@@ -29,7 +29,13 @@ class PetRepository implements RepositoryInterface
 
         return $pet;
     }
-
+    
+    /**
+     * getById
+     *
+     * @param  mixed $petId
+     * @return Collection
+     */
     public function getById(int $petId): Collection
     {
         return Pet::find($petId);

@@ -8,11 +8,32 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pet extends Model
 {
-    use HasFactory,SoftDeletes;
+    use HasFactory, SoftDeletes;
 
-    protected $fillable = ['race', 'age', 'sexe', 'color', 'location'];
+    /**
+     * fillable
+     *
+     * @var array
+     */
+    protected $fillable = ['user_id', 'species_id', 'race_id', 'age', 'sexe', 'color'];
 
-    protected $casts = [
-        'location'=> 'array'
-    ];
+    public function owner()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
+    public function species()
+    {
+        return $this->belongsTo(Species::class, 'species_id');
+    }
+
+    public function race()
+    {
+        return $this->belongsTo(Race::class, 'race_id');
+    }
+
+    public function locations()
+    {
+        return $this->hasMany(Location::class);
+    }
 }
