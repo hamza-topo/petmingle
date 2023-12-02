@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\PetController;
+use App\Http\Controllers\Api\RaceController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -19,6 +20,8 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
-Route::prefix('v.0')->group(function(){
+Route::prefix('v.0')->group(function () {
     Route::resources(['pets' => PetController::class]);
+    Route::resources(['races' => RaceController::class]);
+    Route::put('/races/restore/{id}', [RaceController::class, 'restore']);
 });

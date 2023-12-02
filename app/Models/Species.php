@@ -10,5 +10,5 @@ class Species extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillables = ['name', 'description'];
+    protected $fillable = ['name', 'description'];
 }

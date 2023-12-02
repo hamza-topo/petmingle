@@ -10,6 +10,11 @@ class Race extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillables = ['name'];
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<string>
+     */
+    protected $fillable = ['name'];
    
 }

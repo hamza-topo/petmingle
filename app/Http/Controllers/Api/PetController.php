@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Pet;
 use App\Repositories\PetRepository;
 use Illuminate\Http\Request;
 
@@ -11,7 +12,6 @@ class PetController extends Controller
 
     public function __construct(protected PetRepository $petRepository)
     {
-        
     }
     /**
      * Display a listing of the resource.
@@ -20,7 +20,7 @@ class PetController extends Controller
      */
     public function index()
     {
-       return $this->petRepository->all();
+        return  $this->petRepository->all();
     }
 
     /**

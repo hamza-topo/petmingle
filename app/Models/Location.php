@@ -10,7 +10,7 @@ class Location extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillables = ['pet_id', 'latitude', 'longitude'];
+    protected $fillable = ['pet_id', 'latitude', 'longitude'];
 
     public function pet()
     {

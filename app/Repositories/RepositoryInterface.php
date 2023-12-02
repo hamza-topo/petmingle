@@ -13,9 +13,8 @@ interface RepositoryInterface
      * 
      * @author Topo <hamzaaitsidisaid.11@gmail.com>
      * @param  mixed $model
-     * @return Collection
      */
-    public function create(array $model): Collection;
+    public function create(array $model);
 
     /**
      * update
@@ -23,9 +22,8 @@ interface RepositoryInterface
      * @author Topo <hamzaaitsidisaid.11@gmail.com>
      * @param  int $modelId
      * @param  array $newModel
-     * @return Collection
      */
-    public function update(int $modelId, array $newModel): Collection;
+    public function update(int $modelId, array $newModel);
 
     /**
      * delete method
@@ -41,26 +39,23 @@ interface RepositoryInterface
      *
      * @author Topo <hamzaaitsidisaid.11@gmail.com>
      * @param  mixed $modelId
-     * @return Collection
      */
-    public function getById(int $modelId): Collection;
+    public function getById(int $modelId);
 
     /**
      * restore method
      *
      * @author Topo <hamzaaitsidisaid.11@gmail.com>
      * @param  int $modelId
-     * @return bool
      */
-    public function restore(int $modelId): bool;
+    public function restore(int $modelId);
 
     /**
      * all method
      *
      * @author Topo <hamzaaitsidisaid.11@gmail.com>
-     * @return Collection
      */
-    public function all(): Collection;
+    public function all();
 
     /**
      * paginate method
