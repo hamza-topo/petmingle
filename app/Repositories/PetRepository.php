@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Enums\Pet as EnumsPet;
 use App\Models\Pet;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -14,7 +15,6 @@ use Illuminate\Database\Eloquent\Collection;
 class PetRepository implements RepositoryInterface
 {
     //TODO::make this as enum
-    public static int  $paginate = 25;
 
     public function create(array $pet): Collection
     {
@@ -29,7 +29,7 @@ class PetRepository implements RepositoryInterface
 
         return $pet;
     }
-    
+
     /**
      * getById
      *
@@ -48,17 +48,17 @@ class PetRepository implements RepositoryInterface
 
     public function restore(int $petId): bool
     {
-        return Pet::restore($petId);
+        return Pet::withTrashed()->find($petId)->restore();
     }
 
     public function all(): Collection
     {
-       return Pet::all(); 
+        return Pet::all();
     }
 
     public function paginate()
     {
-        return Pet::paginate(self::$paginate);
+        return Pet::paginate(EnumsPet::PAGINATE);
     }
 
     public function getAllFromCache(): mixed

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Api\Race;
+namespace App\Http\Requests\Api\Species;
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
@@ -16,8 +16,8 @@ class Update extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:races|max:50'
-        ];
+            'name' => 'required|unique:species|max:50',
+        ];;
     }
 
     /**
@@ -28,9 +28,9 @@ class Update extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => \__('The Field Race Name is required.'),
-            'name.unique' => \__('The Race Name already exist.'),
-            'name.max' => \__('This Race Name is too much long.'),
+            'name.required' => \__('The Field Species Name is required.'),
+            'name.unique' => \__('The Species Name already exist.'),
+            'name.max' => \__('This Species Name is too much long.'),
         ];
     }
 
