@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Api\PetController;
+use App\Http\Controllers\Api\RaceController;
+use App\Http\Controllers\Api\SpeciesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,6 +17,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+
+Route::prefix('v.0')->group(function () {
+    Route::resources(['pets' => PetController::class]);
+    Route::resources(['races' => RaceController::class]);
+    Route::put('/races/restore/{id}', [RaceController::class, 'restore']);
+    Route::resources(['species' => SpeciesController::class]);
+    Route::put('/species/restore/{id}', [SpeciesController::class, 'restore']);
 });

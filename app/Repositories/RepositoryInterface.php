@@ -1,0 +1,83 @@
+<?php
+
+namespace App\Repositories;
+
+use Illuminate\Database\Eloquent\Collection;
+
+interface RepositoryInterface
+{
+
+
+    /**
+     * create method
+     * 
+     * @author Topo <hamzaaitsidisaid.11@gmail.com>
+     * @param  mixed $model
+     */
+    public function create(array $model);
+
+    /**
+     * update
+     * 
+     * @author Topo <hamzaaitsidisaid.11@gmail.com>
+     * @param  int $modelId
+     * @param  array $newModel
+     */
+    public function update(int $modelId, array $newModel);
+
+    /**
+     * delete method
+     * 
+     * @author Topo <hamzaaitsidisaid.11@gmail.com>
+     * @param  int $modelId
+     * @return bool
+     */
+    public function delete(int $modelId): bool;
+
+    /**
+     * getById method
+     *
+     * @author Topo <hamzaaitsidisaid.11@gmail.com>
+     * @param  mixed $modelId
+     */
+    public function getById(int $modelId);
+
+    /**
+     * restore method
+     *
+     * @author Topo <hamzaaitsidisaid.11@gmail.com>
+     * @param  int $modelId
+     */
+    public function restore(int $modelId);
+
+    /**
+     * all method
+     *
+     * @author Topo <hamzaaitsidisaid.11@gmail.com>
+     */
+    public function all();
+
+    /**
+     * paginate method
+     *
+     * @author Topo <hamzaaitsidisaid.11@gmail.com>
+     * @param int $number of element to retrieve per page
+     */
+    // public function paginate(int $number); //TODO::add type hint 
+
+    /**
+     * getAllFromCache method
+     *
+     * @author Topo <hamzaaitsidisaid.11@gmail.com>
+     * @return mixed
+     */
+    public function getAllFromCache(): mixed;
+
+    /**
+     * clearCache method
+     * 
+     * @author Topo <hamzaaitsidisaid.11@gmail.com>
+     * @return bool
+     */
+    public function clearCache(): bool;
+}
