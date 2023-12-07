@@ -15,7 +15,11 @@ class Pet extends Model
      *
      * @var array
      */
-    protected $fillable = ['user_id', 'species_id', 'race_id', 'age', 'sexe', 'color'];
+    protected $fillable = ['user_id', 'species_id', 'race_id', 'name', 'age', 'sexe', 'color', 'images', 'about'];
+
+    protected $casts = [
+        'images' => 'array',
+    ];
 
     public function owner()
     {

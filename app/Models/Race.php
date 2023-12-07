@@ -15,6 +15,6 @@ class Race extends Model
      *
      * @var array<string>
      */
-    protected $fillable = ['name'];
+    protected $fillable = ['species_id','name'];
    
 }

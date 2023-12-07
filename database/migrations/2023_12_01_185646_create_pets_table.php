@@ -19,9 +19,12 @@ class CreatePetsTable extends Migration
             $table->integer('user_id');
             $table->integer('species_id');//TODO:make it foreign key
             $table->integer('race_id');//TODO:make it foreign key
+            $table->string('name', 25);
             $table->tinyInteger('age')->index();
             $table->tinyInteger('sexe')->index()->comment( Pet::FEMALE .':female;'.Pet::MALE.': male');
             $table->string('color', 15);
+            $table->json('images');
+            $table->text('about');
             $table->timestamps();
             $table->softDeletes();
         });
