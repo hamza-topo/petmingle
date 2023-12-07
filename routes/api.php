@@ -36,6 +36,7 @@ Route::prefix('v.0')->group(function () {
 */
 Route::prefix('v.0')->middleware('jwt.verify')->group(function () {
     Route::resources(['pets' => PetController::class]);
+    Route::put('/pets/restore/{id}', [PetController::class, 'restore']);
     Route::resources(['races' => RaceController::class]);
     Route::put('/races/restore/{id}', [RaceController::class, 'restore']);
     Route::resources(['species' => SpeciesController::class]);
