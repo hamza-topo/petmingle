@@ -16,7 +16,7 @@ class PetRepository implements RepositoryInterface
 {
     //TODO::make this as enum
 
-    public function create(array $pet): Collection
+    public function create(array $pet): Pet
     {
         return Pet::create($pet);
     }

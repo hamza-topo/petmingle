@@ -7,6 +7,17 @@ use App\Http\Controllers\Api\SpeciesController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+/*
+|--------------------------------------------------------------------------
+| Auth Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register API Ayth routes for app. These
+| routes are loaded by the RouteServiceProvider within a group which
+| is assigned the "api" middleware group. Enjoy building your API!
+|
+*/
+
 Route::prefix('v.0')->group(function () {
     Route::post('/sign-in', [AuthController::class, 'signIn']);
     Route::post('/sign-up', [AuthController::class, 'signUp']);
@@ -15,7 +26,7 @@ Route::prefix('v.0')->group(function () {
 
 /*
 |--------------------------------------------------------------------------
-| Auth Routes
+| Api Routes
 |--------------------------------------------------------------------------
 |
 | Here is where you can register API Ayth routes for app. These
