@@ -33,7 +33,7 @@ class Pet extends Model
 
     public function race()
     {
-        return $this->belongsTo(Race::class, 'race_id');
+        return $this->belongsTo(Race::class);
     }
 
     public function locations()
