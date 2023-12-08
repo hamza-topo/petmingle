@@ -26,17 +26,21 @@ class PetController extends Controller
      */
     public function index()
     {
-        return  $this->petRepository->all();
-    }
+        try {
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+            return response()->json([
+                'success' => true,
+                'message' => \__('List of pets.'),
+                'data' => $this->petRepository->all()
+            ]);
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => \__('Sorry, cannot fetch pets.'),
+                'trace' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
     /**
@@ -74,18 +78,21 @@ class PetController extends Controller
      */
     public function show($id)
     {
-        //
-    }
+        try {
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+            return response()->json([
+                'success' => true,
+                'message' => \__('Pet has been found.'),
+                'data' => $this->petRepository->getById($id)
+            ]);
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => \__('Sorry, pet cannot be found.'),
+                'trace' => $e->getMessage(),
+            ], Response::HTTP_NOT_FOUND);
+        }
     }
 
     /**
@@ -108,6 +115,45 @@ class PetController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+
+            return response()->json([
+                'success' => true,
+                'message' => \__('Pet has been deleted successfully.'),
+                'data' => $this->petRepository->delete($id)
+            ]);
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => \__('Sorry, pet cannot be delted.'),
+                'trace' => $e->getMessage(),
+            ], Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    /**
+     * Restore the specified resource from storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        try {
+
+            return response()->json([
+                'success' => true,
+                'message' => \__('Pet has been restored successfully.'),
+                'data' => $this->petRepository->restore($id)
+            ]);
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => \__('Sorry, pet cannot be restored.'),
+                'trace' => $e->getMessage(),
+            ], Response::HTTP_NOT_FOUND);
+        }
     }
 }

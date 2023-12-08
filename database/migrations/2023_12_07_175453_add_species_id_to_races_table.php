@@ -14,7 +14,7 @@ class AddSpeciesIdToRacesTable extends Migration
     public function up()
     {
         Schema::table('races', function (Blueprint $table) {
-            $table->integer('species_id');
+            $table->integer('species_id')->after('id');
         });
     }
 
