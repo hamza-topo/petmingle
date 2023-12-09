@@ -39,6 +39,7 @@ Route::prefix('v.0')->middleware('jwt.verify')->group(function () {
 
     Route::put('/locations/restore/{id}', [LocationController::class, 'restore']);
     Route::post('/locations/nears/', [LocationController::class, 'near']);
+    Route::post('/locations/filters/', [LocationController::class, 'filter']);
     Route::resources(['locations' => LocationController::class]);
 
     Route::put('/pets/restore/{id}', [PetController::class, 'restore']);
