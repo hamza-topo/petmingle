@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Events\MatchEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Pet\Store;
 use App\Http\Resources\Pet;
@@ -34,7 +35,7 @@ class PetController extends Controller
                 'data' => $this->petRepository->all()
             ]);
         } catch (\Exception $e) {
-
+            dd($e->getMessage());
             return response()->json([
                 'success' => false,
                 'message' => \__('Sorry, cannot fetch pets.'),
