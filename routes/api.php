@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\LangController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\PetController;
 use App\Http\Controllers\Api\RaceController;
@@ -37,8 +38,15 @@ Route::prefix('v.0')->group(function () {
 */
 Route::prefix('v.0')->middleware('jwt.verify')->group(function () {
 
+    Route::prefix('preferences')->group(function(){
+        Route::put('langs/{lang}', [LangController::class, 'set']);
+        Route::get('langs/current',[LangController::class, 'current']);
+        Route::get('langs',[LangController::class, 'index']);
+    });
+
     Route::put('/locations/restore/{id}', [LocationController::class, 'restore']);
     Route::post('/locations/nears/', [LocationController::class, 'near']);
+    Route::post('/locations/filters/', [LocationController::class, 'filter']);
     Route::resources(['locations' => LocationController::class]);
 
     Route::put('/pets/restore/{id}', [PetController::class, 'restore']);

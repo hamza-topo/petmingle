@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api;
 
+use App\Filters\PetFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Location\Near;
 use App\Http\Requests\Api\Location\Store;
@@ -48,6 +49,42 @@ class LocationController extends Controller
     {
         try {
             $resources = $this->locationRepository->near($request->all());
+
+            return response()->json([
+                'success' => true,
+                'message' => \__('List of Locations nears to you.'),
+                'data' => new LocationNear($resources),
+            ]);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            return response()->json([
+                'success' => false,
+                'message' => \__('Sorry, cannot fetch Locations.'),
+                'trace' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function filter(Request $request)
+    {
+        try {
+
+            $coordinates = [
+                'latitude' => $request->filters['latitude'],
+                'longitude' => $request->filters['longitude'],
+                'perimetre' => $request->filters['perimetre'],
+                'user_id' => $request->user_id ?? auth()->user()->id,
+            ];
+
+            $resources = $this->locationRepository->near($coordinates);
+            $petFilter = new PetFilter;
+            $resources = $petFilter->filter($resources, $request->all());
 
             return response()->json([
                 'success' => true,
