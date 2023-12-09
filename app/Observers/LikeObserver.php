@@ -2,16 +2,16 @@
 
 namespace App\Observers;
 
-use App\Events\MatchEvent;
 use App\Models\Like;
 use App\Repositories\LikeRepository;
-use App\Repositories\MatchRepository;
+use App\Services\MatchService;
+use Illuminate\Support\Facades\Log;
 
 class LikeObserver
 {
     public function __construct(
         protected LikeRepository $likeRepository,
-        protected MatchRepository $matchRepository,
+        protected MatchService $matchService,
 
     ) {
     }
@@ -24,14 +24,16 @@ class LikeObserver
     public function created(Like $like)
     {
         if ($this->likeRepository->isMatch($like->toArray())) {
-            $likeFirst = $like->toArray();
-            $likeSeconde = ['from' => $likeFirst['to'], 'to' => $likeFirst['to']];
-            $fromMatch = $this->matchRepository->create($likeFirst);
-            $toMatch = $this->matchRepository->create($likeSeconde);
-            MatchEvent::dispatch($fromMatch, $toMatch);
+            try {
+                $this->matchService
+                    ->create($like->toArray())
+                    ->notify()
+                    ->mail();
+            } catch (\Exception $e) {
+                Log::error('sending mail is matching failed: '.$e->getMessage());
+                return $e->getMessage();
+            }
         }
-        //add try catch 
-        //TODO::dispatch event normally 
     }
 
     /**

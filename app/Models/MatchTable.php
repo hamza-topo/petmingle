@@ -14,12 +14,12 @@ class MatchTable extends Model
 
     protected $fillable = ['from', 'to'];
 
-    public function from()
+    public function fromPet()
     {
         return $this->belongsTo(Pet::class, 'from');
     }
 
-    public function to()
+    public function toPet()
     {
         return $this->belongsTo(Pet::class, 'to');
     }

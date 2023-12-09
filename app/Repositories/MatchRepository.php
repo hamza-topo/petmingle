@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace App\Repositories;
 
 use App\Models\MatchTable;
@@ -6,11 +7,12 @@ use App\Models\MatchTable;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
-class MatchRepository implements RepositoryInterface {
+class MatchRepository implements RepositoryInterface
+{
 
     public function create(array $match): MatchTable
     {
-            return MatchTable::create($match);
+        return MatchTable::create($match);
     }
 
     public function update(int $matchId, array $newModel): MatchTable
