@@ -2,6 +2,7 @@
 
 namespace App\Observers;
 
+use App\Events\MatchEvent;
 use App\Models\Like;
 use App\Repositories\LikeRepository;
 use App\Repositories\MatchRepository;
@@ -25,8 +26,9 @@ class LikeObserver
         if ($this->likeRepository->isMatch($like->toArray())) {
             $likeFirst = $like->toArray();
             $likeSeconde = ['from' => $likeFirst['to'], 'to' => $likeFirst['to']];
-            $this->matchRepository->create($likeFirst);
-            $this->matchRepository->create($likeSeconde);
+            $fromMatch = $this->matchRepository->create($likeFirst);
+            $toMatch = $this->matchRepository->create($likeSeconde);
+            MatchEvent::dispatch($fromMatch, $toMatch);
         }
         //add try catch 
         //TODO::dispatch event normally 
