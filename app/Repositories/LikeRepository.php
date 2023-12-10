@@ -6,9 +6,14 @@ use App\Enums\Like as EnumsLike;
 use App\Models\Like;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use PHPUnit\Framework\Constraint\IsTrue;
 
 class LikeRepository implements RepositoryInterface
 {
+
+    public function __construct(protected MatchRepository $matchRepository)
+    {
+    }
 
     public function create(array $like): Like
     {
@@ -69,6 +74,16 @@ class LikeRepository implements RepositoryInterface
         ])->get();
 
         return $isLikedBefore->count() > 0 ? true : false;
+    }
+
+    public function dislike(array $like): void
+    {
+        Like::where([
+            ['from', '=', $like['from']],
+            ['to', '=', $like['to']],
+        ])->delete();
+
+        $this->isMatch($like) === true ? $this->matchRepository->mismatch($like) : null;
     }
 
     public function isMatch(array $like): bool

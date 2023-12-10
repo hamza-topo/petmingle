@@ -6,21 +6,19 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class MatchTable extends Model
+class Dislike extends Model
 {
     use HasFactory, SoftDeletes;
-
-    protected $table = 'matches';
-
+    
     protected $fillable = ['from', 'to'];
 
-    public function fromPet()
+    public function from()
     {
-        return $this->belongsTo(Pet::class, 'from', 'id');
+        return $this->belongsTo(Pet::class, 'from');
     }
 
-    public function toPet()
+    public function to()
     {
-        return $this->belongsTo(Pet::class, 'to', 'id');
+        return $this->belongsTo(Pet::class, 'to');
     }
 }

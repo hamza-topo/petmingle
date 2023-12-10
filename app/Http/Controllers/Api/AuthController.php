@@ -73,8 +73,7 @@ class AuthController extends Controller
                 'success' => true,
                 'message' => \__('User has been logged out.')
             ]);
-        } catch (JWTException $exception) {
-
+        } catch (JWTException $e) {
             return response()->json([
                 'success' => false,
                 'message' => \__('Sorry, user cannot be logged out.')

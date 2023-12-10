@@ -40,6 +40,12 @@ class MatchRepository implements RepositoryInterface
         return MatchTable::destroy($matchId);
     }
 
+    public function mismatch(array $match): bool
+    {
+        return MatchTable::where(['from' => $match['from'], 'to' => $match['to']])
+            ->orWhere(['from' => $match['to'], 'to' => $match['from']])->delete();
+    }
+
     public function restore(int $matchId): bool
     {
         return MatchTable::withTrashed()->findOrFail($matchId)->restore();
@@ -48,6 +54,18 @@ class MatchRepository implements RepositoryInterface
     public function all(): Collection
     {
         return MatchTable::all();
+    }
+
+    //TODO:paginate the result
+    public function matches(int $petId): Collection
+    {
+        return MatchTable::where('from', $petId)->with('toPet')->get();
+    }
+
+    //TODO:paginate the result
+    public function mismatches(int $petId): Collection
+    {
+        return MatchTable::onlyTrashed()->where('from', $petId)->get();
     }
 
     public function paginate()

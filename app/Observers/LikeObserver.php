@@ -27,7 +27,7 @@ class LikeObserver
             try {
                 $this->matchService
                     ->create($like->toArray())
-                    ->notify()
+                    // ->notify()
                     ->mail();
             } catch (\Exception $e) {
                 Log::error('sending mail is matching failed: '.$e->getMessage());

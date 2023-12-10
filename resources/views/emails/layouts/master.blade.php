@@ -1,67 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
+<!doctype html>
+<html lang="en-US">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
     @yield('title')
-    
-    <style>
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f8f8f8;
-            color: #333;
-            text-align: center;
-        }
-
-        .container {
-            max-width: 600px;
-            margin: 50px auto;
-            background-color: #fff;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            border-radius: 10px;
-        }
-
-        h1 {
-            color: #e44d26;
-        }
-
-        p {
-            line-height: 1.6;
-            color: #555;
-        }
-
-        .button {
-            display: inline-block;
-            padding: 15px 30px;
-            margin-top: 30px;
-            background-color: #3498db;
-            color: #fff;
-            text-decoration: none;
-            border-radius: 25px;
-            transition: background-color 0.3s ease;
-            font-weight: bold;
-        }
-
-        .button:hover {
-            background-color: #2980b9;
-        }
-
-        .emoji {
-            font-size: 24px;
-            margin-right: 10px;
-        }
-
-        @media screen and (max-width: 600px) {
-            .container {
-                width: 90%;
-            }
-        }
+    <meta name="description" content="New Account Email Template.">
+    <style type="text/css">
+        a:hover {text-decoration: underline !important;}
     </style>
 </head>
-<body>
-    @yield('body')
+
+<body marginheight="0" topmargin="0" marginwidth="0" style="margin: 0px; background-color: #f2f3f8;" leftmargin="0">
+    <!-- 100% body table -->
+    <table cellspacing="0" border="0" cellpadding="0" width="100%" bgcolor="#f2f3f8"
+        style="@import url(https://fonts.googleapis.com/css?family=Rubik:300,400,500,700|Open+Sans:300,400,600,700); font-family: 'Open Sans', sans-serif;">
+        <tr>
+            <td>
+                <table style="background-color: #f2f3f8; max-width:670px; margin:0 auto;" width="100%" border="0"
+                    align="center" cellpadding="0" cellspacing="0">
+                    <tr>
+                        <td style="height:80px;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;">
+                            {{config('app.name')}}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="height:20px;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            @yield('body')
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="height:20px;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="text-align:center;">
+                            <p style="font-size:14px; color:rgba(69, 80, 86, 0.7411764705882353); line-height:18px; margin:0 0 0;">&copy; <strong>{{config('app.name')}}</strong> </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="height:80px;">&nbsp;</td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+    <!--/100% body table-->
 </body>
+
 </html>

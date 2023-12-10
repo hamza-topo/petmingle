@@ -17,7 +17,7 @@ class ItsAMatch extends Mailable implements ShouldQueue
      *
      * @return void
      */
-    public function __construct(public Pet $pet)
+    public function __construct(public Pet $pet, public Pet $fromPet)
     {
         //
     }
@@ -33,6 +33,8 @@ class ItsAMatch extends Mailable implements ShouldQueue
             \__('🎉 You\'re Matched! Dive into the Adventure with '. $this->pet->name .'! 🚀')
         )
             ->view('emails.match')
-            ->with('pet', $this->pet);
+            ->with('pet', $this->pet)
+            ->with('fromPet', $this->fromPet)
+            ;
     }
 }
