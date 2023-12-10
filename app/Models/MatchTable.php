@@ -16,11 +16,11 @@ class MatchTable extends Model
 
     public function fromPet()
     {
-        return $this->belongsTo(Pet::class, 'from');
+        return $this->belongsTo(Pet::class, 'from', 'id');
     }
 
     public function toPet()
     {
-        return $this->belongsTo(Pet::class, 'to');
+        return $this->belongsTo(Pet::class, 'to', 'id');
     }
 }
