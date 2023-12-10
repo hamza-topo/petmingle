@@ -3,35 +3,60 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Like\Store;
-use App\Repositories\LikeRepository;
+use App\Repositories\MatchRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class LikeController extends Controller
+class MatchController extends Controller
 {
-    public function __construct(protected LikeRepository $likeRepository)
+
+    public function __construct(protected MatchRepository $matchRepository)
     {
+        
     }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function matches()
     {
         try {
 
             return response()->json([
                 'success' => true,
-                'message' => \__('corresponding Likes of :' . auth()->user()->pet->name),
-                'data' => $this->likeRepository->likes(auth()->user()->pet->id)
+                'message' => \__('corresponding matches of :' . auth()->user()->pet->name),
+                'data' => $this->matchRepository->matches(auth()->user()->pet->id)
             ]);
         } catch (\Exception $e) {
 
             return response()->json([
                 'success' => false,
-                'message' => \__('Sorry, cannot fetch pets.'),
+                'message' => \__('Sorry, cannot fetch matches.'),
+                'trace' => $e->getMessage(),
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function mismatches()
+    {
+        try {
+
+            return response()->json([
+                'success' => true,
+                'message' => \__('corresponding mismatches of :' . auth()->user()->pet->name),
+                'data' => $this->matchRepository->mismatches(auth()->user()->pet->id)
+            ]);
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => \__('Sorry, cannot fetch mismatches.'),
                 'trace' => $e->getMessage(),
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
@@ -53,25 +78,9 @@ class LikeController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Store $request)
+    public function store(Request $request)
     {
-        try {
-            //After storing check if there is the inverse in db then create a matche;
-            $like = $this->likeRepository->create($request->all());
-
-            return response()->json([
-                'success' => true,
-                'message' => \__('like ok'),
-                'data' => $like
-            ]);
-        } catch (\Exception $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => \__('Sorry, cannot like pets.'),
-                'trace' => $e->getMessage(),
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        //
     }
 
     /**

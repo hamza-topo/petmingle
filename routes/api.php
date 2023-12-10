@@ -1,9 +1,11 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\DislikeController;
 use App\Http\Controllers\Api\LangController;
 use App\Http\Controllers\Api\LikeController;
 use App\Http\Controllers\Api\LocationController;
+use App\Http\Controllers\Api\MatchController;
 use App\Http\Controllers\Api\PetController;
 use App\Http\Controllers\Api\RaceController;
 use App\Http\Controllers\Api\SpeciesController;
@@ -59,5 +61,9 @@ Route::prefix('v.0')->middleware('jwt.verify')->group(function () {
     Route::post('/locations/filters/', [LocationController::class, 'filter']);
     Route::resources(['locations' => LocationController::class]);
 
+    Route::resources(['dislikes' => DislikeController::class]);
     Route::resources(['likes' => LikeController::class]);
+
+    Route::get('matches', [MatchController::class, 'matches']);
+    Route::get('mismatches', [MatchController::class, 'mismatches']);
 });
