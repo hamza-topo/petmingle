@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BlockController;
 use App\Http\Controllers\Api\DislikeController;
 use App\Http\Controllers\Api\LangController;
 use App\Http\Controllers\Api\LikeController;
@@ -66,4 +67,7 @@ Route::prefix('v.0')->middleware('jwt.verify')->group(function () {
 
     Route::get('matches', [MatchController::class, 'matches']);
     Route::get('mismatches', [MatchController::class, 'mismatches']);
+
+    Route::post('blocks',[BlockController::class, 'store']);
+    Route::get('blocks', [BlockController::class, 'index']);
 });

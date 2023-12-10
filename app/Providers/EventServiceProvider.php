@@ -2,7 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Block;
 use App\Models\Like;
+use App\Observers\BlockObserver;
 use App\Observers\LikeObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
@@ -20,7 +22,7 @@ class EventServiceProvider extends ServiceProvider
         Registered::class => [
             SendEmailVerificationNotification::class,
         ],
-       
+
     ];
 
     /**
@@ -31,5 +33,6 @@ class EventServiceProvider extends ServiceProvider
     public function boot()
     {
         Like::observe(LikeObserver::class);
+        Block::observe(BlockObserver::class);
     }
 }
