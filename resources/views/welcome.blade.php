@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -46,6 +47,7 @@
             0% {
                 background-position: 0% 0%;
             }
+
             100% {
                 background-position: 100% 100%;
             }
@@ -55,38 +57,49 @@
             0% {
                 transform: scale(1);
             }
+
             50% {
                 transform: scale(1.1);
             }
+
             100% {
                 transform: scale(1);
             }
         }
 
         @keyframes textAnimation {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: scale(1);
             }
+
             50% {
                 transform: scale(1.1);
             }
         }
     </style>
 </head>
+
 <body>
     <div class="container">
-    comming soon
+        comming soon
     </div>
     <script>
         // You can add your countdown script here
         // For simplicity, a placeholder "30 days" is used
     </script>
 </body>
+
 </html>
 <script src="{{ asset('js/app.js') }}"></script>
 <script>
     Echo.channel(`new-match`)
         .listen('.new.match', (e) => {
+            console.log(e);
+        });
+    Echo.channel(`new-message`)
+        .listen('.new.message', (e) => {
             console.log(e);
         });
 </script>

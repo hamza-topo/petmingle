@@ -4,8 +4,10 @@ namespace App\Providers;
 
 use App\Models\Block;
 use App\Models\Like;
+use App\Models\Message;
 use App\Observers\BlockObserver;
 use App\Observers\LikeObserver;
+use App\Observers\MessageObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -34,5 +36,6 @@ class EventServiceProvider extends ServiceProvider
     {
         Like::observe(LikeObserver::class);
         Block::observe(BlockObserver::class);
+        Message::observe(MessageObserver::class);
     }
 }

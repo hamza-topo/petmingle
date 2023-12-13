@@ -11,7 +11,6 @@ use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\PetController;
 use App\Http\Controllers\Api\RaceController;
 use App\Http\Controllers\Api\SpeciesController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
