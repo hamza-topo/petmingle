@@ -7,6 +7,7 @@ use App\Http\Controllers\Api\LangController;
 use App\Http\Controllers\Api\LikeController;
 use App\Http\Controllers\Api\LocationController;
 use App\Http\Controllers\Api\MatchController;
+use App\Http\Controllers\Api\MessageController;
 use App\Http\Controllers\Api\PetController;
 use App\Http\Controllers\Api\RaceController;
 use App\Http\Controllers\Api\SpeciesController;
@@ -68,6 +69,9 @@ Route::prefix('v.0')->middleware('jwt.verify')->group(function () {
     Route::get('matches', [MatchController::class, 'matches']);
     Route::get('mismatches', [MatchController::class, 'mismatches']);
 
-    Route::post('blocks',[BlockController::class, 'store']);
+    Route::post('blocks', [BlockController::class, 'store']);
     Route::get('blocks', [BlockController::class, 'index']);
+
+    Route::put('/messages/restore/{id}', [MessageController::class, 'restore']);
+    Route::resources(['messages' => MessageController::class]);
 });

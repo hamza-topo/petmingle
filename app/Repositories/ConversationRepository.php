@@ -11,6 +11,7 @@ class ConversationRepository
     {
         if ($this->isNew($conversation))
             return Conversation::create($conversation);
+        return $this->getConversation($conversation)->first();
     }
 
     public function delete(array $condition)
@@ -21,11 +22,16 @@ class ConversationRepository
 
     public function isNew(array $conditions = []): bool
     {
-        $isNew = Conversation::where($this->conditions($conditions))
-            ->orWhere($this->conditions($conditions, true))
-            ->get();
+        $isNew = $this->getConversation($conditions);
 
         return $isNew->count() > 0 ? false : true;
+    }
+
+    public function getConversation($conditions)
+    {
+        return Conversation::where($this->conditions($conditions))
+            ->orWhere($this->conditions($conditions, true))
+            ->get();
     }
 
     private function conditions(array $conditions, bool $flip = false): array
