@@ -10,9 +10,11 @@ use PHPUnit\Framework\Constraint\IsTrue;
 
 class LikeRepository implements RepositoryInterface
 {
+    protected $matchRepository;
 
-    public function __construct(protected MatchRepository $matchRepository)
+    public function __construct()
     {
+        $this->matchRepository = new MatchRepository;
     }
 
     public function create(array $like): Like

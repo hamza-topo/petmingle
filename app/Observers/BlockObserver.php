@@ -21,6 +21,7 @@ class BlockObserver
      */
     public function created(Block $block)
     {
+        //TODO::archive conversation
         $this->likeRepository->dislike(['from' => $block->from ?? '', 'to' => $block->to ?? '']);
     }
 

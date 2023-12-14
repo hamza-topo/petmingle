@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Events\MatchEvent;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Pet\Store;
-use App\Http\Resources\Pet;
-use App\Mappers\Pet as MappersPet;
 use App\Repositories\PetRepository;
 use App\Traits\ImageTrait;
 use Illuminate\Http\Request;

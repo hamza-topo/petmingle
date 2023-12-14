@@ -2,17 +2,16 @@
 
 namespace App\Events;
 
-use App\Models\MatchTable;
+use App\Models\Message;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class MatchEvent implements ShouldBroadcast
+class MessageEvent implements ShouldBroadcastNow
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -22,7 +21,7 @@ class MatchEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct(public MatchTable $fromMatch, public MatchTable $toMatch)
+    public function __construct(public Message $message)
     {
     }
 
@@ -33,10 +32,11 @@ class MatchEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return new Channel('new-match');
+        return new Channel('new-message');
     }
 
-    public function broadcastAs() {
-        return 'new.match';
+    public function broadcastAs()
+    {
+        return 'new.message';
     }
 }
