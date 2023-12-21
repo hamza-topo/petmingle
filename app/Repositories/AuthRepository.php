@@ -33,6 +33,14 @@ class AuthRepository
         return JWTAuth::authenticate($token);
     }
 
+    public function removeAvatar(int $userId): User
+    {
+        $user = User::findOrFail($userId);
+        $user->update(['avatar' => '']);
+        $user->refresh();
+        return $user;
+    }
+
     protected function hash(string $key): string
     {
         return Hash::make($key);

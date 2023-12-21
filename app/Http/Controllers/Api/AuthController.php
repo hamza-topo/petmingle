@@ -3,17 +3,15 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Auth\Avatar;
 use App\Http\Requests\Api\Auth\GetUser;
 use App\Http\Requests\Api\Auth\Logout;
 use App\Http\Requests\Api\Auth\SignIn;
 use App\Http\Requests\Api\Auth\SignUp;
-use App\Jobs\SendWelcomeEmail;
-use App\Mail\Welcome;
 use App\Repositories\AuthRepository;
 use App\Services\UserService;
 use App\Traits\ImageTrait;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
@@ -99,6 +97,22 @@ class AuthController extends Controller
         try {
 
             return response()->json(['user' => $this->authRepository->getUser($request->token)]);
+        } catch (\Exception $e) {
+
+            return response()->json([
+                'success' => false,
+                'message' => __('Sorry, user cannot be found.')
+            ], Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    public function removeAvatar(int $userId)
+    {
+        try {
+            if ($userId !== auth()->user()->id) {
+                return abort(401, __('Unauthorized action, the given id doesn\'t match the the authenticated user'));
+            }
+            return response()->json(['user' => $this->authRepository->removeAvatar($userId)]);
         } catch (\Exception $e) {
 
             return response()->json([
