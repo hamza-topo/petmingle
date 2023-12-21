@@ -25,7 +25,7 @@ class Store extends FormRequest
             'images.*' => 'image|size:1024',
         ];
     }
-    //TODO::messages for images
+    
     /**
      * Get the error messages for the defined validation rules.
      *
@@ -41,6 +41,8 @@ class Store extends FormRequest
             'name.required' => \__('The Field Name is required!'),
             'name.min' => \__('The Field Name is too short!'),
             'name.max' => \__('The Field Name is too long!'),
+            'images.required' => \__('The Images are required.'),
+            'images.*' => \__('The Images are invalid.'),
         ];
     }
 
