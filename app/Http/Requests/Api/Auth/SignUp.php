@@ -16,6 +16,8 @@ class SignUp extends FormRequest
     public function rules()
     {
         return [
+            'avatar' => 'required',
+            'avatar.*' => 'image|size:1024',
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
             'password' => 'required|string|min:6|max:50'
@@ -30,6 +32,8 @@ class SignUp extends FormRequest
     public function messages()
     {
         return [
+            'avatar.required' => \__('The Avatar is required.'),
+            'avatar.*' => \__('The Avatar is invalid.'),
             'name.required' => \__('The Name is required.'),
             'name.string' => \__('The Name invalid.'),
             'email.required' => \__('The E-mail is required.'),

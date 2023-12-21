@@ -23,10 +23,10 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->load();
+        $this->helpers();
     }
 
-    protected function load()
+    protected function helpers()
     {
         foreach (glob(__DIR__ . '/../Helpers/*.php') as $filename) {
             require_once $filename;

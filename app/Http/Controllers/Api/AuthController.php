@@ -7,23 +7,36 @@ use App\Http\Requests\Api\Auth\GetUser;
 use App\Http\Requests\Api\Auth\Logout;
 use App\Http\Requests\Api\Auth\SignIn;
 use App\Http\Requests\Api\Auth\SignUp;
+use App\Jobs\SendWelcomeEmail;
+use App\Mail\Welcome;
 use App\Repositories\AuthRepository;
+use App\Services\UserService;
+use App\Traits\ImageTrait;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-    public function __construct(protected AuthRepository $authRepository)
-    {
+    use ImageTrait;
+
+    public function __construct(
+        protected AuthRepository $authRepository,
+        protected UserService $userService,
+    ) {
     }
 
 
     public function signUp(SignUp $request)
     {
         try {
-            $user = $this->authRepository->signUp($request->all());
+            $user = $request->all();
+            $user['avatar'] = $this->setFile($request->file('avatar'))
+                ->setName()
+                ->upload()[0];
+            $user = $this->authRepository->signUp($user);
 
             return response()->json([
                 'success' => true,

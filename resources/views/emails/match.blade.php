@@ -1,6 +1,6 @@
 @extends('emails.layouts.master')
 @section('title')
-    <title>hello</title>
+    <title>__('You're Matched with') {{ $pet->name ?? '' }}</title>
 @endsection
 
 @section('body')
