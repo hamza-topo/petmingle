@@ -53,7 +53,7 @@ class PetController extends Controller
             $pet = $request->all();
             $pet['images'] = $this->setFile($request->file('images'))
                 ->setName()
-                ->upload()->all();
+                ->upload();
             return response()->json([
                 'success' => true,
                 'message' => \__('Pet has been created.'),

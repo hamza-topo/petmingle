@@ -42,6 +42,8 @@ Route::prefix('v.0')->group(function () {
 */
 Route::prefix('v.0')->middleware('jwt.verify')->group(function () {
 
+    Route::put('remove-avatar/{id}', [AuthController::class, 'removeAvatar']);
+
     Route::prefix('preferences')->group(function () {
         Route::put('langs/{lang}', [LangController::class, 'set']);
         Route::get('langs/current', [LangController::class, 'current']);
