@@ -33,6 +33,16 @@ class AuthRepository
         return JWTAuth::authenticate($token);
     }
 
+    public function delete(int $id): int
+    {
+        return User::destroy($id);
+    }
+
+    public function restore(int $id)
+    {
+        return User::withTrashed()->findOrFail($id)->restore();
+    }
+
     public function removeAvatar(int $userId): User
     {
         $user = User::findOrFail($userId);

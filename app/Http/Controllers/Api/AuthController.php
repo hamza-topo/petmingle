@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Auth\Avatar;
 use App\Http\Requests\Api\Auth\GetUser;
 use App\Http\Requests\Api\Auth\Logout;
 use App\Http\Requests\Api\Auth\SignIn;
@@ -26,7 +25,11 @@ class AuthController extends Controller
     ) {
     }
 
-
+    /**
+     * SignUp Method.
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
     public function signUp(SignUp $request)
     {
         try {
@@ -51,7 +54,12 @@ class AuthController extends Controller
         }
     }
 
-    public function signIn(SignIn $request)
+    /**
+     * SignIn Method.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function signIn(SignIn $request): Response
     {
         try {
             $credentials = $request->only(['email', 'password']);
@@ -108,6 +116,7 @@ class AuthController extends Controller
 
     public function removeAvatar(int $userId)
     {
+        //TODO:make a request validation for this 
         try {
             if ($userId !== auth()->user()->id) {
                 return abort(401, __('Unauthorized action, the given id doesn\'t match the the authenticated user'));
@@ -118,6 +127,30 @@ class AuthController extends Controller
             return response()->json([
                 'success' => false,
                 'message' => __('Sorry, user cannot be found.')
+            ], Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    public function disable(int $userId)
+    {
+        try {
+            return response()->json(['user' => $this->authRepository->delete($userId)]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Sorry, Account cannot be deleted.')
+            ], Response::HTTP_NOT_FOUND);
+        }
+    }
+
+    public function enable(int $userId)
+    {
+        try {
+            return response()->json(['user' => $this->authRepository->restore($userId)]);
+        } catch (\Throwable $th) {
+            return response()->json([
+                'success' => false,
+                'message' => __('Sorry, Account cannot be deleted.')
             ], Response::HTTP_NOT_FOUND);
         }
     }

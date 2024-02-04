@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BlockController;
 use App\Http\Controllers\Api\DislikeController;
+use App\Http\Controllers\Api\FilterController;
 use App\Http\Controllers\Api\LangController;
 use App\Http\Controllers\Api\LikeController;
 use App\Http\Controllers\Api\LocationController;
@@ -43,6 +44,8 @@ Route::prefix('v.0')->group(function () {
 Route::prefix('v.0')->middleware('jwt.verify')->group(function () {
 
     Route::put('remove-avatar/{id}', [AuthController::class, 'removeAvatar']);
+    Route::delete('disable-account/{id}', [AuthController::class, 'disable']);
+    Route::put('enable-account/{id}', [AuthController::class, 'enable']);
 
     Route::prefix('preferences')->group(function () {
         Route::put('langs/{lang}', [LangController::class, 'set']);
@@ -75,4 +78,6 @@ Route::prefix('v.0')->middleware('jwt.verify')->group(function () {
 
     Route::put('/messages/restore/{id}', [MessageController::class, 'restore']);
     Route::resources(['messages' => MessageController::class]);
+
+    Route::get('filters',[FilterController::class, 'index']);
 });
