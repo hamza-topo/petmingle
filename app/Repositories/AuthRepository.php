@@ -33,6 +33,11 @@ class AuthRepository
         return JWTAuth::authenticate($token);
     }
 
+    public function firstOrCreate(array $criteria, $user)
+    {
+        return User::firstOrCreate($criteria, $user);
+    }
+
     protected function hash(string $key): string
     {
         return Hash::make($key);
