@@ -101,15 +101,17 @@ class AuthController extends Controller
     /**
      * Redirect the user to the Provider authentication page.
      *
-     * @param $provider
+     * @param string $provider given provider
      * @return JsonResponse
      */
-    public function redirectToProvider($provider)
+    public function redirectToProvider(string $provider)
     {
         $validated = $this->validateProvider($provider);
+        
         if (!is_null($validated)) {
             return $validated;
         }
+
 
         return Socialite::driver($provider)->stateless()->redirect();
     }
@@ -123,35 +125,20 @@ class AuthController extends Controller
     public function handleProviderCallback($provider)
     {
         $validated = $this->validateProvider($provider);
+       
         if (!is_null($validated)) {
             return $validated;
         }
         try {
-            $user = Socialite::driver($provider)->stateless()->user();
+            $providerUser = Socialite::driver($provider)->stateless()->user();
+            $user = $this->authRepository->firstOrCreateProviderUser($providerUser->user, $provider);
         } catch (ClientException $exception) {
             return response()->json(['error' => 'Invalid credentials provided.'], 422);
         }
-
-        $userCreated = $this->authRepository->firstOrCreate([
-            'email' => $user->getEmail()
-        ], [
-            'email_verified_at' => now(),
-            'name' => $user->getName(),
-            'status' => true,
-        ]);
+    
+        $token = $user->createToken('token')->plainTextToken;
         
-        $userCreated->providers()->updateOrCreate(
-            [
-                'provider' => $provider,
-                'provider_id' => $user->getId(),
-            ],
-            [
-                'avatar' => $user->getAvatar()
-            ]
-        );
-        $token = $userCreated->createToken('token-name')->plainTextToken;
-
-        return response()->json($userCreated, 200, ['Access-Token' => $token]);
+        return response()->json($user, 200, ['Access-Token' => $token]);
     }
 
      /**
