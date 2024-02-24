@@ -14,6 +14,8 @@ use App\Http\Controllers\Api\RaceController;
 use App\Http\Controllers\Api\SpeciesController;
 use Illuminate\Support\Facades\Route;
 
+
+
 /*
 |--------------------------------------------------------------------------
 | Auth Routes
@@ -29,6 +31,8 @@ Route::prefix('v.0')->group(function () {
     Route::post('/sign-in', [AuthController::class, 'signIn']);
     Route::post('/sign-up', [AuthController::class, 'signUp']);
     Route::post('/sign-out', [AuthController::class, 'signOut']);
+    Route::get('/login/{provider}', [AuthController::class, 'redirectToProvider']);
+    Route::get('/login/{provider}/callback', [AuthController::class, 'handleProviderCallback']);
 });
 
 /*

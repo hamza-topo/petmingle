@@ -8,21 +8,19 @@ use App\Http\Requests\Api\Auth\Logout;
 use App\Http\Requests\Api\Auth\SignIn;
 use App\Http\Requests\Api\Auth\SignUp;
 use App\Repositories\AuthRepository;
-use App\Services\UserService;
-use App\Traits\ImageTrait;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Laravel\Socialite\Facades\Socialite;
 use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
-    use ImageTrait;
-
-    public function __construct(
-        protected AuthRepository $authRepository,
-        protected UserService $userService,
-    ) {
+    public function __construct(protected AuthRepository $authRepository)
+    {
+        $this->middleware('guest')->except('logout');
     }
 
     /**
@@ -114,44 +112,62 @@ class AuthController extends Controller
         }
     }
 
-    public function removeAvatar(int $userId)
+    /**
+     * Redirect the user to the Provider authentication page.
+     *
+     * @param string $provider given provider
+     * @return JsonResponse
+     */
+    public function redirectToProvider(string $provider)
     {
-        //TODO:make a request validation for this 
-        try {
-            if ($userId !== auth()->user()->id) {
-                return abort(401, __('Unauthorized action, the given id doesn\'t match the the authenticated user'));
-            }
-            return response()->json(['user' => $this->authRepository->removeAvatar($userId)]);
-        } catch (\Exception $e) {
+        $validated = $this->validateProvider($provider);
 
+        if (!is_null($validated)) {
+            return $validated;
+        }
+
+
+        return Socialite::driver($provider)->stateless()->redirect();
+    }
+
+    /**
+     * Obtain the user information from Provider.
+     *
+     * @param $provider
+     * @return JsonResponse
+     */
+    public function handleProviderCallback($provider)
+    {
+        $validated = $this->validateProvider($provider);
+
+        if (!is_null($validated)) {
+            return $validated;
+        }
+        try {
+            $providerUser = Socialite::driver($provider)->stateless()->user();
+            $user = $this->authRepository->firstOrCreateProviderUser($providerUser->user, $provider);
+            Auth::login($user, true);
+            //TODO:we may have a probleme here            
             return response()->json([
-                'success' => false,
-                'message' => __('Sorry, user cannot be found.')
-            ], Response::HTTP_NOT_FOUND);
+                'success' => true,
+                'message' => \__('User logged successfully'),
+                'data' => $user,
+            ], Response::HTTP_OK);
+        } catch (ClientException $e) {
+            Log::error($e->getMessage());
+
+            return response()->json(['error' => 'Invalid credentials provided.'], 422);
         }
     }
 
-    public function disable(int $userId)
+    /**
+     * @param $provider
+     * @return JsonResponse
+     */
+    protected function validateProvider($provider)
     {
-        try {
-            return response()->json(['user' => $this->authRepository->delete($userId)]);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'success' => false,
-                'message' => __('Sorry, Account cannot be deleted.')
-            ], Response::HTTP_NOT_FOUND);
-        }
-    }
-
-    public function enable(int $userId)
-    {
-        try {
-            return response()->json(['user' => $this->authRepository->restore($userId)]);
-        } catch (\Throwable $th) {
-            return response()->json([
-                'success' => false,
-                'message' => __('Sorry, Account cannot be deleted.')
-            ], Response::HTTP_NOT_FOUND);
+        if (!in_array($provider, ['facebook', 'github', 'google'])) {
+            return response()->json(['error' => 'Please login using facebook, github or google'], 422);
         }
     }
 }
