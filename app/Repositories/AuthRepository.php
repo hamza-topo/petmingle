@@ -59,6 +59,24 @@ class AuthRepository
         );
     }
 
+    public function delete(int $id): int
+    {
+        return User::destroy($id);
+    }
+
+    public function restore(int $id)
+    {
+        return User::withTrashed()->findOrFail($id)->restore();
+    }
+
+    public function removeAvatar(int $userId): User
+    {
+        $user = User::findOrFail($userId);
+        $user->update(['avatar' => '']);
+        $user->refresh();
+        return $user;
+    }
+
     protected function hash(string $key): string
     {
         return Hash::make($key);

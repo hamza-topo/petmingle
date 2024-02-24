@@ -16,12 +16,12 @@ class PetRepository implements RepositoryInterface
 {
     //TODO::make this as enum
 
-    public function create(array $pet): Collection
+    public function create(array $pet): Pet
     {
         return Pet::create($pet);
     }
 
-    public function update(int $petId, array $newModel): Collection
+    public function update(int $petId, array $newModel): Pet
     {
         $pet = $this->getById($petId);
         $pet->update($newModel);
@@ -34,9 +34,9 @@ class PetRepository implements RepositoryInterface
      * getById
      *
      * @param  mixed $petId
-     * @return Collection
+     * @return Pet
      */
-    public function getById(int $petId): Collection
+    public function getById(int $petId): Pet
     {
         return Pet::find($petId);
     }
@@ -48,7 +48,7 @@ class PetRepository implements RepositoryInterface
 
     public function restore(int $petId): bool
     {
-        return Pet::withTrashed()->find($petId)->restore();
+        return Pet::withTrashed()->findOrFail($petId)->restore();
     }
 
     public function all(): Collection

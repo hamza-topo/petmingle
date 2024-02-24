@@ -10,10 +10,10 @@ class Location extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['pet_id', 'latitude', 'longitude'];
+    protected $fillable = ['user_id', 'latitude', 'longitude'];
 
-    public function pet()
+    public function user()
     {
-        return $this->belongsTo(Pet::class);
+        return $this->belongsTo(User::class);
     }
 }

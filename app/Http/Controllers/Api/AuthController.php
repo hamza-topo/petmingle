@@ -23,11 +23,19 @@ class AuthController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
-
+    /**
+     * SignUp Method.
+     *
+     * @return Symfony\Component\HttpFoundation\Response
+     */
     public function signUp(SignUp $request)
     {
         try {
-            $user = $this->authRepository->signUp($request->all());
+            $user = $request->all();
+            $user['avatar'] = $this->setFile($request->file('avatar'))
+                ->setName()
+                ->upload()[0];
+            $user = $this->authRepository->signUp($user);
 
             return response()->json([
                 'success' => true,
@@ -44,7 +52,12 @@ class AuthController extends Controller
         }
     }
 
-    public function signIn(SignIn $request)
+    /**
+     * SignIn Method.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function signIn(SignIn $request): Response
     {
         try {
             $credentials = $request->only(['email', 'password']);
@@ -77,8 +90,7 @@ class AuthController extends Controller
                 'success' => true,
                 'message' => \__('User has been logged out.')
             ]);
-        } catch (JWTException $exception) {
-
+        } catch (JWTException $e) {
             return response()->json([
                 'success' => false,
                 'message' => \__('Sorry, user cannot be logged out.')

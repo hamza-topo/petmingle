@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Pet extends Model
@@ -15,7 +16,11 @@ class Pet extends Model
      *
      * @var array
      */
-    protected $fillable = ['user_id', 'species_id', 'race_id', 'age', 'sexe', 'color'];
+    protected $fillable = ['user_id', 'species_id', 'race_id', 'name', 'age', 'sexe', 'color', 'images', 'about'];
+
+    protected $casts = [
+        'images' => 'array',
+    ];
 
     public function owner()
     {
@@ -29,11 +34,26 @@ class Pet extends Model
 
     public function race()
     {
-        return $this->belongsTo(Race::class, 'race_id');
+        return $this->belongsTo(Race::class);
     }
 
     public function locations()
     {
         return $this->hasMany(Location::class);
+    }
+
+    public function likes(): HasMany
+    {
+        return $this->hasMany(Like::class, 'from');
+    }
+
+    public function dislikes(): HasMany
+    {
+        return $this->hasMany(Dislike::class, 'from');
+    }
+
+    public function matches(): HasMany
+    {
+        return $this->hasMany(MatchTable::class, 'from');
     }
 }

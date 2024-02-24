@@ -2,6 +2,14 @@
 
 namespace App\Providers;
 
+use App\Models\Block;
+use App\Models\Like;
+use App\Models\Message;
+use App\Models\User;
+use App\Observers\BlockObserver;
+use App\Observers\LikeObserver;
+use App\Observers\MessageObserver;
+use App\Observers\UserObserver;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -15,9 +23,10 @@ class EventServiceProvider extends ServiceProvider
      * @var array<class-string, array<int, class-string>>
      */
     protected $listen = [
-        Registered::class => [
-            SendEmailVerificationNotification::class,
+        User::class => [
+            UserObserver::class,
         ],
+
     ];
 
     /**
@@ -27,6 +36,9 @@ class EventServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        //
+        Like::observe(LikeObserver::class);
+        Block::observe(BlockObserver::class);
+        Message::observe(MessageObserver::class);
+        User::observe(UserObserver::class);
     }
 }
