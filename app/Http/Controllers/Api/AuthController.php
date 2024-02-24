@@ -10,6 +10,7 @@ use App\Http\Requests\Api\Auth\SignUp;
 use App\Repositories\AuthRepository;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Laravel\Socialite\Facades\Socialite;
 use Symfony\Component\HttpFoundation\Response;
 use Tymon\JWTAuth\Exceptions\JWTException;
@@ -19,6 +20,7 @@ class AuthController extends Controller
 {
     public function __construct(protected AuthRepository $authRepository)
     {
+        $this->middleware('guest')->except('logout');
     }
 
 
@@ -107,7 +109,7 @@ class AuthController extends Controller
     public function redirectToProvider(string $provider)
     {
         $validated = $this->validateProvider($provider);
-        
+
         if (!is_null($validated)) {
             return $validated;
         }
@@ -125,23 +127,28 @@ class AuthController extends Controller
     public function handleProviderCallback($provider)
     {
         $validated = $this->validateProvider($provider);
-       
+
         if (!is_null($validated)) {
             return $validated;
         }
         try {
             $providerUser = Socialite::driver($provider)->stateless()->user();
             $user = $this->authRepository->firstOrCreateProviderUser($providerUser->user, $provider);
-        } catch (ClientException $exception) {
+            Auth::login($user, true);
+            //TODO:we may have a probleme here            
+            return response()->json([
+                'success' => true,
+                'message' => \__('User logged successfully'),
+                'data' => $user,
+            ], Response::HTTP_OK);
+        } catch (ClientException $e) {
+            Log::error($e->getMessage());
+
             return response()->json(['error' => 'Invalid credentials provided.'], 422);
         }
-    
-        $token = $user->createToken('token')->plainTextToken;
-        
-        return response()->json($user, 200, ['Access-Token' => $token]);
     }
 
-     /**
+    /**
      * @param $provider
      * @return JsonResponse
      */

@@ -47,14 +47,15 @@ class AuthRepository
 
     public function firstOrCreateProviderUser(array $providerUser = [], string $provider): User
     {
-        $reducedUser = new Socialite($providerUser, $provider);
+        $reducer = new Socialite($providerUser, $provider);
 
         return User::firstOrCreate(
             [
-                'email' =>  $reducedUser->user()->email,
-                'name' =>  $reducedUser->user()->name,
+                'email' =>  $reducer->user()->email,
+                'provider_id' =>  $reducer->user()->provider_id,
+                'provider_name' =>  $reducer->user()->provider_name,
             ],
-            (array) $reducedUser->user()
+            (array) $reducer->user()
         );
     }
 

@@ -21,6 +21,8 @@ class User extends Authenticatable implements JWTSubject
     protected $fillable = [
         'name',
         'email',
+        'provider_id',
+        'provider_name',
         'password',
     ];
 
@@ -32,6 +34,8 @@ class User extends Authenticatable implements JWTSubject
     protected $hidden = [
         'password',
         'remember_token',
+        'provider_id',
+        'provider_name',
     ];
 
     /**
@@ -51,10 +55,5 @@ class User extends Authenticatable implements JWTSubject
     public function getJWTCustomClaims()
     {
         return [];
-    }
-
-    public function providers()
-    {
-        return $this->hasMany(Provider::class,'user_id','id');
     }
 }
