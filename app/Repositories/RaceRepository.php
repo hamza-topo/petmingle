@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Enums\App;
 use App\Models\Race;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -25,7 +26,7 @@ class RaceRepository
 
     public function getById(int $raceId): Race
     {
-        return Race::find($raceId);
+        return Race::findOrFail($raceId);
     }
 
     public function delete(int $raceId): bool
@@ -41,5 +42,16 @@ class RaceRepository
     public function all()
     {
         return Race::all();
+    }
+
+    /**
+     * Pagination method
+     *
+     * @param int|null $paginate
+     * @return void
+     */
+    public function paginate(int|null $paginate = App::PAGINATE)
+    {
+        return Race::OrderBy('id', App::ORDER)->with('species')->paginate($paginate);
     }
 }

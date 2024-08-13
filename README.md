@@ -18,7 +18,7 @@ Feel free to add `#reference` collections for your specific services to enhance 
 
 Check out our self-service collections, such as:
 
-- [RESTful API Basics Collection](#): This collection demonstrates workflows supported by our API using the fake-store API. You can directly send requests to observe and understand these workflows.
+- [RESTful API Basics Collection](#https://api.postman.com/collections/9516611-42d0d677-d200-4db3-8b02-b83293b9f08c?access_key=PMAT-01HQDG9RBG767P8A83WXAJ0G8C): This collection demonstrates workflows supported by our API using the fake-store API. You can directly send requests to observe and understand these workflows.
 
 Consider adding `#blueprint` collections for essential workflows managed by your team.
 

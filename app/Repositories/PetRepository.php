@@ -56,9 +56,15 @@ class PetRepository implements RepositoryInterface
         return Pet::all();
     }
 
-    public function paginate()
+    /**
+     * Method to paginate pets
+     *
+     * @param int $page
+     * @return void
+     */
+    public function paginate(int|null $page = EnumsPet::PAGINATE)
     {
-        return Pet::paginate(EnumsPet::PAGINATE);
+        return Pet::paginate($page);
     }
 
     public function getAllFromCache(): mixed

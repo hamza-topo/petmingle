@@ -31,7 +31,7 @@ class SpeciesRepository implements RepositoryInterface
      */
     public function getById(int $speciesId): Species
     {
-        return Species::find($speciesId);
+        return Species::findOrFail($speciesId);
     }
 
     public function delete(int $speciesId): bool
@@ -49,9 +49,15 @@ class SpeciesRepository implements RepositoryInterface
         return Species::all();
     }
 
-    public function paginate()
+    /**
+     * Paginate the species resource
+     *
+     * @param int|null $paginate
+     * @return void
+     */
+    public function paginate(int|null $paginate = EnumsSpecies::PAGINATE)
     {
-        return Species::paginate(EnumsSpecies::PAGINATE);
+        return Species::paginate($paginate);
     }
 
     public function getAllFromCache(): mixed
