@@ -1,0 +1,101 @@
+/*---------------------------------------------
+    :: Feature Card
+-----------------------------------------------*/
+
+.fav-badge {
+  padding: 2px 7px;
+  border-radius: 4px;
+  background-color: var(--white);
+  position: absolute;
+  bottom: 16px;
+  left: 104px;
+  color: var(--secondary-color);
+}
+.feature-area {
+  .image-badge {
+    padding: 3px 10px;
+    border-radius: 4px;
+    background-color: var(--white);
+    position: absolute;
+    top: unset;
+    bottom: 16px;
+    left: 16px;
+  }
+  .price-review {
+    margin-bottom: 10px;
+  }
+  .packages-person {
+    margin-bottom: 0;
+  }
+  .package-card {
+    background-color: var(--white);
+  }
+  .package-content {
+    padding-top: 15px;
+    .location {
+      margin-bottom: 2px;
+    }
+    .area-name {
+      margin-bottom: 20px;
+    }
+  }
+}
+.feature-area-bg {
+  margin-top: 28px;
+  padding-top: 100px;
+  padding-bottom: 100px;
+  background-color: var(--primary-soft-color);
+  position: relative;
+  height: 100%;
+  &::before {
+    position: absolute;
+    content: "";
+    background-image: url("../../assets/images/gallery/feature-bg.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: 0.75;
+    width: 100%;
+    height: 332px;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 0;
+    background-repeat: no-repeat;
+  }
+}
+.favSwiper-active {
+  .swiper-button-next,
+  .swiper-button-prev {
+    &::after {
+      content: "";
+    }
+  }
+  .swiper-button-next {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--primary-color);
+    font-size: 30px;
+    color: var(--white);
+    @media #{$xs} {
+      display: none;
+    }
+  }
+  .swiper-button-prev {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--white);
+    font-size: 30px;
+    color: var(--primary-title);
+    @media #{$xs} {
+      display: none;
+    }
+  }
+}

@@ -1,56 +1,85 @@
-<div class="container">
-    <div class="app">
-        <img src="{{ asset('img/white.png') }}" alt="" width="150" height="150">
-        <br>
-        <button class="btn">Download</button>
-        <div class="download">
-            <img src="https://static.cdninstagram.com/rsrc.php/v3/yr/r/093c-DX36-y.png" width="100" height="40">
-            <img src="https://static.cdninstagram.com/rsrc.php/v3/yk/r/NtqqucWkedn.png" width="100" height="40">
-        </div>
-    </div>
-    <div class="hero-section">
-        <div class="slides">
-            <input type="radio" name="slide" id="c1">
-            <label for="c1" class="card">
-                <div class=row>
-                    <div class="icon">
-                        < </div>
-                            <div class="description">
+ <!-- Hero area S t a r t-->
+ <section class="hero-area-bg hero-padding1">
+     <div class="container">
+         <div class="row align-items-center justify-content-between g-4">
+             <div class="col-xxl-5 col-xl-6 col-lg-6 col-md-8">
+                 <div class="hero-caption-one position-relative">
+                     <h4 class="title wow fadeInUp" data-wow-delay="0.0s">Where Your Next Best Friend Awaits</h4>
+                     <p class="pera wow fadeInUp" data-wow-delay="0.1s">
+                         Ready for an unforgettable journey? Discover destinations that thrill, inspire, and bring you
+                         closer to nature. Whether you're chasing sunsets, exploring hidden gems, or seeking the
+                         ultimate adrenaline rush, your next adventure starts here. Join millions of travelers who've
+                         found their perfect escape with us.
+                     </p>
+                 </div>
+                 <div class="hero-footer position-relative">
+                     <a href="https://www.youtube.com/watch?v=pIC-ot19l-c" data-fancybox="video-gallery"
+                         class="wow bounceIn" data-wow-delay=".3s">
+                         <div class="video-player">
+                             <i class="ri-play-fill"></i>
+                         </div>
+                     </a>
+                     <div class="all-user wow fadeInRight" data-wow-delay="0.5s">
+                         <div class="happy-user">
+                             <img src="assets/images/hero/user-1.jpeg" alt="travello">
+                         </div>
+                         <div class="happy-user">
+                             <img src="assets/images/hero/user-2.png" alt="travello">
+                         </div>
+                         <div class="happy-user">
+                             <img src="assets/images/hero/user-3.png" alt="travello">
+                         </div>
+                         <div class="happy-user">
+                             <img src="assets/images/hero/user-4.jpeg" alt="travello">
+                         </div>
+                         <div class="happy-user-count">
+                             <p class="user-count">5k+</p>
+                         </div>
+                         <p class="pera">Happy Customer</p>
+                     </div>
+                 </div>
+             </div>
+             <div class="col-xxl-6 col-xl-6 col-lg-6 col-md-6 d-none d-lg-block">
+                 <div class="hero-banner wow fadeInRight" data-wow-delay="0.0s">
+                     <!-- Slider -->
+                     <div class="swiper h1-Hero-active">
+                         <div class="swiper-wrapper">
+                             <!-- Single -->
+                             <div class="swiper-slide">
+                                 <video class="hero-slider-video" loop autoplay muted>
+                                     <source src="assets/images/hero/hero-slider2.mp4" type="video/mp4">
+                                     Your browser does not support the video tag.
+                                 </video>
+                             </div>
+                             <!-- Single -->
+                             <div class="swiper-slide">
+                                 <video class="hero-slider-video" loop autoplay muted>
+                                     <source src="assets/images/hero/hero-slider1.mp4" type="video/mp4">
+                                     Your browser does not support the video tag.
+                                 </video>
+                             </div>
+                             <!-- Single -->
+                             <div class="swiper-slide">
+                                 <video class="hero-slider-video" loop autoplay muted>
+                                     <source src="assets/images/videos/travel11.mp4" type="video/mp4">
+                                     Your browser does not support the video tag.
+                                 </video>
+                             </div>
+                             <!--img-->
+                             <div class="swiper-slide">
+                                 <img src="assets/images/hero/hero-banner-1.png" alt="travello">
+                             </div>
+                         </div>
+                     </div>
+                     <!-- / End Slider -->
 
-                            </div>
-                    </div>
-            </label>
-            <input type="radio" name="slide" id="c2">
-            <label for="c2" class="card">
-                <div class=row>
-                    <div class="icon"></div>
-                    <div class="description">
-                    </div>
-                </div>
-            </label>
-            <input type="radio" name="slide" id="c3">
-            <label for="c3" class="card">
-                <div class="card-title-right">
-                    <h1>Lorem Ipsum</h1>
-                </div>
-                <div class=row>
-                    <div class="icon"></div>
-                    <div class="description">
-                    </div>
-                </div>
-            </label>
-            <input type="radio" name="slide" id="c4" checked>
-            <label for="c4" class="card">
-                <div class="card-title-left">
-                    <h1>Lorem Ipsum</h1>
-                </div>
-                <div class=row>
-                    <div class="icon">></div>
-                    <div class="description">
-                    </div>
-                </div>
-            </label>
-
-        </div>
-    </div>
-</div>
+                     <!-- shape 01 -->
+                     <div class="shape">
+                         <img src="assets/images/hero/shape-1.png" alt="travello">
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+ </section>
+ <!--/ End-of Hero-->

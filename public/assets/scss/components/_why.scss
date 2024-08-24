@@ -1,0 +1,91 @@
+/*---------------------------------------------
+    :: Why chose Card
+-----------------------------------------------*/
+
+.why-area {
+  padding-top: 100px;
+  @media #{$xs-to-md-max} {
+  padding-top: 70px;
+  }
+}
+.why-section-title {
+  margin-bottom: 60px;
+  .title {
+    position: relative;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--primary-title);
+    text-align: center;
+    line-height: 1.5;
+    &::before {
+      content: "";
+      position: absolute;
+      width: 40%;
+      left: 0;
+      top: 10px;
+      height: 1px;
+      background-color: var(--tertiary-border);
+    }
+    &::after {
+      content: "";
+      position: absolute;
+      width: 40%;
+      right: 0;
+      top: 10px;
+      height: 1px;
+      background-color: var(--tertiary-border);
+    }
+  }
+}
+.why-points{
+  display: flex;
+  flex-direction: column;
+  .why-point{
+    display: flex;
+    gap: 20px;
+    padding: 24px;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    background: linear-gradient(180deg, #95B2B4 0%, rgba(221, 245, 248, 0) 100%);
+    }
+    .why-icon{
+      width: 52px;
+      min-width: 52px;
+      height: 52px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 12px;
+      background-color: var(--primary-color);
+      border: 1px solid var(--primary-color);
+      color: var(--white);
+      font-size: 20px;
+      font-weight: 500;
+    }
+    .why-content{
+      display: flex;
+      flex-direction: column;
+      .title{
+        font-size: 20px;
+        color: var(--primary-title);
+        font-weight: 700;
+        line-height: 1.4;
+        margin-bottom: 16px;
+      }
+      .pera{
+        font-size: 16px;
+        color: var(--primary-paragraph);
+        font-weight: 400;
+        line-height: 1.5;
+      }
+    }
+    &:last-child{
+      padding-bottom: 0;
+    }
+  }
+.whySwiper-active {
+  .swiper-wrapper {
+    align-items: center;
+  }
+}

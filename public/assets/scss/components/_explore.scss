@@ -1,0 +1,61 @@
+/*---------------------------------------------
+    :: Explore Card
+-----------------------------------------------*/
+
+.explore-conntent {
+  .title {
+    color: var(--primary-title);
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.3;
+    margin-bottom: 20px;
+  }
+  .pera {
+    color: var(--primary-paragraph);
+    font-size: 16px;
+    font-weight: 400;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+}
+.explore-banner {
+margin-top: 30px;
+  border-radius: 16px;
+  max-height: 298px;
+  overflow: hidden;
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+.all-explore{
+    border-radius: 16px;
+    background-color: var(--primary-soft-color);
+    padding: 30px;
+    .explore-btn{
+        border-radius: 8px;
+        background-color: var(--white);
+        padding: 14px 24px;
+        margin-bottom: 16px;
+        cursor: pointer;
+        &:last-child{
+            margin-bottom: 0;
+        }
+        &.active{
+            background-color: var(--primary-color);
+            .name{
+                color: var(--white);
+            }
+            svg{
+                fill: var(--white);
+            }
+        }
+        .name{
+            color: var(--primary-title);
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+    }
+}

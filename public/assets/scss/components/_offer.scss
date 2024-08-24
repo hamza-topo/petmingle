@@ -1,0 +1,154 @@
+/*---------------------------------------------
+    :: Offer card
+-----------------------------------------------*/
+
+.offer-banner {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  display: block;
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    background: linear-gradient(90deg, #000000 -0.26%, #071516 -0.26%, rgba(7, 21, 22, 0.6) 33.39%, rgba(7, 21, 22, 0.5) 45.1%, rgba(7, 21, 22, 0) 59.82%);
+    @media #{$xs-to-md-max} {
+      background: linear-gradient(90deg, #000000 -0.26%, #071516 -0.26%, rgba(7, 21, 22, 0.6) 33.39%);
+    }
+  }
+  img {
+    width: 100%;
+    height: 394px;
+    @media #{$xs-to-md-max} {
+      height: 280px;
+    }
+  }
+  .offer-content {
+    position: absolute;
+    z-index: 0;
+    top: 44px;
+    left: 40px;
+    z-index: 2;
+    .highlights-text {
+      font-family: var(--Kaushan);
+      color: var(--secondary-color);
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 8px;
+      text-transform: capitalize;
+      @media #{$xs-to-md-max} {
+        font-size: 18px;
+      }
+    }
+    .title {
+      color: var(--white);
+      font-size: 64px;
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-transform: capitalize;
+      width: 250px;
+      @media #{$xs-to-md-max} {
+        font-size: 28px;
+      }
+    }
+    .pera {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 5px;
+      @media #{$xs-to-md-max} {
+        font-size: 16px;
+      }
+    }
+    .location {
+      display: flex;
+      gap: 2px;
+      font-size: 20px;
+      color: var(--white);
+      margin-bottom: 52px;
+      @media #{$xs-to-md-max} {
+        font-size: 16px;
+        margin-bottom: 30px;
+      }
+      .name {
+        font-size: 16px;
+        font-weight: 400;
+        color: var(--white);
+        @media #{$xs-to-md-max} {
+          font-size: 14px;
+        }
+      }
+    }
+  }
+  .offer-content-two {
+    position: absolute;
+    z-index: 0;
+    top: 38px;
+    left: 42px;
+    max-width: 250px;
+    z-index: 2;
+    @media #{$xs-to-md-max} {
+      max-width: 200px;
+    }
+    .highlights-text {
+      font-family: var(--Dm);
+      color: var(--secondary-color);
+      font-size: 24px;
+      font-weight: 400;
+      line-height: 1.2;
+      margin-bottom: 8px;
+      text-transform: capitalize;
+      @media #{$xs-to-md-max} {
+        font-size: 16px;
+      }
+    }
+    .title {
+      color: var(--white);
+      font-size: 64px;
+      font-weight: 700;
+      margin-bottom: 30px;
+      line-height: 1;
+      text-transform: capitalize;
+      @media #{$xs-to-md-max} {
+        font-size: 28px;
+      }
+    }
+    .pera {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--white);
+      margin-bottom: 5px;
+      line-height: 1.4;
+      @media #{$xs-to-md-max} {
+        font-size: 16px;
+      }
+    }
+    .location {
+      display: flex;
+      gap: 2px;
+      font-size: 20px;
+      color: var(--white);
+      margin-bottom: 18px;
+      .name {
+        font-size: 16px;
+        font-weight: 400;
+        color: var(--white);
+      }
+    }
+  }
+}
+
+
+.shape-bg{
+    position: absolute;
+    top: -50px;
+    left: 0;
+    z-index: -1;
+    @media #{$xs-to-md-max}{
+      display: none;
+    }
+  }

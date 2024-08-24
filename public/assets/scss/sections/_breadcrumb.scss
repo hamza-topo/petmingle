@@ -1,0 +1,70 @@
+/*---------------------------------------------
+    :: Breadcrumbs
+-----------------------------------------------*/
+
+.breadcrumbs-area {
+    background-color: var(--primary-soft-color-two);
+    padding-top: 40px;
+    padding-bottom: 40px;
+
+    @media #{$xs-to-md-max} {
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+
+    .title {
+        font-size: 40px;
+        font-weight: 700;
+        text-transform: capitalize;
+        line-height: 1.1;
+        margin-bottom: 6px;
+        position: relative;
+        color: var(--primary-title);
+
+        @media #{$xs-to-md-max} {
+            font-size: 20px;
+        }
+    }
+
+    .breadcrumb {
+        &.listing {
+            margin-bottom: 0;
+            display: flex;
+            position: relative;
+        }
+
+        .single-list {
+
+            &:last-child {
+                &::before {
+                    float: left;
+                    padding-right: var(--bs-breadcrumb-item-padding-x);
+                    content: "\f1af";
+                    font-family: "remixIcon";
+                    font-size: 16px;
+                    margin-top: 8px;
+                    line-height: 1;
+                    color: var(--primary-title);
+                }
+            }
+
+            .single {
+                font-size: 20px;
+                font-weight: 400;
+                line-height: 1.4;
+                color: var(--primary-title);
+                text-transform: capitalize;
+                font-family: var(--Kaushan);
+
+                @media #{$xs-to-md-max} {
+                    font-size: 14px;
+                }
+
+                &.active {
+                    color: var(--secondary-color);
+                    font-family: var(--Kaushan)
+                }
+            }
+        }
+    }
+}

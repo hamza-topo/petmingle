@@ -1,0 +1,35 @@
+/*---------------------------------------------
+    :: Select2 Custom
+-----------------------------------------------*/
+
+.select2-results__option[aria-selected] {
+	text-transform: capitalize;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    padding-left: 0;
+    padding-right: 40px;
+}
+
+.select2-dropdown{
+    border-color: #EAECF0;
+}
+
+.select2-container--default .select2-selection--single {
+    border: none;
+    background: transparent;
+}
+.ln-change{
+    .select2-container--default .select2-selection--single {
+        background-color:  transparent;
+        padding-left: 0;
+        border: 0;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__rendered {
+        color: #fff;
+    }
+}
+
+.select2-dropdown {  
+    z-index: 10060 !important;/*1051;*/
+  }
+

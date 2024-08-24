@@ -1,0 +1,223 @@
+/*---------------------------------------------
+    :: Hero 03
+-----------------------------------------------*/
+
+
+// hero section
+.hero-area-bg-three {
+    background-image: url(../../assets/images/hero/hero-three-banner.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    height: 100%;
+
+    &::before {
+        position: absolute;
+        content: "";
+        background-color: #071516;
+        opacity: 0.75;
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 0;
+        background-repeat: no-repeat;
+    }
+}
+
+.video-overlay {
+    position: relative;
+
+    &::before {
+        position: absolute;
+        content: "";
+        background: linear-gradient(180deg, rgba(26, 43, 61, 0) 0%, rgb(6, 47, 42) 100%);
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 1;
+        background-repeat: no-repeat;
+    }
+}
+
+.platform-area-bg {
+    background-image: url(../../assets/images/gallery/promotion-banner.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    height: 100%;
+
+    &::before {
+        position: absolute;
+        content: "";
+        background: linear-gradient(89.17deg,
+                #000000 0.61%,
+                rgba(0, 0, 0, 0) 95.26%);
+        width: 100%;
+        height: 100%;
+        left: 0;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 0;
+        background-repeat: no-repeat;
+    }
+}
+
+.hero-padding-for-three {
+    padding: 70px 0px 214px 0px;
+
+    @media #{$xs-to-md-max} {
+        padding: 60px 0px 90px 0px;
+    }
+}
+
+.hero-padding2 {
+    padding: 23px 0 108px 0;
+
+    @media #{$xs-to-md-max} {
+        padding: 23px 0 60px 0;
+    }
+}
+
+.hero-caption-three {
+    max-width: 580px;
+
+    .title {
+        margin-bottom: 20px;
+        color: var(--white);
+        // font-size: 64px;
+        font-size: 50px;
+        font-weight: 700;
+        line-height: 1;
+
+        @media #{$xs-to-lg-max} {
+            font-size: 34px;
+        }
+    }
+
+    .pera {
+        margin-bottom: 30px;
+        color: var(--white);
+        font-size: 16px;
+        font-weight: 400;
+        line-height: 1.5;
+
+        @media #{$xs-to-lg-max} {
+            font-size: 14px;
+        }
+    }
+}
+
+.hero-banner {
+    position: relative;
+    z-index: 1;
+
+    img {
+        border-radius: 10px;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    video {
+        border-radius: 10px;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .h1-Hero-active {
+        border-radius: 10px;
+        overflow: hidden;
+    }
+
+    .shape {
+        position: absolute;
+        top: -62px;
+        right: -62px;
+        z-index: -1;
+        max-width: 108px;
+
+        @media #{$xs-to-sm-max} {
+            display: none;
+        }
+    }
+}
+
+
+// Video Slider
+.hero-slider-video {
+    width: 100%;
+    height: 100%;
+}
+
+.hero-bg-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    // max-height: 280px;
+}
+
+.video-cover {
+    display: block;
+    -webkit-background-size: cover;
+    background-size: cover;
+    background-repeat: no-repeat;
+    -webkit-background-position: center;
+    background-position: center;
+    width: 100%;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    z-index: 0;
+}
+
+.wave-emoji {
+    animation-duration: 1.8s;
+    animation-iteration-count: infinite;
+    animation-name: wave;
+    display: inline-block;
+    transform-origin: 70% 70%;
+    img{
+        max-width: 25px;
+    }
+    @keyframes wave {
+        0% {
+            transform: rotate(0deg);
+        }
+    
+        10% {
+            transform: rotate(-10deg);
+        }
+    
+        20% {
+            transform: rotate(12deg);
+        }
+    
+        30% {
+            transform: rotate(-10deg);
+        }
+    
+        40% {
+            transform: rotate(9deg);
+        }
+    
+        50% {
+            transform: rotate(0deg);
+        }
+    
+        100% {
+            transform: rotate(0deg);
+        }
+    }
+}

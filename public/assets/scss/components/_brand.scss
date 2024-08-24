@@ -1,0 +1,52 @@
+/*---------------------------------------------
+    :: Brand 
+-----------------------------------------------*/
+
+.brand-area{
+    padding-top: 60px;
+    padding-bottom: 5px;
+}
+.border-section-title{
+    margin-bottom: 30px;
+    position: relative;
+    .title{
+        font-size: 16px;
+        font-weight: 700;
+        color: var(--primary-title);
+        text-align: center;
+        display: block;
+        margin: 0 auto;
+        background: var(--white);
+        padding: 0 30px;
+        width: fit-content;
+        position: relative;
+        z-index: 12;
+    }
+    &::before{
+        content: "";
+        position: absolute;
+        width: 100%;
+        left: 0;
+        top: 10px;
+        height: 1px;
+        background-color: var(--tertiary-border);
+    }   
+}
+.brandSwiper-active{
+    .swiper-wrapper{
+     align-items: center;
+     .swiper-slide{
+         width: 100%;
+         img{
+             max-width: 130px;
+             min-height: 28px;
+             opacity: .4;
+         }
+         &.swiper-slide-active{
+             img{
+                 opacity: 1;
+             }
+         }
+     }
+    }
+}
