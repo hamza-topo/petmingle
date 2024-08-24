@@ -1,0 +1,978 @@
+
+
+/*---------------------------------------------
+    :: Variables
+-----------------------------------------------*/
+
+:root {
+    --remix-icon: "remixicon";
+    --Kaushan: "Kaushan Script", cursive;
+    --Dm: "DM Sans", sans-serif;
+
+    --white: #fff;
+    --light: #d8dbe0;
+    --dark: #28292c;
+    --info: #0dcaf0;
+    --body: #fff;
+
+    --primary-color: #017b6e;
+    --secondary-color: #f26f55;
+    --tertiary-color: #39a1f0;
+    --primary-soft-color: #daedef;
+    --primary-soft-color-two: #efeedb;
+
+    --primary-color-rgb: 1, 123, 110;
+    --secondary-color-rgb: 242, 111, 85;
+
+    --primary-title: #071516;
+    --secondary-title: #505a59;
+    --tertiary-title: #95b2b4;
+    --pure-black: #000;
+
+    --primary-paragraph: #4b5051;
+    --secondary-paragraph: #333333;
+    --tertiary-paragraph: #787787;
+
+    --primary-btn: var(--primary-color);
+    --secondary-btn: #ffd502;
+    --tertiary-btn: #090e0d;
+
+    --ratting-color: #fcac17;
+    --ratting-color-rgb: 255, 193, 7;
+
+    --section-bg-one: #fffff3;
+    --section-bg-two: #f5f7f9;
+    --section-bg-three: #e5f1ff;
+
+    --primary-border: #c7d2d8;
+    --secondary-border: #dddddd70;
+    --tertiary-border: #eaebee;
+
+    --primary-shadow: 0px 4.12121px 49.4545px rgba(0, 0, 0, 0.08);
+    --primary-gray: #cccdd3;
+    --secondary-gray: #f8f8f8;
+
+    --available-card-bg: linear-gradient(180deg,
+            #daedef 0%,
+            rgba(218, 237, 239, 0) 98.91%);
+
+}
+[data-theme="dark"] {
+	--white: #f2f2f2;
+	--light: #d8dbe0;
+	--dark: #fff;
+	--info: #0dcaf0;
+	--body: #0D1117;
+    --body: #12151e;
+    
+	--primary-color: #222839;
+	--secondary-color: #f26f55;
+	--tertiary-color: #39a1f0;
+    --primary-soft-color: #161B22;
+    --primary-soft-color-two: var(--primary-soft-color);
+
+	--primary-title: #F4F5F6;
+	--secondary-title: #F4F5F6;
+	--tertiary-title: #F4F5F6;
+    --pure-black: var(--primary-title);
+
+	--primary-paragraph: #8f94a3;
+	--secondary-paragraph: #414456;
+	--tertiary-paragraph: #787787;
+
+	--primary-btn: #24292F;
+	--secondary-btn: var(--tertiary);
+	--tertiary-btn: #304839;
+    
+	--section-bg-one: var(--white);
+	--section-bg-two: var(--white);
+	--section-bg-three: var(--white);
+
+	--primary-border: rgba(240,246,252, 0.1)
+	--primary-border: rgba(248,250,252,.17);
+	--primary-border2: rgba(248,250,252,.08);
+	--secondary-border: rgba(248,250,252,.08);
+	--tertiary-border: rgba(248,250,252,.08);
+	--primary-shadow: 0px 4.12121px 49.4545px rgba(0, 0, 0, 0.08);
+	--panel-bg: #F4F6FA;
+	--gray-text: #969696;
+
+    --available-card-bg:linear-gradient(180deg, #222839 0%, rgba(221, 245, 248, 0) 100%);
+
+	--dark-bg1: #24292F;
+	--dark-bg2: #161B22;
+	--dark-bg3: #272727;
+	--dark-bg4: #252525;
+	--dark-bg5: #2C2C2C;
+	--dark-bg6: #2E2E2E;
+}
+
+// Responsive variable (Bootstrap 0 -1599)
+$xs: "(max-width: 575px)";
+$vxs: "(max-width: 420px)";
+$sm: "only screen and (min-width: 576px) and (max-width: 767px)";
+$md: "only screen and (min-width: 768px) and (max-width: 991px)";
+$lg: "only screen and (min-width: 992px) and (max-width: 1199px)";
+$xl: "only screen and (min-width: 1200px) and (max-width: 1399px)";
+$xxl: "only screen and (min-width: 1400px) and (max-width: 1599px)";
+
+// Custom ( 1600 - 3000)
+$large1: "only screen and (min-width: 1600px) and (max-width: 1799px)";
+$large2: "only screen and (min-width: 1800px) and (max-width: 1999px)";
+$large5: "only screen and (min-width: 2000px) and (max-width: 2399px)";
+$large6: "only screen and (min-width: 2400px) and (max-width: 2599px)";
+$large7: "only screen and (min-width: 2600px) and (max-width: 2799px)";
+$large8: "only screen and (min-width: 2800px) and (max-width: 2999px)";
+
+// Max - width , Min - width
+$xs-to-sm-max: "(max-width: 767px)";
+$xs-to-sm-min: "(min-width: 576px)";
+
+$xs-to-md-max: "(max-width: 991px)";
+$xs-to-md-min: "(min-width: 991px)";
+
+$xs-to-lg-max: "(max-width: 1199px)";
+$xs-to-lg-min: "(min-width: 1199px)";
+
+$xs-to-xl-max: "(max-width: 1399px)";
+$xs-to-xl-min: "(min-width: 1399px)";
+
+$xs-to-xxl-max: "(max-width: 1599px)";
+$xs-to-xxl-min: "(min-width: 1599px)";
+
+// Basic Color
+$white: #ffffff;
+$black: #000000;
+$gray: #f7f7fd;
+
+// Social media colors
+$fb: #50598e;
+$facebook: #3b5999;
+$twitter: #55acee;
+$dribbble: #ea4c89;
+$behance: #131418;
+$google-plus: #dd4b39;
+$linkedin: #0077b5;
+$instagram: #e4405f;
+$youtube: #ff0000;
+$pinterest: #c8232c;
+$steam-color: #ddd;
+
+// Bootstrap color
+$primary: #084298;
+$secondary: #41464b;
+$danger: #dc3545;
+$success: #3cc13b;
+$info: #055160;
+$warning: #f3bb1c;
+$error: #f44336;
+$blue: #11cdef;
+$green: #4bd865;
+
+// Others
+$template-body-font-color: #242934;
+$secondary-color: #ba895d;
+$success-color: #3cc13b;
+$warning-color: #e2c636;
+$danger-color: #d22d3d;
+$light-color: #f4f4f4;
+$light-gray: #e6edef;
+$light-semi-gray: #efefef;
+$dark-color: #2c323f;
+$auth-bg-color: #fafafa;
+$light: #fdfeff;
+$semi-dark: #59667a;
+$light-font: #717171;
+$light-semi-font: $semi-dark;
+$color-fiord: #455a64;
+
+/*-- Margin Padding --*/
+@for $i from 6 through 200 {
+
+    /*-- Margin To-Bottom-Left-Right --*/
+    .mt-#{1 * $i} {
+        margin-top: 1px * $i !important;
+    }
+
+    .mb-#{1 * $i} {
+        margin-bottom: 1px * $i !important;
+    }
+
+    .ml-#{1 *$i} {
+        margin-left: 1px * $i !important;
+    }
+
+    .mr-#{1 * $i} {
+        margin-right: 1px * $i !important;
+    }
+
+    /*-- Padding To-Bottom-Left-Right --*/
+    .pt-#{1 * $i} {
+        padding-top: 1px * $i !important;
+    }
+
+    .pb-#{1 * $i} {
+        padding-bottom: 1px * $i !important;
+    }
+
+    .pl-#{1 * $i} {
+        padding-left: 1px * $i !important;
+    }
+
+    .pr-#{1 * $i} {
+        padding-right: 1px * $i !important;
+    }
+}
+
+/*-- Margin Padding  0 --*/
+@for $i from 0 through 0 {
+
+    /*-- Margin To-Bottom-Left-Right --*/
+    .mt-#{0 * $i} {
+        margin-top: 0px * $i !important;
+    }
+
+    .mb-#{0 * $i} {
+        margin-bottom: 0px * $i !important;
+    }
+
+    .ml-#{0 *$i} {
+        margin-left: 0px * $i !important;
+    }
+
+    .mr-#{0 * $i} {
+        margin-right: 0px * $i !important;
+    }
+
+    /*-- Padding To-Bottom-Left-Right --*/
+    .pt-#{0 * $i} {
+        padding-top: 0px * $i !important;
+    }
+
+    .pb-#{0 * $i} {
+        padding-bottom: 0px * $i !important;
+    }
+
+    .pl-#{0 * $i} {
+        padding-left: 0px * $i !important;
+    }
+
+    .pr-#{0 * $i} {
+        padding-right: 0px * $i !important;
+    }
+}
+
+/*-- Height-Weight --*/
+@for $i from 1 through 600 {
+    .height-#{1 * $i} {
+        height: 1px * $i !important;
+    }
+
+    .wight-#{1 * $i} {
+        width: 1px * $i;
+    }
+}
+
+/*-- Border Radius --*/
+$i: 0;
+
+@while $i<=30 {
+    .radius-#{$i} {
+        border-radius: #{$i}px !important;
+    }
+
+    $i: $i + 1;
+}
+
+/*-- Border width --*/
+@for $i from 0 through 10 {
+    .border-#{1 * $i} {
+        border-width: 1px * $i !important;
+    }
+}
+
+/*-- Border color, hover-same color bg and text color white --*/
+$border-colors-name: success, warning, error, danger, light, green, gray, black,
+    white, main-one, main-two, color-one, color-two;
+$border-colors: $success, $warning, $error, $danger, $light, $green, $gray,
+    $black, $white, var(--primary-color), var(--secondary-color),
+    var(--border-color-one), var(--primary-border);
+
+@each $i in $border-colors-name {
+    $j: index($border-colors-name, $i);
+
+    .border-#{$i} {
+        border-color: nth($border-colors, $j) !important;
+        color: nth($border-colors, $j);
+
+        &:hover {
+            background: nth($border-colors, $j) !important;
+            border-color: transparent !important;
+            color: var(--white) !important;
+        }
+    }
+}
+
+/*-- Border Style --*/
+$border-style-name: solid, dashed, none, unset, hidden, dotted, double, inherit;
+
+@each $i in $border-style-name {
+    .border-style-#{$i} {
+        border-style: $i !important;
+    }
+}
+
+// Gap
+$i: 0;
+
+@while $i<=60 {
+    .gap-#{$i} {
+        grid-gap: #{$i}px;
+    }
+
+    $i: $i + 1;
+}
+
+// Position
+$i: static, absolute, fixed, relative, initial, inherit;
+
+@each $val in $i {
+    .p-#{$val} {
+        position: $val;
+    }
+}
+
+// Overflow
+$i: hidden, visible, auto;
+
+@each $val in $i {
+    .o-#{$val} {
+        overflow: $val;
+    }
+}
+
+// font size
+$i: 1;
+
+@while $i <=50 {
+    .text-#{$i} {
+        font-size: #{$i}px !important;
+    }
+
+    $i: $i + 1;
+}
+
+// Fonts weight
+$i: 100, 200, 300, 400, 500, 600, 700, 800, 900;
+
+@each $val in $i {
+    .font-#{$val} {
+        font-weight: $val !important;
+    }
+}
+
+// Text-color
+$text-name: primary, secondary, tertiary, primary-title, secondary-title,
+    tertiary-title, paragraph, success, danger, light, dark, warning, google-plus,
+    twitter, linkedin, fb;
+
+$label-color: var(--primary-color), var(--secondary-color),
+    var(--tertiary-color), var(--primary-title), var(--secondary-title),
+    var(--tertiary-title), var(--primary-paragraph), $success-color, $danger-color,
+    $light-font, $light-gray, $dark-color, $warning-color, $google-plus, $twitter,
+    $linkedin, $fb;
+
+@each $var in $text-name {
+    $i: index($text-name, $var);
+
+    .text-#{$var} {
+        color: nth($label-color, $i) !important;
+    }
+}
+
+.txt-white {
+    color: $white !important;
+}
+
+// Color Make
+$label-name: Template, primary, secondary, success, danger, info, light, dark,
+    warning;
+$label-color: var(--primary-color), var(--primary-color), $secondary-color,
+    $success-color, $danger-color, $light-font, $light-gray, $dark-color,
+    $warning-color;
+
+@each $var in $label-name {
+    $i: index($label-name, $var);
+
+    .label-#{$var} {
+        background-color: nth($label-color, $i);
+    }
+}
+
+/*---------------------------------------------
+    Background-color Makes CSS Class 
+    @each <variable> in <expression> { ... } 
+-----------------------------------------------*/
+$background-name: primary, secondary, success, danger, info, light, dark,
+    warning;
+$background-color: var(--primary-color), $secondary-color, $success-color,
+    $danger-color, $light-font, $light-gray, $dark-color, $warning-color;
+
+@each $var in $background-name {
+    $i: index($background-name, $var);
+
+    .bg-#{$var} {
+        background-color: nth($background-color, $i) !important;
+    }
+}
+
+// Btn-color
+@each $btn-name, $btn-color in (primary, var(--primary-color)),
+(secondary, $secondary-color), (success, $success-color),
+(danger, $danger-color), (info, $light-font), (light, $light-gray),
+(dark, $dark-color), (warning, $warning-color) {
+    .btn-#{$btn-name} {
+        background-color: $btn-color !important;
+        border-color: $btn-color !important;
+
+        &.disabled,
+        &:disabled {
+            background-color: $btn-color !important;
+            border-color: $btn-color !important;
+        }
+
+        &:hover,
+        &:focus,
+        &:active,
+        &.active {
+            border-color: var(--primary-color);
+        }
+    }
+}
+
+.btn-primary-light {
+    background-color: rgba(var(--primary-color), 0.1) !important;
+    border: none !important;
+    color: var(--primary-color);
+    transition: 0.5s;
+
+    &:focus,
+    &:hover {
+        background-color: rgba(var(--primary-color), 0.5) !important;
+        color: var(--white);
+        transition: 0.5s;
+    }
+}
+
+// Button-color css ends  =
+@each $btn-name, $btn-color in (primary, var(--primary-color)),
+(secondary, $secondary-color), (success, $success-color),
+(danger, $danger-color), (info, $light-font), (light, $light-gray),
+(dark, $dark-color), (warning, $warning-color) {
+    .btn-outline-#{$btn-name}-2x {
+        border-width: 2px;
+        border-color: $btn-color;
+        color: $btn-color;
+        background-color: transparent;
+
+        &:hover,
+        &:focus,
+        &:active,
+        &.active {
+            color: white;
+            box-shadow: none;
+            border-color: var(--primary-color);
+        }
+    }
+}
+
+// outline buttons//
+@each $btn-name, $btn-color in (primary, var(--primary-color)),
+(secondary, $secondary-color), (success, $success-color),
+(danger, $danger-color), (info, $light-font), (light, $light-gray),
+(dark, $dark-color), (warning, $warning-color) {
+    .btn-outline-#{$btn-name} {
+        border-color: $btn-color;
+        color: $btn-color;
+        background-color: transparent;
+
+        &.disabled {
+            color: $btn-color;
+        }
+
+        @if ($btn-name =="light") {
+            color: $template-body-font-color;
+        }
+
+        &:hover,
+        &:focus,
+        &:active,
+        &.active {
+            color: white;
+            border-color: var(--primary-color);
+        }
+    }
+}
+
+//* active button css end *//
+
+@each $btn-name, $btn-color in (primary, var(--primary-color)),
+(secondary, $secondary-color), (success, $success-color),
+(danger, $danger-color), (info, $light-font), (light, $light-gray),
+(dark, $dark-color), (warning, $warning-color) {
+    .btn-outline-#{$btn-name}-2x:not([disabled]):not(.disabled).active {
+        background-color: $btn-color;
+        border-color: $btn-color;
+        box-shadow: none !important;
+        color: white;
+
+        &:hover,
+        &:focus,
+        &:active,
+        &.active {
+            color: white;
+            box-shadow: none !important;
+            border-color: var(--primary-color);
+        }
+    }
+}
+
+// Table Border Bottom
+
+$border-name: primary, secondary, success, danger, info, light, dark, warning;
+$border-color: var(--primary-color), $secondary-color, $success-color,
+    $danger-color, $light-font, $light-gray, $dark-color, $warning-color;
+
+@each $var in $border-name {
+    $i: index($border-name, $var);
+
+    table thead .border-bottom-#{$var} th,
+    table tbody .border-bottom-#{$var} th,
+    table tbody .border-bottom-#{$var} td {
+        border-bottom: 1px solid nth($border-color, $i);
+    }
+}
+
+// All Borders color
+
+$b-name: primary, secondary, success, danger, info, light, dark, warning;
+$b-color: var(--primary-color), $secondary-color, $success-color, $danger-color,
+    $light-font, $light-gray, $dark-color, $warning-color;
+
+@each $var in $b-name {
+    $i: index($b-name, $var);
+
+    .b-#{$var} {
+        border: 1px solid nth($b-color, $i) !important;
+    }
+
+    .b-t-#{$var} {
+        border-top: 1px solid nth($b-color, $i) !important;
+    }
+
+    .b-b-#{$var} {
+        border-bottom: 1px solid nth($b-color, $i) !important;
+    }
+
+    .b-l-#{$var} {
+        border-left: 1px solid nth($b-color, $i) !important;
+    }
+
+    .b-r-#{$var} {
+        border-right: 1px solid nth($b-color, $i) !important;
+    }
+}
+
+// btn Bg
+@each $btn-name, $btn-color in (primary, var(--btn-color-one)),
+(secondary, $secondary-color), (success, $success-color),
+(danger, $danger-color), (info, $light-font), (light, $light-gray),
+(dark, $dark-color), (warning, $warning-color) {
+    .btn-bg-#{$btn-name} {
+        background: $btn-color;
+        border-color: $btn-color;
+
+        @if ($btn-name ==light) {
+            color: $dark-color;
+        }
+
+        @else {
+            color: var(--white);
+        }
+
+        &:focus {
+            border-color: $btn-color;
+            background: $btn-color;
+
+            @if ($btn-name ==light) {
+                color: $dark-color;
+            }
+
+            @else {
+                color: var(--white);
+            }
+
+            &:active {
+                border-color: $btn-color;
+                background: $btn-color;
+
+                @if ($btn-name ==light) {
+                    color: $dark-color;
+                }
+
+                @else {
+                    color: var(--white);
+                }
+            }
+        }
+    }
+}
+
+// Full Web site uses This Radius
+$radius-4: 4px;
+$radius-8: 8px;
+$radius-12: 12px;
+$radius-16: 16px;
+
+// Text Color
+.text-white {
+    color: $white !important;
+}
+
+.text-warning {
+    color: $warning !important;
+}
+
+.text-danger {
+    color: $danger !important;
+}
+
+.text-success {
+    color: $success !important;
+}
+
+.text-success {
+    color: $success !important;
+}
+
+.text-error {
+    color: $error !important;
+}
+
+.text-blue {
+    color: $blue !important;
+}
+
+// Background Color
+.bg-danger {
+    background-color: $danger !important;
+}
+
+.bg-warning {
+    background-color: $warning !important;
+}
+
+.bg-success {
+    background-color: $success !important;
+}
+
+.bg-error {
+    background-color: $error !important;
+}
+
+.bg-blue {
+    background-color: $blue !important;
+}
+
+.bg-primary {
+    background-color: var(--primary-color) !important;
+}
+
+.bg-secondary {
+    background-color: var(--secondary-color) !important;
+}
+
+.bg-tertiary {
+    background-color: var(--tertiary-color) !important;
+}
+
+// Background Color opacity
+.bg-danger-soft {
+    background-color: rgba($danger, 0.1) !important;
+}
+
+.bg-warning-soft {
+    background-color: rgba($warning, 0.1) !important;
+}
+
+.bg-success-soft {
+    background-color: rgba($success, 0.1) !important;
+}
+
+.bg-error-soft {
+    background-color: rgba($danger, 0.1) !important;
+}
+
+.bg-blue-soft {
+    background-color: rgba($blue, 0.1) !important;
+}
+
+// Badge Color opacity
+.badge-secondary-soft {
+    background-color: rgba(var(--tertiary-color), 0.1) !important;
+}
+
+// Template BG
+.main-bg-one {
+    background-color: var(--primary-color);
+}
+
+.main-bg-two {
+    background-color: var(--main-color-tow);
+}
+
+.main-bg-three {
+    background-color: var(--tertiary-color);
+}
+
+.main-bg-four {
+    background-color: var(--main-color-four);
+}
+
+.main-bg-five {
+    background-color: var(--main-color-five);
+}
+
+// Background Gradient
+
+// Cart 2
+.bg-danger-gradient {
+    background: -webkit-gradient(linear,
+            left top,
+            right top,
+            from(#fe7096),
+            to(#ffbf96));
+    background: linear-gradient(90deg, #fe7096, #ffbf96);
+    @include transition(0.6s);
+}
+
+.bg-success-gradient {
+    background: -webkit-gradient(linear,
+            left top,
+            right top,
+            from(#07cdae),
+            to(#84d9d2));
+    background: linear-gradient(90deg, #07cdae, #84d9d2);
+}
+
+.bg-warning-gradient {
+    background: -webkit-gradient(linear,
+            left top,
+            right top,
+            from(#ffd500),
+            to(#f6e384));
+    background: linear-gradient(90deg, #ffd500, #f6e384);
+}
+
+.bg-beguni-gradient {
+    background: -webkit-gradient(linear,
+            left top,
+            right top,
+            from(#9a55ff),
+            to(#da8cff));
+    background: linear-gradient(90deg, #9a55ff, #da8cff);
+}
+
+.bg-blue-gradient {
+    background: -webkit-gradient(linear,
+            left top,
+            right top,
+            from(#047edf),
+            color-stop(99%, #90caf9));
+    background: linear-gradient(90deg, #047edf, #90caf9 99%);
+}
+
+// Cart Three
+.bg-orange-gradient {
+    background: -webkit-gradient(linear,
+            left top,
+            right top,
+            from(#1b5661),
+            color-stop(99%, #989898));
+    background: linear-gradient(90deg, #1b5661, #989898 99%);
+}
+
+.bg-romance-gradient {
+    background: -webkit-gradient(linear,
+            left top,
+            right top,
+            from(#be3664),
+            color-stop(99%, #222771));
+    background: linear-gradient(90deg, #be3664, #222771 99%);
+}
+
+.bg-tea-gradient {
+    background: -webkit-gradient(linear,
+            left top,
+            right top,
+            from(#6cad7e),
+            color-stop(99%, #175360));
+    background: linear-gradient(90deg, #6cad7e, #175360 99%);
+}
+
+.bg-royal-gradient {
+    background: -webkit-gradient(linear,
+            left top,
+            right top,
+            from(#aa3475),
+            color-stop(99%, #cb7326));
+    background: linear-gradient(90deg, #aa3475, #cb7326 99%);
+}
+
+// Extend Color
+%overlay1 {
+    /* Permalink - use to edit and share this gradient: https://colorzilla.com/gradient-editor/#000000+0,545454+100&0.85+0,0.06+100 */
+    background: -moz-linear-gradient(top,
+            rgba(0, 0, 0, 0.85) 0%,
+            rgba(84, 84, 84, 0.06) 100%);
+    /* FF3.6-15 */
+    background: -webkit-linear-gradient(top,
+            rgba(0, 0, 0, 0.85) 0%,
+            rgba(84, 84, 84, 0.06) 100%);
+    /* Chrome10-25,Safari5.1-6 */
+    background: linear-gradient(to bottom,
+            rgba(0, 0, 0, 0.85) 0%,
+            rgba(84, 84, 84, 0.06) 100%);
+    /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#d9000000', endColorstr='#0f545454', GradientType=0);
+    /* IE6-9 */
+}
+
+
+/*-------------  Color Witch Class Name  --------------*/
+
+// Section bg
+.section-bg-one {
+    background: var(--section-bg-one) !important;
+}
+
+.section-bg-two {
+    background: var(--section-bg-two) !important;
+}
+
+.section-bg-three {
+    background: var(--section-bg-three) !important;
+}
+
+.white-bg {
+    background: var(--white);
+}
+
+.black-bg {
+    background: $black;
+}
+
+// Color
+.main-color-one {
+    color: var(--primary-color);
+}
+
+.main-color-two {
+    color: var(--secondary-color);
+}
+
+.main-color-three {
+    color: var(--tertiary-color);
+}
+
+.heading-color-one {
+    color: var(--primary-title) !important;
+}
+
+.heading-color-two {
+    color: var(--secondary-title) !important;
+}
+
+.paragraph-color-one {
+    color: var(--primary-paragraph) !important;
+}
+
+.paragraph-color-two {
+    color: var(--secondary-paragraph) !important;
+}
+
+.color-paragraph {
+    color: var(--primary-paragraph);
+}
+
+.gray-bg {
+    background: #f5f5f5;
+}
+
+.white-bg {
+    background: var(--white);
+}
+
+.black-bg {
+    background: $black;
+}
+
+.height-100vh {
+    height: 100vh;
+}
+
+.panel-bg {
+    background-color: var(--panel-bg) !important;
+}
+
+.facebook {
+    background: $facebook !important;
+    color: var(--white) !important;
+}
+
+.twitter {
+    background: $twitter !important;
+    color: var(--white) !important;
+}
+
+.linkedin {
+    background: $linkedin !important;
+    color: var(--white) !important;
+}
+
+.share-btn {
+    background: #dddddd57 !important;
+    color: var(--primary-title) !important;
+}
+
+.color-effect {
+    background-image: -webkit-gradient(linear,
+            left top,
+            right top,
+            color-stop(45%, var(--primary-color)),
+            color-stop(55%, var(--primay-title)));
+    background-image: linear-gradient(to right,
+            var(--primary-color) 45%,
+            var(--primay-title) 55%);
+    background-size: 220% 100%;
+    background-position: 100% 50%;
+    cursor: pointer;
+    color: transparent;
+    -webkit-background-clip: text;
+    background-clip: text;
+    background-repeat: no-repeat;
+    -webkit-transition: 0.9s ease-out;
+    transition: 0.9s ease-out;
+
+    &:hover {
+        background-position: 0% 50%;
+    }
+}
+
+.template-gradient {
+    background: linear-gradient(115.87deg, #9a61e0 39.31%, #5b58ff 100.75%);
+    background-clip: border-box;
+    background-clip: border-box;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}

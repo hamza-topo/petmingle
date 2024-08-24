@@ -1,0 +1,105 @@
+/*---------------------------------------------
+    :: Questions 
+-----------------------------------------------*/
+
+.question-area {
+  .section-title {
+    padding-right: 60px;
+    @media #{$xs-to-md-max} {
+      padding-right: 0;
+    }
+    .title {
+      font-size: 34px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--primary-title);
+      margin-bottom: 10px;
+      @media #{$xs-to-sm-max} {
+        font-size: 24px;
+      }
+    }
+    .pera {
+      color: var(--tertiary-title);
+      font-size: 16px;
+      font-weight: 400;
+      margin-bottom: 30px;
+      line-height: 25px;
+      @media #{$xs-to-sm-max} {
+        font-size: 14px;
+      }
+    }
+  }
+  .accordion {
+    padding-right: 60px;
+    @media #{$xs-to-md-max} {
+      padding-right: 0;
+    }
+  }
+  .accordion-button:not(.collapsed) {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--primary-title) !important;
+    background-color: var(--white);
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+
+    box-shadow: none;
+    @media #{$xs-to-sm-max} {
+      font-size: 14px;
+    }
+  }
+  .accordion-body {
+    padding-top: 0;
+    font-size: 16px;
+    @media #{$xs-to-sm-max} {
+      font-size: 14px;
+    }
+  }
+
+  .accordion-item {
+    color: var(--tertiary-title);
+    font-size: 16px;
+    font-weight: 400;
+    border: 1px solid #f1f1f18a;
+    margin-bottom: 20px;
+    @media #{$xs-to-sm-max} {
+      font-size: 14px;
+    }
+    .accordion-collapse.collapse.show {
+      background-color: var(--white);
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+      box-shadow: 0px 4px 40px -10px rgba(0, 0, 0, 0.15);
+    }
+    .accordion-button:focus {
+      box-shadow: none;
+    }
+    .accordion-button {
+      padding: 20px 46px 20px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary-title);
+      @media #{$xs-to-sm-max} {
+        font-size: 14px;
+      }
+    }
+    .accordion-button{
+      &::after{
+        background-image: none;
+        content: "\ea12";
+        font-family: "remixIcon";
+        font-size: 24px;
+        color: var(--primary-title);
+        font-weight: 400;
+        right: 21px;
+        top: 15px;
+        position: absolute;
+        transform: unset;
+      }
+      &:not(.collapsed)::after{
+        content: "\f1ae";
+      }
+    }
+  }
+}

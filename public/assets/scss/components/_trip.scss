@@ -1,0 +1,92 @@
+/*---------------------------------------------
+    :: Trip
+-----------------------------------------------*/
+
+.trip-pills {
+  margin-top: -30px;
+  margin-bottom: 58px;
+  gap: 16px;
+  justify-content: center;
+  .trip-nav {
+    background-color: transparent;
+    border: 1px solid var(--tertiary-border);
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--primary-title);
+    @include transition(0.3s);
+    &.active,
+    &:hover {
+      background-color: var(--primary-color);
+      color: var(--white);
+      border: 1px solid transparent;
+    }
+  }
+}
+.trip-card {
+  background-color: var(--tertiary-border);
+  border: 1px solid transparent;
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  flex-wrap: wrap;
+  align-items: center;
+  @include transition(.3s);
+  cursor: pointer;
+  &:hover{
+    background-color: var(--white);
+    border: 1px solid var(--primary-color);
+    .trip-icon{
+        background-color: var(--tertiary-border);
+    }
+  }
+  .from-flex {
+    .from-title {
+      font-size: 18px;
+      font-weight: 700;
+      line-height: 1.5;
+      color: var(--primary-title);
+      margin-bottom: 4px;
+    }
+    .from-pera {
+      font-size: 14px;
+      font-weight: 400;
+      line-height: 1.4;
+      color: var(--primary-paragraph);
+    }
+  }
+  .trip-icon-flex{
+    position: relative;
+    @media #{$vxs}{
+      display: none;
+    }
+    &::before{
+        content: "";
+        position: absolute;
+        z-index: 1;
+        top: -22px;
+        left: 18px;
+        width: 1px;
+        height: 80px;
+        border: 1px dashed var(--primary-paragraph);
+    }
+  }
+  .trip-icon{
+    width: 36px;
+    min-width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--white);
+    color: var(--primary-title);
+    z-index: 12;
+    position: relative;
+    
+  }
+}

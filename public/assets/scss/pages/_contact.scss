@@ -1,0 +1,80 @@
+/*---------------------------------------------
+    :: Contact us
+-----------------------------------------------*/
+
+.contact-card {
+  background-color: var(--tertiary-border);
+  border-radius: 12px;
+  padding: 30px 40px;
+  z-index: 1;
+  position: relative;
+  @media #{$xs-to-md-max} {
+    padding: 20px;
+  }
+  .contact-heading {
+    font-size: 24px;
+    font-weight: 700;
+    line-height: 1.3;
+    color: var(--primary-title);
+    margin-bottom: 30px;
+    @media #{$xs-to-md-max} {
+      font-size: 20px;
+    }
+  }
+}
+.custom-form {
+	padding: 16px 20px;
+	border-radius: 8px;
+	border: 1px solid var(--primary-border);
+	background: var(--body);
+	height: 52px;
+	width: 100%;
+	color: var(--primary-title);
+}
+.custom-form-textarea {
+  padding: 16px 20px;
+  border-radius: 8px;
+  border: 1px solid var(--primary-border);
+  background: var(--body);
+  min-height: 317px;
+  width: 100%;
+  color: var(--primary-title);
+  @media #{$xs-to-sm-max} {
+    min-height: 200px;
+  }
+}
+.send-btn {
+  border-radius: 8px;
+  background-color: var(--primary-color);
+  padding: 14px 30px;
+  color: var(--white);
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.5;
+  border: 1px solid var(--primary-color);
+  @include transition(0.3s);
+  @media #{$xs-to-md-max} {
+    font-size: 14px;
+  }
+  &:hover {
+    background-color: transparent;
+    color: var(--primary-color);
+  }
+}
+.contact-bg-before {
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    background-image: url("../../assets/images/gallery/contact-bg.png");
+    background-size: contain;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  }
+}
+.map-frame {
+  filter: grayscale(100%) invert(92%) contrast(83%);
+  margin-bottom: -15px;
+  width: 100%;
+}

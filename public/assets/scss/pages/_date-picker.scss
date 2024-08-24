@@ -1,0 +1,22 @@
+/*---------------------------------------------
+    :: Date Picker
+-----------------------------------------------*/
+
+.daterangepicker td.active, td.active.end-date.in-range.available, .daterangepicker td.active:hover{
+    background-color: var(--primary-color);
+}
+.daterangepicker td.in-range{
+    background-color: var(--primary-soft-color);
+}
+button.applyBtn.btn.btn-sm.btn-primary{
+    background-color: var(--secondary-color);
+    border: 1px solid var(--secondary-color);
+}
+.daterangepicker{
+    box-shadow: 0px -1px 13px 0px rgba(176, 176, 176, 0.45);
+    border: none;
+    border-radius: 8px;
+    &::before{
+        border-bottom: none;
+    }
+}

@@ -1,0 +1,73 @@
+/*---------------------------------------------
+    :: Terms & condition
+-----------------------------------------------*/
+
+.single-terms{
+    .title{
+        font-size: 22px;
+        margin-bottom: 18px;
+        text-transform: capitalize;
+    }
+    .pera{
+        font-size: 14px;
+        line-height: 1.6;
+    }
+}
+
+.single-policy{
+    .title{
+        font-size: 22px;
+        margin-bottom: 18px;
+        text-transform: capitalize;
+    }
+    .pera{
+        font-size: 14px;
+        text-transform: capitalize;
+        line-height: 1.6;
+    }
+}
+
+
+// Single Experience
+.experience{
+    &.listing{
+        // display: grid;
+        // grid-template-columns: repeat(2, 1fr);
+        column-count: 2;
+        @media #{$xs}{
+          column-count: 1;
+        }
+        &.listing2{
+          column-count: unset;
+          @media #{$xs}{
+            column-count: unset;
+          }
+        }
+        .single-list{
+            display: flex;
+            i{
+                color: var(--primary-paragraph);
+                margin-right: 15px;
+                font-size: 20px;
+            }
+            .title{
+                font-weight: 600;
+                font-size: 16px;
+                line-height: 1.5;
+                text-transform: capitalize;
+                color: var(--primary-title);
+                margin-bottom: 6px;
+            }
+            .pera{
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 1.6;
+                text-transform: capitalize;
+                color: var(--primary-paragraph);
+                .sub-pera{
+                  color: var(--primary-title);
+                }
+            }
+        }
+    }
+}

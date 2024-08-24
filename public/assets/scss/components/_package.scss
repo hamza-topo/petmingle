@@ -1,0 +1,215 @@
+/*---------------------------------------------
+    :: Package card
+-----------------------------------------------*/
+
+.package-area {
+
+    .package-pills {
+        margin-top: -20px;
+        margin-bottom: 58px;
+        gap: 16px;
+        justify-content: center;
+
+        .package-nav {
+            background-color: transparent;
+            border: 1px solid var(--tertiary-border);
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            color: var(--primary-title);
+            @include transition(0.3s);
+
+            &.active,
+            &:hover {
+                background-color: var(--primary-color);
+                color: var(--white);
+                border: 1px solid transparent;
+            }
+        }
+    }
+}
+
+.package-card {
+    border-radius: 12px;
+    border: 1px solid var(--tertiary-border);
+    overflow: hidden;
+
+    &:hover {
+        .package-img {
+            overflow: hidden;
+            img {
+                border-top-right-radius: 12px;
+                border-top-left-radius: 12px;
+            }
+        }
+    }
+
+    .package-img {
+        position: relative;
+        overflow: hidden;
+        height: 200px;
+
+        img {
+            @include transition(0.8s);
+            width: 100%;
+            height: 100%;
+            border-top-right-radius: 12px;
+            border-top-left-radius: 12px;
+        }
+
+        @media #{$xs} {
+            height: 260px;
+        }
+    }
+}
+
+.package-content {
+    padding-top: 20px;
+    padding-left: 15px;
+    padding-right: 16px;
+    padding-bottom: 16px;
+
+    .area-name {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--primary-title);
+        margin-bottom: 2px;
+
+        &:hover {
+            color: var(--secondary-color);
+        }
+
+        @media #{$xs-to-md-max} {
+            font-size: 16px;
+        }
+    }
+
+    .location {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        font-size: 20px;
+        color: var(--primary-color);
+        margin-bottom: 12px;
+
+        @media #{$xs-to-md-max} {
+            font-size: 16px;
+        }
+
+        .name {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--primary-color);
+            line-height: 1.8;
+
+            @media #{$xs-to-md-max} {
+                font-size: 14px;
+            }
+        }
+    }
+
+    .packages-person {
+        background-color: var(--tertiary-border);
+        padding: 4px 24px;
+        border-radius: 4px;
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+
+        .count {
+            display: flex;
+            gap: 4px;
+            align-items: center;
+            font-size: 20px;
+            color: var(--primary-title);
+
+            @media #{$xs-to-md-max} {
+                font-size: 16px;
+            }
+
+            .pera {
+                font-size: 14px;
+                font-weight: 400;
+                color: var(--primary-title);
+            }
+        }
+    }
+
+    .price-review {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+
+        @media #{$vxs} {
+            gap: 0px;
+        }
+
+        .pera {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--primary-title);
+
+            @media #{$xs-to-md-max} {
+                font-size: 14px;
+            }
+        }
+
+        .light-pera {
+            font-size: 16px;
+            font-weight: 400;
+            color: var(--primary-paragraph);
+
+            @media #{$xs-to-md-max} {
+                font-size: 14px;
+            }
+        }
+
+        .rating {
+            color: var(--ratting-color);
+            font-size: 16px;
+            display: flex;
+            gap: 6px;
+            align-items: center;
+
+            @media #{$xs-to-md-max} {
+                font-size: 16px;
+            }
+
+            .pera {
+                font-size: 14px;
+                font-weight: 500;
+                color: var(--primary-title);
+            }
+        }
+    }
+}
+
+.image-badge {
+    padding: 3px 10px;
+    border-radius: 4px;
+    background-color: var(--white);
+    position: absolute;
+    top: 16px;
+    left: 16px;
+
+    .pera {
+        color: var(--priamry-title);
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    &.active {
+        background-color: var(--secondary-color);
+        color: var(--white);
+    }
+}
+
+.section-button {
+    text-align: center;
+    margin-top: 60px;
+    @media #{$xs-to-sm-max}{
+        margin-top: 30px;
+    }
+}

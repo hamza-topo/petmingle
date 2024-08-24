@@ -15,7 +15,6 @@
         data-sidebar-position="fixed" data-header-position="fixed">
         <!-- Sidebar Start -->
         <x-admin.layout.side-bar />
-        <!--  Sidebar End -->
         <!--  Main wrapper -->
         <div class="body-wrapper">
             <!--  Header Start -->
