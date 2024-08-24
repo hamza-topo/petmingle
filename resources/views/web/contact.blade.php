@@ -7,23 +7,27 @@
                 <div class="row justify-content-center">
                     <div class="col-xl-7 col-lg-9">
                         <div class="contact-card">
-                            <h4 class="contact-heading">Feel Free to Write us Anytime</h4>
-                            <form method="post" class="contact-form">
+                            <h4 class="contact-heading">{{ __('Feel Free to Write us Anytime') }}</h4>
+                            <form method="post" action="{{ route('contact.store') }}" class="contact-form">
+                                @csrf
                                 <div class="row g-4">
                                     <div class="col-sm-6">
-                                        <input class="custom-form" type="text" placeholder="Enter your name">
+                                        <input class="custom-form" name="name" type="text"
+                                            placeholder="Enter your name">
                                     </div>
                                     <div class="col-sm-6">
-                                        <input class="custom-form" type="text" placeholder="Enter your email">
+                                        <input class="custom-form" name="email" type="email"
+                                            placeholder="Enter your email">
                                     </div>
-                                    <div class="col-sm-6">
+                                    {{-- <div class="col-sm-6">
                                         <input class="custom-form" type="text" placeholder="Your Phone">
-                                    </div>
+                                    </div> --}}
                                     <div class="col-sm-6">
-                                        <input class="custom-form" type="text" placeholder="Select subject">
+                                        <input class="custom-form" name="subject" type="text"
+                                            placeholder="Select subject">
                                     </div>
                                     <div class="col-sm-12">
-                                        <textarea class="custom-form-textarea" id="exampleFormControlTextarea1" rows="3"
+                                        <textarea class="custom-form-textarea" name="message" id="exampleFormControlTextarea1" rows="3"
                                             placeholder="Enter your message..."></textarea>
                                     </div>
                                 </div>
