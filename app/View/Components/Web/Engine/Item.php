@@ -2,17 +2,17 @@
 
 namespace App\View\Components\Web\Engine;
 
-use Illuminate\Support\Collection;
+use App\Models\Pet;
 use Illuminate\View\Component;
 
-class Main extends Component
+class Item extends Component
 {
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct(public Collection $pets)
+    public function __construct(public Pet $pet)
     {
         //
     }
@@ -24,6 +24,6 @@ class Main extends Component
      */
     public function render()
     {
-        return view('components.web.engine.main');
+        return view('components.web.engine.item');
     }
 }

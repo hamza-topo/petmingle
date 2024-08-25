@@ -32,9 +32,6 @@ class ContactController extends Controller
     public function store(Request $request)
     {
         //TODO:validate request
-        //TODO:store the message
-        //TODO:fire te event
-
         try {
             Log::info('send email contact ...');
             Mail::to(env('MAIL_CONTACT_US'))->queue(new Contact($request->all()));
