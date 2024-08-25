@@ -11,21 +11,21 @@
                                 <button class="plan-link active" id="tour-tab" data-bs-toggle="tab"
                                     data-bs-target="#tour" type="button" role="tab" aria-controls="tour"
                                     aria-selected="true">
-                                    <i class="ri-ship-line"></i> Dating
+                                    <i class="ri-heart-2-fill"></i> Dating
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="plan-link" id="book-tab" data-bs-toggle="tab" data-bs-target="#book"
                                     type="button" role="tab" aria-controls="book" aria-selected="false"
                                     tabindex="-1">
-                                    <i class="ri-flight-takeoff-fill"></i> Adoption
+                                    <i class="ri-bear-smile-fill"></i> Adoption
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="plan-link" id="book-tab" data-bs-toggle="tab" data-bs-target="#book"
                                     type="button" role="tab" aria-controls="book" aria-selected="false"
                                     tabindex="-1">
-                                    <i class="ri-flight-takeoff-fill"></i> Pet Sitting
+                                    <i class="ri-map-pin-user-fill"></i> Pet Sitting
                                 </button>
                             </li>
                         </ul>
