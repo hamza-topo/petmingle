@@ -7,6 +7,7 @@ use App\Http\Requests\Api\Auth\GetUser;
 use App\Http\Requests\Api\Auth\Logout;
 use App\Http\Requests\Api\Auth\SignIn;
 use App\Http\Requests\Api\Auth\SignUp;
+use App\Providers\RouteServiceProvider;
 use App\Repositories\AuthRepository;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Auth;
@@ -147,12 +148,16 @@ class AuthController extends Controller
             $providerUser = Socialite::driver($provider)->stateless()->user();
             $user = $this->authRepository->firstOrCreateProviderUser($providerUser->user, $provider);
             Auth::login($user, true);
-            //TODO:we may have a probleme here            
-            return response()->json([
-                'success' => true,
-                'message' => \__('User logged successfully'),
-                'data' => $user,
-            ], Response::HTTP_OK);
+            //TODO:we may have a probleme here         ->   fix default value for password
+            if (request()->wantsJson()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => __('User logged in successfully'),
+                    'data' => $user,
+                ], Response::HTTP_OK);
+            } else {
+                return redirect()->intended(RouteServiceProvider::HOME);
+            }
         } catch (ClientException $e) {
             Log::error($e->getMessage());
 
