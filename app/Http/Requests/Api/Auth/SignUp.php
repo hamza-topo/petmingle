@@ -16,11 +16,11 @@ class SignUp extends FormRequest
     public function rules()
     {
         return [
-            'avatar' => 'required',
-            'avatar.*' => 'image|size:1024',
+            // 'avatar' => 'required',
+            // 'avatar.*' => 'image|size:1024',
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:6|max:50'
+            'password' => 'required|string|min:6|max:50|confirmed'
         ];
     }
 

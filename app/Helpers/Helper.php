@@ -35,7 +35,7 @@ if (!function_exists('fakeImages')) {
             return '';
         }
 
-        // $result = file_get_contents($images[0]);
+       // $result = file_get_contents($images[0]);
         return '';
         return json_decode($result)->message ?? '';
     }
