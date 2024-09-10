@@ -12,7 +12,6 @@ class BlogController extends Controller
 
     public function __invoke()
     {
-        $news = $this->newsRepository->all();
-        return view('web.blog', compact('news'));
+        return view('web.blog');
     }
 }

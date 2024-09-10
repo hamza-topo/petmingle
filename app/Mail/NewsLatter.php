@@ -29,6 +29,7 @@ class NewsLatter extends Mailable
      */
     public function build()
     {
+        //TODO : Build the view for news latter.
         return $this->view('view.name');
     }
 }
