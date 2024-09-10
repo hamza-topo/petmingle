@@ -2,16 +2,12 @@
 
 namespace App\Console\Commands;
 
-use App\Enums\NewsLetter;
-use App\Repositories\NewsLetterRepository;
-use App\Repositories\PetRepository;
+use App\Jobs\ProcessNewsLetters;
 use Illuminate\Console\Command;
+
 
 class NewsLetterEmailing extends Command
 {
-    protected NewsLetterRepository $newsLetterRepository;
-
-    protected PetRepository $petRepository;
     /**
      * The name and signature of the console command.
      *
@@ -34,9 +30,6 @@ class NewsLetterEmailing extends Command
     public function __construct()
     {
         parent::__construct();
-
-        $this->newsLetterRepository = new NewsLetterRepository;
-        $this->petRepository = new PetRepository;
     }
 
     /**
@@ -44,25 +37,14 @@ class NewsLetterEmailing extends Command
      *
      * @return int
      */
+ 
     public function handle()
     {
-        //TODO:get the newsLetter where the type is for emailing or all and active
-        $newsLetters = $this->newsLetterRepository->getByTypes([NewsLetter::ALL, NewsLetter::EMAIL]);
-        $newsLetters->map(function ($newsLetter) {
-            if (!empty($newsLetter->species_id)) {
-                $pets = $this->petRepository->getBySpeciesId($newsLetter);
-                foreach ($pets as $pet) {
-                    //process the send with newsLetter content
-                }
-            }
-            //get the users where they pets are in $newsLetter->species_id
-            //TODO:handle it if we want all the species to be mailed
+        // Dispatch the job to process newsletters and send emails
+        ProcessNewsLetters::dispatch();
 
-        });
-        //TODO:loop each newsLetter and get the included species for 
-        //TODO:list all users that has same pet species
-        //TODO:run bulk send Mailing process
-        //TODO:fetch all 
+        // display message about job execution process 
+        $this->info('Job dispatched successfully.');
         return 0;
     }
 }
