@@ -88,7 +88,7 @@
                     <div class="footer-content">
                         <div class="d-flex flex-column gap-20">
                             <div class="logo">
-                                <img src="assets/images/logo/logo.png" alt="travello" class="changeLogo">
+                                <img src="assets/images/logo/logo.png" width="50" alt="travello" class="changeLogo">
                             </div>
                             <p class="pera">
                                 Travel is a transformative and enriching experience that
@@ -131,7 +131,7 @@
                                 © <span class="current-year">2023</span> initTheme. All rights
                                 reserved
                             </p>
-                            <p class="pera">Powered by @Travello</p>
+                            <p class="pera">Powered by @topo</p>
                         </div>
                     </div>
                 </div>

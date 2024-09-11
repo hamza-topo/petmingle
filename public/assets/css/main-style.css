@@ -20061,7 +20061,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 .offer-banner {
   position: relative;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 4px;
   display: block;
 }
 .offer-banner::before {
@@ -20719,7 +20719,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
   font-weight: 600;
   border: 1px solid var(--primary-border);
   padding: 8px 14px;
-  border-radius: 12px;
+  border-radius: 4px;
   position: absolute;
   top: 50px;
   right: -29px;
@@ -20792,7 +20792,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
       -ms-flex-align: center;
           align-items: center;
   border: 1px solid var(--primary-soft-color);
-  border-radius: 12px;
+  border-radius: 4px;
   color: var(--primary-title);
   font-size: 20px;
   font-weight: 500;
@@ -20829,7 +20829,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 }
 
 .available-card {
-  border-radius: 12px;
+  border-radius: 4px;
   background: var(--available-card-bg);
   padding: 24px;
 }
@@ -20876,7 +20876,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 .destination-banner {
   position: relative;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 4px;
   cursor: pointer;
   display: block;
   -webkit-transition: 0.3s;
@@ -20901,7 +20901,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
   color: var(--white);
 }
 .destination-banner img {
-  border-radius: 12px;
+  border-radius: 4px;
   width: 100%;
   height: 100%;
   -o-object-fit: cover;
@@ -21095,7 +21095,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 }
 
 .package-card {
-  border-radius: 12px;
+  border-radius: 4px;
   border: 1px solid var(--tertiary-border);
   overflow: hidden;
 }
@@ -21482,7 +21482,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
   background: -webkit-gradient(linear, left top, right top, color-stop(2.93%, #daedef), color-stop(103.19%, rgba(218, 237, 239, 0)));
   background: linear-gradient(90deg, #daedef 2.93%, rgba(218, 237, 239, 0) 103.19%);
   padding: 10px 20px;
-  border-radius: 12px;
+  border-radius: 4px;
 }
 .price-card .price-tag-section .price-tag .title {
   font-size: 40px;
@@ -21571,7 +21571,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
     :: News Card
 -----------------------------------------------*/
 .news-banner {
-  border-radius: 12px;
+  border-radius: 4px;
   overflow: hidden;
 }
 .news-banner img {
@@ -22082,7 +22082,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  border-radius: 12px;
+  border-radius: 4px;
   background-color: var(--primary-color);
   border: 1px solid var(--primary-color);
   color: var(--white);
@@ -22127,7 +22127,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 .destination-banner-two {
   position: relative;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 4px;
   cursor: pointer;
   display: block;
   -webkit-transition: 0.3s;
@@ -22152,7 +22152,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
   color: var(--white);
 }
 .destination-banner-two img {
-  border-radius: 12px;
+  border-radius: 4px;
   width: 100%;
   height: 100%;
   -o-object-fit: cover;
@@ -22223,7 +22223,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 .destination-offer-two {
   position: relative;
   padding: 88px 52px 0 30px;
-  border-radius: 12px;
+  border-radius: 4px;
   background-color: var(--primary-color);
   overflow: hidden;
   z-index: 10;
@@ -22280,7 +22280,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 .destination-offer-three {
   position: relative;
   padding: 129px 52px 129px 30px;
-  border-radius: 12px;
+  border-radius: 4px;
   background-color: var(--primary-color);
   overflow: hidden;
   z-index: 0;
@@ -22342,7 +22342,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 }
 
 .user-qty-card {
-  border-radius: 12px;
+  border-radius: 4px;
   background-color: var(--body);
   padding: 30px;
 }
@@ -22427,7 +22427,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
   width: 44px;
   -webkit-transition: 0.3s;
   transition: 0.3s;
-  border-radius: 12px;
+  border-radius: 4px;
   border: 1px solid var(--tertiary-border);
   background-color: var(--white);
   display: -webkit-box;
@@ -22644,7 +22644,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 @media (max-width: 991px) {
   .discover-circle {
     margin-left: unset;
-    border-radius: 12px;
+    border-radius: 4px;
     width: unset;
     height: unset;
     padding: 12px 24px;
@@ -22720,7 +22720,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
       -ms-flex-align: center;
           align-items: center;
   border: 1px solid var(--primary-soft-color);
-  border-radius: 12px;
+  border-radius: 4px;
   color: var(--primary-title);
   font-size: 20px;
   font-weight: 500;
@@ -22757,7 +22757,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 }
 
 .available-card {
-  border-radius: 12px;
+  border-radius: 4px;
   background: var(--available-card-bg);
   padding: 24px;
 }
@@ -23017,7 +23017,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
     :: Nes Card 02
 -----------------------------------------------*/
 .news-card-two {
-  border-radius: 12px;
+  border-radius: 4px;
   overflow: hidden;
   border: 1px solid var(--tertiary-border);
   -webkit-transition: 0.3s;
@@ -23460,7 +23460,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
-  border-radius: 12px;
+  border-radius: 4px;
   background-color: var(--primary-color);
   border: 1px solid var(--primary-color);
   color: var(--white);
@@ -23505,7 +23505,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 .destination-banner-two {
   position: relative;
   overflow: hidden;
-  border-radius: 12px;
+  border-radius: 4px;
   cursor: pointer;
   display: block;
   -webkit-transition: 0.3s;
@@ -23530,7 +23530,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
   color: var(--white);
 }
 .destination-banner-two img {
-  border-radius: 12px;
+  border-radius: 4px;
   width: 100%;
   height: 100%;
   -o-object-fit: cover;
@@ -23601,7 +23601,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 .destination-offer-two {
   position: relative;
   padding: 88px 52px 0 30px;
-  border-radius: 12px;
+  border-radius: 4px;
   background-color: var(--primary-color);
   overflow: hidden;
   z-index: 10;
@@ -23658,7 +23658,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 .destination-offer-three {
   position: relative;
   padding: 129px 52px 129px 30px;
-  border-radius: 12px;
+  border-radius: 4px;
   background-color: var(--primary-color);
   overflow: hidden;
   z-index: 0;
@@ -23720,7 +23720,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 }
 
 .user-qty-card {
-  border-radius: 12px;
+  border-radius: 4px;
   background-color: var(--body);
   padding: 30px;
 }
@@ -23805,7 +23805,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
   width: 44px;
   -webkit-transition: 0.3s;
   transition: 0.3s;
-  border-radius: 12px;
+  border-radius: 4px;
   border: 1px solid var(--tertiary-border);
   background-color: var(--white);
   display: -webkit-box;
@@ -24022,7 +24022,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 @media (max-width: 991px) {
   .discover-circle {
     margin-left: unset;
-    border-radius: 12px;
+    border-radius: 4px;
     width: unset;
     height: unset;
     padding: 12px 24px;
@@ -24098,7 +24098,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
       -ms-flex-align: center;
           align-items: center;
   border: 1px solid var(--primary-soft-color);
-  border-radius: 12px;
+  border-radius: 4px;
   color: var(--primary-title);
   font-size: 20px;
   font-weight: 500;
@@ -24135,7 +24135,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 }
 
 .available-card {
-  border-radius: 12px;
+  border-radius: 4px;
   background: var(--available-card-bg);
   padding: 24px;
 }
@@ -24225,7 +24225,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
     :: Nes Card 02
 -----------------------------------------------*/
 .news-card-two {
-  border-radius: 12px;
+  border-radius: 4px;
   overflow: hidden;
   border: 1px solid var(--tertiary-border);
   -webkit-transition: 0.3s;
@@ -24647,7 +24647,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 .choose-plan-nav .select-dropdown-section,
 .choose-plan-nav .custom-date-three {
   border: 1px solid var(--tertiary-border);
-  border-radius: 12px;
+  border-radius: 4px;
   padding: 8px 20px;
   background: transparent;
   width: 100%;
@@ -24789,7 +24789,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 .trip-card {
   background-color: var(--tertiary-border);
   border: 1px solid transparent;
-  border-radius: 12px;
+  border-radius: 4px;
   padding: 20px;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -25181,7 +25181,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 -----------------------------------------------*/
 .contact-card {
   background-color: var(--tertiary-border);
-  border-radius: 12px;
+  border-radius: 4px;
   padding: 30px 40px;
   z-index: 1;
   position: relative;
@@ -25284,13 +25284,13 @@ button.applyBtn.btn.btn-sm.btn-primary {
   width: 100%;
   height: 76px;
   z-index: 10;
-  border-radius: 12px;
+  border-radius: 4px;
 }
 .destination-details-banner .swiper-slide {
-  border-radius: 12px;
+  border-radius: 4px;
 }
 .destination-details-banner .swiper-slide img {
-  border-radius: 12px;
+  border-radius: 4px;
   width: 100%;
 }
 .destination-details-banner .swiper-pagination-bullet {
@@ -25354,7 +25354,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 
 .info-table .table {
   background-color: var(--tertiary-border);
-  border-radius: 12px;
+  border-radius: 4px;
   border-collapse: unset;
 }
 .info-table .table tr {
@@ -25431,7 +25431,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
   font-weight: 700;
   color: var(--primary-title);
   line-height: 1.4;
-  border-radius: 12px;
+  border-radius: 4px;
   border: none;
   -webkit-box-shadow: none;
           box-shadow: none;
@@ -25453,7 +25453,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
   font-weight: 700;
   color: var(--primary-title);
   line-height: 1.4;
-  border-radius: 12px;
+  border-radius: 4px;
   border: none;
   position: relative;
   -webkit-box-shadow: none;
@@ -25494,7 +25494,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
   font-weight: 400;
 }
 .destination-accordion .accordion-item:first-of-type .accordion-button {
-  border-radius: 12px;
+  border-radius: 4px;
 }
 .destination-accordion .accordion-button::after {
   content: "\ea4e";
@@ -25519,7 +25519,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 .tour-list-card {
   padding: 24px;
   background-color: var(--primary-soft-color);
-  border-radius: 12px;
+  border-radius: 4px;
 }
 @media (max-width: 420px) {
   .tour-list-card {
@@ -25583,10 +25583,10 @@ button.applyBtn.btn.btn-sm.btn-primary {
     :: Nes Details 
 -----------------------------------------------*/
 .news-details-banner {
-  border-radius: 12px;
+  border-radius: 4px;
 }
 .news-details-banner img {
-  border-radius: 12px;
+  border-radius: 4px;
   width: 100%;
 }
 
@@ -25789,7 +25789,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 .comment-section .main-profile {
   position: relative;
   padding: 40px 50px;
-  border-radius: 12px;
+  border-radius: 4px;
   background-color: var(--tertiary-border);
   display: -webkit-box;
   display: -ms-flexbox;
@@ -25818,7 +25818,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
   height: 100%;
   top: 0;
   left: 0;
-  border-radius: 12px;
+  border-radius: 4px;
   background-color: var(--primary-color);
 }
 .comment-section .main-profile .user-info .name {
@@ -25948,7 +25948,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 .search-filter-section {
   padding: 10px 20px 10px 20px;
   border: 1px solid var(--tertiary-border);
-  border-radius: 12px;
+  border-radius: 4px;
 }
 .search-filter-section .heading {
   display: -webkit-box;
@@ -26110,7 +26110,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 .tour-list-section .search-filter-section {
   padding: 0px 20px 30px 20px;
   border: 1px solid var(--tertiary-border);
-  border-radius: 12px;
+  border-radius: 4px;
 }
 .tour-list-section .search-filter-section .heading {
   display: -webkit-box;
@@ -26154,7 +26154,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 }
 .tour-list-section .search-filter-section .tour-search .select-dropdown-section {
   border: 1px solid var(--tertiary-border);
-  border-radius: 12px;
+  border-radius: 4px;
   padding: 16px;
   margin-bottom: 12px;
   padding-bottom: 6px;
@@ -26162,7 +26162,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 }
 .tour-list-section .search-filter-section .tour-search .dropdown-section {
   border: 1px solid var(--tertiary-border);
-  border-radius: 12px;
+  border-radius: 4px;
   padding: 16px;
   margin-bottom: 12px;
   padding-bottom: 14px;
@@ -26437,7 +26437,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 }
 
 .expand-icon {
-  border-radius: 12px;
+  border-radius: 4px;
   min-width: 60px;
   width: 60px;
   height: 50px;
@@ -26482,7 +26482,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 }
 .tourSwiper-active .swiper-slide {
   max-height: 640px;
-  border-radius: 12px;
+  border-radius: 4px;
   overflow: hidden;
   width: 70%;
 }
@@ -26723,7 +26723,7 @@ button.applyBtn.btn.btn-sm.btn-primary {
 }
 .tour-details-container .date-travel-card {
   background-color: var(--tertiary-border);
-  border-radius: 12px;
+  border-radius: 4px;
   padding: 24px;
 }
 .tour-details-container .date-travel-card .price-review {

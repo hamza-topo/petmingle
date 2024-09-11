@@ -2,6 +2,8 @@
 
 namespace App\View\Components\Web\Engine;
 
+use App\Repositories\RaceRepository;
+use App\Repositories\SpeciesRepository;
 use Illuminate\View\Component;
 
 class Filter extends Component
@@ -11,8 +13,10 @@ class Filter extends Component
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(
+        protected SpeciesRepository $speciesRepository,
+        protected RaceRepository $raceRepository,
+    ) {
         //
     }
 
@@ -23,6 +27,8 @@ class Filter extends Component
      */
     public function render()
     {
-        return view('components.web.engine.filter');
+        $species = $this->speciesRepository->all()->pluck('name', 'id');
+
+        return view('components.web.engine.filter', compact('species'));
     }
 }
