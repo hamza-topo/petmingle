@@ -24,6 +24,7 @@ class CreateNewsLettersTable extends Migration
             $table->longText('content');
             $table->boolean('active')->default(true);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

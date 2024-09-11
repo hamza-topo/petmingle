@@ -11,7 +11,7 @@
                                 <div class="top-header-left d-flex align-items-center">
                                     <!-- Logo-->
                                     <div class="logo">
-                                        <a href="index.html"><img src="assets/images/logo/logo.png" alt="logo"
+                                        <a href="index.html"><img src="assets/images/logo/logo.png" width="50" alt="logo"
                                                 class="changeLogo"></a>
                                     </div>
                                     <!-- search box -->
@@ -85,19 +85,8 @@
                                         <div class="d-flex justify-content-between align-items-center">
                                             <ul class="listing" id="navigation">
                                                 <li class="single-list">
-                                                    <a href="javascript:void(0)" class="single link-active">Home <i
+                                                    <a href="{{route('home')}}" class="single link-active">Home <i
                                                             class="ri-arrow-down-s-line"></i></a>
-                                                    <ul class="submenu">
-                                                        <li class="single-list">
-                                                            <a href="index.html" class="single">Home 01</a>
-                                                        </li>
-                                                        <li class="single-list">
-                                                            <a href="index-two.html" class="single">Home 02</a>
-                                                        </li>
-                                                        <li class="single-list">
-                                                            <a href="index-three.html" class="single">Home 03</a>
-                                                        </li>
-                                                    </ul>
                                                 </li>
                                                 <li class="single-list">
                                                     <a href="{{ route('about') }}" class="single">About</a>

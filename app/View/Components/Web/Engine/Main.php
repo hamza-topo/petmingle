@@ -2,6 +2,7 @@
 
 namespace App\View\Components\Web\Engine;
 
+use Illuminate\Support\Collection;
 use Illuminate\View\Component;
 
 class Main extends Component
@@ -11,7 +12,7 @@ class Main extends Component
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(public Collection $pets)
     {
         //
     }

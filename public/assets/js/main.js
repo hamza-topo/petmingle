@@ -266,14 +266,14 @@
     $(function () {
         $("#slider-range").slider({
             range: true,
-            min: 130,
-            max: 500,
-            values: [130, 250],
+            min: 1,
+            max: 20,
+            values: [1, 3],
             slide: function (event, ui) {
-                $("#amount").val("$" + ui.values[0] + " - $" + ui.values[1]);
+                $("#amount").val("Year " + ui.values[0] + " - Years " + ui.values[1]);
             },
         });
-        $("#amount").val("$" + $("#slider-range").slider("values", 0) + " - $" + $("#slider-range").slider("values", 1));
+        $("#amount").val("Year " + $("#slider-range").slider("values", 0) + " - Years " + $("#slider-range").slider("values", 1));
     });
 
     /*----------------------------------------------

@@ -32,7 +32,7 @@ class PetController extends Controller
                 'data' => $this->petRepository->all()
             ]);
         } catch (\Exception $e) {
-            dd($e->getMessage());
+           
             return response()->json([
                 'success' => false,
                 'message' => \__('Sorry, cannot fetch pets.'),
