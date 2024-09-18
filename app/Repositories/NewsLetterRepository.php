@@ -47,10 +47,11 @@ class NewsLetterRepository implements RepositoryInterface
         return NewsLetter::take(EnumsNewsLetter::TAKE)->get();
     }
 
-    public function paginate()
+    public function paginate(int|null $page = EnumsNewsLetter::PAGINATE)
     {
-        return NewsLetter::paginate(EnumsNewsLetter::PAGINATE);
+        return NewsLetter::paginate($page);
     }
+
 
     public function getByActivity(bool $isActive = true)
     {
