@@ -12,11 +12,66 @@
     </div>
     <div class="tour-search">
         <div class="select-dropdown-section">
-            <div class="d-flex gap-10 align-items-center">
-                <h4 class="select2-title">
+            <div class="d-flex gap-10 align-items-center search-box">
+                <div class="search-box search-bar d-none d-lg-block">
+                    <div class="header-search">
+                        <span class="pera">Location</span>
+                        <div class="search-icon">
+                            <i class="ri-search-line"></i>
+                        </div>
+                    </div>
+                </div>
+                <!-- Mobile Device Seach & Theme Mode -->
+                <div class="search-header-position d-block d-lg-none">
+                    <div class="d-flex gap-15">
+                        <div class="search-bar">
+                            <a href="javascript:void(0)" class="rounded-btn">
+                                <i class="ri-search-line"></i>
+                            </a>
+                        </div>
+                        <!-- Theme Mode -->
+                        <button class="ToggleThemeButton change-theme-mode m-0 p-0 border-0">
+                            <i class="ri-sun-line"></i>
+                        </button>
+                    </div>
+                </div>
+                {{-- <h4 class="select2-title">
                     <button class="btn-secondary-sm"><i class="ri-map-pin-line"></i> {{ trans('Location') }}</button>
-                </h4>
+                </h4> --}}
             </div>
+            <!-- Search box -->
+            <div class="search-container" style="margin-top: -30%;">
+                <div class="body-section">
+                    <link href="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.css" rel="stylesheet">
+                    <script src="https://api.mapbox.com/mapbox-gl-js/v3.6.0/mapbox-gl.js"></script>
+                    <style>
+                        body {
+                            margin: 0;
+                            padding: 0;
+                        }
+
+                        #map {
+                            position: absolute;
+                            top: 0;
+                            bottom: 0;
+                            width: 100%;
+                        }
+                    </style>
+                    <div id="map"></div>
+                    <script>
+                        // TO MAKE THE MAP APPEAR YOU MUST
+                        // ADD YOUR ACCESS TOKEN FROM
+                        // https://account.mapbox.com
+                        mapboxgl.accessToken = 'pk.eyJ1IjoidG9wb2hhbXphIiwiYSI6ImNtMGN2ejRmZzA1dWUybHFzM2ZpemNwZGcifQ.O1llXOoe8zNM-JFsv-sQiw';
+                        const map = new mapboxgl.Map({
+                            container: 'map', // container ID
+                            center: [-74.5, 40], // starting position [lng, lat]. Note that lat must be set between -90 and 90
+                            zoom: 9 // starting zoom
+                        });
+                    </script>
+                </div>
+            </div>
+            <!-- / End-Search -->
         </div>
         <div class="select-dropdown-section">
             <div class="d-flex gap-10 align-items-center">
@@ -26,7 +81,7 @@
             <select class="destination-dropdown">
                 @if (!empty($species))
                     @foreach ($species as $id => $name)
-                        <option value="{{$id}}">{{$name}}</option>
+                        <option value="{{ $id }}">{{ $name }}</option>
                     @endforeach
                 @endif
             </select>
