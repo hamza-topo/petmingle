@@ -22,7 +22,7 @@ class ItemsContainer extends Component
      */
     public function render()
     {
-        $news = $this->newsRepository->paginate();
+        $news = $this->newsRepository->paginate(request()->get('paginate'));
         return view('components.web.home.blog.items-container', compact('news'));
     }
 
