@@ -39,8 +39,7 @@ class SpeciesRepository implements RepositoryInterface
 
     public function delete(int $speciesId): bool
     {
-        $deleted = Species::destroy($speciesId);
-        return $deleted;
+        return Species::destroy($speciesId);
     }
 
     public function restore(int $speciesId): bool
