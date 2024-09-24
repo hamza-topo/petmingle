@@ -24,7 +24,7 @@ class SpeciesController extends Controller
         return view(
             'admin.species.index',
             [
-                'species' => $this->speciesRepository->paginate(2)
+                'species' => $this->speciesRepository->paginate(request()->get('paginate'))
             ]
         );
     }

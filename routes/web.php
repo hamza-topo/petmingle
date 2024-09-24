@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Web\AuthController as WebAuthController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +21,10 @@ Auth::routes();
 
 Route::get('login/{provider}', [AuthController::class, 'redirectToProvider']);
 Route::get('{provider}/callback', [AuthController::class, 'handleProviderCallback']);
+Route::get('login/', [WebAuthController::class, 'login'])->name('user.login');
+Route::get('register/', [WebAuthController::class, 'register'])->name('user.register');
+Route::post('login/', [WebAuthController::class, 'signIn'])->name('user.login');
+Route::post('register/', [WebAuthController::class, 'signUp'])->name('user.register');
 
 
 
@@ -35,3 +40,7 @@ Route::post('/contact', [App\Http\Controllers\Web\ContactController::class, 'sto
 Route::get('/blogs', App\Http\Controllers\Web\BlogController::class)->name('blogs');
 Route::get('/faq', App\Http\Controllers\Web\FaqController::class)->name('faq');
 Route::get('/search', [App\Http\Controllers\Web\EngineController::class, 'index'])->name('engine');
+
+Auth::routes();
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

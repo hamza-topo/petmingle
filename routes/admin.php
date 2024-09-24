@@ -17,9 +17,9 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
-
-Route::prefix('/admin')->middleware('auth')->name('admin.')->group(function () {
-    Route::get('admin', [HomeController::class, 'index']);
+// ->middleware('auth')
+Route::prefix('/admin')->name('admin.')->group(function () {
+    Route::get('/', [HomeController::class, 'index']);
     Route::resource('pets', PetController::class);
     Route::resource('species', SpeciesController::class);
     Route::resource('races', RaceController::class);
