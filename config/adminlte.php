@@ -338,8 +338,8 @@ return [
             'icon' => 'fas fa-fw fa-share',
             'submenu' => [
                 [
-                    'text' => 'level_one',
-                    'url' => '#',
+                    'text' => 'species',
+                    'url' => '/admin/species',
                 ],
                 [
                     'text' => 'level_one',
@@ -491,6 +491,16 @@ return [
                     'type' => 'js',
                     'asset' => false,
                     'location' => '//cdnjs.cloudflare.com/ajax/libs/pace/1.0.2/pace.min.js',
+                ],
+            ],
+        ],
+        'RemixIcons' => [
+            'active' => true,
+            'files' => [
+                [
+                    'type' => 'css',
+                    'asset' => true,
+                    'location' => 'assets/css/remixicon.css',
                 ],
             ],
         ],
