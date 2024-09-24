@@ -2,13 +2,17 @@
 
 namespace App\Repositories;
 
+use App\Enums\CacheDuration;
 use App\Enums\Species as EnumsSpecies;
 use App\Models\Species;
+use App\Services\CacheService;
 use Illuminate\Support\Collection;
 
 class SpeciesRepository implements RepositoryInterface
 {
-
+    public function __construct(protected CacheService $cacheService)
+    {
+    }
     public function create(array $species): Species
     {
         return Species::create($species);
@@ -19,7 +23,6 @@ class SpeciesRepository implements RepositoryInterface
         $species = $this->getById($speciesId);
         $species->update($newModel);
         $species->refresh();
-
         return $species;
     }
 
@@ -36,7 +39,8 @@ class SpeciesRepository implements RepositoryInterface
 
     public function delete(int $speciesId): bool
     {
-        return Species::destroy($speciesId);
+        $deleted = Species::destroy($speciesId);
+        return $deleted;
     }
 
     public function restore(int $speciesId): bool
@@ -46,7 +50,7 @@ class SpeciesRepository implements RepositoryInterface
 
     public function all(): Collection
     {
-        return Species::all();
+        return $this->getAllFromCache();
     }
 
     /**
@@ -62,11 +66,13 @@ class SpeciesRepository implements RepositoryInterface
 
     public function getAllFromCache(): mixed
     {
-        return [];
+        return $this->cacheService->remember('all_species', CacheDuration::SHORT->value, function () {
+            return Species::all();
+        });
     }
 
     public function clearCache(): bool
     {
-        return true;
+        return $this->cacheService->clear('all_species');
     }
 }
