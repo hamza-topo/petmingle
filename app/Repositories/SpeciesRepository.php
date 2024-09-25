@@ -65,13 +65,13 @@ class SpeciesRepository implements RepositoryInterface
 
     public function getAllFromCache(): mixed
     {
-        return $this->cacheService->remember('all_species', CacheDuration::SHORT->value, function () {
+        return $this->cacheService->remember(EnumsSpecies::CACHEKEY, CacheDuration::SHORT->value, function () {
             return Species::all();
         });
     }
 
     public function clearCache(): bool
     {
-        return $this->cacheService->clear('all_species');
+        return $this->cacheService->clear(EnumsSpecies::CACHEKEY);
     }
 }
