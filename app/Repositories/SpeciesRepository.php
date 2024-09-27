@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Enums\CacheDuration;
 use App\Enums\Species as EnumsSpecies;
+use App\Factories\TrashedFactory;
 use App\Models\Species;
 use App\Services\CacheService;
 use Illuminate\Support\Collection;
@@ -58,9 +59,9 @@ class SpeciesRepository implements RepositoryInterface
      * @param int|null $paginate
      * @return void
      */
-    public function paginate(int|null $paginate = EnumsSpecies::PAGINATE)
+    public function paginate(int|null $paginate = EnumsSpecies::PAGINATE )
     {
-        return Species::paginate($paginate);
+        return TrashedFactory::apply(Species::query())->paginate($paginate);
     }
 
     public function getAllFromCache(): mixed

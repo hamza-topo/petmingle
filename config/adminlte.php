@@ -334,13 +334,14 @@ return [
             'icon' => 'fas fa-fw fa-lock',
         ],
         [
+            'text' => 'species',
+            'url' => '/admin/species',
+            'icon' => 'ri-bear-smile-fill',
+        ],
+        [
             'text' => 'multilevel',
             'icon' => 'fas fa-fw fa-share',
             'submenu' => [
-                [
-                    'text' => 'species',
-                    'url' => '/admin/species',
-                ],
                 [
                     'text' => 'level_one',
                     'url' => '#',
