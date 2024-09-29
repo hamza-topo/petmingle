@@ -173,15 +173,4 @@ class PetController extends Controller
         //
     }
 
-    /**
-     * Method to pluck given peroperty
-     *
-     * @param Collection $colletion
-     * @param string $key
-     * @return Collection
-     */
-    protected function plucker(Collection $colletion, string $key, string $value = ''): Collection
-    {
-        return $colletion->pluck($key, 'id')->prepend('Please select an: '. $value, '');
-    }
 }
