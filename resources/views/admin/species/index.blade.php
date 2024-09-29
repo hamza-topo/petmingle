@@ -7,10 +7,8 @@
 @stop
 
 @section('content')
-    <div class="row mt-100">
-        <div class="card">
-       
-           
+    <div class="row">
+        <div class="card col-12">
             <div class="card-body">
                 <a href="{{ route('admin.species.create') }}" type="button" class="btn btn-success btn-sm top-0 end-0 m-2">
                     <i class="ri ri-add-line"></i> <!-- Remix Icon for add -->
