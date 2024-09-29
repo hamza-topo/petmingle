@@ -24,7 +24,7 @@ class Adoption extends Model
         return $this->belongsTo(Pet::class, 'pet_id', 'id');
     }
 
-    public function NewOwner()
+    public function newOwner()
     {
         return $this->belongsTo(User::class, 'to', 'id');
     }
