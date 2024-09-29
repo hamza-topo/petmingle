@@ -2,10 +2,12 @@
 
 namespace App\Providers;
 
+use App\Models\Adoption;
 use App\Models\Block;
 use App\Models\Like;
 use App\Models\Message;
 use App\Models\User;
+use App\Observers\AdoptionObserver;
 use App\Observers\BlockObserver;
 use App\Observers\LikeObserver;
 use App\Observers\MessageObserver;
@@ -26,6 +28,9 @@ class EventServiceProvider extends ServiceProvider
         User::class => [
             UserObserver::class,
         ],
+        Adoption::class => [
+            AdoptionObserver::class,
+        ],
 
     ];
 
@@ -40,5 +45,6 @@ class EventServiceProvider extends ServiceProvider
         Block::observe(BlockObserver::class);
         Message::observe(MessageObserver::class);
         User::observe(UserObserver::class);
+        Adoption::observe(AdoptionObserver::class);
     }
 }

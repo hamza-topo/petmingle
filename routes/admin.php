@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\AdoptionController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\PetController;
 use App\Http\Controllers\Admin\RaceController;
@@ -28,4 +29,5 @@ Route::prefix('/admin')->name('admin.')->group(function () {
     Route::resource('species', SpeciesController::class);
     Route::put('/species/restore/{id}', [SpeciesController::class, 'restore'])->name('species.restore');
     Route::resource('races', RaceController::class);
+    Route::resource('adoptions', AdoptionController::class);
 });

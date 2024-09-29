@@ -57,9 +57,9 @@ class PetController extends Controller
         return view(
             'admin.pets.create',
             [
-                'users' => $this->plucker($this->userRepository->all(), 'name'),
-                'species' => $this->plucker($this->speciesRepository->all(), 'name'),
-                'races' => $this->plucker($this->raceRepository->all(), 'name'),
+                'users' => $this->plucker($this->userRepository->all(), 'name', 'Owner'),
+                'species' => $this->plucker($this->speciesRepository->all(), 'name', 'Species'),
+                'races' => $this->plucker($this->raceRepository->getAllFromCache(), 'name', 'Race'),
             ]
         );
     }
@@ -74,14 +74,21 @@ class PetController extends Controller
     {
         try {
             $pet = $request->all();
-            $pet['images'] = $this->setFile($request->file('images'))
+            if(!empty($request->file('images'))){
+                $pet['images'] = $this->setFile($request->file('images'))
                 ->setName()
                 ->upload();
+            }
             $pet = $this->petRepository->create($pet);
 
-            return redirect()->with('success', Response::HTTP_ACCEPTED);
-        } catch (\Exception $th) {
+            return redirect()->route('admin.pets.index')->with('success', Response::HTTP_ACCEPTED);
+        } catch (\Exception $e) {
             Log::error('error while saving the pet:', $request->all());
+            Log::error('error while saving the pet:', [$e->getMessage()]);
+
+            return redirect()->route('admin.pets.create')
+            ->withErrors(['error' => $e->getMessage()])->withInput();
+
         }
     }
 
@@ -93,7 +100,16 @@ class PetController extends Controller
      */
     public function show($id)
     {
-        //
+        $pet = $this->petRepository->getById($id);
+        return view(
+            'admin.pets.show',
+            [
+                'users' => $this->plucker($this->userRepository->all(), 'name', 'Owner'),
+                'species' => $this->plucker($this->speciesRepository->all(), 'name', 'Species'),
+                'races' => $this->plucker($this->raceRepository->getAllFromCache(), 'name', 'Race'),
+                'pet' => $pet,
+            ]
+        );
     }
 
     /**
@@ -104,7 +120,16 @@ class PetController extends Controller
      */
     public function edit($id)
     {
-        //
+        $pet = $this->petRepository->getById($id);
+        return view(
+            'admin.pets.edit',
+            [
+                'users' => $this->plucker($this->userRepository->all(), 'name', 'Owner'),
+                'species' => $this->plucker($this->speciesRepository->all(), 'name', 'Species'),
+                'races' => $this->plucker($this->raceRepository->getAllFromCache(), 'name', 'Race'),
+                'pet' => $pet,
+            ]
+        );
     }
 
     /**
@@ -116,7 +141,25 @@ class PetController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $pet = $request->all();
+            if(!empty($request->file('images'))){
+                $pet['images'] = $this->setFile($request->file('images'))
+                ->setName()
+                ->upload();
+            }
+           
+            $pet = $this->petRepository->update($id, $pet);
+
+            return redirect()->route('admin.pets.index')->with('success', Response::HTTP_ACCEPTED);
+        } catch (\Exception $e) {
+            Log::error('error while saving the pet:', $request->all());
+            Log::error('error while saving the pet:', [$e->getMessage()]);
+
+            return redirect()->route('admin.pets.edit', $id)
+            ->withErrors(['error' => $e->getMessage()])->withInput();
+
+        }
     }
 
     /**
@@ -130,15 +173,4 @@ class PetController extends Controller
         //
     }
 
-    /**
-     * Method to pluck given peroperty
-     *
-     * @param Collection $colletion
-     * @param string $key
-     * @return Collection
-     */
-    protected function plucker(Collection $colletion, string $key): Collection
-    {
-        return $colletion->pluck($key, 'id');
-    }
 }
