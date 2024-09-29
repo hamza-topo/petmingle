@@ -1,18 +1,25 @@
-@extends('layouts.admin.master')
+@extends('adminlte::page')
+
+@section('title', __('Races'))
+
+@section('content_header')
+    <h1>{{ __('Races') }}</h1>
+@stop
 
 @section('content')
-    <div class="row" style="margin-top: 10%">
-        <div class="card">
-            <h5 class="card-title fw-semibold mb-4">{{ __('Races') }}</h5>
-            <a href="{{ route('admin.races.create') }}" type="button" class="btn btn-success"><i class="ti ti-plus"></i></a>
+    <div class="row">
+        <div class="card col-12">
             <div class="card-body">
+                <a href="{{ route('admin.races.create') }}" type="button" class="btn btn-success btn-sm top-0 end-0 m-2">
+                    <i class="ri ri-add-line"></i> <!-- Remix Icon for add -->
+                </a>
                 <table class="table">
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">{{ __('name') }}</th>
-                            <th scope="col">{{ __('species') }}</th>
-                            <th scope="col" align="right">{{ __('Actions') }}</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Species</th>
+                            <th scope="col" align="right">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -20,21 +27,35 @@
                             <tr>
                                 <th scope="row">{{ $race->id }}</th>
                                 <td>{{ $race->name }}</td>
-                                <td>{{ $race->species->name ?? 'walou' }}</td>
-                                <td align="right">
+                                <td>{{ $race->species?->name }}</td>
+                                <td align="right" class="d-flex justify-content-end">
                                     <a href="{{ route('admin.races.show', $race->id) }}" type="button"
-                                        class="btn btn-success"><i class="ti ti-eye"></i></a>
+                                        class="btn btn-success me-2">
+                                        <i class="ri ri-eye-line"></i> <!-- Remix Icon for view -->
+                                    </a>
                                     <a href="{{ route('admin.races.edit', $race->id) }}" type="button"
-                                        class="btn btn-primary"><i class="ti ti-pencil"></i></a>
-                                    <button type="button" class="btn btn-danger"><i class="ti ti-trash"></i>
+                                        class="btn btn-primary me-2">
+                                        <i class="ri ri-pencil-line"></i> <!-- Remix Icon for edit -->
+                                    </a>
+                                    <form action="{{ route('admin.races.destroy', $race->id) }}" method="POST"
+                                        style="display:inline;">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-danger"
+                                            onclick="return confirm('Are you sure?')">
+                                            <i class="ri ri-delete-bin-5-line"></i> <!-- Remix Icon for delete -->
+                                        </button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach
                     </tbody>
                 </table>
 
-                {{ $races->links() }}
+                <div class="d-flex justify-content-center">
+                    {{ $races->links('pagination::bootstrap-4') }}
+                </div>
             </div>
         </div>
     </div>
-@endsection
+@stop

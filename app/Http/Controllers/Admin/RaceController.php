@@ -111,6 +111,12 @@ class RaceController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $this->raceRepository->delete($id);
+
+            return redirect(route('admin.races.index'))->with('success');
+        } catch (\Exception $e) {
+            Log::erro('error occured while deleting this species: ' . $e->getMessage());
+        }
     }
 }
