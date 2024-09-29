@@ -21,6 +21,7 @@ class SpeciesController extends Controller
      */
     public function index()
     {
+
         return view(
             'admin.species.index',
             [
@@ -118,6 +119,23 @@ class SpeciesController extends Controller
             return redirect(route('admin.species.index'))->with('success');
         } catch (\Exception $e) {
             Log::erro('error occured while deleting this species: ' . $e->getMessage());
+        }
+    }
+
+       /**
+     * Restore the specified resource to storage.
+     *
+     * @param  int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function restore($id)
+    {
+        try {
+            $this->speciesRepository->restore($id);
+
+            return redirect(route('admin.species.index'))->with('success');
+        } catch (\Exception $e) {
+            Log::erro('error occured while restoring this species: ' . $e->getMessage());
         }
     }
 }
