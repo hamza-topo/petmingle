@@ -351,6 +351,11 @@ return [
                     'url' => 'admin/pets',
                    
                 ],
+                [
+                    'text' => 'Adoptions',
+                    'url' => 'admin/adoptions',
+                   
+                ],
             ],
         ],
         // ['header' => 'labels'],
