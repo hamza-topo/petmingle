@@ -3,13 +3,20 @@
 namespace App\Repositories;
 
 use App\Enums\App;
+use App\Enums\CacheDuration;
+use App\Enums\Race as EnumsRace;
 use App\Models\Race;
+use App\Services\CacheService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
-class RaceRepository
+class RaceRepository implements RepositoryInterface
 {
 
+    public function __construct(protected CacheService $cacheService)
+    {
+        
+    }
 
     public function create(array $race): Race
     {
@@ -43,6 +50,20 @@ class RaceRepository
     public function all()
     {
         return Race::all();
+    }
+
+    public function getAllFromCache(): mixed
+    {
+        return $this->cacheService->remember(EnumsRace::CACHEKEY, CacheDuration::SHORT->value, function () {
+            return Race::whereHas('species')->get();
+        });
+       
+    }
+
+    
+    public function clearCache(): bool
+    {
+        return $this->cacheService->clear(EnumsRace::CACHEKEY);
     }
 
     /**
