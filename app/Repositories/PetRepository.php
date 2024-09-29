@@ -64,7 +64,7 @@ class PetRepository implements RepositoryInterface
      */
     public function paginate(int|null $page = EnumsPet::PAGINATE)
     {
-        return Pet::paginate($page);
+        return Pet::orderBy('created_at', 'DESC')->paginate($page);
     }
 
     public function getAllFromCache(): mixed

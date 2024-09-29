@@ -346,6 +346,11 @@ return [
                     'url' => 'admin/races',
                    
                 ],
+                [
+                    'text' => 'Pets',
+                    'url' => 'admin/pets',
+                   
+                ],
             ],
         ],
         // ['header' => 'labels'],
