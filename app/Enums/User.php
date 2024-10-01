@@ -25,5 +25,13 @@ enum User {
         ];
     }
 
+    public static function verificationOptions(): array
+    {
+        return [
+            self::ACCOUNT_VERIFIED => __('Verified'),
+            self::ACCOUNT_NOT_VERIFIED => __('Not Verified'),
+        ];
+    }
+
      
 }

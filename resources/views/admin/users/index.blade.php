@@ -20,6 +20,7 @@
                             <th scope="col">Name</th>
                             <th scope="col">Email</th>
                             <th scope="col">Role</th>
+                            <th scope="col">Verification Status</th> 
                             <th scope="col" align="right">Action</th>
                         </tr>
                     </thead>
@@ -31,6 +32,9 @@
                                 <td>{{ $user->email }}</td>
                                 <td>
                                     {{ \App\Enums\User::options()[$user->is_admin] }}
+                                </td>
+                                <td>
+                                    {{ \App\Enums\User::verificationOptions()[$user->is_verified] }} <!-- Verification status -->
                                 </td>
                                 <td align="right" class="d-flex justify-content-end">
                                     <a href="{{ route('admin.users.show', $user->id) }}" type="button" class="btn btn-success me-2">
