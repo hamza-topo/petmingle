@@ -26,6 +26,7 @@ class User extends Authenticatable implements JWTSubject
         'provider_id',
         'provider_name',
         'password',
+        'is_admin',
     ];
 
     /**
@@ -48,6 +49,7 @@ class User extends Authenticatable implements JWTSubject
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
 
     public function pet()
     {

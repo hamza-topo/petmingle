@@ -334,11 +334,6 @@ return [
             'icon' => 'fas fa-fw fa-lock',
         ],
         [
-            'text' => 'species',
-            'url' => '/admin/species',
-            'icon' => 'ri-bear-smile-fill',
-        ],
-        [
             'text' => 'multilevel',
             'icon' => 'fas fa-fw fa-share',
             'submenu' => [
@@ -358,6 +353,11 @@ return [
                 [
                     'text' => 'Adoptions',
                     'url' => 'admin/adoptions',
+                   
+                ],
+                [
+                    'text' => 'Users',
+                    'url' => 'admin/users',
                    
                 ],
             ],
