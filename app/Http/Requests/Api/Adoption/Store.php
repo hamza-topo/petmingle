@@ -6,7 +6,7 @@ use App\Rules\Api\Like\MatchUser;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Contracts\Validation\Validator;
-
+use Illuminate\Validation\Rule;
 
 class Store extends FormRequest
 {
@@ -29,8 +29,15 @@ class Store extends FormRequest
     {
         return [
             'from' => ['required', 'integer'],
-            'to' => 'required|integer',
-            'pet_id' => 'required|integer', //TODO::verify if the given pet belongs to to user_id
+            'to' => 'required|integer|different:from',
+            'pet_id' => [
+                'required', 
+                'integer', 
+                'exists:pets,id', 
+                Rule::exists('pets', 'id')->where(function ($query) {
+                    $query->where('user_id', $this->input('from')); // Ensure the pet belongs to the 'from' user
+                }),
+            ],
         ];
     }
 
@@ -48,6 +55,9 @@ class Store extends FormRequest
             'to.integer' => \__('The Value of To Id  invalid!'),
             'pet_id.required' => \__('The Value of To Pet Id  is required!'),
             'pet_id.integer' => \__('The Value of To Pet Id  invalid!'),
+            'to.different' => __('The To Id must be different from the From Id!'), 
+            'pet_id.exists' => __('The selected pet does not exist!'),
+            'pet_id.exists' => __('The selected pet does not belong to the owner with the specified From Id!'),
         ];
     }
 
