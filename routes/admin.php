@@ -8,6 +8,7 @@ use App\Http\Controllers\Admin\SpeciesController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\Web\MainController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,6 +21,12 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+Route::prefix('/admin')->name('admin')->group(function () {
+    Auth::routes(['register' => false]);
+});
+
+    
 // ->middleware('auth')
 Route::prefix('/admin')->name('admin.')->group(function () {
     //toggle trashed 
