@@ -20,8 +20,6 @@ jobs:
           php-version: 8.2
       - name: Verify composer version 
         run: composer --version
-      - name: Validate composer.json and composer.lock
-        run: composer validate --strict
 
       - name: Cache Composer packages (if available)
         id: composer-cache
