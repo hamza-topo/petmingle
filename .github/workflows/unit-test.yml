@@ -19,10 +19,10 @@ jobs:
       - name: Run composer install
         run: composer install -n --prefer-dist
  
-      #- name: Prepare Laravel Application
-      #  run: |
-      #    cp .env.ci .env
-      #    php artisan key:generate
+      - name: Prepare Laravel Application
+       run: |
+         cp .env.example .env
+         php artisan key:generate
  
       - name: Run tests
         run: php artisan test
