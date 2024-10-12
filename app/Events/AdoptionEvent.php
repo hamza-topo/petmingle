@@ -37,7 +37,7 @@ class AdoptionEvent implements ShouldBroadcast
 
     /**
      * Broadcast As channel
-     *
+     * @author hamza <hamzaaitsidisaid.11@gmail.com>
      * @return string
      */
     public function broadcastAs(): string
