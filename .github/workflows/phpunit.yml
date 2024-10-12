@@ -52,9 +52,9 @@ jobs:
       - name: Generate application key
         run: php artisan key:generate
     
-      - name: Run migrations and seed the database
-        run: |
-          php artisan migrate --force
+      #- name: Run migrations and seed the database
+        #run: |
+        #  php artisan migrate --force
         #  php artisan db:seed --force
 
       - name: Run PHPUnit tests
