@@ -198,7 +198,7 @@ return [
     'classes_content' => '',
     'classes_sidebar' => 'sidebar-dark-primary elevation-4',
     'classes_sidebar_nav' => '',
-    'classes_topnav' => 'navbar-white navbar-light',
+    'classes_topnav' => 'navbar-dark navbar-light',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
 
@@ -311,16 +311,9 @@ return [
             'text' => 'search',
         ],
         [
-            'text' => 'blog',
-            'url' => 'admin/blog',
+            'text' => 'NewsLetter',
+            'url' => 'admin/news-letter',
             'can' => 'manage-blog',
-        ],
-        [
-            'text' => 'pages',
-            'url' => 'admin/pages',
-            'icon' => 'far fa-fw fa-file',
-            'label' => 4,
-            'label_color' => 'success',
         ],
         ['header' => 'account_settings'],
         [
@@ -334,50 +327,39 @@ return [
             'icon' => 'fas fa-fw fa-lock',
         ],
         [
-            'text' => 'multilevel',
-            'icon' => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'Species',
-                    'url' => 'admin/species',
-                ],
-                [
-                    'text' => 'Races',
-                    'url' => 'admin/races',
-                ],
-                [
-                    'text' => 'Pets',
-                    'url' => 'admin/pets',
-                   
-                ],
-                [
-                    'text' => 'Adoptions',
-                    'url' => 'admin/adoptions',
-                   
-                ],
-                [
-                    'text' => 'Users',
-                    'url' => 'admin/users',
-                   
-                ],
-            ],
+            'text' => 'Species',
+            'url' => 'admin/species',
+            'icon' => 'fas fa-fw fa-venus-mars',
         ],
-        // ['header' => 'labels'],
-        // [
-        //     'text' => 'important',
-        //     'icon_color' => 'red',
-        //     'url' => '#',
-        // ],
-        // [
-        //     'text' => 'warning',
-        //     'icon_color' => 'yellow',
-        //     'url' => '#',
-        // ],
-        // [
-        //     'text' => 'information',
-        //     'icon_color' => 'cyan',
-        //     'url' => '#',
-        // ],
+        [
+            'text' => 'Races',
+            'url' => 'admin/races',
+            'icon' => 'fas fa-fw fa-cat',
+        ],
+        [
+            'text' => 'Pets',
+            'url' => 'admin/pets',
+            'icon' => 'fas fa-fw fa-dog',
+           
+        ],
+        [
+            'text' => 'Adoptions',
+            'url' => 'admin/adoptions',
+            'icon' => 'fas fa-fw fa-hand-holding',
+           
+        ],
+        [
+            'text' => 'Users',
+            'url' => 'admin/users',
+            'icon' => 'fas fa-fw fa-users',
+           
+        ],
+        [
+            'text' => 'News Letters',
+            'url' => 'admin/news-letters',
+            'icon' => 'fas fa-fw fa-blog',
+           
+        ],
     ],
 
     /*
