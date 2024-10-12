@@ -16,31 +16,27 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Auth::routes();
 
 
 Route::get('login/{provider}', [AuthController::class, 'redirectToProvider']);
 Route::get('{provider}/callback', [AuthController::class, 'handleProviderCallback']);
-Route::get('login/', [WebAuthController::class, 'login'])->name('user.login');
-Route::get('register/', [WebAuthController::class, 'register'])->name('user.register');
-Route::post('login/', [WebAuthController::class, 'signIn'])->name('user.login');
-Route::post('register/', [WebAuthController::class, 'signUp'])->name('user.register');
-
-
-
-
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/about', App\Http\Controllers\Web\AboutController::class)->name('about');
-Route::get('/contact', [App\Http\Controllers\Web\ContactController::class, 'index'])->name('contact');
-Route::post('/contact', [App\Http\Controllers\Web\ContactController::class, 'store'])->name('contact.store');
-Route::get('/blogs', App\Http\Controllers\Web\BlogController::class)->name('blogs');
-Route::get('/faq', App\Http\Controllers\Web\FaqController::class)->name('faq');
-Route::get('/search', [App\Http\Controllers\Web\EngineController::class, 'index'])->name('engine');
-
+Route::get('user/login/', [WebAuthController::class, 'login'])->name('user.login');
+Route::get('user/register/', [WebAuthController::class, 'register'])->name('user.register');
+Route::post('user/login/', [WebAuthController::class, 'signIn'])->name('user.login.signIn');
+Route::post('user/register/', [WebAuthController::class, 'signUp'])->name('user.register.signUp');
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+
+// Route::get('/', function () {
+//     return view('welcome');
+// });
+
+Route::group([],function ($router) {
+    $router->get('/about', App\Http\Controllers\Web\AboutController::class)->name('about');
+    $router->get('/contact', [App\Http\Controllers\Web\ContactController::class, 'index'])->name('contact');
+    $router->post('/contact', [App\Http\Controllers\Web\ContactController::class, 'store'])->name('contact.store');
+    $router->get('/blogs', App\Http\Controllers\Web\BlogController::class)->name('blogs');
+    $router->get('/faq', App\Http\Controllers\Web\FaqController::class)->name('faq');
+    $router->get('/search', [App\Http\Controllers\Web\EngineController::class, 'index'])->name('engine');
+    $router->get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+});
