@@ -64,7 +64,7 @@ class SpeciesRepository implements RepositoryInterface
         return TrashedFactory::apply(Species::query())->paginate($paginate);
     }
 
-    public function getAllFromCache(): mixed
+    public function getAllFromCache(?string $key = ''): mixed
     {
         return $this->cacheService->remember(EnumsSpecies::CACHEKEY, CacheDuration::SHORT->value, function () {
             return Species::all();

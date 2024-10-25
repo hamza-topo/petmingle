@@ -90,6 +90,11 @@ class SeoRepository implements RepositoryInterface
         return Seo::all();
     }
 
+    public function getByKey(string $key): ?Seo
+    {
+        return Seo::where('key', $key)->first();
+    }
+
     /**
      * Get Seo that not created yet
      * Its based on @see App\Enums\Pages::CASES()

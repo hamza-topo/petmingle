@@ -806,16 +806,16 @@
         },
         {
             "name": "guzzlehttp/promises",
-            "version": "2.0.3",
+            "version": "2.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "6ea8dd08867a2a42619d65c3deb2c0fcbf81c8f8"
+                "reference": "f9c436286ab2892c7db7be8c8da4ef61ccf7b455"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/6ea8dd08867a2a42619d65c3deb2c0fcbf81c8f8",
-                "reference": "6ea8dd08867a2a42619d65c3deb2c0fcbf81c8f8",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/f9c436286ab2892c7db7be8c8da4ef61ccf7b455",
+                "reference": "f9c436286ab2892c7db7be8c8da4ef61ccf7b455",
                 "shasum": ""
             },
             "require": {
@@ -869,7 +869,7 @@
             ],
             "support": {
                 "issues": "https://github.com/guzzle/promises/issues",
-                "source": "https://github.com/guzzle/promises/tree/2.0.3"
+                "source": "https://github.com/guzzle/promises/tree/2.0.4"
             },
             "funding": [
                 {
@@ -885,7 +885,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2024-07-18T10:29:17+00:00"
+            "time": "2024-10-17T10:06:22+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -1005,16 +1005,16 @@
         },
         {
             "name": "jeroennoten/laravel-adminlte",
-            "version": "v3.14.0",
+            "version": "v3.14.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/jeroennoten/Laravel-AdminLTE.git",
-                "reference": "9ce9ef65f309851883e6c44db1f2ae14b9ab2baf"
+                "reference": "4dafd7931e0971ed75cca2efe052d891c783c1dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/jeroennoten/Laravel-AdminLTE/zipball/9ce9ef65f309851883e6c44db1f2ae14b9ab2baf",
-                "reference": "9ce9ef65f309851883e6c44db1f2ae14b9ab2baf",
+                "url": "https://api.github.com/repos/jeroennoten/Laravel-AdminLTE/zipball/4dafd7931e0971ed75cca2efe052d891c783c1dd",
+                "reference": "4dafd7931e0971ed75cca2efe052d891c783c1dd",
                 "shasum": ""
             },
             "require": {
@@ -1058,9 +1058,9 @@
             ],
             "support": {
                 "issues": "https://github.com/jeroennoten/Laravel-AdminLTE/issues",
-                "source": "https://github.com/jeroennoten/Laravel-AdminLTE/tree/v3.14.0"
+                "source": "https://github.com/jeroennoten/Laravel-AdminLTE/tree/v3.14.1"
             },
-            "time": "2024-10-10T07:51:55+00:00"
+            "time": "2024-10-15T18:40:40+00:00"
         },
         {
             "name": "laravel/framework",

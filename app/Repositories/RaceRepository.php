@@ -52,7 +52,7 @@ class RaceRepository implements RepositoryInterface
         return Race::all();
     }
 
-    public function getAllFromCache(): mixed
+    public function getAllFromCache(?string $key = ''): mixed
     {
         return $this->cacheService->remember(EnumsRace::CACHEKEY, CacheDuration::SHORT->value, function () {
             return Race::whereHas('species')->get();
