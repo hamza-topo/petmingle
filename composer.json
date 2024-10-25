@@ -20,6 +20,7 @@
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.4",
         "nunomaduro/collision": "^5.10",
+        "phan/phan": "^5.4",
         "phpunit/phpunit": "^9.5.10"
     },
     "autoload": {
@@ -47,6 +48,9 @@
         ],
         "post-create-project-cmd": [
             "@php artisan key:generate --ansi"
+        ],
+        "phpphan" : [
+            "./vendor/bin/phan --allow-polyfill-parser"
         ]
     },
     "extra": {

@@ -9,9 +9,9 @@ use Illuminate\Console\Command;
 
 class NewsLetterEmailing extends Command
 {
-    protected NewsLetterRepository $newsLetterRepository;
+    protected $newsLetterRepository;
 
-    protected PetRepository $petRepository;
+    protected $petRepository;
     /**
      * The name and signature of the console command.
      *

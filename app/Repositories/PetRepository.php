@@ -56,6 +56,11 @@ class PetRepository implements RepositoryInterface
         return Pet::all();
     }
 
+    public function getBySpeciesId(array $ids): Collection
+    {
+        return Pet::whereIn('species_id', $ids)->get();
+    }
+
     public function paginate()
     {
         return Pet::paginate(EnumsPet::PAGINATE);
