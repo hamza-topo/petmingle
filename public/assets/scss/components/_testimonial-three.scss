@@ -1,0 +1,71 @@
+/*---------------------------------------------
+    :: Testimonial 03
+-----------------------------------------------*/
+
+.testimonialThree-active {
+  .rattings {
+    color: var(--ratting-color);
+  }
+  .testimonial-header {
+    margin-bottom: 20px;
+  }
+  .testimonial-card {
+    background-color: transparent;
+  }
+  .testimonial-body {
+    margin-top: 30px;
+    margin-bottom: 20px;
+    .pera {
+      color: var(--primary-title);
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.4;
+    }
+  }
+  .swiper-pagination.swiper-pagination-progressbar.swiper-pagination-horizontal{
+    top: unset;
+    bottom: 0;
+  }
+  .swiper-pagination-progressbar-fill{
+     background:  var(--primary-title);
+  }
+}
+.testimonial-area-three{
+  .hero-banner{
+    position: relative;
+    img{
+      border-radius: 20px;
+    }
+    .video-player{
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+    &::before{
+      content: "";
+      position: absolute;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--primary-title);
+      opacity: .35;
+      border-radius: 20px;
+    }
+    .shape{
+      top: -52px;
+      right: -48px;
+      @media #{$xs-to-md-max}{
+        display: none;
+      }
+    }
+  }
+}
+.shape-testimonial{
+  position: absolute;
+  top: 70px;
+  left: 70px;
+  @media #{$xs-to-md-max}{
+    display: none;
+  }
+}

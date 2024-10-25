@@ -15,6 +15,10 @@ class Race extends Model
      *
      * @var array<string>
      */
-    protected $fillable = ['species_id','name'];
-   
+    protected $fillable = ['species_id', 'name'];
+
+    public function species()
+    {
+        return $this->belongsTo(Species::class, 'species_id');
+    }
 }

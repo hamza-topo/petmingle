@@ -1,0 +1,126 @@
+
+/*---------------------------------------------
+    :: About
+-----------------------------------------------*/
+
+.about-area {
+	padding-top: 100px;
+	padding-bottom: 110px;
+
+	.mx-430 {
+		@media #{$xs-to-md-max} {
+			max-width: 100%;
+		}
+	}
+}
+
+.about-imp-link {
+	display: flex;
+	gap: 10px;
+	align-items: center;
+	margin-top: 30px;
+
+	.icon {
+		width: 44px;
+		min-width: 44px;
+		height: 44px;
+		border-radius: 50%;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		background-color: var(--primary-title);
+		color: var(--white);
+		font-size: 20px;
+	}
+
+	.content {
+		.pera {
+			margin-top: 0;
+			font-size: 14px;
+			font-weight: 400;
+			line-height: 1.4;
+		}
+
+		.title {
+			font-size: 16px;
+			font-weight: 700;
+			line-height: 1.5;
+		}
+	}
+}
+
+.about-count-section {
+	position: relative;
+
+	.banner {
+		border-radius: 16px;
+		overflow: hidden;
+
+		img {
+			width: 100%;
+			height: 100%;
+		}
+	}
+
+	.all-count-list {
+		margin-top: 50px;
+		display: flex;
+		justify-content: space-between;
+		flex-wrap: wrap;
+		gap: 18px;
+		align-items: center;
+
+		.count {
+			color: var(--primary-title);
+			font-size: 40px;
+			font-weight: 700;
+			line-height: 1.1;
+			margin-bottom: 10px;
+
+			@media #{$xs-to-md-max} {
+				font-size: 24px;
+			}
+		}
+
+		.pera {
+			color: var(--primary-title);
+			font-size: 16px;
+			font-weight: 500;
+			line-height: 1.5;
+			opacity: 0.5;
+
+			@media #{$xs-to-md-max} {
+				font-size: 14px;
+			}
+		}
+	}
+
+	.divider {
+		width: 1px;
+		height: 30px;
+		opacity: 0.3;
+		background: linear-gradient(270deg, rgba(75, 80, 81, 0) -5.7%, #4b5051 44.9%, rgba(75, 80, 81, 0) 101.96%);
+
+		@media #{$xs-to-md-max} {
+			display: none;
+		}
+	}
+}
+
+.about-count-before-bg {
+	&::before {
+		content: "";
+		position: absolute;
+		bottom: -38px;
+		left: -72px;
+		border-radius: 32px 0px 0px 32px;
+		background: linear-gradient(90deg, rgba(149, 178, 180, 0.6) 0%, rgba(221, 245, 248, 0) 100%);
+		width: 100%;
+		height: 350px;
+		z-index: -1;
+
+		@media #{$xs-to-xl-max} {
+			left: -34px;
+		}
+	}
+}

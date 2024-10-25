@@ -26,6 +26,7 @@ class User extends Authenticatable implements JWTSubject
         'provider_id',
         'provider_name',
         'password',
+        'is_admin',
     ];
 
     /**
@@ -47,7 +48,9 @@ class User extends Authenticatable implements JWTSubject
      */
     protected $casts = [
         'email_verified_at' => 'datetime',
+        'is_admin' => 'boolean',
     ];
+
 
     public function pet()
     {
@@ -58,9 +61,14 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->getKey();
     }
-    
+
     public function getJWTCustomClaims()
     {
         return [];
+    }
+
+    public function sessions()
+    {
+        return $this->hasMany(Online::class);
     }
 }

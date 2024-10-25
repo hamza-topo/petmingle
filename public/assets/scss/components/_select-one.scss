@@ -1,0 +1,104 @@
+/*---------------------------------------------
+    :: Select Style custom
+-----------------------------------------------*/
+
+.select2-container--default .select2-selection--single.custom-select2-dropdown .select2-selection__rendered {
+    color: var(--primary-paragraph);
+    font-size: 14px;
+    line-height: 1;
+    font-weight: 500;
+    padding-left: 32px;
+    padding-top: 6px;
+    padding-bottom: 6px;
+}
+.select2-title{
+    color: var(--primary-title);
+    font-size: 18px;
+    font-weight: 700;
+    font-family: var(--Dm);
+    line-height: 1.1;
+    cursor: pointer;
+    @media #{$xs-to-lg-max}{
+     font-size: 16px;   
+    }
+}
+.select2-container--default .select2-selection--single.custom-select2-dropdown .select2-selection_placeholder,.select2-container--default .select2-selection--single.custom-select2-dropdown-three .select2-selection_placeholder {
+    color: var(--primary-title);
+    font-size: 18px;
+    font-weight: 700;
+    font-family: var(--Dm);
+    line-height: 1.2;
+    @media #{$xs-to-lg-max}{
+     font-size: 16px;   
+    }
+}
+.select2-container--open .custom-select2-dropdown-container.select2-dropdown--below{
+    width: 350px !important;
+     border-top-left-radius: 8px; 
+    border-top-right-radius: 8px;
+    // @media #{$xs-to-sm-max}{
+    //     width: auto !important;
+    // }
+    @media #{$xs-to-sm-max}{
+        width: 200px !important;
+    }
+}
+.select2-container--default .select2-selection--single.custom-select2-dropdown-three .select2-selection__rendered{
+  text-align: right;
+  padding-right: 0;
+  color: var(--primary-title);
+    font-size: 18px;
+    font-weight: 700;
+    font-family: var(--Dm);
+    line-height: 1.1;
+}
+.select2-dropdown.custom-select2-dropdown-container{
+    border-radius: 8px;
+    overflow: hidden;
+    top: 4px;
+    border: none;
+    box-shadow: 0px -1px 13px 0px rgba(176, 176, 176, 0.45);
+    width: 350px !important;
+//    @media #{$xs-to-sm-max}{
+//        width: auto !important;
+//    }
+   @media #{$xs-to-sm-max}{
+       width: 200px !important;
+   }
+}
+.custom-select2-dropdown-container .select2-search--dropdown,.select2-results__option{
+    padding: 10px;
+}
+.select2-container--default .select2-selection--single.custom-select2-dropdown .select2-selection__arrow b {
+    border-style: solid;
+    position: absolute;
+    top: 50%;
+    width: 0;
+    transform: translateY(-50%);
+    border: solid var(--primary-title);
+    border-width: 0 2px 2px 0;
+    display: inline-block;
+    padding: 4px;
+    transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+}
+.select2-container--default.select2-container--open .select2-selection--single.custom-select2-dropdown .select2-selection__arrow b {
+    transform: rotate(45deg);
+    -webkit-transform: rotate(45deg);
+    border: solid var(--primary-title);
+    border-width: 0 2px 2px 0;
+}
+
+.select2-container--default .select2-selection--single.custom-select2-dropdown .select2-selection__arrow {
+    top: -32px;
+    right: -5px;
+    @media #{$xs-to-md-max}{
+        right: 5px;
+    }
+}
+.select2-container--default .select2-results__option--highlighted[aria-selected] .airport-desc {
+    color: var(--white);
+  }
+  .select2-container--default .select2-results__option--highlighted[aria-selected] .airport-name {
+    color: var(--white);
+  }

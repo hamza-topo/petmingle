@@ -1,0 +1,398 @@
+[data-theme="dark"] {
+    // a {
+    //     color: var(--secondary-color);
+    // }
+    .daterangepicker .calendar-table {
+        border: 1px solid var(--primary-color);
+        background-color: var(--body);
+    }
+    .daterangepicker {
+        background-color: var(--body);
+        border:1px solid var(--primary-color);
+        box-shadow: none;
+    }
+    .daterangepicker td.off, .daterangepicker td.off.in-range, .daterangepicker td.off.start-date, .daterangepicker td.off.end-date {
+        background-color: var(--dark-bg1);
+        border-color: transparent;
+    }
+    .daterangepicker td.in-range {
+        background-color: var(--secondary-color);
+        color: #fff;
+    }
+    .cancelBtn {
+        color: var(--secondary-color);
+    }
+    .daterangepicker .drp-buttons {
+        border-top: 1px solid var(--primary-border);
+    }
+    .daterangepicker .calendar-table .next span, .daterangepicker .calendar-table .prev span {
+        border-color: var(--secondary-color);
+    }
+    .daterangepicker .calendar-table .next:hover span, .daterangepicker .calendar-table .prev:hover span {
+        border-color: #fff;
+    }
+    .daterangepicker td.available:hover, .daterangepicker th.available:hover {
+        background-color: var(--secondary-color);
+        color: #fff;
+    }
+    .daterangepicker::after {
+        border-bottom: 6px solid var(--body);
+    }
+    .select2-container--default .select2-results__option[aria-selected="true"] {
+        background-color: var(--primary-color);
+    }
+    .select2-dropdown.custom-select2-dropdown-container {
+        background: var(--dark-bg2);
+        box-shadow: none;
+    }
+    .select2-container--default .select2-search--dropdown .select2-search__field {
+        border: 1px solid var(--dark-bg3);
+        background: transparent;
+        color: #fff;
+    }
+    .mobile_menu .slicknav_menu .slicknav_btn .slicknav_icon-bar {
+        background-color: var(--primary-title);
+    }
+    .mobile_menu .slicknav_menu .slicknav_nav .slicknav_arrow {
+        color: var(--primary-title);
+    }
+    .slicknav_nav {
+        background: var(--body);
+        border-bottom: 1px solid var(--secondary-border);
+    }
+    .mobile_menu .slicknav_menu .slicknav_nav a:hover {
+        color: var(--secondary-color);
+    }
+    .question-area .accordion-button:not(.collapsed) {
+        background-color: var(--primary-color);
+    }
+    .question-area .accordion-item .accordion-collapse.collapse.show {
+        background-color: var(--primary-btn);
+    }
+    .question-area .accordion-item {
+        border: 1px solid var(--primary-border);
+    }
+    .question-area .accordion-item .accordion-button {
+        background: var(--primary-color);
+    }
+
+
+    // Start Theme CSS
+   .header-sticky.sticky-bar {
+        background: var(--dark-bg1);
+    }
+    .plan-section-three {
+        background: linear-gradient(360deg, #1c212f 0%, #12151e 100%);
+        box-shadow: none;
+      }
+    .plan-section {
+        background: linear-gradient(360deg, #1c212f 0%, #12151e 100%);
+        box-shadow: none;
+    }
+    .section-bg-before-two::before {
+        background: linear-gradient(180deg, #1c212f 0%, #12151e 100%);
+    }
+
+    .header-area-three .main-menu .listing .single-list .link-active,
+    .header-area-two .main-menu .listing .single-list .link-active ,
+    .header-area .main-menu .listing .single-list .link-active {
+        color: var(--primary-title);
+        background-color: var(--primary-color);
+    }
+
+    .header-area-three .main-menu .listing .single-list .link-active::after ,
+    .header-area-two .main-menu .listing .single-list .link-active::after ,
+    .header-area .main-menu .listing .single-list .link-active::after {
+        background-color: var(--primary-color);
+    }
+    .header-area-three .main-menu .listing .single-list:hover > .single,
+    .header-area-two .main-menu .listing .single-list:hover > .single ,
+    .header-area .main-menu .listing .single-list:hover > .single {
+        color: var(--primary-title);
+        background-color: var(--primary-color);
+    }
+    .header-area-three .main-menu .listing .single-list:hover > .single::after,
+    .header-area-two  .main-menu .listing .single-list:hover > .single::after,
+    .header-area .main-menu .listing .single-list:hover > .single::after {
+        background-color: var(--primary-color);
+    }
+    .header-area-three .main-menu .listing .submenu ,
+    .header-area-two .main-menu .listing .submenu ,
+    .header-area .main-menu .listing .submenu {
+        background: var(--primary-color);
+    }
+
+
+    .choose-plan-nav label .radio-text {
+        background-color: var(--primary-btn);
+        color: var(--primary-paragraph);
+    }
+    .choose-plan-nav .plan-link.active {
+        border-bottom: 2px solid var(--secondary-color);
+        color: var(--secondary-color);
+    }
+    .choose-plan-nav label input:checked + .circle::before {
+        background: var(--secondary-color);
+    }
+    .choose-plan-nav label input:checked + .circle {
+        background-color: var(--secondary-color);
+        border-color: var(--secondary-color);
+    }
+    
+    .search-container {
+        background-color: var(--body);
+    }
+    .price-card {
+        background: linear-gradient(180deg, #12151e 0%, #12151e 100%);
+    }
+    .footer-wrapper .footer-middle-area {
+        background: linear-gradient(0deg, #1c212f 0%, #12151e 100%);
+    }
+    .trip-card {
+        .trip-icon {
+            background-color: var(--dark-bg2);
+            color: var(--secondary-color);
+        }
+        .trip-icon-flex::before {
+           border: 1px dashed var(--secondary-color);
+       }
+       &:hover {
+           background-color: var(--tertiary-border);
+           border: 1px solid var(--secondary-color);
+       }
+    }
+    .about-count-before-bg::before {
+        background: -webkit-gradient(linear, left top, right top, from(#1c212f), to(rgb(18, 21, 30)));
+        background: linear-gradient(90deg, #1c212f 0%, rgb(18, 21, 30) 100%);
+    }
+    .header-area .top-menu-wrapper {
+        background-color: var(--body);
+        @media #{$xs-to-md-max}{
+            background-color: unset;
+        }
+    }
+    .header-area {
+        background-color: var(--primary-btn);
+    }
+    .price-card .price-tag-section .price-tag {
+        background: linear-gradient(90deg, #1c212f 0%, rgb(18, 21, 30) 100%);
+    }
+    .testimonial-card {
+        background-color: var(--primary-color);
+    }
+    .bulletRightSwiper-active::before {
+        background: linear-gradient(90deg, #1c212f 0%, rgba(18, 21, 30, 0) 100%);
+    }
+    .bulletLeftSwiper-active::before {
+        background: linear-gradient(90deg, #1c212f00 0%, rgb(18, 21, 30) 100%);
+    }
+    .key-points .key-point.active, .key-points .key-point:hover {
+        background: linear-gradient(180deg, #222839 0%, rgba(221, 245, 248, 0) 100%);
+    }
+    .all-contents .news-content.active, .all-contents .news-content:hover {
+        background: linear-gradient(180deg, #222839 0%, rgba(221, 245, 248, 0) 100%);
+    }
+    .why-points .why-point {
+        background: linear-gradient(180deg, #222839 0%, rgba(221, 245, 248, 0) 100%);
+    }
+    .destination-bg-before::before {
+        background-color: var(--dark-bg1);
+    }
+    .key-points .key-point .key-icon {
+        border: 1px solid var(--primary-border);
+    }
+    .section-title .highlights-primary {
+        color: var(--secondary-color);
+    }
+    .feature-area-bg {
+        background: linear-gradient(180deg, #1c212f 0%, #12151e 100%);
+    }
+    .feature-area .package-card {
+        background-color: var(--dark-bg2);
+    }
+    .package-content .location .name {
+        color: var(--secondary-color);
+    }
+    .package-content .location {
+        color: var(--secondary-color);
+    }
+    .all-explore .explore-btn {
+        background-color: var(--primary-btn);
+    }
+    .favSwiper-active .swiper-button-prev {
+        background-color: var(--primary-color);
+    }
+    .destination-banner .arrow-btn {
+        background-color: var(--dark-bg2);
+    }
+    .destination-banner .destination-content .ratting-badge {
+        background-color: var(--dark-bg2);
+        color: var(--secondary-color);
+    }
+    .progressParent::after {
+        color: var(--secondary-color);
+    }
+    .progressParent {
+        -webkit-box-shadow: inset 0 0 0 2px  var(--secondary-color);
+        box-shadow: inset 0 0 0 2px var(--secondary-color);
+    }
+    .image-badge {
+        background-color: var(--primary-btn);
+        color: #fff;
+    }
+    .testimonialThree-active .swiper-pagination-progressbar-fill {
+        background: var(--tertiary-border);
+    }
+    .hero-bg-two {
+        background: var(--primary-soft-color);
+    }
+    .shape-one ,
+    .shape-two ,
+    .shape-about-two ,
+    .feature-area-bg::before {
+        opacity: .1;
+    }
+    .search-tour-card {
+        background-color: var(--dark-bg1);
+    }
+    .header-area-two .top-header-two .discount {
+        background: #f9f9f940;
+    }
+    .border-section-title .title {
+        background: var(--body);
+    }
+    .user-quantity .qty-container .qty-btn-minus-two, .user-quantity .qty-container .qty-btn-plus-two {
+        background-color: transparent;
+    }
+    .footer-wrapper {
+        background: var(--dark-bg1);
+    }
+
+    .user-picker {
+        background: linear-gradient(360deg, #1c212f 0%, #12151e 100%);
+        box-shadow: none;
+    }
+    .gradient-divider {
+        background-image: linear-gradient(to right, #7a7f8c 0%, #8f94a3 100%, #5b606b 0%);
+    }
+    .btn-primary-icon-outline {
+        border: 1px solid var(--primary-border);
+    }
+    .price-card:hover {
+        box-shadow: 0px 8px 12px 0px rgba(144, 149, 150, 0.2);
+    }
+
+    .btn-primary-icon-sm:hover {
+        border: 1px solid var(--secondary-border);
+        color: #fff;
+    }
+    .btn-primary-icon-sm:hover .pera {
+        color: #fff;
+    }
+    .rounded-btn {
+        background-color: var(--primary-border2);
+        &:hover{
+            i{
+                color: var(--primary-title);
+            }
+        }
+    }
+    .filter_menu .slicknav_menutxt {
+        background: var(--dark-bg2);
+    }
+    .search-overlay {
+        background-color: rgba(0, 0, 0, 0.82);
+        backdrop-filter: blur(6px);
+    }
+    .send-btn {
+        background-color: var(--secondary-color);
+        border: 1px solid var(--secondary-color);
+        &:hover{
+            background-color: var(--secondary-color);
+            border: 1px solid var(--secondary-color);
+            color: #fff;
+        }
+    }
+    .tour-list-section .search-filter-section .price-range-slider .range-bar .ui-slider-handle + span {
+        background: var(--secondary-color);
+    }
+    .tour-list-section .search-filter-section .price-range-slider .range-bar .ui-slider-range {
+        background: var(--secondary-color);
+    }
+    .tour-list-section .search-filter-section .ratting-section .ratting-checkbox {
+        background-color: var(--dark-bg1);
+    }
+    .tourSwiper-active .swiper-button-prev {
+        background-color: var(--primary-color);
+    }
+    .tour-details-container .date-travel-card .date-time-dropdown {
+        background-color: var(--primary-border2);
+    }
+    .tour-details-container .date-travel-card .dropdown-section {
+        background-color: var(--primary-border2);
+    }
+    .news-detals-search .search-input {
+        background: var(--primary-border2);
+    }
+    .recent-news-list .list .date {
+        color: var(--secondary-color);
+    }
+    .recent-news-list .list:hover .title {
+        color: var(--secondary-color);
+    }
+    .social-btn:hover {
+        color: var(--secondary-color);
+    }
+    .news-details-quote .pera {
+        color: var(--secondary-color);
+    }
+    .tour-details-container .details-heading .location .name {
+        color: var(--secondary-color);
+    }
+    
+    .tour-details-container .details-heading .location {
+        color: var(--secondary-color);
+    }
+    .btn-primary-fill:hover,
+    .btn-primary-submit:hover {
+        border: 1px solid var(--secondary-border);
+        color: #fff;
+    }
+    .contact-form .contact-input {
+        border: 1px solid var(--secondary-border);
+    }
+    .login-area .login-card {
+        background: var(--dark-bg2);
+    }
+    .text-primary {
+        color: var(--secondary-color) !important;
+    }
+    .btn-secondary-sm {
+        color: #fff;
+    }
+    .select2-dropdown {
+        border-color: var(--primary-border);
+    }
+    .select2-dropdown {
+        background-color: var(--dark-bg2);
+        border: 1px solid var(--primary-border);
+    }
+    .checkbox-label .checkmark-style {
+        border: 1.5px solid var(--secondary-border);
+    }
+    .news-card-two .news-content .title:hover {
+        color: var(--secondary-color);
+    }
+    .news-card-two .news-content .heading .heading-pera {
+        color: var(--secondary-color);
+    }
+    .all-contents .news-content .heading .heading-pera {
+        color: var(--secondary-color);
+    }
+    .donation-payment .remember-me .checkmark-style {
+        border: 1.5px solid var(--secondary-border);
+    }
+    .sign-with .icon-login-section .icon-login a {
+        border: 1px solid var(--secondary-border);
+    }
+}

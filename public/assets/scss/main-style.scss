@@ -1,0 +1,82 @@
+/*----------------------------------------------
+    Index Of Script
+------------------------------------------------
+
+    @version         : 1.0.0
+    @Template Name   : Travello
+    @Template author : initTheme
+    
+
+    :: Variables                :: News Card
+    :: Template default css     :: Platform Card
+    :: Buttons                  :: Why chose Card
+    :: Animations               :: Destination card 02
+    :: Select2 Custom           :: About
+    :: Date Picker              :: About 02
+    :: Header 01                :: Contact us
+    :: Header 02                :: Testimonial
+    :: Header 03                :: Plan Card
+    :: Hero Section 01          :: Why chose Card
+    :: Hero 02                  :: Destination card
+    :: Hero 03                  :: Trip
+    :: About                    :: Feature Card
+    :: Destinations Card        :: Explore Card
+    :: Brand                    :: Destination Details
+    :: Package card             :: Nes Details 
+    :: Testimonial              :: Tour List
+    :: Pricing                  :: Tour Details
+    :: Breadcrumbs              :: Login
+    :: Pagination               :: Payment
+    :: Plan Card                :: Landing Page
+    :: Select Style custom      :: Offer card
+    :: Footer                   :: Search style
+
+------------------------------------------------
+    End-of Script
+------------------------------------------------*/
+
+
+// Global SCSS
+    @import "global/mixins";
+    @import "global/variables";
+    @import "global/global";
+    @import "global/button";
+    @import "global/animation";
+
+// Demo Default
+    @import "pages/select2";
+    @import "pages/date-picker";
+
+// layout
+    @import "layout/header-one";
+    @import "layout/header-two";
+    @import "layout/header-three";
+    @import "layout/footer";
+    @import "layout/hero-one";
+    @import "layout/hero-two";
+    @import "layout/hero-three";
+
+// Sections
+    @import "sections/breadcrumb";
+    @import "sections/pagination";
+
+// Pages
+    @import "pages/landing_one";
+    @import "pages/landing_two";
+    @import "pages/landing_three";
+    @import "pages/about";
+    @import "pages/contact";
+    @import "pages/destination-details";
+    @import "pages/news-details";
+    @import "pages/tour-list";
+    @import "pages/tour-details";
+    @import "pages/login";
+    @import "pages/payment";
+    @import "pages/terms-condition";
+    @import "components/questions";
+
+// Landing page
+    @import "pages/landing-page";
+
+// Dark Mode
+@import "global/dark";

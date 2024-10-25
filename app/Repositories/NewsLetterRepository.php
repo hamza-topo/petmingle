@@ -42,11 +42,16 @@ class NewsLetterRepository implements RepositoryInterface
     {
         return NewsLetter::all();
     }
-
-    public function paginate()
+    public function take()
     {
-        return NewsLetter::paginate(EnumsNewsLetter::PAGINATE);
+        return NewsLetter::take(EnumsNewsLetter::TAKE)->get();
     }
+
+    public function paginate(int|null $page = EnumsNewsLetter::PAGINATE)
+    {
+        return NewsLetter::paginate($page);
+    }
+
 
     public function getByActivity(bool $isActive = true)
     {
@@ -69,4 +74,6 @@ class NewsLetterRepository implements RepositoryInterface
 
         return false;
     }
+
+
 }

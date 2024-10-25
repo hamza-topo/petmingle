@@ -2,13 +2,18 @@
 
 namespace App\Repositories;
 
+use App\Enums\CacheDuration;
 use App\Enums\Species as EnumsSpecies;
+use App\Factories\TrashedFactory;
 use App\Models\Species;
+use App\Services\CacheService;
 use Illuminate\Support\Collection;
 
 class SpeciesRepository implements RepositoryInterface
 {
-
+    public function __construct(protected CacheService $cacheService)
+    {
+    }
     public function create(array $species): Species
     {
         return Species::create($species);
@@ -19,7 +24,6 @@ class SpeciesRepository implements RepositoryInterface
         $species = $this->getById($speciesId);
         $species->update($newModel);
         $species->refresh();
-
         return $species;
     }
 
@@ -31,7 +35,7 @@ class SpeciesRepository implements RepositoryInterface
      */
     public function getById(int $speciesId): Species
     {
-        return Species::find($speciesId);
+        return Species::findOrFail($speciesId);
     }
 
     public function delete(int $speciesId): bool
@@ -46,21 +50,29 @@ class SpeciesRepository implements RepositoryInterface
 
     public function all(): Collection
     {
-        return Species::all();
+        return $this->getAllFromCache();
     }
 
-    public function paginate()
+    /**
+     * Paginate the species resource
+     *
+     * @param int|null $paginate
+     * @return void
+     */
+    public function paginate(int|null $paginate = EnumsSpecies::PAGINATE )
     {
-        return Species::paginate(EnumsSpecies::PAGINATE);
+        return TrashedFactory::apply(Species::query())->paginate($paginate);
     }
 
     public function getAllFromCache(): mixed
     {
-        return [];
+        return $this->cacheService->remember(EnumsSpecies::CACHEKEY, CacheDuration::SHORT->value, function () {
+            return Species::all();
+        });
     }
 
     public function clearCache(): bool
     {
-        return true;
+        return $this->cacheService->clear(EnumsSpecies::CACHEKEY);
     }
 }

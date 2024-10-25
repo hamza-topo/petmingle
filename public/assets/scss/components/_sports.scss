@@ -1,0 +1,113 @@
+/*---------------------------------------------
+    :: Sports Card
+-----------------------------------------------*/
+
+.card-sports {
+  .card-img {
+    max-width: 452px;
+    max-height: 320px;
+    @include transition(.3s);
+    &:hover{
+      .play-button{
+        width: 70px;
+        opacity: 1;
+        cursor: pointer;
+      }
+    }
+    img {
+      width: 100%;
+    }
+    .play-button{
+      position: absolute;
+      top: 50%;
+      left: 50%; 
+      transform: translate(-50%, -50%);
+      width: 0px;
+      height: 70px;
+      border-radius: 50%;
+      background-color: var(--white);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 24px;
+      color: var(--primary-color);
+      opacity: 0;
+      @include transition(.3s);
+    }
+  }
+  .tags {
+    @include primaryTagOne;
+    margin-top: 24px;
+    @media #{$xs-to-lg-max}{
+        margin-top: 16px;
+    }
+  }
+  .title {
+    font-size: 30px;
+    font-weight: 600;
+    line-height: 1.2;
+    color: var(--primary-title);
+    margin-top: 10px;
+    margin-bottom: 16px;
+    @media #{$xs-to-lg-max}{
+        font-size: 18px;
+        margin-bottom: 14px;
+    }
+  }
+  .author {
+    @include primaryTagTwo;
+  }
+}
+.ad-card-one {
+  background: var(--ad-bg);
+  padding: 36px 20px 30px 20px;
+  position: relative;
+  .ad-image-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 17px;
+    margin-bottom: 29px;
+    img {
+      width: 100%;
+    }
+  }
+  .title {
+    font-size: 22px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: 1.2;
+    letter-spacing: -0.22px;
+    text-align: center;
+    color: var(--white);
+    margin-bottom: 20px;
+    @media #{$xs-to-xl-max}{
+        font-size: 16px;
+    }
+  }
+  .visit-btn{
+    background: var(--visit-btn-bg);
+    padding: 7px 12px;
+    color: var(--primary-title);
+    font-size: 16px;
+    line-height: 1.7;
+    letter-spacing: -0.16px;
+    text-align: center;
+    display: block;
+    margin: auto;
+    @media #{$xs-to-xl-max}{
+        font-size: 14px;
+    }
+  }
+  .cancel-btn{
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 19px;
+    height: 19px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: var(--cancel-btn-bg);
+    color: var(--white);
+  }
+}

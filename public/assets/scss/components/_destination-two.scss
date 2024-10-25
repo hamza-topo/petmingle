@@ -1,0 +1,177 @@
+/*---------------------------------------------
+    :: Destination card 02
+-----------------------------------------------*/
+
+.destination-banner-two {
+  position: relative;
+  overflow: hidden;
+  border-radius: 12px;
+  cursor: pointer;
+  display: block;
+  @media #{$xs} {
+    height: 300px;
+  }
+  @include transition(0.3s);
+  &:hover {
+    img {
+      @include transition(0.8s);
+      transform: scale3d(1.1, 1.1, 1);
+    }
+    &::before {
+      z-index: 1;
+    }
+    .arrow-btn {
+      background-color: var(--secondary-color);
+      color: var(--white);
+    }
+  }
+  img {
+    border-radius: 12px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: all 0.8s ease;
+  }
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0px;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background-image: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.4));
+    z-index: 1;
+    @include transition(0.3s);
+  }
+  .destination-content-two {
+    .ratting-badge {
+      position: absolute;
+      top: 22px;
+      left: 22px;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 16px;
+      color: var(--white);
+      font-weight: 500;
+      line-height: 1.5;
+      background-color: var(--primary-color);
+    }
+    .destination-info-two {
+      z-index: 1;
+      bottom: 0px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: absolute;
+      width: 100%;
+      padding-left: 20px;
+      padding-bottom: 12px;
+      padding-right: 12px;
+      .pera {
+        font-size: 18px;
+        font-weight: 700;
+        color: var(--white);
+        line-height: 1.5;
+        @media #{$xs-to-md-max} {
+          font-size: 16px;
+        }
+      }
+    }
+  }
+  .arrow {
+    font-size: 20px;
+    color: var(--white);
+    font-weight: 700;
+  }
+}
+.destination-offer-two {
+  position: relative;
+  padding: 88px 52px 0 30px;
+  border-radius: 12px;
+  background-color: var(--primary-color);
+  overflow: hidden;
+  z-index: 10;
+  @media #{$lg} {
+    padding: 40px;
+  }
+  @media #{$xs} {
+    padding: 30px;
+    height: 300px;
+  }
+  &::before {
+    content: "";
+    position: absolute;
+    background-image: url("../../assets/images/destination/destination-shape.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 330px;
+    height: 230px;
+    bottom: -24px;
+    right: -24px;
+    z-index: -1;
+  }
+}
+.destination-content-offer {
+  .highlights {
+    color: var(--secondary-color);
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 1.2;
+    @media #{$xs-to-sm-max} {
+      font-size: 16px;
+    }
+  }
+  .title {
+    margin-top: 12px;
+    margin-bottom: 20px;
+    color: var(--white);
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.1;
+    @media #{$xs-to-sm-max} {
+      font-size: 26px;
+    }
+  }
+}
+.destination-offer-three {
+  position: relative;
+  padding: 129px 52px 129px 30px;
+  border-radius: 12px;
+  background-color: var(--primary-color);
+  overflow: hidden;
+  z-index: 0;
+  @media #{$lg} {
+    padding: 40px;
+  }
+  @media #{$sm} {
+    padding: 40px;
+  }
+  @media #{$xs} {
+    padding: 30px;
+    height: 250px;
+  }
+  &::before {
+    content: "";
+    position: absolute;
+    background-image: url("../../assets/images/destination/destination-shape-two.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    width: 175px;
+    height: 143px;
+    bottom: 10px;
+    right: 10px;
+    z-index: -1;
+  }
+  &::after {
+    content: "";
+    position: absolute;
+    background-image: url("../../assets/images/destination/destination-shape-three.png");
+    background-repeat: no-repeat;
+    background-size: contain;
+    top: 10px;
+    left: 80px;
+    width: 48px;
+    height: 60px;
+    z-index: -1;
+  }
+}

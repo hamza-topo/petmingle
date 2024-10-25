@@ -1,56 +1,54 @@
-<div class="container">
-    <div class="app">
-        <img src="{{ asset('img/white.png') }}" alt="" width="150" height="150">
-        <br>
-        <button class="btn">Download</button>
-        <div class="download">
-            <img src="https://static.cdninstagram.com/rsrc.php/v3/yr/r/093c-DX36-y.png" width="100" height="40">
-            <img src="https://static.cdninstagram.com/rsrc.php/v3/yk/r/NtqqucWkedn.png" width="100" height="40">
-        </div>
-    </div>
-    <div class="hero-section">
-        <div class="slides">
-            <input type="radio" name="slide" id="c1">
-            <label for="c1" class="card">
-                <div class=row>
-                    <div class="icon">
-                        < </div>
-                            <div class="description">
-
-                            </div>
-                    </div>
-            </label>
-            <input type="radio" name="slide" id="c2">
-            <label for="c2" class="card">
-                <div class=row>
-                    <div class="icon"></div>
-                    <div class="description">
-                    </div>
-                </div>
-            </label>
-            <input type="radio" name="slide" id="c3">
-            <label for="c3" class="card">
-                <div class="card-title-right">
-                    <h1>Lorem Ipsum</h1>
-                </div>
-                <div class=row>
-                    <div class="icon"></div>
-                    <div class="description">
-                    </div>
-                </div>
-            </label>
-            <input type="radio" name="slide" id="c4" checked>
-            <label for="c4" class="card">
-                <div class="card-title-left">
-                    <h1>Lorem Ipsum</h1>
-                </div>
-                <div class=row>
-                    <div class="icon">></div>
-                    <div class="description">
-                    </div>
-                </div>
-            </label>
-
-        </div>
-    </div>
-</div>
+ <!-- Hero area S t a r t-->
+ <section class="hero-padding-for-three video-overlay position-relative">
+     <!-- Video -->
+     <div class="hero-bg-video">
+         <video class="hero-slider-video video-cover" poster="assets/images/hero/hero-three-banner.png" loop=""
+             autoplay="" muted="">
+             <source src="assets/images/videos/travel1.mp4" type="video/mp4">
+             Your browser does not support the video tag.
+         </video>
+     </div>
+     <div class="container">
+         <div class="row align-items-center justify-content-between g-4">
+             <div class="col-xl-12">
+                 <div class="hero-caption-three position-relative z-3">
+                     <h4 class="title wow fadeInUp" data-wow-delay="0.0s"
+                         style="visibility: visible; animation-delay: 0s; animation-name: fadeInUp;">
+                         Plan tours to dream locations in just a click!
+                     </h4>
+                     <p class="pera wow fadeInUp" data-wow-delay="0.1s"
+                         style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
+                         Travel is a transformative and enriching experience that
+                         allows individuals to explore new destinations, cultures, and
+                         landscapes
+                     </p>
+                 </div>
+                 <div class="hero-footer position-relative z-3 wow fadeInUp" data-wow-delay="0.3s"
+                     style="visibility: visible; animation-delay: 0.3s; animation-name: fadeInUp;">
+                     <div class="all-user">
+                         <div class="happy-user">
+                             <img src="assets/images/hero/user-1.jpeg" alt="travello">
+                         </div>
+                         <div class="happy-user">
+                             <img src="assets/images/hero/user-2.png" alt="travello">
+                         </div>
+                         <div class="happy-user">
+                             <img src="assets/images/hero/user-3.png" alt="travello">
+                         </div>
+                         <div class="happy-user">
+                             <img src="assets/images/hero/user-4.jpeg" alt="travello">
+                         </div>
+                         <div class="happy-user-count">
+                             <p class="user-count">5k+</p>
+                         </div>
+                         <p class="pera">Happy Customer</p>
+                         <span class="wave-emoji">
+                             <img src="assets/images/icon/hand.png" alt="travello">
+                         </span>
+                     </div>
+                 </div>
+             </div>
+         </div>
+     </div>
+ </section>
+ <!--/ End-of Hero-->

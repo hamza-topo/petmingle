@@ -2,12 +2,21 @@
 
 namespace App\Repositories;
 
+use App\Enums\App;
+use App\Enums\CacheDuration;
+use App\Enums\Race as EnumsRace;
 use App\Models\Race;
+use App\Services\CacheService;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
 
-class RaceRepository
+class RaceRepository implements RepositoryInterface
 {
 
+    public function __construct(protected CacheService $cacheService)
+    {
+        
+    }
 
     public function create(array $race): Race
     {
@@ -23,9 +32,9 @@ class RaceRepository
         return $race;
     }
 
-    public function getById(int $raceId): Race
+    public function getById(int $raceId) 
     {
-        return Race::find($raceId);
+        return Race::with('species')->where('id', $raceId)->first();
     }
 
     public function delete(int $raceId): bool
@@ -41,5 +50,30 @@ class RaceRepository
     public function all()
     {
         return Race::all();
+    }
+
+    public function getAllFromCache(): mixed
+    {
+        return $this->cacheService->remember(EnumsRace::CACHEKEY, CacheDuration::SHORT->value, function () {
+            return Race::whereHas('species')->get();
+        });
+       
+    }
+
+    
+    public function clearCache(): bool
+    {
+        return $this->cacheService->clear(EnumsRace::CACHEKEY);
+    }
+
+    /**
+     * Pagination method
+     *
+     * @param int|null $paginate
+     * @return void
+     */
+    public function paginate(int|null $paginate = App::PAGINATE)
+    {   
+        return Race::OrderBy('id', App::ORDER)->with('species')->paginate($paginate);
     }
 }

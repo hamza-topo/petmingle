@@ -16,7 +16,7 @@ class Update extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:species|max:50',
+            'name' => 'required|max:50',
         ];;
     }
 
@@ -29,7 +29,6 @@ class Update extends FormRequest
     {
         return [
             'name.required' => \__('The Field Species Name is required.'),
-            'name.unique' => \__('The Species Name already exist.'),
             'name.max' => \__('This Species Name is too much long.'),
         ];
     }

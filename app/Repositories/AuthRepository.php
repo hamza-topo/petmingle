@@ -7,6 +7,7 @@ use App\Reducers\Socialite;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Tymon\JWTAuth\Facades\JWTAuth;
+use Illuminate\Support\Str;
 
 class AuthRepository
 {
@@ -54,6 +55,7 @@ class AuthRepository
                 'email' =>  $reducer->user()->email,
                 'provider_id' =>  $reducer->user()->provider_id,
                 'provider_name' =>  $reducer->user()->provider_name,
+                'password' => bcrypt(Str::random(16)),
             ],
             (array) $reducer->user()
         );
