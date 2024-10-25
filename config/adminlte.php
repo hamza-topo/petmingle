@@ -360,6 +360,11 @@ return [
             'icon' => 'fas fa-fw fa-blog',
            
         ],
+        [
+            'text' => 'SEO',
+            'url' => 'admin/seo',
+            'icon' => 'fas fa-fw fa-file',
+        ],
     ],
 
     /*

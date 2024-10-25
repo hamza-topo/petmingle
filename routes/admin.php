@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AdoptionController;
 use App\Http\Controllers\Admin\HomeController;
 use App\Http\Controllers\Admin\PetController;
 use App\Http\Controllers\Admin\RaceController;
+use App\Http\Controllers\Admin\SeoController;
 use App\Http\Controllers\Admin\SpeciesController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\ConfigController;
@@ -31,6 +32,7 @@ Route::prefix('/admin')->name('admin.')->group(function () {
     Route::resource('races', RaceController::class);
     Route::resource('adoptions', AdoptionController::class);
     Route::resource('users', UserController::class);
+    Route::resource('seo', SeoController::class);
 
     Route::post('/trashed/toggle', [ConfigController::class, 'toggleShowTrashed'])->name('trash.toggle');
     Route::put('/species/restore/{id}', [SpeciesController::class, 'restore'])->name('species.restore');
