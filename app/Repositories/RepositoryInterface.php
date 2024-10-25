@@ -69,9 +69,10 @@ interface RepositoryInterface
      * getAllFromCache method
      *
      * @author Topo <hamzaaitsidisaid.11@gmail.com>
+     * @param ?string $key
      * @return mixed
      */
-    public function getAllFromCache(): mixed;
+    public function getAllFromCache(?string $key = ''): mixed;
 
     /**
      * clearCache method
