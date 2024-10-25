@@ -67,7 +67,7 @@ class PetRepository implements RepositoryInterface
         return Pet::orderBy('created_at', 'DESC')->paginate($page);
     }
 
-    public function getAllFromCache(): mixed
+    public function getAllFromCache(?string $key = ''): mixed
     {
         return [];
     }

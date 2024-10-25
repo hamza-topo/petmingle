@@ -3,9 +3,11 @@
 
 <head>
 
-    <x-web.layout.meta />
+   @yield('meta')
     <!-- Title -->
-    <title>{{ config('app.name', 'Petmingle') }}</title>
+    <title>
+        @yield('title')
+    </title>
     <link rel="icon" type="image/x-icon" sizes="20x20" href="{{ asset('assets/images/icon/favicon.png') }}">
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap-5.3.0.min.css') }}">
