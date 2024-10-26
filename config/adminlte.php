@@ -315,6 +315,13 @@ return [
             'url' => 'admin/news-letter',
             'can' => 'manage-blog',
         ],
+        [
+            'text' => 'pages',
+            'url' => 'admin/pages',
+            'icon' => 'far fa-fw fa-file',
+            'label' => 4,
+            'label_color' => 'success',
+        ],
         ['header' => 'account_settings'],
         [
             'text' => 'profile',
@@ -364,6 +371,12 @@ return [
             'text' => 'SEO',
             'url' => 'admin/seo',
             'icon' => 'fas fa-fw fa-file',
+        ],
+        [
+            'text' => 'Components',
+            'url' => 'admin/components',
+            'icon' => 'fas fa-fw fa-address-card',
+            'label_color' => 'success',
         ],
     ],
 

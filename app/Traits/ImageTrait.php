@@ -30,17 +30,22 @@ trait ImageTrait
         return $this;
     }
 
-    public function upload(string $folder = self::DIRECTORY, string $disk = self::DISK, string $filename = null): array
+    public function upload(string $folder = self::DIRECTORY, string $disk = self::DISK, string $filename = null): mixed
     {
-        $file = $this->file->storeAs($folder, $this->name . '.' . $this->file->getClientOriginalExtension(), $disk);
-        return [$file];
+        $filePath = 'uploads/' . $this->file->getClientOriginalName();
+        if( Storage::disk($disk)->put($filePath, file_get_contents($this->file->getRealPath()))){
+            return $filePath;
+        }
+
+        return false;
     }
 
     public function uploadAll(array $uploadedFiles = [])
     {
         if (!empty($uploadedFiles))
             return array_map(function ($uploadedFile) {
-                return $this->upload($uploadedFile, self::DIRECTORY, self::DISK);
+                $this->setFile($uploadedFile);
+                return $this->upload($uploadedFile, self::DISK, self::DIRECTORY);
             }, $uploadedFiles);
     }
 }

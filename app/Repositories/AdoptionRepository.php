@@ -72,7 +72,7 @@ class AdoptionRepository implements RepositoryInterface
         return Adoption::paginate();
     }
 
-    public function getAllFromCache(): mixed
+    public function getAllFromCache(?string $key = ''): mixed
     {
         return [];
     }

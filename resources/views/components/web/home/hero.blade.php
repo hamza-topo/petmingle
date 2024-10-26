@@ -2,10 +2,9 @@
  <section class="hero-padding-for-three video-overlay position-relative">
      <!-- Video -->
      <div class="hero-bg-video">
-         <video class="hero-slider-video video-cover" poster="assets/images/hero/hero-three-banner.png" loop=""
-             autoplay="" muted="">
-             <source src="assets/images/videos/travel1.mp4" type="video/mp4">
-             Your browser does not support the video tag.
+         <video class="hero-slider-video video-cover" poster="{{ asset('assets/images/hero/hero-three-banner.png') }}"
+             loop="" autoplay="" muted="">
+             <source src="{{ asset('assets/images/videos/pets-hero.mp4') }}" type="video/mp4">
          </video>
      </div>
      <div class="container">
@@ -14,13 +13,13 @@
                  <div class="hero-caption-three position-relative z-3">
                      <h4 class="title wow fadeInUp" data-wow-delay="0.0s"
                          style="visibility: visible; animation-delay: 0s; animation-name: fadeInUp;">
-                         Plan tours to dream locations in just a click!
+                         {{ __('Plan tours to dream locations in just a click!')}}
                      </h4>
                      <p class="pera wow fadeInUp" data-wow-delay="0.1s"
                          style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
-                         Travel is a transformative and enriching experience that
+                         {{__('Travel is a transformative and enriching experience that
                          allows individuals to explore new destinations, cultures, and
-                         landscapes
+                         landscapes')}}
                      </p>
                  </div>
                  <div class="hero-footer position-relative z-3 wow fadeInUp" data-wow-delay="0.3s"
