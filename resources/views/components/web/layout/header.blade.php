@@ -11,11 +11,10 @@
                                 <div class="top-header-left d-flex align-items-center">
                                     <!-- Logo-->
                                     <div class="logo">
-                                        <a href="index.html"><img src="assets/images/logo/logo.png" width="50"
-                                                alt="logo" class="changeLogo"></a>
+                                        <a href="{{ route('home') }}"><img src="{{ $component->media ?? '' }}"
+                                                width="50" alt="logo" class="changeLogo"></a>
                                     </div>
                                     <!-- search box -->
-                                    
                                     <!-- / Mobile Device Seach & Theme Mode-->
                                 </div>
                                 <!--Top Right Side -->
@@ -26,9 +25,10 @@
                                             <i class="ri-mail-line"></i>
                                         </div>
                                         <div class="info">
-                                            <p class="pera">Email Anytime</p>
+                                            <p class="pera">{{ $component->content['email']['text'] ?? '' }}</p>
                                             <h4 class="title">
-                                                <a href="javascript:void(0)">example@gmail.com</a>
+                                                <a
+                                                    href="javascript:void(0)">{{ $component->content['email']['value'] ?? '' }}</a>
                                             </h4>
                                         </div>
                                     </div>
@@ -37,9 +37,10 @@
                                             <i class="ri-phone-line"></i>
                                         </div>
                                         <div class="info">
-                                            <p class="pera">Call Anytime</p>
+                                            <p class="pera">{{ $component->content['phone']['text'] ?? '' }}</p>
                                             <h4 class="title">
-                                                <a href="javascript:void(0)">00 (888) +123456</a>
+                                                <a
+                                                    href="javascript:void(0)">{{ $component->content['phone']['value'] ?? '' }}</a>
                                             </h4>
                                         </div>
                                     </div>
@@ -60,31 +61,13 @@
                                     <nav>
                                         <div class="d-flex justify-content-between align-items-center">
                                             <ul class="listing" id="navigation">
-                                                <li class="single-list">
-                                                    <a href="{{ route('home') }}" class="single link-active">Home <i
-                                                            class="ri-arrow-down-s-line"></i></a>
-                                                </li>
-                                                <li class="single-list">
-                                                    <a href="{{ route('about') }}" class="single">About</a>
-                                                </li>
-                                                <li class="single-list">
-                                                    <a href="{{ route('engine', ['type' => 0]) }}"
-                                                        class="single">Dating</a>
-                                                </li>
-                                                <li class="single-list">
-                                                    <a href="{{ route('engine', ['type' => 1]) }}" class="single">pet
-                                                        sitters</a>
-                                                </li>
-                                                <li class="single-list">
-                                                    <a href="{{ route('engine', ['type' => 2]) }}"
-                                                        class="single">Adoption</a>
-                                                </li>
-                                                <li class="single-list">
-                                                    <a href="{{ route('blogs') }}" class="single">Blogs</a>
-                                                </li>
-                                                <li class="single-list">
-                                                    <a href="{{ route('contact') }}" class="single">Contact</a>
-                                                </li>
+                                                @foreach ($menus as $menu)
+                                                    <li class="single-list">
+                                                        <a href="{{ url($menu['url']) }}"
+                                                            class="single">{{ $menu['Text'] }}<i
+                                                                class="ri-arrow-down-s-line"></i></a>
+                                                    </li>
+                                                @endforeach
                                                 <li class="d-block d-lg-none">
                                                     <div class="header-right pl-15">
                                                         <div class="d-flex align-items-center gap-12">
@@ -93,7 +76,7 @@
                                                             </div>
                                                             <div class="divider gradient-divider"></div>
                                                             <div class="money">
-                                                                <p class="pera">USD</p>
+                                                                <p class="pera">{{ App\Enums\App::CURRENCY }}</p>
                                                             </div>
                                                         </div>
                                                         <div class="sign-btn">
@@ -111,7 +94,7 @@
                                                     </div>
                                                     <div class="divider gradient-divider"></div>
                                                     <div class="money">
-                                                        <p class="pera">USD</p>
+                                                        <p class="pera">{{ App\Enums\App::CURRENCY }}</p>
                                                     </div>
                                                 </div>
                                                 <div class="sign-btn">

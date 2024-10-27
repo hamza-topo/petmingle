@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Enums\App;
+use App\Enums\Component;
+use App\Models\Component as ModelComponent;
 use App\Traits\ImageTrait;
 use Illuminate\Http\Request;
 use App\Services\ComponentService;
@@ -53,18 +55,23 @@ class ComponentController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
+     * TODO::add Validation rule
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
+        $component = $this->componentRepository->getByName($request->name);
         try {
             $request = $request->all();
             if (!empty($request['media'])) {
                 $request['media'] =  $this->uploadAll([$request['media']])[0];
             }
-            $this->componentRepository->create($request);
+            if (empty($component->id)) {
+                $this->componentRepository->create($request);
+            } else {
+                $this->componentRepository->update($component->id, $request);
+            }
 
             return redirect(route('admin.components.index'));
         } catch (\Exception $e) {
@@ -88,12 +95,22 @@ class ComponentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param  string  $componentName
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(string $componentName)
     {
-        //
+        if (!\in_array(
+            $componentName,
+            collect(Component::cases())->pluck('value')->toArray()
+        )) {
+            abort(404);
+        }
+        $component = $this->componentRepository->getByName($componentName) ?? new ModelComponent;
+        $langs = App::LOCALES;
+
+
+        return view('admin.components.elements.' . \strtolower($componentName), compact('component', 'componentName', 'langs'));
     }
 
     /**

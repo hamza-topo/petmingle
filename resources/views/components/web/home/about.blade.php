@@ -21,25 +21,25 @@
                     <div class="tab-pane fade show active" id="v-pills-one" role="tabpanel"
                         aria-labelledby="v-pills-one-tab">
                         <div class="about-banner imgEffect4">
-                            <img src="assets/images/gallery/about.png" alt="travello">
+                            <img src="assets/images/gallery/about.png" alt="{{config('app.name')}}">
                         </div>
                     </div>
                     <div class="tab-pane fade" id="v-pills-two" role="tabpanel"
                         aria-labelledby="v-pills-two-tab">
                         <div class="about-banner imgEffect4">
-                            <img src="assets/images/gallery/about-banner-2.png" alt="travello">
+                            <img src="assets/images/gallery/about-banner-2.png" alt="{{config('app.name')}}">
                         </div>
                     </div>
                     <div class="tab-pane fade" id="v-pills-three" role="tabpanel"
                         aria-labelledby="v-pills-three-tab">
                         <div class="about-banner imgEffect4">
-                            <img src="assets/images/gallery/about-banner-3.png" alt="travello">
+                            <img src="assets/images/gallery/about-banner-3.png" alt="{{config('app.name')}}">
                         </div>
                     </div>
                     <div class="tab-pane fade" id="v-pills-four" role="tabpanel"
                         aria-labelledby="v-pills-four-tab">
                         <div class="about-banner imgEffect4">
-                            <img src="assets/images/gallery/about-banner-4.png" alt="travello">
+                            <img src="assets/images/gallery/about-banner-4.png" alt="{{config('app.name')}}">
                         </div>
                     </div>
                 </div>
@@ -108,7 +108,7 @@
         </div>
     </div>
     <div class="shape-bg-about">
-        <img src="assets/images/icon/bg-shape-2.png" alt="travello">
+        <img src="assets/images/icon/bg-shape-2.png" alt="{{config('app.name')}}">
     </div>
 </section>
 <!--/ End-of About US-->

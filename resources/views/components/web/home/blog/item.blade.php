@@ -2,7 +2,7 @@
     <article class="news-card-two">
         <figure class="news-banner-two imgEffect">
             <a href="news-details.html">
-                <img src="assets/images/news/news-4.png" alt="travello">
+                <img src="assets/images/news/news-4.png" alt="{{config('app.name')}}">
             </a>
         </figure>
         <div class="news-content">

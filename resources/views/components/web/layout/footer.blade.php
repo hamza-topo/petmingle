@@ -88,7 +88,7 @@
                     <div class="footer-content">
                         <div class="d-flex flex-column gap-20">
                             <div class="logo">
-                                <img src="assets/images/logo/logo.png" width="50" alt="travello" class="changeLogo">
+                                <img src="assets/images/logo/logo.png" width="50" alt="{{config('app.name')}}" class="changeLogo">
                             </div>
                             <p class="pera">
                                 Travel is a transformative and enriching experience that

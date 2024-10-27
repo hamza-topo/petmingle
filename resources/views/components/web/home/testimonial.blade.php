@@ -18,7 +18,7 @@
                 <div class="swiper-slide testimonial-card">
                     <div class="testimonial-header">
                         <div class="user-img">
-                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                         </div>
                         <div class="user-info">
                             <p class="name">David Malan</p>
@@ -35,7 +35,7 @@
                     </div>
                     <div class="testimonial-footer">
                         <div class="logo">
-                            <img src="assets/images/logo/logo.png" alt="travello" class="changeLogo">
+                            <img src="assets/images/logo/logo.png" alt="{{config('app.name')}}" class="changeLogo">
                         </div>
                         <p class="date">Jan 20, 2025</p>
                     </div>
@@ -43,7 +43,7 @@
                 <div class="swiper-slide testimonial-card">
                     <div class="testimonial-header">
                         <div class="user-img">
-                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                         </div>
                         <div class="user-info">
                             <p class="name">David Malan</p>
@@ -60,7 +60,7 @@
                     </div>
                     <div class="testimonial-footer">
                         <div class="logo">
-                            <img src="assets/images/logo/logo.png" alt="travello" class="changeLogo">
+                            <img src="assets/images/logo/logo.png" alt="{{config('app.name')}}" class="changeLogo">
                         </div>
                         <p class="date">Jan 20, 2025</p>
                     </div>
@@ -68,7 +68,7 @@
                 <div class="swiper-slide testimonial-card">
                     <div class="testimonial-header">
                         <div class="user-img">
-                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                         </div>
                         <div class="user-info">
                             <p class="name">David Malan</p>
@@ -85,7 +85,7 @@
                     </div>
                     <div class="testimonial-footer">
                         <div class="logo">
-                            <img src="assets/images/logo/logo.png" alt="travello" class="changeLogo">
+                            <img src="assets/images/logo/logo.png" alt="{{config('app.name')}}" class="changeLogo">
                         </div>
                         <p class="date">Jan 20, 2025</p>
                     </div>
@@ -93,7 +93,7 @@
                 <div class="swiper-slide testimonial-card">
                     <div class="testimonial-header">
                         <div class="user-img">
-                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                         </div>
                         <div class="user-info">
                             <p class="name">David Malan</p>
@@ -110,7 +110,7 @@
                     </div>
                     <div class="testimonial-footer">
                         <div class="logo">
-                            <img src="assets/images/logo/logo.png" alt="travello" class="changeLogo">
+                            <img src="assets/images/logo/logo.png" alt="{{config('app.name')}}" class="changeLogo">
                         </div>
                         <p class="date">Jan 20, 2025</p>
                     </div>
@@ -118,7 +118,7 @@
                 <div class="swiper-slide testimonial-card">
                     <div class="testimonial-header">
                         <div class="user-img">
-                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                         </div>
                         <div class="user-info">
                             <p class="name">David Malan</p>
@@ -135,7 +135,7 @@
                     </div>
                     <div class="testimonial-footer">
                         <div class="logo">
-                            <img src="assets/images/logo/logo.png" alt="travello" class="changeLogo">
+                            <img src="assets/images/logo/logo.png" alt="{{config('app.name')}}" class="changeLogo">
                         </div>
                         <p class="date">Jan 20, 2025</p>
                     </div>
@@ -143,7 +143,7 @@
                 <div class="swiper-slide testimonial-card">
                     <div class="testimonial-header">
                         <div class="user-img">
-                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                         </div>
                         <div class="user-info">
                             <p class="name">David Malan</p>
@@ -160,7 +160,7 @@
                     </div>
                     <div class="testimonial-footer">
                         <div class="logo">
-                            <img src="assets/images/logo/logo.png" alt="travello" class="changeLogo">
+                            <img src="assets/images/logo/logo.png" alt="{{config('app.name')}}" class="changeLogo">
                         </div>
                         <p class="date">Jan 20, 2025</p>
                     </div>
@@ -172,7 +172,7 @@
                 <div class="swiper-slide testimonial-card">
                     <div class="testimonial-header">
                         <div class="user-img">
-                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                         </div>
                         <div class="user-info">
                             <p class="name">David Malan</p>
@@ -189,7 +189,7 @@
                     </div>
                     <div class="testimonial-footer">
                         <div class="logo">
-                            <img src="assets/images/logo/logo.png" alt="travello" class="changeLogo">
+                            <img src="assets/images/logo/logo.png" alt="{{config('app.name')}}" class="changeLogo">
                         </div>
                         <p class="date">Jan 20, 2025</p>
                     </div>
@@ -197,7 +197,7 @@
                 <div class="swiper-slide testimonial-card">
                     <div class="testimonial-header">
                         <div class="user-img">
-                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                         </div>
                         <div class="user-info">
                             <p class="name">David Malan</p>
@@ -214,7 +214,7 @@
                     </div>
                     <div class="testimonial-footer">
                         <div class="logo">
-                            <img src="assets/images/logo/logo.png" alt="travello" class="changeLogo">
+                            <img src="assets/images/logo/logo.png" alt="{{config('app.name')}}" class="changeLogo">
                         </div>
                         <p class="date">Jan 20, 2025</p>
                     </div>
@@ -222,7 +222,7 @@
                 <div class="swiper-slide testimonial-card">
                     <div class="testimonial-header">
                         <div class="user-img">
-                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                         </div>
                         <div class="user-info">
                             <p class="name">David Malan</p>
@@ -239,7 +239,7 @@
                     </div>
                     <div class="testimonial-footer">
                         <div class="logo">
-                            <img src="assets/images/logo/logo.png" alt="travello" class="changeLogo">
+                            <img src="assets/images/logo/logo.png" alt="{{config('app.name')}}" class="changeLogo">
                         </div>
                         <p class="date">Jan 20, 2025</p>
                     </div>
@@ -247,7 +247,7 @@
                 <div class="swiper-slide testimonial-card">
                     <div class="testimonial-header">
                         <div class="user-img">
-                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                         </div>
                         <div class="user-info">
                             <p class="name">David Malan</p>
@@ -264,7 +264,7 @@
                     </div>
                     <div class="testimonial-footer">
                         <div class="logo">
-                            <img src="assets/images/logo/logo.png" alt="travello" class="changeLogo">
+                            <img src="assets/images/logo/logo.png" alt="{{config('app.name')}}" class="changeLogo">
                         </div>
                         <p class="date">Jan 20, 2025</p>
                     </div>
@@ -272,7 +272,7 @@
                 <div class="swiper-slide testimonial-card">
                     <div class="testimonial-header">
                         <div class="user-img">
-                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                         </div>
                         <div class="user-info">
                             <p class="name">David Malan</p>
@@ -289,7 +289,7 @@
                     </div>
                     <div class="testimonial-footer">
                         <div class="logo">
-                            <img src="assets/images/logo/logo.png" alt="travello" class="changeLogo">
+                            <img src="assets/images/logo/logo.png" alt="{{config('app.name')}}" class="changeLogo">
                         </div>
                         <p class="date">Jan 20, 2025</p>
                     </div>
@@ -297,7 +297,7 @@
                 <div class="swiper-slide testimonial-card">
                     <div class="testimonial-header">
                         <div class="user-img">
-                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                            <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                         </div>
                         <div class="user-info">
                             <p class="name">David Malan</p>
@@ -314,7 +314,7 @@
                     </div>
                     <div class="testimonial-footer">
                         <div class="logo">
-                            <img src="assets/images/logo/logo.png" alt="travello" class="changeLogo">
+                            <img src="assets/images/logo/logo.png" alt="{{config('app.name')}}" class="changeLogo">
                         </div>
                         <p class="date">Jan 20, 2025</p>
                     </div>

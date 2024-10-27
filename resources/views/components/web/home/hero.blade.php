@@ -2,9 +2,9 @@
  <section class="hero-padding-for-three video-overlay position-relative">
      <!-- Video -->
      <div class="hero-bg-video">
-         <video class="hero-slider-video video-cover" poster="{{ asset('assets/images/hero/hero-three-banner.png') }}"
+         <video class="hero-slider-video video-cover" poster="{{ asset('storage/' . $component->media ?? '') }}"
              loop="" autoplay="" muted="">
-             <source src="{{ asset('assets/images/videos/pets-hero.mp4') }}" type="video/mp4">
+             <source src="{{ asset('storage/' . $component->media ?? '') }}" type="video/mp4">
          </video>
      </div>
      <div class="container">
@@ -13,36 +13,27 @@
                  <div class="hero-caption-three position-relative z-3">
                      <h4 class="title wow fadeInUp" data-wow-delay="0.0s"
                          style="visibility: visible; animation-delay: 0s; animation-name: fadeInUp;">
-                         {{ __('Plan tours to dream locations in just a click!')}}
+                         {{ $component->content['h4'][app()->getLocale()] ?? '' }}
                      </h4>
                      <p class="pera wow fadeInUp" data-wow-delay="0.1s"
                          style="visibility: visible; animation-delay: 0.1s; animation-name: fadeInUp;">
-                         {{__('Travel is a transformative and enriching experience that
-                         allows individuals to explore new destinations, cultures, and
-                         landscapes')}}
+                         {{ $component->title[app()->getLocale()] ?? '' }}
                      </p>
                  </div>
                  <div class="hero-footer position-relative z-3 wow fadeInUp" data-wow-delay="0.3s"
                      style="visibility: visible; animation-delay: 0.3s; animation-name: fadeInUp;">
                      <div class="all-user">
-                         <div class="happy-user">
-                             <img src="assets/images/hero/user-1.jpeg" alt="travello">
-                         </div>
-                         <div class="happy-user">
-                             <img src="assets/images/hero/user-2.png" alt="travello">
-                         </div>
-                         <div class="happy-user">
-                             <img src="assets/images/hero/user-3.png" alt="travello">
-                         </div>
-                         <div class="happy-user">
-                             <img src="assets/images/hero/user-4.jpeg" alt="travello">
-                         </div>
+                         @for ($i = 0; $i < 2; $i++)
+                             <div class="happy-user">
+                                 <img src="" alt="{{ $i }}">
+                             </div>
+                         @endfor
                          <div class="happy-user-count">
                              <p class="user-count">5k+</p>
                          </div>
                          <p class="pera">Happy Customer</p>
                          <span class="wave-emoji">
-                             <img src="assets/images/icon/hand.png" alt="travello">
+                             <img src="" alt="{{config('app.name')}}">
                          </span>
                      </div>
                  </div>

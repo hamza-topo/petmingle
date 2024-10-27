@@ -17,6 +17,7 @@ enum Component: string
     case PROMOTION = 'c-promotion';
     case SPECIAL = 'c-special';
     case TESTIMONIAL = 'c-testimonial';
+    case HEADER = 'c-header';
 
     public static function reverseMatch(string $value): ?Component
     {
@@ -31,6 +32,23 @@ enum Component: string
             'c-promotion' => Component::PROMOTION,
             'c-special' => Component::SPECIAL,
             'c-testimonial' => Component::TESTIMONIAL,
+            default => null, // Fallback for invalid values
+        };
+    }
+
+    public static function match(string $key): ?Component
+    {
+        return match ($key) {
+            Component::ABOUT => 'c-about',
+            Component::BLOG => 'c-blog',
+            Component::BRAND => 'c-brand',
+            Component::HERO => 'c-hero',
+            Component::PACKAGE => 'c-package',
+            Component::PLAN => 'c-plan',
+            Component::PRICING => 'c-pricing',
+            Component::PROMOTION => 'c-promotion',
+            Component::SPECIAL => 'c-special',
+            Component::TESTIMONIAL => 'c-testimonial',
             default => null, // Fallback for invalid values
         };
     }

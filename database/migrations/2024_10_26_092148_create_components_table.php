@@ -19,6 +19,7 @@ class CreateComponentsTable extends Migration
             $table->json('title')->nullable();
             $table->json('content')->nullable();
             $table->string('media')->nullable();
+            $table->boolean('show')->default(true);
             $table->timestamps();
             $table->softDeletes();
         });

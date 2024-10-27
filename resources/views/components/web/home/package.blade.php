@@ -58,7 +58,7 @@
                                 <div class="package-card h-calc">
                                     <div class="package-img imgEffect4">
                                         <a href="tour-details.html">
-                                            <img src="assets/images/package/package-4.png" alt="travello">
+                                            <img src="assets/images/package/package-4.png" alt="{{config('app.name')}}">
                                         </a>
                                         <div class="image-badge">
                                             <p class="pera">Featured</p>
@@ -99,7 +99,7 @@
                                 <div class="package-card h-calc">
                                     <div class="package-img imgEffect4">
                                         <a href="tour-details.html">
-                                            <img src="assets/images/package/package-3.png" alt="travello">
+                                            <img src="assets/images/package/package-3.png" alt="{{config('app.name')}}">
                                         </a>
                                         <div class="image-badge">
                                             <p class="pera">Featured</p>
@@ -140,7 +140,7 @@
                                 <div class="package-card h-calc">
                                     <div class="package-img imgEffect4">
                                         <a href="tour-details.html">
-                                            <img src="assets/images/package/package-2.png" alt="travello">
+                                            <img src="assets/images/package/package-2.png" alt="{{config('app.name')}}">
                                         </a>
                                         <div class="image-badge">
                                             <p class="pera">Featured</p>
@@ -181,7 +181,7 @@
                                 <div class="package-card h-calc">
                                     <div class="package-img imgEffect4">
                                         <a href="tour-details.html">
-                                            <img src="assets/images/package/package-10.jpg" alt="travello">
+                                            <img src="assets/images/package/package-10.jpg" alt="{{config('app.name')}}">
                                         </a>
                                         <div class="image-badge">
                                             <p class="pera">Featured</p>
@@ -226,7 +226,7 @@
                                 <div class="package-card h-calc">
                                     <div class="package-img imgEffect4">
                                         <a href="tour-details.html">
-                                            <img src="assets/images/package/package-5.jpg" alt="travello">
+                                            <img src="assets/images/package/package-5.jpg" alt="{{config('app.name')}}">
                                         </a>
                                         <div class="image-badge">
                                             <p class="pera">Featured</p>
@@ -267,7 +267,7 @@
                                 <div class="package-card h-calc">
                                     <div class="package-img imgEffect4">
                                         <a href="tour-details.html">
-                                            <img src="assets/images/package/package-6.jpg" alt="travello">
+                                            <img src="assets/images/package/package-6.jpg" alt="{{config('app.name')}}">
                                         </a>
                                         <div class="image-badge">
                                             <p class="pera">Featured</p>
@@ -308,7 +308,7 @@
                                 <div class="package-card h-calc">
                                     <div class="package-img imgEffect4">
                                         <a href="tour-details.html">
-                                            <img src="assets/images/package/package-7.jpg" alt="travello">
+                                            <img src="assets/images/package/package-7.jpg" alt="{{config('app.name')}}">
                                         </a>
                                         <div class="image-badge">
                                             <p class="pera">Featured</p>
@@ -349,7 +349,7 @@
                                 <div class="package-card h-calc">
                                     <div class="package-img imgEffect4">
                                         <a href="tour-details.html">
-                                            <img src="assets/images/package/package-8.jpg" alt="travello">
+                                            <img src="assets/images/package/package-8.jpg" alt="{{config('app.name')}}">
                                         </a>
                                         <div class="image-badge">
                                             <p class="pera">Featured</p>
@@ -394,7 +394,7 @@
                                 <div class="package-card h-calc">
                                     <div class="package-img imgEffect4">
                                         <a href="tour-details.html">
-                                            <img src="assets/images/package/package-9.jpg" alt="travello">
+                                            <img src="assets/images/package/package-9.jpg" alt="{{config('app.name')}}">
                                         </a>
                                         <div class="image-badge">
                                             <p class="pera">Featured</p>
@@ -435,7 +435,7 @@
                                 <div class="package-card h-calc">
                                     <div class="package-img imgEffect4">
                                         <a href="tour-details.html">
-                                            <img src="assets/images/package/package-10.jpg" alt="travello">
+                                            <img src="assets/images/package/package-10.jpg" alt="{{config('app.name')}}">
                                         </a>
                                         <div class="image-badge">
                                             <p class="pera">Featured</p>
@@ -476,7 +476,7 @@
                                 <div class="package-card h-calc">
                                     <div class="package-img imgEffect4">
                                         <a href="tour-details.html">
-                                            <img src="assets/images/package/package-11.jpg" alt="travello">
+                                            <img src="assets/images/package/package-11.jpg" alt="{{config('app.name')}}">
                                         </a>
                                         <div class="image-badge">
                                             <p class="pera">Featured</p>
@@ -517,7 +517,7 @@
                                 <div class="package-card h-calc">
                                     <div class="package-img imgEffect4">
                                         <a href="tour-details.html">
-                                            <img src="assets/images/package/package-12.jpg" alt="travello">
+                                            <img src="assets/images/package/package-12.jpg" alt="{{config('app.name')}}">
                                         </a>
                                         <div class="image-badge">
                                             <p class="pera">Featured</p>
@@ -563,7 +563,7 @@
                                 <div class="package-card h-calc">
                                     <div class="package-img imgEffect4">
                                         <a href="tour-details.html">
-                                            <img src="assets/images/package/package-13.jpg" alt="travello">
+                                            <img src="assets/images/package/package-13.jpg" alt="{{config('app.name')}}">
                                         </a>
                                         <div class="image-badge">
                                             <p class="pera">Featured</p>
@@ -604,7 +604,7 @@
                                 <div class="package-card h-calc">
                                     <div class="package-img imgEffect4">
                                         <a href="tour-details.html">
-                                            <img src="assets/images/package/package-14.jpg" alt="travello">
+                                            <img src="assets/images/package/package-14.jpg" alt="{{config('app.name')}}">
                                         </a>
                                         <div class="image-badge">
                                             <p class="pera">Featured</p>
@@ -645,7 +645,7 @@
                                 <div class="package-card h-calc">
                                     <div class="package-img imgEffect4">
                                         <a href="tour-details.html">
-                                            <img src="assets/images/package/package-15.jpg" alt="travello">
+                                            <img src="assets/images/package/package-15.jpg" alt="{{config('app.name')}}">
                                         </a>
                                         <div class="image-badge">
                                             <p class="pera">Featured</p>
@@ -686,7 +686,7 @@
                                 <div class="package-card h-calc">
                                     <div class="package-img imgEffect4">
                                         <a href="tour-details.html">
-                                            <img src="assets/images/package/package-16.jpg" alt="travello">
+                                            <img src="assets/images/package/package-16.jpg" alt="{{config('app.name')}}">
                                         </a>
                                         <div class="image-badge">
                                             <p class="pera">Featured</p>
@@ -731,7 +731,7 @@
                                 <div class="package-card h-calc">
                                     <div class="package-img imgEffect4">
                                         <a href="tour-details.html">
-                                            <img src="assets/images/package/package-17.jpg" alt="travello">
+                                            <img src="assets/images/package/package-17.jpg" alt="{{config('app.name')}}">
                                         </a>
                                         <div class="image-badge">
                                             <p class="pera">Featured</p>
@@ -772,7 +772,7 @@
                                 <div class="package-card h-calc">
                                     <div class="package-img imgEffect4">
                                         <a href="tour-details.html">
-                                            <img src="assets/images/package/package-18.jpg" alt="travello">
+                                            <img src="assets/images/package/package-18.jpg" alt="{{config('app.name')}}">
                                         </a>
                                         <div class="image-badge">
                                             <p class="pera">Featured</p>
@@ -813,7 +813,7 @@
                                 <div class="package-card h-calc">
                                     <div class="package-img imgEffect4">
                                         <a href="tour-details.html">
-                                            <img src="assets/images/package/package-19.jpg" alt="travello">
+                                            <img src="assets/images/package/package-19.jpg" alt="{{config('app.name')}}">
                                         </a>
                                         <div class="image-badge">
                                             <p class="pera">Featured</p>
@@ -854,7 +854,7 @@
                                 <div class="package-card h-calc">
                                     <div class="package-img imgEffect4">
                                         <a href="tour-details.html">
-                                            <img src="assets/images/package/package-20.jpg" alt="travello">
+                                            <img src="assets/images/package/package-20.jpg" alt="{{config('app.name')}}">
                                         </a>
                                         <div class="image-badge">
                                             <p class="pera">Featured</p>

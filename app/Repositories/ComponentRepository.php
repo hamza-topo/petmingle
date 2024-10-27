@@ -67,6 +67,11 @@ class ComponentRepository implements RepositoryInterface
         return Component::onlyTrashed()->where('from', $petId)->get();
     }
 
+    public function getByName(string $name): ?Component
+    {
+        return Component::Where('name', $name)->first();
+    }
+
     public function paginate()
     {
         return Component::paginate();

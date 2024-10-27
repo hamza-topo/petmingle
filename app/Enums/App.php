@@ -29,7 +29,12 @@ enum App
      */
     const MAX_AGE = 30;
 
-     /* 
+    /**
+     * Currency
+     */
+    const CURRENCY = 'USD';
+
+    /* 
      The `LOCALES` constant in the `App` enum class is defining an array of locales with their
      corresponding language codes. Each entry in the array consists of a key-value pair where
      the key represents the language code and the value represents the corresponding locale. In

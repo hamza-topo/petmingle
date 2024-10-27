@@ -26,7 +26,7 @@
             </div>
             <div class="col-lg-4">
                 <div class="hero-banner d-none d-lg-block wow fadeInUp" data-wow-delay="0.2s">
-                    <img src="assets/images/gallery/promotion.png" alt="travello">
+                    <img src="assets/images/gallery/promotion.png" alt="{{config('app.name')}}">
                 </div>
             </div>
         </div>
