@@ -2,7 +2,7 @@
 
 namespace App\Enums;
 
-enum Matched
+enum Match
 {
     const PAGINATE = 25;
 }
