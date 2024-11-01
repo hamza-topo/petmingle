@@ -24,7 +24,7 @@
         </div>
     </div>
     <div class="shape-news">
-        <img src="assets/images/icon/bg-shape-3.png" alt="travello">
+        <img src="assets/images/icon/bg-shape-3.png" alt="{{config('app.name')}}">
     </div>
 </section>
 <!--/ End of Blogs -->

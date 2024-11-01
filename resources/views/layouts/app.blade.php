@@ -3,7 +3,7 @@
 
 <head>
 
-   @yield('meta')
+    @yield('meta')
     <!-- Title -->
     <title>
         @yield('title')
@@ -49,6 +49,7 @@
     <script src="{{ asset('assets/js/main.js') }}"></script>
     <script>
         function setTheme() {
+            localStorage.theme = 'light';
             if (localStorage.theme == 'light') {
                 theme = 'dark';
             } else {
@@ -58,6 +59,7 @@
             document.documentElement.dataset.theme = theme;
             localStorage.theme = theme;
         };
+        setTheme();
     </script>
 </body>
 

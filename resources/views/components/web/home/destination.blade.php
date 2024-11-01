@@ -14,7 +14,7 @@
         <div class="row g-4">
             <div class="col-xl-7 col-lg-7 col-md-7">
                 <a href="destination-details.html" class="destination-banner">
-                    <img src="assets/images/destination/destination-1.png" alt="travello">
+                    <img src="assets/images/destination/destination-1.png" alt="{{config('app.name')}}">
                     <div class="destination-content">
                         <div class="ratting-badge">
                             <i class="ri-star-s-fill"></i>
@@ -39,7 +39,7 @@
             </div>
             <div class="col-xl-5 col-lg-5 col-md-5">
                 <a href="destination-details.html" class="destination-banner">
-                    <img src="assets/images/destination/destination-2.png" alt="travello">
+                    <img src="assets/images/destination/destination-2.png" alt="{{config('app.name')}}">
                     <div class="destination-content">
                         <div class="ratting-badge">
                             <i class="ri-star-s-fill"></i>
@@ -66,7 +66,7 @@
                 <div class="row g-4">
                     <div class="col-lg-4 col-md-6 col-sm-6">
                         <a href="destination-details.html" class="destination-banner">
-                            <img src="assets/images/destination/destination-3.png" alt="travello">
+                            <img src="assets/images/destination/destination-3.png" alt="{{config('app.name')}}">
                             <div class="destination-content">
                                 <div class="ratting-badge">
                                     <i class="ri-star-s-fill"></i>
@@ -91,7 +91,7 @@
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-6">
                         <a href="destination-details.html" class="destination-banner">
-                            <img src="assets/images/destination/destination-4.png" alt="travello">
+                            <img src="assets/images/destination/destination-4.png" alt="{{config('app.name')}}">
                             <div class="destination-content">
                                 <div class="ratting-badge">
                                     <i class="ri-star-s-fill"></i>
@@ -116,7 +116,7 @@
                     </div>
                     <div class="col-lg-4 col-md-6 col-sm-6">
                         <a href="destination-details.html" class="destination-banner">
-                                <img src="assets/images/destination/destination-5.png" alt="travello">
+                                <img src="assets/images/destination/destination-5.png" alt="{{config('app.name')}}">
                             <div class="destination-content">
                                 <div class="ratting-badge">
                                     <i class="ri-star-s-fill"></i>
@@ -145,7 +145,7 @@
     </div>
     <!-- shape -->
     <div class="shape">
-        <img src="assets/images/icon/shape.png" alt="travello">
+        <img src="assets/images/icon/shape.png" alt="{{config('app.name')}}">
     </div>
 </section>
 <!--/ End-of Destination -->    

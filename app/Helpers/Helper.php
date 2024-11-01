@@ -2,6 +2,7 @@
 
 use App\Enums\App;
 use App\Enums\Pet;
+use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
 
 if (!function_exists('isNew')) {
@@ -35,7 +36,7 @@ if (!function_exists('fakeImages')) {
             return '';
         }
 
-       // $result = file_get_contents($images[0]);
+        // $result = file_get_contents($images[0]);
         return '';
         return json_decode($result)->message ?? '';
     }
@@ -47,5 +48,12 @@ if (!function_exists('lastActivity')) {
         $last = $time != 0 ? Carbon::createFromTimestamp($time) : Carbon::now();
 
         return $last->diffForHumans();
+    }
+}
+
+if (!function_exists('slugify')) {
+    function slugify(string $word): string
+    {
+        return Str::slug($word);
     }
 }

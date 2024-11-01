@@ -1,9 +1,9 @@
 @extends('adminlte::page')
 
-@section('title', __('Species'))
+@section('title', __('Pets'))
 
 @section('content_header')
-    <h1>{{ __('Species') }}</h1>
+    <h1>{{ __('Pets') }}</h1>
 @stop
 
 @section('content')

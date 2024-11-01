@@ -75,7 +75,7 @@ class UserRepository implements RepositoryInterface
      * @author Topo <hamzaaitsidisaid.11@gmail.com>
      * @return mixed
      */
-    public function getAllFromCache(): mixed
+    public function getAllFromCache(?string $key = ''): mixed
     {
         return $this->cacheService->remember(EnumsUser::CACHEKEY, CacheDuration::SHORT->value, function () {
             return User::all();

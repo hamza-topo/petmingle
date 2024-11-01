@@ -9,25 +9,25 @@
                 <div class="swiper brandSwiper-active">
                     <div class="swiper-wrapper">
                         <div class="swiper-slide">
-                            <img src="assets/images/brand/brand-1.jpeg" alt="travello">
+                            <img src="assets/images/brand/brand-1.jpeg" alt="{{config('app.name')}}">
                         </div>
                         <div class="swiper-slide">
-                            <img src="assets/images/brand/brand-2.jpg" alt="travello">
+                            <img src="assets/images/brand/brand-2.jpg" alt="{{config('app.name')}}">
                         </div>
                         <div class="swiper-slide">
-                            <img src="assets/images/brand/brand-3.jpg" alt="travello">
+                            <img src="assets/images/brand/brand-3.jpg" alt="{{config('app.name')}}">
                         </div>
                         <div class="swiper-slide">
-                            <img src="assets/images/brand/brand-4.png" alt="travello">
+                            <img src="assets/images/brand/brand-4.png" alt="{{config('app.name')}}">
                         </div>
                         <div class="swiper-slide">
-                            <img src="assets/images/brand/brand-5.png" alt="travello">
+                            <img src="assets/images/brand/brand-5.png" alt="{{config('app.name')}}">
                         </div>
                         <div class="swiper-slide">
-                            <img src="assets/images/brand/brand-1.jpeg" alt="travello">
+                            <img src="assets/images/brand/brand-1.jpeg" alt="{{config('app.name')}}">
                         </div>
                         <div class="swiper-slide">
-                            <img src="assets/images/brand/brand-2.jpg" alt="travello">
+                            <img src="assets/images/brand/brand-2.jpg" alt="{{config('app.name')}}">
                         </div>
                     </div>
                 </div>

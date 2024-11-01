@@ -47,13 +47,13 @@
   --dark: #28292c;
   --info: #0dcaf0;
   --body: #fff;
-  --primary-color: #017b6e;
-  --secondary-color: #f26f55;
+  --primary-color: #c50f4c;
+  --secondary-color: #FF4E88;
   --tertiary-color: #39a1f0;
   --primary-soft-color: #daedef;
   --primary-soft-color-two: #efeedb;
   --primary-color-rgb: 1, 123, 110;
-  --secondary-color-rgb: 242, 111, 85;
+  --secondary-color-rgb: 255, 78, 136;
   --primary-title: #071516;
   --secondary-title: #505a59;
   --tertiary-title: #95b2b4;
@@ -87,8 +87,8 @@
   --info: #0dcaf0;
   --body: #0D1117;
   --body: #12151e;
-  --primary-color: #222839;
-  --secondary-color: #f26f55;
+  --primary-color: #c50f4c;
+  --secondary-color: #FF4E88;
   --tertiary-color: #39a1f0;
   --primary-soft-color: #161B22;
   --primary-soft-color-two: var(--primary-soft-color);
@@ -19414,8 +19414,8 @@ button.applyBtn.btn.btn-sm.btn-primary {
 .video-overlay::before {
   position: absolute;
   content: "";
-  background: -webkit-gradient(linear, left top, left bottom, from(rgba(26, 43, 61, 0)), to(rgb(6, 47, 42)));
-  background: linear-gradient(180deg, rgba(26, 43, 61, 0) 0%, rgb(6, 47, 42) 100%);
+  background: -webkit-gradient(linear, left top, left bottom, from(rgba(26, 43, 61, 0)), to(rgb(0, 0, 0)));
+  /* background: linear-gradient(180deg, rgba(26, 43, 61, 0) 0%, rgb(6, 47, 42) 100%); */
   width: 100%;
   height: 100%;
   left: 0;
@@ -29105,7 +29105,8 @@ button.applyBtn.btn.btn-sm.btn-primary {
   color: var(--secondary-color) !important;
 }
 [data-theme=dark] .btn-secondary-sm {
-  color: #fff;
+  color: white;
+  
 }
 [data-theme=dark] .select2-dropdown {
   border-color: var(--primary-border);

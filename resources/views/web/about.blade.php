@@ -51,7 +51,7 @@
                 <div class="col-xl-7 col-lg-6">
                     <div class="about-count-section about-count-before-bg">
                         <div class="banner">
-                            <img src="assets/images/gallery/about-banner-three.png" alt="travello">
+                            <img src="assets/images/gallery/about-banner-three.png" alt="{{config('app.name')}}">
                         </div>
                         <div class="all-count-list">
                             <div class="details">
@@ -316,31 +316,31 @@
 
                     <div class="swiper-slide" role="group" aria-label="1 / 7"
                         style="width: 205.333px; margin-right: 40px;" data-swiper-slide-index="0">
-                        <img src="assets/images/brand/brand-1.jpeg" alt="travello">
+                        <img src="assets/images/brand/brand-1.jpeg" alt="{{config('app.name')}}">
                     </div>
                     <div class="swiper-slide" role="group" aria-label="2 / 7"
                         style="width: 205.333px; margin-right: 40px;" data-swiper-slide-index="1">
-                        <img src="assets/images/brand/brand-2.jpg" alt="travello">
+                        <img src="assets/images/brand/brand-2.jpg" alt="{{config('app.name')}}">
                     </div>
                     <div class="swiper-slide" role="group" aria-label="3 / 7"
                         style="width: 205.333px; margin-right: 40px;" data-swiper-slide-index="2">
-                        <img src="assets/images/brand/brand-3.jpg" alt="travello">
+                        <img src="assets/images/brand/brand-3.jpg" alt="{{config('app.name')}}">
                     </div>
                     <div class="swiper-slide" role="group" aria-label="4 / 7"
                         style="width: 205.333px; margin-right: 40px;" data-swiper-slide-index="3">
-                        <img src="assets/images/brand/brand-4.png" alt="travello">
+                        <img src="assets/images/brand/brand-4.png" alt="{{config('app.name')}}">
                     </div>
                     <div class="swiper-slide swiper-slide-prev" role="group" aria-label="5 / 7"
                         style="width: 205.333px; margin-right: 40px;" data-swiper-slide-index="4">
-                        <img src="assets/images/brand/brand-5.png" alt="travello">
+                        <img src="assets/images/brand/brand-5.png" alt="{{config('app.name')}}">
                     </div>
                     <div class="swiper-slide swiper-slide-active" role="group" aria-label="6 / 7"
                         style="width: 205.333px; margin-right: 40px;" data-swiper-slide-index="5">
-                        <img src="assets/images/brand/brand-1.jpeg" alt="travello">
+                        <img src="assets/images/brand/brand-1.jpeg" alt="{{config('app.name')}}">
                     </div>
                     <div class="swiper-slide swiper-slide-next" role="group" aria-label="7 / 7"
                         style="width: 205.333px; margin-right: 40px;" data-swiper-slide-index="6">
-                        <img src="assets/images/brand/brand-2.jpg" alt="travello">
+                        <img src="assets/images/brand/brand-2.jpg" alt="{{config('app.name')}}">
                     </div>
                 </div>
                 <span class="swiper-notification" aria-live="assertive" aria-atomic="true"></span>
@@ -374,7 +374,7 @@
                         style="width: 388px; margin-right: 24px;" data-swiper-slide-index="0">
                         <div class="testimonial-header">
                             <div class="user-img">
-                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                             </div>
                             <div class="user-info">
                                 <p class="name">David Malan</p>
@@ -391,7 +391,7 @@
                         </div>
                         <div class="testimonial-footer">
                             <div class="logo">
-                                <img src="assets/images/logo/logo-white.png" alt="travello" class="changeLogo">
+                                <img src="assets/images/logo/logo-white.png" alt="{{config('app.name')}}" class="changeLogo">
                             </div>
                             <p class="date">Jan 20, 2025</p>
                         </div>
@@ -400,7 +400,7 @@
                         style="width: 388px; margin-right: 24px;" data-swiper-slide-index="1">
                         <div class="testimonial-header">
                             <div class="user-img">
-                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                             </div>
                             <div class="user-info">
                                 <p class="name">David Malan</p>
@@ -417,7 +417,7 @@
                         </div>
                         <div class="testimonial-footer">
                             <div class="logo">
-                                <img src="assets/images/logo/logo-white.png" alt="travello" class="changeLogo">
+                                <img src="assets/images/logo/logo-white.png" alt="{{config('app.name')}}" class="changeLogo">
                             </div>
                             <p class="date">Jan 20, 2025</p>
                         </div>
@@ -426,7 +426,7 @@
                         style="width: 388px; margin-right: 24px;" data-swiper-slide-index="2">
                         <div class="testimonial-header">
                             <div class="user-img">
-                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                             </div>
                             <div class="user-info">
                                 <p class="name">David Malan</p>
@@ -443,7 +443,7 @@
                         </div>
                         <div class="testimonial-footer">
                             <div class="logo">
-                                <img src="assets/images/logo/logo-white.png" alt="travello" class="changeLogo">
+                                <img src="assets/images/logo/logo-white.png" alt="{{config('app.name')}}" class="changeLogo">
                             </div>
                             <p class="date">Jan 20, 2025</p>
                         </div>
@@ -452,7 +452,7 @@
                         style="width: 388px; margin-right: 24px;" data-swiper-slide-index="3">
                         <div class="testimonial-header">
                             <div class="user-img">
-                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                             </div>
                             <div class="user-info">
                                 <p class="name">David Malan</p>
@@ -469,7 +469,7 @@
                         </div>
                         <div class="testimonial-footer">
                             <div class="logo">
-                                <img src="assets/images/logo/logo-white.png" alt="travello" class="changeLogo">
+                                <img src="assets/images/logo/logo-white.png" alt="{{config('app.name')}}" class="changeLogo">
                             </div>
                             <p class="date">Jan 20, 2025</p>
                         </div>
@@ -478,7 +478,7 @@
                         style="width: 388px; margin-right: 24px;" data-swiper-slide-index="4">
                         <div class="testimonial-header">
                             <div class="user-img">
-                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                             </div>
                             <div class="user-info">
                                 <p class="name">David Malan</p>
@@ -495,7 +495,7 @@
                         </div>
                         <div class="testimonial-footer">
                             <div class="logo">
-                                <img src="assets/images/logo/logo-white.png" alt="travello" class="changeLogo">
+                                <img src="assets/images/logo/logo-white.png" alt="{{config('app.name')}}" class="changeLogo">
                             </div>
                             <p class="date">Jan 20, 2025</p>
                         </div>
@@ -504,7 +504,7 @@
                         style="width: 388px; margin-right: 24px;" data-swiper-slide-index="5">
                         <div class="testimonial-header">
                             <div class="user-img">
-                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                             </div>
                             <div class="user-info">
                                 <p class="name">David Malan</p>
@@ -521,7 +521,7 @@
                         </div>
                         <div class="testimonial-footer">
                             <div class="logo">
-                                <img src="assets/images/logo/logo-white.png" alt="travello" class="changeLogo">
+                                <img src="assets/images/logo/logo-white.png" alt="{{config('app.name')}}" class="changeLogo">
                             </div>
                             <p class="date">Jan 20, 2025</p>
                         </div>
@@ -542,7 +542,7 @@
                         style="width: 388px; margin-right: 24px;" data-swiper-slide-index="5">
                         <div class="testimonial-header">
                             <div class="user-img">
-                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                             </div>
                             <div class="user-info">
                                 <p class="name">David Malan</p>
@@ -559,7 +559,7 @@
                         </div>
                         <div class="testimonial-footer">
                             <div class="logo">
-                                <img src="assets/images/logo/logo-white.png" alt="travello" class="changeLogo">
+                                <img src="assets/images/logo/logo-white.png" alt="{{config('app.name')}}" class="changeLogo">
                             </div>
                             <p class="date">Jan 20, 2025</p>
                         </div>
@@ -568,7 +568,7 @@
                         style="width: 388px; margin-right: 24px;" data-swiper-slide-index="0">
                         <div class="testimonial-header">
                             <div class="user-img">
-                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                             </div>
                             <div class="user-info">
                                 <p class="name">David Malan</p>
@@ -585,7 +585,7 @@
                         </div>
                         <div class="testimonial-footer">
                             <div class="logo">
-                                <img src="assets/images/logo/logo-white.png" alt="travello" class="changeLogo">
+                                <img src="assets/images/logo/logo-white.png" alt="{{config('app.name')}}" class="changeLogo">
                             </div>
                             <p class="date">Jan 20, 2025</p>
                         </div>
@@ -594,7 +594,7 @@
                         style="width: 388px; margin-right: 24px;" data-swiper-slide-index="1">
                         <div class="testimonial-header">
                             <div class="user-img">
-                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                             </div>
                             <div class="user-info">
                                 <p class="name">David Malan</p>
@@ -611,7 +611,7 @@
                         </div>
                         <div class="testimonial-footer">
                             <div class="logo">
-                                <img src="assets/images/logo/logo-white.png" alt="travello" class="changeLogo">
+                                <img src="assets/images/logo/logo-white.png" alt="{{config('app.name')}}" class="changeLogo">
                             </div>
                             <p class="date">Jan 20, 2025</p>
                         </div>
@@ -620,7 +620,7 @@
                         style="width: 388px; margin-right: 24px;" data-swiper-slide-index="2">
                         <div class="testimonial-header">
                             <div class="user-img">
-                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                             </div>
                             <div class="user-info">
                                 <p class="name">David Malan</p>
@@ -637,7 +637,7 @@
                         </div>
                         <div class="testimonial-footer">
                             <div class="logo">
-                                <img src="assets/images/logo/logo-white.png" alt="travello" class="changeLogo">
+                                <img src="assets/images/logo/logo-white.png" alt="{{config('app.name')}}" class="changeLogo">
                             </div>
                             <p class="date">Jan 20, 2025</p>
                         </div>
@@ -646,7 +646,7 @@
                         style="width: 388px; margin-right: 24px;" data-swiper-slide-index="3">
                         <div class="testimonial-header">
                             <div class="user-img">
-                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                             </div>
                             <div class="user-info">
                                 <p class="name">David Malan</p>
@@ -663,7 +663,7 @@
                         </div>
                         <div class="testimonial-footer">
                             <div class="logo">
-                                <img src="assets/images/logo/logo-white.png" alt="travello" class="changeLogo">
+                                <img src="assets/images/logo/logo-white.png" alt="{{config('app.name')}}" class="changeLogo">
                             </div>
                             <p class="date">Jan 20, 2025</p>
                         </div>
@@ -672,7 +672,7 @@
                         style="width: 388px; margin-right: 24px;" data-swiper-slide-index="4">
                         <div class="testimonial-header">
                             <div class="user-img">
-                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="travello">
+                                <img src="assets/images/testimonial/testimonial-1.jpeg" alt="{{config('app.name')}}">
                             </div>
                             <div class="user-info">
                                 <p class="name">David Malan</p>
@@ -689,7 +689,7 @@
                         </div>
                         <div class="testimonial-footer">
                             <div class="logo">
-                                <img src="assets/images/logo/logo-white.png" alt="travello" class="changeLogo">
+                                <img src="assets/images/logo/logo-white.png" alt="{{config('app.name')}}" class="changeLogo">
                             </div>
                             <p class="date">Jan 20, 2025</p>
                         </div>

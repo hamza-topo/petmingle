@@ -38,5 +38,6 @@ Route::group([],function ($router) {
     $router->get('/blogs', App\Http\Controllers\Web\BlogController::class)->name('blogs');
     $router->get('/faq', App\Http\Controllers\Web\FaqController::class)->name('faq');
     $router->get('/search', [App\Http\Controllers\Web\EngineController::class, 'index'])->name('engine');
+    $router->get('/search/{slug}/{id}', [App\Http\Controllers\Web\EngineController::class, 'show'])->name('engine.detail');
     $router->get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 });

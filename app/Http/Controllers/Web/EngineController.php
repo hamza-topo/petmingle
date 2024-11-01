@@ -22,4 +22,15 @@ class EngineController extends Controller
         $seo = $this->seoRepository->getByKey(Pages::ENGINE->value);
         return view('web.search', compact('pets', 'seo'));
     }
+
+    public function show(string $slug, int $id)
+    {
+        try {
+            $result = $this->petRepository->getById($id);
+
+            return view('web.search_detail', compact('result'));
+        } catch (\Exception $e) {
+            // Log::error($e->getMessage());
+        }
+    }
 }
