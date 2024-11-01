@@ -16,7 +16,7 @@ class Plan extends Component
      */
     public function __construct(protected ComponentRepository $componentRepository)
     {
-        $this->component = $this->componentRepository->getByName(EnumComponent::PLAN->value);
+        $this->component = $this->componentRepository->getByName(EnumComponent::PLAN->value) ?? new ModelComponent;
     }
     /**
      * Get the view / contents that represent the component.

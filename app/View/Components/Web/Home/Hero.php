@@ -17,7 +17,7 @@ class Hero extends Component
      */
     public function __construct(protected ComponentRepository $componentRepository)
     {
-        $this->component = $this->componentRepository->getByName(EnumComponent::HERO->value);
+        $this->component = $this->componentRepository->getByName(EnumComponent::HERO->value) ?? new ModelComponent;
     }
 
     /**

@@ -4,41 +4,29 @@
             <div class="col-lg-12">
                 <div class="plan-section-three plan-shadow">
                     <div class="choose-plan-nav">
-
                         <!-- Buttons Type Select -->
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
-                            @if(!empty($component->content['tabs']))
-                            @foreach($component->content['tabs'] as $i => $tab)
                             <li class="nav-item" role="presentation">
-                                <button class="plan-link {{$i==0 ? 'active' : ''}}" id="tour-tab" data-bs-toggle="tab"
-                                    data-bs-target="#tour" type="button" role="tab" aria-controls="tour"
-                                    aria-selected="true">
-                                    <i class="{{$tab['icon']}}"></i> {{$tab['label'][app()->getLocale()]}}
-                                </button>
-                            </li>
-                            @endforeach
-                            @endif
-                            {{-- <li class="nav-item" role="presentation">
                                 <button class="plan-link active" id="tour-tab" data-bs-toggle="tab"
                                     data-bs-target="#tour" type="button" role="tab" aria-controls="tour"
                                     aria-selected="true">
-                                    <i class="ri-heart-2-fill"></i> Dating
+                                    <i class="ri-heart-2-fill"></i> {{ __('Dating') }}
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="plan-link" id="book-tab" data-bs-toggle="tab" data-bs-target="#book"
                                     type="button" role="tab" aria-controls="book" aria-selected="false"
                                     tabindex="-1">
-                                    <i class="ri-bear-smile-fill"></i> Adoption
+                                    <i class="ri-bear-smile-fill"></i> {{ _('Adoption') }}
                                 </button>
                             </li>
                             <li class="nav-item" role="presentation">
                                 <button class="plan-link" id="book-tab" data-bs-toggle="tab" data-bs-target="#book"
                                     type="button" role="tab" aria-controls="book" aria-selected="false"
                                     tabindex="-1">
-                                    <i class="ri-map-pin-user-fill"></i> Pet Sitting
+                                    <i class="ri-map-pin-user-fill"></i> {{ \__('Pet Sitting') }}
                                 </button>
-                            </li> --}}
+                            </li>
                         </ul>
                         <!-- / End-of Buttons -->
 
