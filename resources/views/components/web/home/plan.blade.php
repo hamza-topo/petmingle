@@ -7,7 +7,18 @@
 
                         <!-- Buttons Type Select -->
                         <ul class="nav nav-tabs" id="myTab" role="tablist">
+                            @if(!empty($component->content['tabs']))
+                            @foreach($component->content['tabs'] as $i => $tab)
                             <li class="nav-item" role="presentation">
+                                <button class="plan-link {{$i==0 ? 'active' : ''}}" id="tour-tab" data-bs-toggle="tab"
+                                    data-bs-target="#tour" type="button" role="tab" aria-controls="tour"
+                                    aria-selected="true">
+                                    <i class="{{$tab['icon']}}"></i> {{$tab['label'][app()->getLocale()]}}
+                                </button>
+                            </li>
+                            @endforeach
+                            @endif
+                            {{-- <li class="nav-item" role="presentation">
                                 <button class="plan-link active" id="tour-tab" data-bs-toggle="tab"
                                     data-bs-target="#tour" type="button" role="tab" aria-controls="tour"
                                     aria-selected="true">
@@ -27,7 +38,7 @@
                                     tabindex="-1">
                                     <i class="ri-map-pin-user-fill"></i> Pet Sitting
                                 </button>
-                            </li>
+                            </li> --}}
                         </ul>
                         <!-- / End-of Buttons -->
 
