@@ -1,4 +1,7 @@
 @extends('layouts.app')
+@section('title')
+{{config('app.name')}}
+@endsection
 @section('main')
     <x-web.home.hero />
 
@@ -14,7 +17,7 @@
 
     <x-web.home.package />
 
-    <x-web.home.testimonial />
+    {{-- <x-web.home.testimonial /> --}}
 
     <x-web.home.pricing />
 

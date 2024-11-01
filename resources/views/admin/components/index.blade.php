@@ -25,7 +25,7 @@
                         @foreach ($components as $component)
                             <tr>
                                 <th scope="row">{{ $component->id ?? '' }}</th>
-                                <td>{{ $component->name }}</td>
+                                <td>{{ App\Enums\Component::reverseMatch($component->name)->name ?? '' }}</td>
                                 <td>{{ $component->title['fr'] ?? '' }}</td>
                                 <td>{{ $component->contenu['fr'] ?? '' }}</td>
                                 <td>

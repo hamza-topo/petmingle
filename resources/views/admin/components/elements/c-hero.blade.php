@@ -1,11 +1,10 @@
 @extends('adminlte::page')
 
-@section('title', __('Update Component'). $componentName ?? '')
+@section('title', __('Update Component') . $componentName ?? '')
 
 @section('content_header')
-    <h1>{{  __('Update Component'). $componentName ?? '' }}</h1>
+    <h1>{{ __('Update Component') . $componentName ?? '' }}</h1>
 @stop
-
 @section('content')
     <div class="row">
         <div class="col-12">
@@ -24,7 +23,9 @@
                 </div>
                 <div class="card-body">
                     <div class="tab-content" id="custom-tabs-one-tabContent">
-                        <form class="row" action="{{ route('admin.components.store') }}" method="POST" enctype="multipart/form-data">
+                        <form class="row" action="{{ route('admin.components.store') }}" method="POST"
+                            enctype="multipart/form-data">
+                            <input type="hidden" name="name" value="{{ $componentName }}" />
                             @foreach ($langs as $lang)
                                 <div class="tab-pane fade col-12 {{ $lang === 'en' ? 'active show' : '' }}"
                                     id="custom-tabs-one-{{ $lang }}" role="tabpanel"
@@ -34,15 +35,15 @@
                                         <div class="mb-3">
                                             <label class="form-label">Title : {{ $lang }}</label>
                                             <input type="text" class="form-control" name="title[{{ $lang }}]"
-                                                value="{{ old('title.' . $lang) }}">
+                                                value="{{ $component->title[$lang] ?? '' }}">
                                             @error('name')
                                                 <div class="form-text text-danger">{{ $message }}</div>
                                             @enderror
                                         </div>
                                         <div class="mb-3">
-                                            <label class="form-label">Meta : {{ $lang }}</label>
-                                            <input class="form-control" name="meta[content][{{ $lang }}]"
-                                                type="text" value="{{ old('meta.content.' . $lang) }}">
+                                            <label class="form-label">H4 : {{ $lang }}</label>
+                                            <input class="form-control" name="content[h4][{{ $lang }}]"
+                                                type="text" value="{{ $component->content['h4'][$lang] ?? '' }}">
                                             @error('meta')
                                                 <div class="form-text text-danger">{{ $message }}</div>
                                             @enderror

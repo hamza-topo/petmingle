@@ -3,17 +3,20 @@
 namespace App\View\Components\Web\Home;
 
 use Illuminate\View\Component;
+use Illuminate\Support\Collection;
+use App\Repositories\PetRepository;
 
 class Special extends Component
 {
+    public Collection $pets;
     /**
      * Create a new component instance.
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(protected PetRepository $petRepository)
     {
-        //
+        $this->pets = $this->petRepository->getLastNewPets();
     }
 
     /**

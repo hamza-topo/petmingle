@@ -42,8 +42,6 @@ class ComponentController extends Controller
      */
     public function create()
     {
-        // dd(Component::reverseMatch($components[0]));
-
         $components = $this->componentRepository->all();
         $avacomponents = array_keys($this->componentService->format($components)
             ->where('id', null)->toArray());
@@ -108,7 +106,6 @@ class ComponentController extends Controller
         }
         $component = $this->componentRepository->getByName($componentName) ?? new ModelComponent;
         $langs = App::LOCALES;
-
 
         return view('admin.components.elements.' . \strtolower($componentName), compact('component', 'componentName', 'langs'));
     }

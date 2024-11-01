@@ -20,13 +20,12 @@ class ComponentService
         foreach ($components as $component) {
             $cases[$component->name] = $component;
         }
-
-        return collect($cases)->map(function ($case) {
-
+       
+        return collect($cases)->map(function ($case,$key) {
+            
             if (!$case instanceof MComponent) {
-                $name = $case;
                 $case = new MComponent;
-                $case->name = $name;
+                $case->name = $key;
             }
             return $case;
         });

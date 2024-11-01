@@ -31,9 +31,9 @@
                          <div class="happy-user-count">
                              <p class="user-count">5k+</p>
                          </div>
-                         <p class="pera">Happy Customer</p>
+                         <p class="pera">{{ __('Happy Partners') }}</p>
                          <span class="wave-emoji">
-                             <img src="" alt="{{config('app.name')}}">
+                             <img src="" alt="{{ config('app.name') }}">
                          </span>
                      </div>
                  </div>

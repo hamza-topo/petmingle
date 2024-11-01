@@ -6,7 +6,7 @@
                 <div class="section-title mx-430 mx-auto text-center">
                     <span class="highlights fancy-font font-400"></span>
                     <h4 class="title">
-                        {{__('Our best Petsitter')}}
+                        {{ __('They need a ') }}<span class="highlights">PetParent</span>
                     </h4>
                 </div>
             </div>
@@ -38,195 +38,33 @@
                     <div class="tab-pane fade show active" id="pills-domestic" role="tabpanel"
                         aria-labelledby="pills-domestic-tab">
                         <div class="row g-4">
-                            <div class="col-xl-4 col-md-6">
-                                <a href="tour-details.html" class="trip-card">
-                                    <div class="from-flex">
-                                        <h4 class="from-title">USA</h4>
-                                        <p class="from-pera line-clamp-1">Istanbul Airport...</p>
-                                    </div>
-                                    <div class="trip-icon-flex">
-                                        <div class="trip-icon"><i class="ri-flight-takeoff-fill"></i></div>
-                                    </div>
-                                    <div class="from-flex">
-                                        <h4 class="from-title">Sylhet</h4>
-                                        <p class="from-pera line-clamp-1">Osman Internatin...</p>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-xl-4 col-md-6">
-                                <a href="tour-details.html" class="trip-card">
-                                    <div class="from-flex">
-                                        <h4 class="from-title">USA</h4>
-                                        <p class="from-pera line-clamp-1">Istanbul Airport...</p>
-                                    </div>
-                                    <div class="trip-icon-flex">
-                                        <div class="trip-icon"><i class="ri-flight-takeoff-fill"></i></div>
-                                    </div>
-                                    <div class="from-flex">
-                                        <h4 class="from-title">kolkata</h4>
-                                        <p class="from-pera line-clamp-1">kolkata Airport</p>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-xl-4 col-md-6">
-                                <a href="tour-details.html" class="trip-card">
-                                    <div class="from-flex">
-                                        <h4 class="from-title">USA</h4>
-                                        <p class="from-pera line-clamp-1">Istanbul Airport...</p>
-                                    </div>
-                                    <div class="trip-icon-flex">
-                                        <div class="trip-icon"><i class="ri-flight-takeoff-fill"></i></div>
-                                    </div>
-                                    <div class="from-flex">
-                                        <h4 class="from-title">india</h4>
-                                        <p class="from-pera line-clamp-1">Shah Amanat Inter...</p>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-xl-4 col-md-6">
-                                <a href="tour-details.html" class="trip-card">
-                                    <div class="from-flex">
-                                        <h4 class="from-title">USA</h4>
-                                        <p class="from-pera line-clamp-1">Istanbul Airport...</p>
-                                    </div>
-                                    <div class="trip-icon-flex">
-                                        <div class="trip-icon"><i class="ri-flight-takeoff-fill"></i></div>
-                                    </div>
-                                    <div class="from-flex">
-                                        <h4 class="from-title">india</h4>
-                                        <p class="from-pera line-clamp-1">Shah Amanat Inter...</p>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-xl-4 col-md-6">
-                                <a href="tour-details.html" class="trip-card">
-                                    <div class="from-flex">
-                                        <h4 class="from-title">USA</h4>
-                                        <p class="from-pera line-clamp-1">Istanbul Airport...</p>
-                                    </div>
-                                    <div class="trip-icon-flex">
-                                        <div class="trip-icon"><i class="ri-flight-takeoff-fill"></i></div>
-                                    </div>
-                                    <div class="from-flex">
-                                        <h4 class="from-title">canada</h4>
-                                        <p class="from-pera line-clamp-1">canada Airport</p>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-xl-4 col-md-6">
-                                <a href="tour-details.html" class="trip-card">
-                                    <div class="from-flex">
-                                        <h4 class="from-title">USA</h4>
-                                        <p class="from-pera line-clamp-1">Istanbul Airport...</p>
-                                    </div>
-                                    <div class="trip-icon-flex">
-                                        <div class="trip-icon"><i class="ri-flight-takeoff-fill"></i></div>
-                                    </div>
-                                    <div class="from-flex">
-                                        <h4 class="from-title">kolkata</h4>
-                                        <p class="from-pera line-clamp-1">kolkata Airport</p>
-                                    </div>
-                                </a>
-                            </div>
+                            @foreach ($pets as $pet)
+                                <div class="col-xl-4 col-md-6">
+                                    <a href="{{ route('engine.detail', [slugify($pet->name), $pet->id]) }}"
+                                        class="trip-card">
+                                        <div class="from-flex">
+                                            <h4 class="from-title">{{ $pet->name ?? '' }}</h4>
+                                            <p class="from-pera line-clamp-1">{{ $pet->owner->name }}</p>
+                                        </div>
+                                        <div class="trip-icon-flex">
+                                            <div class="trip-icon">
+                                                @if (empty($pet->images[0]))
+                                                @else
+                                                    <img src="assets/images/package/package-2.png"
+                                                        style="height:75px;width:75px;border-radius:50%" />
+                                                @endif
+                                            </div>
+                                        </div>
+                                        <div class="from-flex">
+                                            <h4 class="from-title">{{ $pet->race->name }}</h4>
+                                            <p class="from-pera line-clamp-1">Age: {{ $pet->age }} months</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            @endforeach
                         </div>
                     </div>
-                    <div class="tab-pane fade" id="pills-international" role="tabpanel"
-                        aria-labelledby="pills-international-tab">
-                        <div class="row g-4">
-                            <div class="col-xl-4 col-md-6">
-                                <a href="tour-details.html" class="trip-card">
-                                    <div class="from-flex">
-                                        <h4 class="from-title">USA</h4>
-                                        <p class="from-pera line-clamp-1">Istanbul Airport...</p>
-                                    </div>
-                                    <div class="trip-icon-flex">
-                                        <div class="trip-icon"><i class="ri-flight-takeoff-fill"></i></div>
-                                    </div>
-                                    <div class="from-flex">
-                                        <h4 class="from-title">Australia</h4>
-                                        <p class="from-pera line-clamp-1">
-                                            Australia Internatin...
-                                        </p>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-xl-4 col-md-6">
-                                <a href="tour-details.html" class="trip-card">
-                                    <div class="from-flex">
-                                        <h4 class="from-title">USA</h4>
-                                        <p class="from-pera line-clamp-1">Istanbul Airport...</p>
-                                    </div>
-                                    <div class="trip-icon-flex">
-                                        <div class="trip-icon"><i class="ri-flight-takeoff-fill"></i></div>
-                                    </div>
-                                    <div class="from-flex">
-                                        <h4 class="from-title">Usa</h4>
-                                        <p class="from-pera line-clamp-1">Usa Airport</p>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-xl-4 col-md-6">
-                                <a href="tour-details.html" class="trip-card">
-                                    <div class="from-flex">
-                                        <h4 class="from-title">USA</h4>
-                                        <p class="from-pera line-clamp-1">Istanbul Airport...</p>
-                                    </div>
-                                    <div class="trip-icon-flex">
-                                        <div class="trip-icon"><i class="ri-flight-takeoff-fill"></i></div>
-                                    </div>
-                                    <div class="from-flex">
-                                        <h4 class="from-title">Japan</h4>
-                                        <p class="from-pera line-clamp-1">Narita Inter...</p>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-xl-4 col-md-6">
-                                <a href="tour-details.html" class="trip-card">
-                                    <div class="from-flex">
-                                        <h4 class="from-title">USA</h4>
-                                        <p class="from-pera line-clamp-1">Istanbul Airport...</p>
-                                    </div>
-                                    <div class="trip-icon-flex">
-                                        <div class="trip-icon"><i class="ri-flight-takeoff-fill"></i></div>
-                                    </div>
-                                    <div class="from-flex">
-                                        <h4 class="from-title">Hongkok</h4>
-                                        <p class="from-pera line-clamp-1">Hongkok Inter...</p>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-xl-4 col-md-6">
-                                <a href="tour-details.html" class="trip-card">
-                                    <div class="from-flex">
-                                        <h4 class="from-title">USA</h4>
-                                        <p class="from-pera line-clamp-1">Istanbul Airport...</p>
-                                    </div>
-                                    <div class="trip-icon-flex">
-                                        <div class="trip-icon"><i class="ri-flight-takeoff-fill"></i></div>
-                                    </div>
-                                    <div class="from-flex">
-                                        <h4 class="from-title">Japan</h4>
-                                        <p class="from-pera line-clamp-1">Narita Inter...</p>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-xl-4 col-md-6">
-                                <a href="tour-details.html" class="trip-card">
-                                    <div class="from-flex">
-                                        <h4 class="from-title">USA</h4>
-                                        <p class="from-pera line-clamp-1">Istanbul Airport...</p>
-                                    </div>
-                                    <div class="trip-icon-flex">
-                                        <div class="trip-icon"><i class="ri-flight-takeoff-fill"></i></div>
-                                    </div>
-                                    <div class="from-flex">
-                                        <h4 class="from-title">Canada</h4>
-                                        <p class="from-pera line-clamp-1">Canada Airport</p>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
+
                 </div>
                 <!-- / End-of Tab contents -->
             </div>

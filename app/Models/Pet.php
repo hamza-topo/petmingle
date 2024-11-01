@@ -56,4 +56,9 @@ class Pet extends Model
     {
         return $this->hasMany(MatchTable::class, 'from');
     }
+
+    public function adoptions(): HasMany
+    {
+        return $this->hasMany(Adoption::class, 'from');
+    }
 }

@@ -38,7 +38,7 @@ class PetRepository implements RepositoryInterface
      */
     public function getById(int $petId): Pet
     {
-        return Pet::find($petId);
+        return Pet::findOrFail($petId);
     }
 
     public function delete(int $petId): bool
@@ -54,6 +54,11 @@ class PetRepository implements RepositoryInterface
     public function all(): Collection
     {
         return Pet::all();
+    }
+
+    public function getLastNewPets()
+    {
+        return Pet::orderBy('created_at', 'desc')->with(['adoptions', 'likes', 'race', 'owner'])->limit(6)->get();
     }
 
     /**
