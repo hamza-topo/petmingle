@@ -63,17 +63,25 @@ class NewsLetterRepository implements RepositoryInterface
         return NewsLetter::whereIn('type', $types)->where('active', $isActive)->get();
     }
 
-    public function getAllFromCache(): mixed
+    /**
+     * getAllFromCache method
+     *
+     * @author Topo <hamzaaitsidisaid.11@gmail.com>
+     * @param ?string $key
+     * @return mixed
+     */
+    public function getAllFromCache(?string $key = ''): mixed
     {
-        new Exception('Not defined yet');
+        throw new Exception('Not defined yet');
     }
 
+    /**
+     * Undocumented function
+     *
+     * @return boolean
+     */
     public function clearCache(): bool
     {
-        new Exception('Not defined yet');
-
-        return false;
+        throw  new Exception('Not defined yet');
     }
-
-
 }

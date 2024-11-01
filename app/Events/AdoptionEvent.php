@@ -2,6 +2,7 @@
 
 namespace App\Events;
 
+use App\Enums\PusherEvent;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -36,11 +37,11 @@ class AdoptionEvent implements ShouldBroadcast
 
     /**
      * Broadcast As channel
-     *
+     * @author hamza <hamzaaitsidisaid.11@gmail.com>
      * @return string
      */
     public function broadcastAs(): string
     {
-        return 'new.adoption';
+        return PusherEvent::ITS_NEW_ADOPTION;
     }
 }

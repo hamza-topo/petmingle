@@ -63,7 +63,7 @@ return [
     |
     */
 
-    'logo' => '<b>PETMINGLE</b>LTE',
+    'logo' => '<b>PETMINGLE</b>',
     'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
@@ -110,7 +110,7 @@ return [
     */
 
     'preloader' => [
-        'enabled' => true,
+        'enabled' => false,
         'mode' => 'fullscreen',
         'img' => [
             'path' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
@@ -154,10 +154,10 @@ return [
 
     'layout_topnav' => null,
     'layout_boxed' => null,
-    'layout_fixed_sidebar' => null,
+    'layout_fixed_sidebar' => true,
     'layout_fixed_navbar' => null,
     'layout_fixed_footer' => null,
-    'layout_dark_mode' => null,
+    'layout_dark_mode' => true,
 
     /*
     |--------------------------------------------------------------------------
@@ -198,7 +198,7 @@ return [
     'classes_content' => '',
     'classes_sidebar' => 'sidebar-dark-primary elevation-4',
     'classes_sidebar_nav' => '',
-    'classes_topnav' => 'navbar-white navbar-light',
+    'classes_topnav' => 'navbar-dark navbar-light',
     'classes_topnav_nav' => 'navbar-expand',
     'classes_topnav_container' => 'container',
 
@@ -258,11 +258,11 @@ return [
 
     'use_route_url' => false,
     'dashboard_url' => 'home',
-    'logout_url' => 'logout',
-    'login_url' => 'login',
+    'logout_url' => 'admin/logout',
+    'login_url' => 'admin/login',
     'register_url' => 'register',
-    'password_reset_url' => 'password/reset',
-    'password_email_url' => 'password/email',
+    'password_reset_url' => 'admin/password/reset',
+    'password_email_url' => 'admin/password/email',
     'profile_url' => false,
 
     /*
@@ -311,16 +311,9 @@ return [
             'text' => 'search',
         ],
         [
-            'text' => 'blog',
-            'url' => 'admin/blog',
+            'text' => 'NewsLetter',
+            'url' => 'admin/news-letter',
             'can' => 'manage-blog',
-        ],
-        [
-            'text' => 'pages',
-            'url' => 'admin/pages',
-            'icon' => 'far fa-fw fa-file',
-            'label' => 4,
-            'label_color' => 'success',
         ],
         ['header' => 'account_settings'],
         [
@@ -334,50 +327,44 @@ return [
             'icon' => 'fas fa-fw fa-lock',
         ],
         [
-            'text' => 'species',
-            'url' => '/admin/species',
-            'icon' => 'ri-bear-smile-fill',
+            'text' => 'Species',
+            'url' => 'admin/species',
+            'icon' => 'fas fa-fw fa-venus-mars',
         ],
         [
-            'text' => 'multilevel',
-            'icon' => 'fas fa-fw fa-share',
-            'submenu' => [
-                [
-                    'text' => 'Species',
-                    'url' => 'admin/species',
-                ],
-                [
-                    'text' => 'Races',
-                    'url' => 'admin/races',
-                ],
-                [
-                    'text' => 'Pets',
-                    'url' => 'admin/pets',
-                   
-                ],
-                [
-                    'text' => 'Adoptions',
-                    'url' => 'admin/adoptions',
-                   
-                ],
-            ],
+            'text' => 'Races',
+            'url' => 'admin/races',
+            'icon' => 'fas fa-fw fa-cat',
         ],
-        // ['header' => 'labels'],
-        // [
-        //     'text' => 'important',
-        //     'icon_color' => 'red',
-        //     'url' => '#',
-        // ],
-        // [
-        //     'text' => 'warning',
-        //     'icon_color' => 'yellow',
-        //     'url' => '#',
-        // ],
-        // [
-        //     'text' => 'information',
-        //     'icon_color' => 'cyan',
-        //     'url' => '#',
-        // ],
+        [
+            'text' => 'Pets',
+            'url' => 'admin/pets',
+            'icon' => 'fas fa-fw fa-dog',
+           
+        ],
+        [
+            'text' => 'Adoptions',
+            'url' => 'admin/adoptions',
+            'icon' => 'fas fa-fw fa-hand-holding',
+           
+        ],
+        [
+            'text' => 'Users',
+            'url' => 'admin/users',
+            'icon' => 'fas fa-fw fa-users',
+           
+        ],
+        [
+            'text' => 'News Letters',
+            'url' => 'admin/news-letters',
+            'icon' => 'fas fa-fw fa-blog',
+           
+        ],
+        [
+            'text' => 'SEO',
+            'url' => 'admin/seo',
+            'icon' => 'fas fa-fw fa-file',
+        ],
     ],
 
     /*
@@ -427,7 +414,7 @@ return [
                     'type' => 'js',
                     'asset' => false,
                     'location' => '//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js',
-                ],
+                ],//TODO:use our local assets
                 [
                     'type' => 'css',
                     'asset' => false,

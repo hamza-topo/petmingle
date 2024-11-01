@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Enums\Pages;
 use App\Http\Controllers\Controller;
 use App\Events\Contact as ContactEvent;
 use App\Http\Requests\Web\Contact\Store;
 use App\Mail\Contact;
 use App\Models\Contact as ModelsContact;
+use App\Repositories\SeoRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
@@ -14,6 +16,7 @@ use Illuminate\Support\Facades\Mail;
 
 class ContactController extends Controller
 {
+    public function __construct(protected SeoRepository $seoRepository) {}
     /**
      * Display a listing of the resource.
      *
@@ -21,7 +24,8 @@ class ContactController extends Controller
      */
     public function index()
     {
-        return view('web.contact');
+        $seo = $this->seoRepository->getByKey(Pages::CONTACT->value);
+        return view('web.contact', compact('seo'));
     }
 
     /**

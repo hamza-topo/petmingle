@@ -97,7 +97,7 @@
                                                             </div>
                                                         </div>
                                                         <div class="sign-btn">
-                                                            <a href="{{ route('user.login') }} "
+                                                            <a href="{{ route('login') }} "
                                                                 class="btn-secondary-sm">Sign
                                                                 In</a>
                                                         </div>
@@ -115,12 +115,12 @@
                                                     </div>
                                                 </div>
                                                 <div class="sign-btn">
-                                                    <a href="{{ route('user.login') }} " class="btn-secondary-sm">Sign
+                                                    <a href="{{ route('login') }} " class="btn-secondary-sm">Sign
                                                         In</a>
                                                 </div>
                                                 <!-- Theme Mode -->
                                                 <li class="single-list">
-                                                    <button
+                                                    <button onclick="setTheme()"
                                                         class="ToggleThemeButton change-theme-mode m-0 p-0 border-0">
                                                         <i class="ri-sun-line"></i>
                                                     </button>

@@ -3,6 +3,7 @@
 namespace App\View\Components\Web\Layout;
 
 use Illuminate\View\Component;
+use App\Models\Seo;
 
 class Meta extends Component
 {
@@ -11,9 +12,8 @@ class Meta extends Component
      *
      * @return void
      */
-    public function __construct()
+    public function __construct(public ?Seo $seo)
     {
-        //
     }
 
     /**

@@ -12,8 +12,7 @@
         "laravel/sanctum": "^2.11",
         "laravel/socialite": "^5.11",
         "laravel/tinker": "^2.5",
-        "laravel/ui": "^3.4",
-        "tymon/jwt-auth": "*"
+        "laravel/ui": "^3.4"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
