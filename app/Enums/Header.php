@@ -16,32 +16,32 @@ class Header extends Enum
         'About' => [
             'url' => '/about',
             'Text' => 'About',
-            'show' => true,
+            'show' => false,
         ],
         'Dating' => [
             'url' => '/search?type=0',
             'Text' => 'Dating',
-            'show' => true,
+            'show' => false,
         ],
         'Pet-Sitters' => [
             'url' => '/search?type=1',
             'Text' => 'Pet-Sitters',
-            'show' => true,
+            'show' => false,
         ],
         'Adoption' => [
             'url' => '/search?type=2',
             'Text' => 'Adoption',
-            'show' => true,
+            'show' => false,
         ],
         'Blogs' => [
             'url' => '/blogs',
-            'Text' => 'Blogs',
+            'Text' => 'Magazine',
             'show' => true,
         ],
         'Contact' => [
             'url' => '/contact',
             'Text' => 'Contact',
-            'show' => true,
+            'show' => false,
         ],
     ];
 }
