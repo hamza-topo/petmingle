@@ -64,6 +64,12 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-12">
+                                <div class="mb-3">
+                                    <label class="form-label">Media</label>
+                                    <input class="form-control" name="media" type="file">
+                                </div>
+                            </div>
                             <div class="col-12">
                                 <button type="submit" class="btn btn-primary">Submit</button>
                                 <a href="{{ route('admin.seo.index') }}" class="btn btn-secondary ms-2">Cancel</a>

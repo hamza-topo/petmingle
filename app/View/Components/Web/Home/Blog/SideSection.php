@@ -2,8 +2,9 @@
 
 namespace App\View\Components\Web\Home\Blog;
 
-use App\Repositories\NewsLetterRepository;
 use Illuminate\View\Component;
+use Illuminate\Support\Collection;
+use App\Repositories\NewsLetterRepository;
 
 class SideSection extends Component
 {
@@ -12,7 +13,7 @@ class SideSection extends Component
      *
      * @return void
      */
-    public function __construct(protected NewsLetterRepository $newsRepository) {}
+    public function __construct(protected NewsLetterRepository $newsRepository, public Collection $blogs) {}
 
 
     /**
@@ -22,7 +23,7 @@ class SideSection extends Component
      */
     public function render()
     {
-        $current_news = $this->newsRepository->take();
-        return view('components.web.home.blog.side-section' , compact('current_news'));
+        $currentNews = $this->newsRepository->take();
+        return view('components.web.home.blog.side-section', compact('currentNews'));
     }
 }
