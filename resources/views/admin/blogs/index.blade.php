@@ -26,31 +26,30 @@
                     <tbody>
                         @empty(!$blogs)
                         @foreach ($blogs as $blog)
-                            {{-- <tr>
-                                <th scope="row">{{ $component->id ?? '' }}</th>
-                                <td>{{ App\Enums\Component::reverseMatch($component->name)->name ?? '' }}</td>
-                                <td>{{ $component->title['fr'] ?? '' }}</td>
-                                <td>{{ $component->contenu['fr'] ?? '' }}</td>
+                        @php 
+                        $img = !empty($blog->media[0]) ? $blog->media[0] : ''
+                        @endphp
+                            <tr>
+                                <th scope="row">{{ $blog->id ?? '' }}</th>
+                                <td>{{ $blog->title[app()->getLocale()] ?? '' }}</td>
+                                <td>{{ generateTextPreview($blog->content[app()->getLocale()] ?? '') }}</td>
                                 <td>
-                                    <video width="75" class="hero-slider-video video-cover"
-                                        poster="{{ asset('storage/' . $component->media ?? '') }}" loop=""
-                                        autoplay="" muted="">
-                                        <source src="{{ asset('storage/' . $component->media ?? '') }}" type="video/mp4">
-                                    </video>
+                                    <img src="{{ asset('storage/' . $img) }}"
+                                    alt="{{ $blog->title[app()->getLocale()] ?? '' }}" width='75'>
                                 </td>
                                 <td align="right" class="d-flex justify-content-end">
-                                    @if (!empty($component->id))
-                                        <a href="{{ route('admin.components.show', $component->name) }}" type="button"
+                                    @if (!empty($blog->id))
+                                        <a href="{{ route('admin.blogs.show', $blog->id) }}" type="button"
                                             class="btn btn-success me-2">
                                             <i class="ri ri-eye-line"></i> <!-- Remix Icon for view -->
                                         </a>
                                     @endif
-                                    <a href="{{ route('admin.components.edit', \strtolower($component->name)) }}" type="button"
+                                    <a href="{{ route('admin.blogs.edit', \strtolower($blog->id)) }}" type="button"
                                         class="btn btn-primary me-2">
                                         <i class="ri ri-pencil-line"></i> <!-- Remix Icon for edit -->
                                     </a>
-                                    @if (!empty($component->id))
-                                        <form action="{{ route('admin.components.destroy', $component->id) }}"
+                                    @if (!empty($blog->id))
+                                        <form action="{{ route('admin.blogs.destroy', $blog->id) }}"
                                             method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
@@ -61,14 +60,14 @@
                                         </form>
                                     @endif
                                 </td>
-                            </tr> --}}
+                            </tr>
                         @endforeach
                         @endempty
                     </tbody>
                 </table>
 
                 <div class="d-flex justify-content-center">
-                    {{-- {{ $components->links('pagination::bootstrap-4') }} --}}
+                    {{ $blogs->links('pagination::bootstrap-4') }}
                 </div>
             </div>
         </div>
