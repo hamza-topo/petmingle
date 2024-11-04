@@ -42,9 +42,15 @@ class NewsLetterRepository implements RepositoryInterface
     {
         return NewsLetter::all();
     }
-    public function take()
+    /**
+     * Take News to display
+     *
+     * @param [type] $take
+     * @return void
+     */
+    public function take(int $take = EnumsNewsLetter::TAKE)
     {
-        return NewsLetter::take(EnumsNewsLetter::TAKE)->get();
+        return NewsLetter::take($take)->get();
     }
 
     public function paginate(int|null $page = EnumsNewsLetter::PAGINATE)

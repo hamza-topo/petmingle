@@ -11,7 +11,7 @@
                                 <div class="top-header-left d-flex align-items-center">
                                     <!-- Logo-->
                                     <div class="logo">
-                                        <a href="{{ route('home') }}"><img src="{{ $component->media ?? '' }}"
+                                        <a href="{{ route('home') }}"><img src="{{ asset('storage/' . $component->media ?? '') }}"
                                                 width="50" alt="logo" class="changeLogo"></a>
                                     </div>
                                     <!-- search box -->

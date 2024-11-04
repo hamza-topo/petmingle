@@ -1,39 +1,57 @@
-<div class="row g-4 mb-60">
-    <div class="col-xl-7 col-lg-7">
-        <div class="tab-content" id="v-pills-tabContent-two">
-            <div class="tab-pane fade show active" id="pills-news-one" role="tabpanel" aria-labelledby="pills-news-one">
-                <div class="about-banner imgEffect4">
-                    <img id="news-image" src="assets/images/news/news-banner.png" alt="news-image">
+<div class="row g-4">
+    @foreach ($blogs as $blog)
+        <div class="col-xl-4 col-lg-4 col-sm-6">
+            <article class="news-card-two">
+                <figure class="news-banner-two imgEffect">
+                    <a href="news-details.html">
+                        @php 
+                        $img = !empty($blog->media[0]) ? $blog->media[0] : ''
+                        @endphp
+                        <img src="{{ asset('storage/' . $img) }}"
+                            alt="{{ $blog->title[app()->getLocale()] ?? '' }}">
+                    </a>
+                </figure>
+                <div class="news-content">
+                    <div class="heading">
+                        <span class="heading-pera">{{ $blog->title[app()->getLocale()] ?? '' }}</span>
+                    </div>
+                    <h4 class="title line-clamp-2">
+                        <a href="news-details.html">The World is a Book and Those Who do not Travel Read
+                            Only
+                            One Page.</a>
+                    </h4>
+                    <div class="news-info">
+                        <div class="d-flex gap-10 align-items-center">
+                            <div class="all-user">
+                                <div class="happy-user">
+                                    <img src="assets/images/hero/user-1.jpeg" alt="image">
+                                </div>
+                                <div class="happy-user">
+                                    <img src="assets/images/hero/user-2.png" alt="image">
+                                </div>
+                                <div class="happy-user">
+                                    <img src="assets/images/hero/user-3.png" alt="image">
+                                </div>
+                                <div class="happy-user">
+                                    <img src="assets/images/hero/user-4.jpeg" alt="image">
+                                </div>
+                            </div>
+                        </div>
+                        <p class="time">published {{ $blog->created_at }}</p>
+                    </div>
                 </div>
-            </div>
+            </article>
         </div>
-    </div>
+    @endforeach
 
-    <div class="col-xl-5 col-lg-5">
-        <div class="all-contents" id="v-pills-tab-two" role="tablist" aria-orientation="vertical">
-        @forelse ( $current_news as $new)
-        <x-web.home.blog.side-item :new="$new"/>
-        @empty
-            
-        @endforelse
+    <div class="col-12 text-center">
+        <div class="section-button d-inline-block">
+            <a href="javascript:void(0)">
+                <div class="btn-primary-icon-sm">
+                    <i class="ri-loader-2-line"></i>
+                    <p class="pera">Loading</p>
+                </div>
+            </a>
         </div>
     </div>
 </div>
-
-@push('scripts')
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const newsItems = document.querySelectorAll('.news-content');
-        newsItems.forEach(item => {
-            item.addEventListener('mouseover', function() {
-                const imageUrl = this.getAttribute('data-image');
-                document.getElementById('news-image').src = imageUrl;
-                const targetTab = document.querySelector(this.getAttribute('data-bs-target'));
-                const tabContent = document.getElementById('v-pills-tabContent-two');
-                tabContent.querySelector('.active').classList.remove('show', 'active');
-                targetTab.classList.add('show', 'active');
-            });
-        });
-    });
-</script>
-@endpush
