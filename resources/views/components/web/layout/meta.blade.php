@@ -4,9 +4,9 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    @if(!empty($seo))
-    <meta name="description" content="{{ $seo->meta['description'][app()->getLocale()] ?? '' }}">
-    <meta name="keywords" content="{{ $seo->meta['keywords'][app()->getLocale()] ?? '' }}">
+    @if (!empty($seo))
+        <meta name="description" content="{{ $seo->meta['description'][app()->getLocale()] ?? '' }}">
+        <meta name="keywords" content="{{ $seo->meta['keywords'][app()->getLocale()] ?? '' }}">
     @endif
     <meta name="author" content="inittheme">
     <meta name="viewport" content="width=device-width, initial-scale=1">
