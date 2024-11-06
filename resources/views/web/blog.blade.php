@@ -26,8 +26,7 @@
     <section class="news-area section-padding2">
         <div class="container">
             <x-web.home.blog.side-item :blogs="$blogs->take(4)"/>
-            <x-web.home.blog.side-section :blogs="$blogs->skip(4)"/>
-            
+            <x-web.home.blog.side-section :blogs="$blogs->skip(4)->take(6)"/>
         </div>
     </section>
 @endsection
