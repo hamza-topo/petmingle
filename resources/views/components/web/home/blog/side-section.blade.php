@@ -16,25 +16,16 @@
                         <span class="heading-pera">{{ $blog->title[app()->getLocale()] ?? '' }}</span>
                     </div>
                     <h4 class="title line-clamp-2">
-                        <a href="news-details.html">The World is a Book and Those Who do not Travel Read
-                            Only
-                            One Page.</a>
+                        <a href="#">{!! generateTextPreview($blog->content[app()->getLocale()] ?? '') !!}</a>
                     </h4>
                     <div class="news-info">
                         <div class="d-flex gap-10 align-items-center">
                             <div class="all-user">
+                                @if(!true)
                                 <div class="happy-user">
                                     <img src="assets/images/hero/user-1.jpeg" alt="image">
                                 </div>
-                                <div class="happy-user">
-                                    <img src="assets/images/hero/user-2.png" alt="image">
-                                </div>
-                                <div class="happy-user">
-                                    <img src="assets/images/hero/user-3.png" alt="image">
-                                </div>
-                                <div class="happy-user">
-                                    <img src="assets/images/hero/user-4.jpeg" alt="image">
-                                </div>
+                                @endif
                             </div>
                         </div>
                         <p class="time">published {{ $blog->created_at }}</p>
@@ -44,7 +35,7 @@
         </div>
     @endforeach
 
-    <div class="col-12 text-center">
+    {{-- <div class="col-12 text-center">
         <div class="section-button d-inline-block">
             <a href="javascript:void(0)">
                 <div class="btn-primary-icon-sm">
@@ -53,5 +44,5 @@
                 </div>
             </a>
         </div>
-    </div>
+    </div> --}}
 </div>

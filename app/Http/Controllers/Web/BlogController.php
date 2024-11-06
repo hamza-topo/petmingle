@@ -2,13 +2,12 @@
 
 namespace App\Http\Controllers\Web;
 
+use App\Enums\App;
 use App\Enums\Pages;
-use App\Http\Controllers\Controller;
-use App\Repositories\NewsLetterRepository;
 use App\Repositories\SeoRepository;
-use App\Repositories\BlogRepository;
+use App\Http\Controllers\Controller;
 
-use Illuminate\Http\Request;
+use App\Repositories\BlogRepository;
 
 class BlogController extends Controller
 {
@@ -20,8 +19,8 @@ class BlogController extends Controller
     public function __invoke()
     {
         $seo = $this->seoRepository->getByKey(Pages::BLOGS->value);
-        $blogs = $this->blogRepostory->all();
-       
+        $blogs = $this->blogRepostory->take();
+
         return view('web.blog', compact('seo', 'blogs'));
     }
 }

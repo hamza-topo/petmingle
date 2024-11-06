@@ -3,6 +3,8 @@
 namespace App\View\Components\Web\Home\Blog;
 
 use Illuminate\View\Component;
+use Illuminate\Support\Collection;
+use App\Repositories\NewsLetterRepository;
 
 class SideItem extends Component
 {
@@ -11,10 +13,7 @@ class SideItem extends Component
      *
      * @return void
      */
-    public function __construct()
-    {
-        //
-    }
+    public function __construct(protected NewsLetterRepository $newsRepository, public Collection $blogs) {}
 
     /**
      * Get the view / contents that represent the component.

@@ -23,7 +23,6 @@ class SideSection extends Component
      */
     public function render()
     {
-        $currentNews = $this->newsRepository->take();
-        return view('components.web.home.blog.side-section', compact('currentNews'));
+        return view('components.web.home.blog.side-section');
     }
 }
