@@ -35,7 +35,8 @@ Route::group([],function ($router) {
     $router->get('/about', App\Http\Controllers\Web\AboutController::class)->name('about');
     $router->get('/contact', [App\Http\Controllers\Web\ContactController::class, 'index'])->name('contact');
     $router->post('/contact', [App\Http\Controllers\Web\ContactController::class, 'store'])->name('contact.store');
-    $router->get('/blogs', App\Http\Controllers\Web\BlogController::class)->name('blogs');
+    $router->get('/blogs', [App\Http\Controllers\Web\BlogController::class, 'index'])->name('blogs');
+    $router->get('/blogs/{id}', [App\Http\Controllers\Web\BlogController::class, 'read'])->name('blogs.read');
     $router->get('/faq', App\Http\Controllers\Web\FaqController::class)->name('faq');
     $router->get('/search', [App\Http\Controllers\Web\EngineController::class, 'index'])->name('engine');
     $router->get('/search/{slug}/{id}', [App\Http\Controllers\Web\EngineController::class, 'show'])->name('engine.detail');

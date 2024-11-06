@@ -25,4 +25,6 @@
     <meta name="facebook-domain-verification" content="...">
     <meta name="csrf-token" content="...">
     <meta name="currency" content="$">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 </div>

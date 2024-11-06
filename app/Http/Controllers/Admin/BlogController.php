@@ -68,7 +68,7 @@ class BlogController extends Controller
             if (!empty($request['media'])) {
                 $request['media'] =  $this->uploadAll([$request['media']]);
             }
-            
+
             $this->blogRepository->create($request);
 
             return redirect(route('admin.blogs.index'));
@@ -98,7 +98,8 @@ class BlogController extends Controller
      */
     public function edit($id)
     {
-        //
+        $blog = $this->blogRepository->getById($id);
+        return view('admin.blogs.edit', ['blog' => $blog, 'langs' => APP::LOCALES]);
     }
 
     /**
@@ -110,7 +111,21 @@ class BlogController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        try {
+            $request = $request->all();
+            $request['user_id'] = auth()->user()->id;
+            if (!empty($request['media'])) {
+                $request['media'] =  $this->uploadAll([$request['media']]);
+            }
+
+            $this->blogRepository->update($id, $request);
+
+            return redirect(route('admin.blogs.index'));
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+
+            return redirect()->back();
+        }
     }
 
     /**
