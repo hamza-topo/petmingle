@@ -1,19 +1,12 @@
 <div class="row g-4 mb-60">
     <div class="col-xl-7 col-lg-7">
         <div class="tab-content" id="v-pills-tabContent-two">
+            @php 
+                $bannerImg = !empty($blogs->first()->media[0]) ? $blogs->first()->media[0] : ''
+            @endphp
             <div class="tab-pane  fade show active" id="pills-news-one" role="tabpanel" aria-labelledby="pills-news-one">
                 <div class="about-banner imgEffect4">
-                    <img src="assets/images/news/news-banner.png" alt="travello">
-                </div>
-            </div>
-            <div class="tab-pane fade" id="pills-news-two" role="tabpanel" aria-labelledby="pills-news-two">
-                <div class="about-banner imgEffect4">
-                    <img src="assets/images/news/banner-1.png" alt="travello">
-                </div>
-            </div>
-            <div class="tab-pane fade" id="pills-news-three" role="tabpanel" aria-labelledby="pills-news-three">
-                <div class="about-banner imgEffect4">
-                    <img src="assets/images/news/banner-2.png" alt="travello">
+                    <img src="{{ asset('storage/' . $bannerImg) }}" alt="{{config('app.name')}}">
                 </div>
             </div>
         </div>
