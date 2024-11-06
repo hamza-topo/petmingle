@@ -21,4 +21,9 @@ class Blog extends Model
         'content' => 'array',
         'media' => 'array'
     ];
+
+    public function author()
+    {
+        return $this->belongsTo(User::class, 'user_id');
+    }
 }

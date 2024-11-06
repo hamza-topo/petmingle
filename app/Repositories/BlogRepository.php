@@ -62,6 +62,13 @@ class BlogRepository implements RepositoryInterface
         return Blog::paginate(EnumsLike::PAGINATE);
     }
 
+    //TODO::create another enum class for blog
+    public function take(?int $limit = EnumsLike::PAGINATE)
+    {
+        return Blog::orderBy('created_at')->limit($limit)->get();
+    }
+
+
 
     /**
      * getAllFromCache method
