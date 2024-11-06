@@ -10,6 +10,10 @@
 
     RewriteEngine On
 
+    # Redirect www to non-www
+    RewriteCond %{HTTP_HOST} ^www\.petspat\.net [NC]
+    RewriteRule ^(.*)$ https://petspat.net/$1 [L,R=301]
+
     # Handle Authorization Header
     RewriteCond %{HTTP:Authorization} .
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
