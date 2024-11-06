@@ -20,6 +20,18 @@
     <!-- RTL CSS::When Need RTL Uncomments File -->
     <!-- <link rel="stylesheet" type="text/css" href="assets/css/rtl.css')}}"> -->
     <!-- Google Tag Manager -->
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-KR0GFNFJ50"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+        gtag('js', new Date());
+
+        gtag('config', 'G-KR0GFNFJ50');
+    </script>
     <script>
         (function(w, d, s, l, i) {
             w[l] = w[l] || [];
