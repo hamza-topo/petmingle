@@ -8,7 +8,7 @@
     <title>
         @yield('title')
     </title>
-    <link rel="icon" type="image/x-icon" sizes="20x20" href="{{ asset('assets/images/icon/favicon.png') }}">
+    <link rel="icon" type="image/x-icon" sizes="20x20" href="{{ asset('assets/images/icon/favicon.ico') }}">
     <!-- Bootstrap -->
     <link rel="stylesheet" type="text/css" href="{{ asset('assets/css/bootstrap-5.3.0.min.css') }}">
     <!-- Fonts & icon -->

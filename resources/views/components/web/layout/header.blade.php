@@ -27,8 +27,7 @@
                                         <div class="info">
                                             <p class="pera">{{ $component->content['email']['text'] ?? '' }}</p>
                                             <h4 class="title">
-                                                <a
-                                                    href="javascript:void(0)">{{ $component->content['email']['value'] ?? '' }}</a>
+                                                <a  href="javascript:void(0)">{{ $component->content['email']['value'] ?? '' }}</a>
                                             </h4>
                                         </div>
                                     </div>
