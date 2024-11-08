@@ -23,18 +23,15 @@
                  <div class="hero-footer position-relative z-3 wow fadeInUp" data-wow-delay="0.3s"
                      style="visibility: visible; animation-delay: 0.3s; animation-name: fadeInUp;">
                      <div class="all-user">
-                         @for ($i = 0; $i < 2; $i++)
+                         @for ($i = 1; $i < 3; $i++)
                              <div class="happy-user">
-                                 <img src="" alt="{{ $i }}">
+                                 <img src="assets/images/hero/{{ $i }}.jpg" alt="{{ $i }}">
                              </div>
                          @endfor
                          <div class="happy-user-count">
                              <p class="user-count">5k+</p>
                          </div>
-                         <p class="pera">{{ __('Happy Partners') }}</p>
-                         <span class="wave-emoji">
-                             <img src="" alt="{{ config('app.name') }}">
-                         </span>
+                         <p class="pera">{{ __('Happy Partners') }}👋</p>
                      </div>
                  </div>
              </div>
