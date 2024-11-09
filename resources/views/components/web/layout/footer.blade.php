@@ -70,9 +70,13 @@
                         <div class="footer-right">
                             <h4 class="title">Subscribe Our Newsletter</h4>
                             <div class="subscribe-wraper">
-                                <input class="footer-search" type="search" name="footer"
+                                <form action="{{route('news-letter.subscribe')}}" method="post">
+                                    @csrf 
+                                    <input class="footer-search" type="search" name="email"
                                     placeholder="Enter Your Email">
-                                <button class="subscribe-btn">Subscribe</button>
+                                <button class="subscribe-btn" submit>Subscribe</button>
+                                </form>
+                                
                             </div>
                         </div>
                     </div>

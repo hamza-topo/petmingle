@@ -41,4 +41,5 @@ Route::group([],function ($router) {
     $router->get('/search', [App\Http\Controllers\Web\EngineController::class, 'index'])->name('engine');
     $router->get('/search/{slug}/{id}', [App\Http\Controllers\Web\EngineController::class, 'show'])->name('engine.detail');
     $router->get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
+    $router->post('', [App\Http\Controllers\Web\NewsletterController::class, 'subscribe'])->name('news-letter.subscribe');
 });
