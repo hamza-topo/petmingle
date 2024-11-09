@@ -56,8 +56,9 @@
                     <div class="footer-content">
                         <div class="d-flex flex-column gap-20">
                             <div class="logo">
-                                <img src="assets/images/logo/logo.png" width="50" alt="{{ config('app.name') }}"
-                                    class="changeLogo">
+                                <a href="{{ route('home') }}"><img
+                                        src="{{ asset('storage/' . $component->media ?? '') }}" width="50"
+                                        alt="{{ config('app.name') }}" class="changeLogo"></a>
                             </div>
                             <h4>Stay Informed with the Latest Pet Health Tips!</h4>
                             <p class="pera">
@@ -70,13 +71,13 @@
                         <div class="footer-right">
                             <h4 class="title">Subscribe Our Newsletter</h4>
                             <div class="subscribe-wraper">
-                                <form action="{{route('news-letter.subscribe')}}" method="post">
-                                    @csrf 
+                                <form action="{{ route('news-letter.subscribe') }}" method="post">
+                                    @csrf
                                     <input class="footer-search" type="search" name="email"
-                                    placeholder="Enter Your Email">
-                                <button class="subscribe-btn" submit>Subscribe</button>
+                                        placeholder="Enter Your Email">
+                                    <button class="subscribe-btn" submit>Subscribe</button>
                                 </form>
-                                
+
                             </div>
                         </div>
                     </div>
