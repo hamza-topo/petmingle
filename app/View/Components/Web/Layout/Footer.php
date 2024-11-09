@@ -19,6 +19,7 @@ class Footer extends Component
         $this->component = $this->componentRepository->getByName(EnumComponent::HEADER->value);
     }
 
+
     /**
      * Get the view / contents that represent the component.
      *

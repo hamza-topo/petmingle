@@ -12,7 +12,7 @@
                                     <!-- Logo-->
                                     <div class="logo">
                                         <a href="{{ route('home') }}"><img src="{{ asset('storage/' . $component->media ?? '') }}"
-                                                width="50" alt="logo" class="changeLogo"></a>
+                                                width="50" alt="{{config('app.name')}}" class="changeLogo"></a>
                                     </div>
                                     <!-- search box -->
                                     <!-- / Mobile Device Seach & Theme Mode-->
