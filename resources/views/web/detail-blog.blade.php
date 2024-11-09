@@ -57,7 +57,7 @@
                                 </div> --}}
                             </div>
                         </div>
-                        <div class="price-review">
+                        {{-- <div class="price-review">
                             <div class="d-flex gap-10 align-items-end">
                                 <p class="light-pera">From</p>
                                 <p class="pera">$95</p>
@@ -66,7 +66,7 @@
                                 <i class="ri-star-s-fill"></i>
                                 <p class="pera">4.7 (20 Reviews)</p>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                     <!-- / Details Heading -->
 
