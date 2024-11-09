@@ -66,7 +66,7 @@ if (!function_exists('generateTextPreview')) {
      * @param int $length The maximum length of the preview.
      * @return string The truncated preview of the text.
      */
-    function generateTextPreview($text, $length = 100)
+    function generateTextPreview($text, $length = 250)
     {
         // Check if the text length exceeds the maximum length
         if (strlen($text) <= $length) {
