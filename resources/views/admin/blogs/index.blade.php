@@ -16,7 +16,7 @@
                 <table class="table">
                     <thead class="thead-dark">
                         <tr>
-                            <th scope="col">#</th>
+                            <th scope="col">Slug</th>
                             <th scope="col">Title</th>
                             <th scope="col">Short description</th>
                             <th scope="col">Media</th>
@@ -30,7 +30,7 @@
                         $img = !empty($blog->media[0]) ? $blog->media[0] : ''
                         @endphp
                             <tr>
-                                <th scope="row">{{ $blog->id ?? '' }}</th>
+                                <th scope="row">{{ $blog->slug[app()->getLocale()] ?? '' }}</th>
                                 <td>{{ $blog->title[app()->getLocale()] ?? '' }}</td>
                                 <td>{{ generateTextPreview($blog->content[app()->getLocale()] ?? '') }}</td>
                                 <td>

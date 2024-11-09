@@ -9,7 +9,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Blog extends Model
 {
     use HasFactory, SoftDeletes;
-    protected $fillable = ['user_id', 'title', 'content', 'media', 'active'];
+
+    protected $fillable = ['user_id', 'slug', 'title', 'content', 'media', 'active'];
 
     /**
      * Casted property
@@ -18,10 +19,16 @@ class Blog extends Model
      */
     protected $casts = [
         'title' => 'array',
+        'slug' => 'array',
         'content' => 'array',
         'media' => 'array'
     ];
 
+    /**
+     * Author relationship
+     *
+     * @return void
+     */
     public function author()
     {
         return $this->belongsTo(User::class, 'user_id');

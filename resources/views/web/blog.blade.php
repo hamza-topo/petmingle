@@ -19,7 +19,8 @@
                         {!! generateTextPreview($blogs->first()->content[app()->getLocale()] ?? '') !!}
 
                         <div class="section-button mt-27 d-inline-block">
-                            <a href="about.html" class="btn-primary-icon-sm radius-20">
+                            <a href="{{ route('blogs.read', $blogs->first()->slug[app()->getLocale()]) }}"
+                                class="btn-primary-icon-sm radius-20">
                                 <p class="pera mt-0">Learn More</p>
                                 <i class="ri-arrow-right-up-line"></i>
                             </a>
@@ -47,17 +48,14 @@
                         </div>
                         <div class="all-count-list">
                             <div class="details">
-                                <p class="pera">{{ $blogs->first()->created_at }}</p>
+                                <p class="pera">{{ readTimesStamps($blogs->first()->created_at) }}</p>
                             </div>
                             <div class="divider"></div>
                             <div class="details">
-                                {{-- <h4 class="count">95.7%</h4> --}}
                                 <p class="pera">{{ $blogs->first()->author->name ?? '' }}</p>
                             </div>
                             <div class="divider"></div>
                             <div class="details">
-                                {{-- <h4 class="count">5000+</h4>
-                                    <p class="pera">Tour Completed</p> --}}
                             </div>
                         </div>
                     </div>

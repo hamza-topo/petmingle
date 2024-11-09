@@ -378,6 +378,12 @@ return [
             'icon' => 'fas fa-fw fa-address-card',
             'label_color' => 'success',
         ],
+        [
+            'text' => 'Blogs',
+            'url' => 'admin/blogs',
+            'icon' => 'fas fa-fw fa-address-card',
+            'label_color' => 'success',
+        ],
     ],
 
     /*

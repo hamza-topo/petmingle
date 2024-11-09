@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use Auth;
 use App\Enums\App;
 use App\Traits\ImageTrait;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
@@ -64,6 +65,11 @@ class BlogController extends Controller
     {
         try {
             $request = $request->all();
+            foreach ($request['slug'] as $lang => &$slug) {
+                if (empty($slug) && !empty($request['title'][$lang])) {
+                    $slug = Str::slug($request['title'][$lang]);
+                }
+            }
             $request['user_id'] = auth()->user()->id;
             if (!empty($request['media'])) {
                 $request['media'] =  $this->uploadAll([$request['media']]);
@@ -113,6 +119,12 @@ class BlogController extends Controller
     {
         try {
             $request = $request->all();
+            foreach ($request['slug'] as $lang => &$slug) {
+                if (empty($slug) && !empty($request['title'][$lang])) {
+                    $slug = Str::slug($request['title'][$lang]);
+                }
+            }
+
             $request['user_id'] = auth()->user()->id;
             if (!empty($request['media'])) {
                 $request['media'] =  $this->uploadAll([$request['media']]);

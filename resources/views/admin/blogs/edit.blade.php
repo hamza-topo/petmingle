@@ -22,14 +22,19 @@
                                     <label class="form-label">Title {{ $lang }}:</label>
                                     <input type="text" class="form-control" name="title[{{ $lang }}]"
                                         value="{{ $blog->title[$lang] ?? '' }}">
-                                    @error('name')
+                                    @error('title')
                                         <div class="form-text text-danger">{{ $message }}</div>
                                     @enderror
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-3">
-
+                                    <label class="form-label">Slug {{ $lang }}:</label>
+                                    <input type="text" class="form-control" name="slug[{{ $lang }}]"
+                                        value="{{ $blog->slug[$lang] ?? '' }}">
+                                    @error('slug')
+                                        <div class="form-text text-danger">{{ $message }}</div>
+                                    @enderror
                                 </div>
                             </div>
                         @endforeach

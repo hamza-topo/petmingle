@@ -21,6 +21,13 @@ if (!function_exists('displayHumanDate')) {
     }
 }
 
+if (!function_exists('readTimesStamps')) {
+    function readTimesStamps(Carbon $at)
+    {
+        return $at->format('Y-m-d');
+    }
+}
+
 if (!function_exists('sexIcon')) {
 
     function sexIcon(int $sex): string
