@@ -32,14 +32,15 @@ class BlogController extends Controller
     /**
      * Display The detail page
      *
-     * @param integer $blogId
+     * @param string $slug
      * @return void
      */
-    public function read(int $blogId)
+    public function read(string $slug)
     {
         $seo = $this->seoRepository->getByKey(Pages::BLOGS->value);
-        $blog = $this->blogRepostory->getById($blogId);
+        $blog = $this->blogRepostory->getBySlug($slug, app()->getLocale());
+        $randoms = $this->blogRepostory->random();
 
-        return view('web.detail-blog', compact('seo', 'blog'));
+        return view('web.detail-blog', compact('seo', 'blog', 'randoms'));
     }
 }

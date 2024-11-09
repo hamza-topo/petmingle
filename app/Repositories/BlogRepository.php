@@ -42,6 +42,16 @@ class BlogRepository implements RepositoryInterface
         return Blog::destroy($likeId);
     }
 
+    public function getBySlug(string $slug, string $local): Blog
+    {
+        return Blog::where("slug->{$local}", $slug)->firstOrFail();
+    }
+
+    public function random(): Collection
+    {
+        return Blog::inRandomOrder()->limit(5)->get();
+    }
+
     public function restore(int $likeId): bool
     {
         return Blog::withTrashed()->findOrFail($likeId)->restore();
