@@ -2,9 +2,8 @@
 @section('meta')
     <x-web.layout.meta :seo="$seo" />
 @endsection
-
 @section('title')
-    {{ $seo->title['fr'] ?? config('app.name', 'Petmingle') }}
+    {{ $seo->title[app()->getLocale()] ?? config('app.name', 'Petmingle') }}
 @endsection
 @section('main')
     <section class="tour-details-section section-padding2">
@@ -12,7 +11,7 @@
 
             <!-- Details Banner Slider -->
             <div class="tour-details-banner">
-                <div class="swiper tourSwiper-active">
+                {{-- <div class="swiper tourSwiper-active">
                     <div class="swiper-wrapper">
                         @foreach ($randoms as $random)
                             <div class="swiper-slide">
@@ -28,7 +27,7 @@
                         <div class="swiper-button-next"><i class="ri-arrow-right-s-line"></i></div>
                         <div class="swiper-button-prev"><i class="ri-arrow-left-s-line"></i></div>
                     @endif
-                </div>
+                </div> --}}
             </div>
             <!-- / Slider-->
 

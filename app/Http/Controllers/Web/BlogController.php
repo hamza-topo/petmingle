@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\Web;
 
+use stdClass;
 use App\Enums\App;
+use App\Models\Seo;
 use App\Enums\Pages;
+
 use App\Repositories\SeoRepository;
 use App\Http\Controllers\Controller;
-
 use App\Repositories\BlogRepository;
 
 class BlogController extends Controller
@@ -37,8 +39,11 @@ class BlogController extends Controller
      */
     public function read(string $slug)
     {
-        $seo = $this->seoRepository->getByKey(Pages::BLOGS->value);
+        $seo = new stdClass;
         $blog = $this->blogRepostory->getBySlug($slug, app()->getLocale());
+        $seo->meta['description'][app()->getLocale()] =  generateTextPreview($blog->content[app()->getLocale()] ?? '');
+        $seo->meta['keywords'][app()->getLocale()] =  generateTextPreview($blog->content[app()->getLocale()] ?? '');
+        $seo->title[app()->getLocale()] =  $blog->title[app()->getLocale()] ?? '';
         $randoms = $this->blogRepostory->random();
 
         return view('web.detail-blog', compact('seo', 'blog', 'randoms'));

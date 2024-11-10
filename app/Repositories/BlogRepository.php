@@ -69,7 +69,7 @@ class BlogRepository implements RepositoryInterface
 
     public function paginate()
     {
-        return Blog::paginate(EnumsLike::PAGINATE);
+        return Blog::orderBy('id', 'DESC')->paginate(EnumsLike::PAGINATE);
     }
 
     //TODO::create another enum class for blog
