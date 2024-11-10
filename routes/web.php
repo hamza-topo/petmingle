@@ -24,7 +24,6 @@ Route::get('user/login/', [WebAuthController::class, 'login'])->name('user.login
 Route::get('user/register/', [WebAuthController::class, 'register'])->name('user.register');
 Route::post('user/login/', [WebAuthController::class, 'signIn'])->name('user.login.signIn');
 Route::post('user/register/', [WebAuthController::class, 'signUp'])->name('user.register.signUp');
-Auth::routes();
 
 
 // Route::get('/', function () {

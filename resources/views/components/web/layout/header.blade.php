@@ -74,15 +74,15 @@
                                                                 <i class="ri-global-line"></i>
                                                             </div>
                                                             <div class="divider gradient-divider"></div>
-                                                            <div class="money">
+                                                            {{-- <div class="money">
                                                                 <p class="pera">{{ App\Enums\App::CURRENCY }}</p>
-                                                            </div>
+                                                            </div> --}}
                                                         </div>
-                                                        <div class="sign-btn">
-                                                            <a href="{{ route('login') }} "
+                                                        {{-- <div class="sign-btn">
+                                                            <a href="{{ route('user.login') }} "
                                                                 class="btn-secondary-sm">Sign
                                                                 In</a>
-                                                        </div>
+                                                        </div> --}}
                                                     </div>
                                                 </li>
                                             </ul>
@@ -92,21 +92,21 @@
                                                         <i class="ri-global-line"></i>
                                                     </div>
                                                     <div class="divider gradient-divider"></div>
-                                                    <div class="money">
+                                                    {{-- <div class="money">
                                                         <p class="pera">{{ App\Enums\App::CURRENCY }}</p>
-                                                    </div>
+                                                    </div> --}}
                                                 </div>
-                                                <div class="sign-btn">
-                                                    <a href="{{ route('login') }} " class="btn-secondary-sm">Sign
+                                                {{-- <div class="sign-btn">
+                                                    <a href="{{ route('user.login') }} " class="btn-secondary-sm">Sign
                                                         In</a>
-                                                </div>
+                                                </div> --}}
                                                 <!-- Theme Mode -->
-                                                <li class="single-list">
+                                                {{-- <li class="single-list">
                                                     <button onclick="setTheme()"
                                                         class="ToggleThemeButton change-theme-mode m-0 p-0 border-0">
                                                         <i class="ri-sun-line"></i>
                                                     </button>
-                                                </li>
+                                                </li> --}}
                                                 {{ auth()->user()?->name }}
                                             </div>
                                         </div>

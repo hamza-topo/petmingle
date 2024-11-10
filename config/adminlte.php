@@ -14,7 +14,7 @@ return [
     |
     */
 
-    'title' => 'PETMINGLE ADMIN',
+    'title' => 'PETSPAT ADMIN',
     'title_prefix' => '',
     'title_postfix' => '',
 
@@ -63,12 +63,12 @@ return [
     |
     */
 
-    'logo' => '<b>PETMINGLE</b>',
+    'logo' => '<b>PETSPAT</b>',
     'logo_img' => 'vendor/adminlte/dist/img/AdminLTELogo.png',
     'logo_img_class' => 'brand-image img-circle elevation-3',
     'logo_img_xl' => null,
     'logo_img_xl_class' => 'brand-image-xs',
-    'logo_img_alt' => 'PETMINGLE',
+    'logo_img_alt' => 'PETSPAT',
 
     /*
     |--------------------------------------------------------------------------
@@ -256,13 +256,13 @@ return [
     |
     */
 
-    'use_route_url' => false,
+    'use_route_url' => true,
     'dashboard_url' => 'home',
     'logout_url' => 'admin/logout',
     'login_url' => 'admin/login',
-    'register_url' => 'register',
-    'password_reset_url' => 'admin/password/reset',
-    'password_email_url' => 'admin/password/email',
+    // 'register_url' => 'register',
+    // 'password_reset_url' => 'admin/password/reset',
+    // 'password_email_url' => 'admin/password/email',
     'profile_url' => false,
 
     /*
