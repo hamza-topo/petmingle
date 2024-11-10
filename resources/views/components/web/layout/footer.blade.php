@@ -23,7 +23,7 @@
                     <div class="col-xl-6 col-lg-6 col-sm-6">
                         <div class="single-footer-caption">
                             <div class="footer-tittle">
-                                <h4 class="title">Contact</h4>
+                                <h4 class="title">{{ __('Contact') }}</h4>
                                 <ul class="listing">
                                     <li class="single-lsit">
                                         <a href="#" class="mb-20 d-block">420 Pittsburg Landing,
@@ -60,22 +60,22 @@
                                         src="{{ asset('storage/' . $component->media ?? '') }}" width="50"
                                         alt="{{ config('app.name') }}" class="changeLogo"></a>
                             </div>
-                            <h4>Stay Informed with the Latest Pet Health Tips!</h4>
+                            <h4>{{ __('Stay Informed with the Latest Pet Health Tips!') }}</h4>
                             <p class="pera">
-                                Don’t miss out on expert advice, pet care tips, and exclusive updates tailored for pet
-                                parents like you. Subscribe to our newsletter to receive the latest on pet health
-
-                                Join Our Pet Parent Community Today!
+                                {{ __('Don’t miss out on expert advice, pet care tips, and exclusive updates tailored for pet
+                                                                                                parents like you. Subscribe to our newsletter to receive the latest on pet health
+                                                                
+                                                                                                Join Our Pet Parent Community Today!') }}
                             </p>
                         </div>
                         <div class="footer-right">
-                            <h4 class="title">Subscribe Our Newsletter</h4>
+                            <h4 class="title">{{ __('Subscribe Our Newsletter') }}</h4>
                             <div class="subscribe-wraper">
                                 <form action="{{ route('news-letter.subscribe') }}" method="post">
                                     @csrf
                                     <input class="footer-search" type="search" name="email"
                                         placeholder="Enter Your Email">
-                                    <button class="subscribe-btn" submit>Subscribe</button>
+                                    <button class="subscribe-btn" submit>{{ __('Subscribe') }}</button>
                                 </form>
 
                             </div>
@@ -89,12 +89,21 @@
             <div class="container">
                 <div class="row">
                     <div class="col-lg-12">
-                        <div class="d-flex justify-content-between gap-14 flex-wrap">
-                            <p class="pera">
-                                © <span class="current-year">{{ date('Y-m-d') }}</span>. All rights
-                                reserved
-                            </p>
-                            <p class="pera">Powered by {{ config('app.name') }}</p>
+                        <div class="row">
+                            <div class="col-md-4 col-lg-4">
+                                <p class="pera">
+                                    © <span class="current-year">{{ date('Y-m-d') }}</span>.
+                                    {{ __('All rights reserved') }}
+                                </p>
+                            </div>
+                            <div class="col-md-4 col-lg-4">
+                                <p class="pera">{{ __('Powered by') }} {{ config('app.name') }}</p>
+                            </div>
+                            <div class="col-md-4 col-lg-4">
+                                <a href="{{ config('app.pinterest_url') }}" target="_blank">
+                                    <i class="ri-pinterest-fill" style="font-size: 2rem;"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>

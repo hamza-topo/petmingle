@@ -13,7 +13,20 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'LETSPET'),
+    'name' => env('APP_NAME', 'PETSPAT'),
+
+    /*
+    |--------------------------------------------------------------------------
+    | Application Name
+    |--------------------------------------------------------------------------
+    |
+    | This value is the name of your application. This value is used when the
+    | framework needs to place the application's name in a notification or
+    | any other location as required by the application or its packages.
+    |
+    */
+
+    'pinterest_url' => env('PINTEREST_URL', '#'),
 
     /*
     |--------------------------------------------------------------------------
@@ -166,7 +179,7 @@ return [
          * Package Service Providers...
          */
         // Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
-        
+
 
         /*
          * Application Service Providers...
