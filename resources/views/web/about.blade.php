@@ -4,7 +4,7 @@
 @endsection
 
 @section('title')
-    {{ $seo->title['fr'] ?? config('app.name', 'Petmingle') }}
+    {{ $seo->title[app()->getLocale()] ?? config('app.name', 'Petmingle') }}
 @endsection
 @section('main')
     <section class="tour-details-section section-padding2">
