@@ -1,4 +1,4 @@
-<div class="row g-4">
+<div class="row p-2 g-4">
     @foreach ($blogs as $blog)
         <div class="col-xl-4 col-lg-4 col-sm-6">
             <article class="news-card-two">
