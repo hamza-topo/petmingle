@@ -3,12 +3,11 @@
         <div class="col-xl-4 col-lg-4 col-sm-6">
             <article class="news-card-two">
                 <figure class="news-banner-two imgEffect">
-                    <a href="news-details.html">
-                        @php 
-                        $img = !empty($blog->media[0]) ? $blog->media[0] : ''
+                    <a href="{{ route('blogs.read', $blog->slug[app()->getLocale()] ?? slugify($blog->title[app()->getLocale()] ?? '')) }}">
+                        @php
+                            $img = !empty($blog->media[0]) ? $blog->media[0] : '';
                         @endphp
-                        <img src="{{ asset('storage/' . $img) }}"
-                            alt="{{ $blog->title[app()->getLocale()] ?? '' }}">
+                        <img src="{{ asset('storage/' . $img) }}" alt="{{ $blog->title[app()->getLocale()] ?? '' }}">
                     </a>
                 </figure>
                 <div class="news-content">
@@ -16,19 +15,23 @@
                         <span class="heading-pera">{{ $blog->title[app()->getLocale()] ?? '' }}</span>
                     </div>
                     <h4 class="title line-clamp-2">
-                        <a href="#">{!! generateTextPreview($blog->content[app()->getLocale()] ?? '') !!}</a>
+                        <a
+                            href="{{ route('blogs.read', $blog->slug[app()->getLocale()] ?? slugify($blog->title[app()->getLocale()] ?? '')) }}">{!! generateTextPreview($blog->content[app()->getLocale()] ?? '') !!}</a>
                     </h4>
                     <div class="news-info">
-                        <div class="d-flex gap-10 align-items-center">
-                            <div class="all-user">
-                                @if(!true)
-                                <div class="happy-user">
-                                    <img src="assets/images/hero/user-1.jpeg" alt="image">
+                        <a
+                            href="{{ route('blogs.read', $blog->slug[app()->getLocale()] ?? slugify($blog->title[app()->getLocale()] ?? '')) }}">
+                            <div class="d-flex gap-10 align-items-center">
+                                <div class="all-user">
+                                    @if (!true)
+                                        <div class="happy-user">
+                                            <img src="assets/images/hero/user-1.jpeg" alt="image">
+                                        </div>
+                                    @endif
                                 </div>
-                                @endif
                             </div>
-                        </div>
-                        <p class="time">published {{ $blog->created_at }}</p>
+                            <p class="time">{{ readTimesStamps($blog->created_at) }}</p>
+                        </a>
                     </div>
                 </div>
             </article>
