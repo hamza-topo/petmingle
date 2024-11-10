@@ -3,11 +3,13 @@
         <div class="col-xl-4 col-lg-4 col-sm-6">
             <article class="news-card-two">
                 <figure class="news-banner-two imgEffect">
-                    <a href="{{ route('blogs.read', $blog->slug[app()->getLocale()] ?? slugify($blog->title[app()->getLocale()] ?? '')) }}">
+                    <a
+                        href="{{ route('blogs.read', $blog->slug[app()->getLocale()] ?? slugify($blog->title[app()->getLocale()] ?? '')) }}">
                         @php
                             $img = !empty($blog->media[0]) ? $blog->media[0] : '';
                         @endphp
-                        <img src="{{ asset('storage/' . $img) }}" alt="{{ $blog->title[app()->getLocale()] ?? '' }}">
+                        <img style="height:120px" src="{{ asset('storage/' . $img) }}"
+                            alt="{{ $blog->title[app()->getLocale()] ?? '' }}">
                     </a>
                 </figure>
                 <div class="news-content">
@@ -23,14 +25,18 @@
                             href="{{ route('blogs.read', $blog->slug[app()->getLocale()] ?? slugify($blog->title[app()->getLocale()] ?? '')) }}">
                             <div class="d-flex gap-10 align-items-center">
                                 <div class="all-user">
-                                    @if (!true)
-                                        <div class="happy-user">
-                                            <img src="assets/images/hero/user-1.jpeg" alt="image">
-                                        </div>
-                                    @endif
+                                    @php
+                                        $avatar = json_decode($blog->author->avatar ?? '[]', true);
+                                        $avatar = $avatar[0] ?? '';
+                                    @endphp
+                                    <div class="happy-user">
+                                        <img src="{{ asset('storage/' . $avatar) }}"
+                                            alt="{{ __('Author') . $blog->author->name ?? '' }}">
+                                    </div>
                                 </div>
+                                <p class="time" style="margin:4px">{{ $blog->author->name ?? '' }}</p>
+
                             </div>
-                            <p class="time">{{ readTimesStamps($blog->created_at) }}</p>
                         </a>
                     </div>
                 </div>
