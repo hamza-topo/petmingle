@@ -31,6 +31,7 @@ Route::prefix('/admin')->middleware(['admin'])->name('admin.')->group(function (
 
     Route::get('/home', [HomeController::class, 'index']);
     Route::get('/settings', [SettingController::class, 'index']);
+    Route::put('/settings', [SettingController::class, 'update'])->name('profile.update');
     Route::resource('pets', PetController::class);
     Route::resource('species', SpeciesController::class);
     Route::resource('races', RaceController::class);
@@ -43,7 +44,6 @@ Route::prefix('/admin')->middleware(['admin'])->name('admin.')->group(function (
 
     Route::post('/trashed/toggle', [ConfigController::class, 'toggleShowTrashed'])->name('trash.toggle');
     Route::put('/species/restore/{id}', [SpeciesController::class, 'restore'])->name('species.restore');
-
 });
 
 Route::prefix('/admin')->name('admin.')->group(function () {

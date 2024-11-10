@@ -2,11 +2,21 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
+use App\Traits\ImageTrait;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Controller;
+use App\Repositories\UserRepository;
 
 class SettingController extends Controller
 {
+    /**
+     * Image Trait
+     */
+    use ImageTrait;
+
+    public function __construct(protected UserRepository $userRepository) {}
+
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +24,7 @@ class SettingController extends Controller
      */
     public function index()
     {
-        return 'update profile';
+        return view('admin.profile.index');
     }
 
     /**
@@ -64,12 +74,23 @@ class SettingController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        //
+        try {
+            $request = $request->all();
+            if (!empty($request['avatar'])) {
+                $request['avatar'] =  $this->uploadAll([$request['avatar']]);
+            }
+
+            $this->userRepository->update(auth()->user()->id, $request);
+
+            return redirect(route('admin.profile.index'));
+        } catch (\Exception $e) {
+            Log::error('Error while updating my profiel', [$e->getMessage()]);
+            return redirect()->back();
+        }
     }
 
     /**
