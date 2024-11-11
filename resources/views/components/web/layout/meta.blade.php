@@ -26,5 +26,5 @@
     <meta name="csrf-token" content="...">
     <meta name="currency" content="$">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
+    <meta name="p:domain_verify" content="c07b324b7190f4c4bd1322f1671c7f4f"/>
 </div>
