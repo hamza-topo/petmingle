@@ -75,7 +75,7 @@ class BlogRepository implements RepositoryInterface
     //TODO::create another enum class for blog
     public function take(?int $limit = EnumsLike::PAGINATE)
     {
-        return Blog::orderBy('created_at')->limit($limit)->get()->filter(function($row){
+        return Blog::orderBy('created_at', 'desc')->limit($limit)->get()->filter(function($row){
             return !empty($row->slug['en']) && $row->slug['en'] != 'about';
         });
     }

@@ -7,7 +7,7 @@
     {{ $seo->title[app()->getLocale()] ?? config('app.name', 'Petmingle') }}
 @endsection
 @section('main')
-    <x-web.layout.bread-crumb />
+    {{-- <x-web.layout.bread-crumb /> --}}
     <section class="contact-area section-padding2">
         <div class="position-relative contact-bg-before">
             <div class="container">
