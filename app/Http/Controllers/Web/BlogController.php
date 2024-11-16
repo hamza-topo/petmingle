@@ -26,9 +26,11 @@ class BlogController extends Controller
     public function index()
     {
         $seo = $this->seoRepository->getByKey(Pages::BLOGS->value);
-        $blogs = $this->blogRepostory->paginate();
-     
-        return view('web.blog', compact('seo', 'blogs'));
+        $blogs = $this->blogRepostory->paginate(true);
+        $exludedSlugs = collect(Pages::cases())->pluck('value')->map(function ($slug) {
+            return strtolower(slugify($slug));
+        })->toArray();
+        return view('web.blog', compact('seo', 'blogs', 'exludedSlugs'));
     }
 
     /**
