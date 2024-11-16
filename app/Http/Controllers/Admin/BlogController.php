@@ -31,6 +31,11 @@ class BlogController extends Controller
         return view('admin.blogs.index', ['blogs' => $this->blogRepository->paginate()]);
     }
 
+    public function scheduled()
+    {
+        return view('admin.blogs.scheduled', ['blogs' => $this->blogRepository->getScheduled()]);
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -65,12 +70,23 @@ class BlogController extends Controller
     {
         try {
             $request = $request->all();
+
+            if ($request['active'] === "1") {
+                $request['active'] = false;
+            }
+
+            if (!empty($request['publish_it_at'])) {
+                $request['active'] = false;
+            }
+
             foreach ($request['slug'] as $lang => &$slug) {
                 if (empty($slug) && !empty($request['title'][$lang])) {
                     $slug = Str::slug($request['title'][$lang]);
                 }
             }
+
             $request['user_id'] = auth()->user()->id;
+
             if (!empty($request['media'])) {
                 $request['media'] =  $this->uploadAll([$request['media']]);
             }
@@ -119,6 +135,15 @@ class BlogController extends Controller
     {
         try {
             $request = $request->all();
+
+            if ($request['active'] === "1") {
+                $request['active'] = false;
+            }
+
+            if (!empty($request['publish_it_at'])) {
+                $request['active'] = false;
+            }
+
             foreach ($request['slug'] as $lang => &$slug) {
                 if (empty($slug) && !empty($request['title'][$lang])) {
                     $slug = Str::slug($request['title'][$lang]);

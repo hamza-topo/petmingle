@@ -1,10 +1,13 @@
 <div class="row p-2 g-4">
     @foreach ($blogs as $blog)
+    @php 
+        $blogUrl = $blog->slug[app()->getLocale()] ?? slugify($blog->title[app()->getLocale()]);
+    @endphp
         <div class="col-xl-4 col-lg-4 col-sm-6">
-            <article class="news-card-two">
+            <article class="news-card-two" onclick="window.location.href=">
                 <figure class="news-banner-two imgEffect">
                     <a
-                        href="{{ route('blogs.read', $blog->slug[app()->getLocale()] ?? slugify($blog->title[app()->getLocale()] ?? '')) }}">
+                        href="{{ route('blogs.read', $blogUrl) }}">
                         @php
                             $img = !empty($blog->media[0]) ? $blog->media[0] : '';
                         @endphp
@@ -18,11 +21,11 @@
                     </div>
                     <h4 class="title line-clamp-2">
                         <a
-                            href="{{ route('blogs.read', $blog->slug[app()->getLocale()] ?? slugify($blog->title[app()->getLocale()] ?? '')) }}">{!! strip_tags(generateTextPreview($blog->content[app()->getLocale()]) ?? '') !!}</a>
+                            href="{{ route('blogs.read', $blogUrl) }}">{!! strip_tags(generateTextPreview($blog->content[app()->getLocale()]) ?? '') !!}</a>
                     </h4>
                     <div class="news-info">
                         <a
-                            href="{{ route('blogs.read', $blog->slug[app()->getLocale()] ?? slugify($blog->title[app()->getLocale()] ?? '')) }}">
+                            href="{{ route('blogs.read', $blogUrl) }}">
                             <div class="d-flex gap-10 align-items-center">
                                 <div class="all-user">
                                     @php

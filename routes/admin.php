@@ -41,6 +41,7 @@ Route::prefix('/admin')->middleware(['admin'])->name('admin.')->group(function (
     Route::resource('components', ComponentController::class);
     Route::resource('blogs', BlogController::class);
     Route::post('blogs/upload', [BlogController::class, 'uploadMedia'])->name('blogs.upload');
+    Route::get('blogs-scheduled', [BlogController::class, 'scheduled'])->name('blogs.scheduled');
 
     Route::post('/trashed/toggle', [ConfigController::class, 'toggleShowTrashed'])->name('trash.toggle');
     Route::put('/species/restore/{id}', [SpeciesController::class, 'restore'])->name('species.restore');

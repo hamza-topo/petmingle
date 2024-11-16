@@ -62,20 +62,47 @@ class BlogRepository implements RepositoryInterface
         return Blog::all();
     }
 
-    public function Blogs(int $petId): LengthAwarePaginator
+    public function Blogs(?int $petId): LengthAwarePaginator
     {
         return Blog::with(['to', 'from'])->where('from', $petId)->paginate(EnumsLike::PAGINATE);
     }
 
     public function paginate()
     {
-        return Blog::orderBy('id', 'DESC')->paginate(EnumsLike::PAGINATE);
+        return Blog::orderBy('id', 'DESC')->where('active', true)->paginate(EnumsLike::PAGINATE);
+    }
+
+    /**
+     * get Scheduled blogs
+     *
+     * @return Collection
+     */
+    public function getScheduled(): Collection
+    {
+        return Blog::where('active', false)->where('publish_it_at', '!=', null)->get();
+    }
+
+    public function getScheduledFor(array $condition)
+    {
+        $query = Blog::where('active', false)
+            ->where('publish_it_at', '!=', null)
+            ->whereBetween('publish_it_at', $condition);
+
+        return $query->get();
+    }
+
+    public function publishBulk(array $ids = [])
+    {
+        return Blog::whereIn('id', $ids)->update([
+            'active' => true,
+            'publish_it_at' => null
+        ]);
     }
 
     //TODO::create another enum class for blog
     public function take(?int $limit = EnumsLike::PAGINATE)
     {
-        return Blog::orderBy('created_at', 'desc')->limit($limit)->get()->filter(function($row){
+        return Blog::orderBy('created_at')->limit($limit)->get()->filter(function ($row) {
             return !empty($row->slug['en']) && $row->slug['en'] != 'about';
         });
     }
