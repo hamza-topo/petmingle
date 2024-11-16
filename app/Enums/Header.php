@@ -16,7 +16,7 @@ class Header extends Enum
         'About' => [
             'url' => '/about',
             'Text' => 'About',
-            'show' => false,
+            'show' => true,
         ],
         'Dating' => [
             'url' => '/search?type=0',
@@ -41,7 +41,7 @@ class Header extends Enum
         'Contact' => [
             'url' => '/contact',
             'Text' => 'Contact',
-            'show' => false,
+            'show' => true,
         ],
     ];
 }

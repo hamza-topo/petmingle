@@ -9,7 +9,6 @@
 @section('main')
     <section class="news-area section-padding2">
         <div class="container">
-            {{-- <x-web.home.blog.side-item :blogs="$blogs->take(4)"/> --}}
             <div class="row g-4">
                 <div class="col-xl-5 col-lg-6">
                     <div class="section-title mx-430 mb-30 w-md-100">
@@ -26,16 +25,6 @@
                                 <i class="ri-arrow-right-up-line"></i>
                             </a>
                             @endif
-                        </div>
-                        <div class="about-imp-link mt-40">
-                            <div class="icon">
-                                <i class="ri-user-line"></i>
-                            </div>
-                            <div class="content">
-                                <p class="pera font-16">
-                                    <span class="font-700">published </span>
-                                </p>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -58,13 +47,33 @@
                             </div>
                             <div class="divider"></div>
                             <div class="details">
+                                @php
+                                    $avatar = json_decode($blogs->first()->author->avatar ?? '[]', true);
+                                    $avatar = $avatar[0] ?? '';
+                                @endphp
+                                <div class="icon"
+                                    style="
+                                    width: 50px;
+                                    height: 50px;
+                                    border-radius: 50%;
+                                    background-image: url('{{ asset('storage/' . $avatar) }}');
+                                    background-size: cover;
+                                    background-position: center;
+                                ">
+                                    <!-- Optional icon or text if you want -->
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+<<<<<<< HEAD
             <x-web.home.blog.side-section :blogs="$blogs->skip(1)->take(6)" />
                 {{$blogs->links('vendor.pagination.default')}}
+=======
+        </div>
+        <x-web.home.blog.side-section :blogs="$blogs->skip(1)->take(6)" />
+>>>>>>> origin/main
         </div>
     </section>
 @endsection

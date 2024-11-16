@@ -1,10 +1,16 @@
  <!-- Hero area S t a r t-->
  <section class="hero-padding-for-three video-overlay position-relative">
      <!-- Video -->
+
      <div class="hero-bg-video">
-         <video class="hero-slider-video video-cover" poster="{{ asset('storage/' . $component->media ?? '') }}"
+         <video class="hero-slider-video video-cover" 
+         @if(!empty($component->media))
+         poster="{{ asset('storage/' . $component->media ?? '') }}"
+         @endif
              loop="" autoplay="" muted="">
+             @if(!empty($component->media))
              <source src="{{ asset('storage/' . $component->media ?? '') }}" type="video/mp4">
+                @endif
          </video>
      </div>
      <div class="container">
