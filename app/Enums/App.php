@@ -12,7 +12,7 @@ enum App
     /**
      * const Default pagination
      */
-    const PAGINATE = 5;
+    const PAGINATE = 25;
 
     /**
      * const default order 

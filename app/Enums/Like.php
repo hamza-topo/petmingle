@@ -4,5 +4,5 @@ namespace App\Enums;
 
 enum Like
 {
-    const PAGINATE = 25;
+    const PAGINATE = 10;
 }
