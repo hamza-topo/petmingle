@@ -12,6 +12,6 @@ enum Pages: string
     case CONTACT = 'CONTACT';
     case BLOGS = 'BLOGS';
     case ENGINE = 'ENGINE';
-    case PRIVACY_POLICY = 'PRIVACY_POLICY';
+    case PRIVACY_POLICY = 'PRIVACY-POLICY';
     case FAQ = 'FAQ';
 }

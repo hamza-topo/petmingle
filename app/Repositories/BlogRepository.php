@@ -2,13 +2,14 @@
 
 namespace App\Repositories;
 
-use App\Enums\App as EnumsLike;
+use App\Enums\Pages;
 use App\Models\Blog;
 use App\Models\Like;
-use Illuminate\Pagination\LengthAwarePaginator;
+use App\Enums\App as EnumsLike;
 use Illuminate\Support\Collection;
 
 use function PHPUnit\Framework\isTrue;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 class BlogRepository implements RepositoryInterface
 {
@@ -67,9 +68,22 @@ class BlogRepository implements RepositoryInterface
         return Blog::with(['to', 'from'])->where('from', $petId)->paginate(EnumsLike::PAGINATE);
     }
 
-    public function paginate()
+    public function paginate(bool $exlude = false)
     {
-        return Blog::orderBy('id', 'DESC')->where('active', true)->paginate(EnumsLike::PAGINATE);
+        $locale = app()->getLocale(); // Get the current locale
+        $slugs = collect(Pages::cases())->pluck('value')->map(function ($slug) {
+            return strtolower(slugify($slug));
+        })->toArray();
+        
+        $query = Blog::orderBy('id', 'DESC')
+            ->where('active', true)
+            ->whereNull('publish_it_at');
+        
+        if ($exlude) {
+            $query->whereNotIn("slug->$locale", $slugs);
+        }
+
+        return $query->paginate(EnumsLike::PAGINATE);
     }
 
     /**
