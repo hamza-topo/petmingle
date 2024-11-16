@@ -15,6 +15,40 @@
                         enctype="multipart/form-data">
                         @method('PUT')
                         @csrf
+                        <div class="col-md-4 row">
+                            <div class="mb-3">
+                                <label class="form-label">Mark as draft:</label>
+                                <input type="checkbox" class="form-control col-sm-6" name="active"
+                                    value="{{ $blog->active }}">
+                                @error('active')
+                                    <div class="form-text text-danger">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <div class="col-md-4 row">
+                            <div class="mb-3">
+                                <label class="form-label">Media:</label>
+                                <input type="file" name="media" multiple class="fomr-control col-sm-6" />
+                                @error('file')
+                                    <div class="form-text text-danger">{{ $message }}</div>
+                                @enderror
+                                @php
+                                    $img = !empty($blog->media[0]) ? $blog->media[0] : '';
+                                @endphp
+                                <img src="{{ asset('storage/' . $img) }}"
+                                    alt="{{ $blog->title[app()->getLocale()] ?? '' }}" width="100">
+                            </div>
+                        </div>
+                        <div class="col-md-4 row">
+                            <div class="mb-3">
+                                <label class="form-label">Publish It At:</label>
+                                <input type="datetime-local" name="publish_it_at" class="fomr-control col-sm-12" />
+                                @error('publish_it_at')
+                                    <div class="form-text text-danger">{{ $message }}</div>
+                                @enderror
+                                
+                            </div>
+                        </div>
                         @foreach ($langs as $lang)
                             <div class="col-md-6">
                                 <div class="mb-3">
@@ -37,7 +71,6 @@
                                 </div>
                             </div>
                         @endforeach
-                        <input type="file" name="media" multiple class="fomr-control" />
                         <textarea id="editor-en" name="content[en]">
                             {!! $blog->content['en'] ?? '' !!}
                         </textarea>

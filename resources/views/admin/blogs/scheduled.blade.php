@@ -13,13 +13,14 @@
                 <a href="{{ route('admin.blogs.create') }}" type="button" class="btn btn-success btn-sm top-0 end-0 m-2">
                     <i class="ri ri-add-line"></i> <!-- Remix Icon for add -->
                 </a>
-                <a href="{{ route('admin.blogs.scheduled') }}" type="button" class="btn btn-success btn-sm top-0 end-0 m-2">
-                    Scheduled Blogs
+                <a href="{{ route('admin.blogs.index') }}" type="button" class="btn btn-success btn-sm top-0 end-0 m-2">
+                    Blogs
                 </a>
                 <table class="table">
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col">Slug</th>
+                            <th scope="col">scheduled</th>
                             <th scope="col">Title</th>
                             <th scope="col">Short description</th>
                             <th scope="col">Media</th>
@@ -39,6 +40,7 @@
                                 <tr>
                                     <th scope="row">{{ $blog->slug[app()->getLocale()] ?? '' }}</th>
                                     <td>{{ $blog->title[app()->getLocale()] ?? '' }}</td>
+                                    <td>{{ $blog->publish_it_at }}</td>
                                     <td>{{ generateTextPreview($blog->content[app()->getLocale()] ?? '') }}</td>
                                     <td>
                                         <img src="{{ asset('storage/' . $img) }}"
@@ -74,7 +76,6 @@
                 </table>
 
                 <div class="d-flex justify-content-center">
-                    {{ $blogs->links('pagination::bootstrap-4') }}
                 </div>
             </div>
         </div>

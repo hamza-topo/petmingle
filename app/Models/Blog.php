@@ -10,7 +10,7 @@ class Blog extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = ['user_id', 'slug', 'title', 'content', 'media', 'active'];
+    protected $fillable = ['user_id', 'slug', 'title', 'content', 'media', 'active', 'publish_it_at'];
 
     /**
      * Casted property
