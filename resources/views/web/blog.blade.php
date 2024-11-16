@@ -67,13 +67,8 @@
                     </div>
                 </div>
             </div>
-<<<<<<< HEAD
             <x-web.home.blog.side-section :blogs="$blogs->skip(1)->take(6)" />
                 {{$blogs->links('vendor.pagination.default')}}
-=======
-        </div>
-        <x-web.home.blog.side-section :blogs="$blogs->skip(1)->take(6)" />
->>>>>>> origin/main
         </div>
     </section>
 @endsection

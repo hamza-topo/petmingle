@@ -9,12 +9,12 @@
                             $img = !empty($blog->media[0]) ? $blog->media[0] : '';
                         @endphp
                         <img style="height:120px" src="{{ asset('storage/' . $img) }}"
-                            alt="{{ $blog->title[app()->getLocale()] ?? '' }}">
+                            alt="{{ strip_tags($blog->title[app()->getLocale()]) ?? '' }}">
                     </a>
                 </figure>
                 <div class="news-content">
                     <div class="heading">
-                        <span class="heading-pera">{{ $blog->title[app()->getLocale()] ?? '' }}</span>
+                        <span class="heading-pera">{{ strip_tags($blog->title[app()->getLocale()]) ?? '' }}</span>
                     </div>
                     <h4 class="title line-clamp-2">
                         <a
@@ -43,15 +43,4 @@
             </article>
         </div>
     @endforeach
-
-    {{-- <div class="col-12 text-center">
-        <div class="section-button d-inline-block">
-            <a href="javascript:void(0)">
-                <div class="btn-primary-icon-sm">
-                    <i class="ri-loader-2-line"></i>
-                    <p class="pera">Loading</p>
-                </div>
-            </a>
-        </div>
-    </div> --}}
 </div>
