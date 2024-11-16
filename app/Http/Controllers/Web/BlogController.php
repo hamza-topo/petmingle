@@ -26,8 +26,8 @@ class BlogController extends Controller
     public function index()
     {
         $seo = $this->seoRepository->getByKey(Pages::BLOGS->value);
-        $blogs = $this->blogRepostory->take();
-
+        $blogs = $this->blogRepostory->paginate();
+     
         return view('web.blog', compact('seo', 'blogs'));
     }
 

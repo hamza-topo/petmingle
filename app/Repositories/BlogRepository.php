@@ -2,7 +2,7 @@
 
 namespace App\Repositories;
 
-use App\Enums\Like as EnumsLike;
+use App\Enums\App as EnumsLike;
 use App\Models\Blog;
 use App\Models\Like;
 use Illuminate\Pagination\LengthAwarePaginator;

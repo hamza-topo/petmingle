@@ -19,11 +19,13 @@
                         {!! generateTextPreview($blogs->first()->content[app()->getLocale()] ?? '') !!}
 
                         <div class="section-button mt-27 d-inline-block">
+                            @if(!empty($blogs->first()->slug[app()->getLocale()]))
                             <a href="{{ route('blogs.read', $blogs->first()->slug[app()->getLocale()]) }}"
                                 class="btn-primary-icon-sm radius-20">
                                 <p class="pera mt-0">Learn More</p>
                                 <i class="ri-arrow-right-up-line"></i>
                             </a>
+                            @endif
                         </div>
                         <div class="about-imp-link mt-40">
                             <div class="icon">
@@ -48,7 +50,7 @@
                         </div>
                         <div class="all-count-list">
                             <div class="details">
-                                <p class="pera">{{ readTimesStamps($blogs->first()->created_at) }}</p>
+                                <p class="pera">{{ readTimesStamps($blogs->first()->created_at ?? Illuminate\Support\Carbon::now()) }}</p>
                             </div>
                             <div class="divider"></div>
                             <div class="details">
@@ -62,6 +64,7 @@
                 </div>
             </div>
             <x-web.home.blog.side-section :blogs="$blogs->skip(1)->take(6)" />
+                {{$blogs->links('vendor.pagination.default')}}
         </div>
     </section>
 @endsection
