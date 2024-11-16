@@ -39,7 +39,7 @@
                                 <tr>
                                     <th scope="row">{{ $blog->slug[app()->getLocale()] ?? '' }}</th>
                                     <td>{{ $blog->title[app()->getLocale()] ?? '' }}</td>
-                                    <td>{{ generateTextPreview($blog->content[app()->getLocale()] ?? '') }}</td>
+                                    <td>{{ generateTextPreview(strip_tags($blog->content[app()->getLocale()] ?? '')) }}</td>
                                     <td>
                                         <img src="{{ asset('storage/' . $img) }}"
                                             alt="{{ $blog->title[app()->getLocale()] ?? '' }}" width='75'>

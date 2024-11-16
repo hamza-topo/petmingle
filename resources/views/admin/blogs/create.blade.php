@@ -17,14 +17,13 @@
                         <div class="col-md-4 row">
                             <div class="mb-3">
                                 <label class="form-label">Mark as draft:</label>
-                                <input type="checkbox" class="form-control col-sm-6" name="active"
-                                    value="">
+                                <input type="checkbox" class="form-control col-sm-6" name="active" value="">
                                 @error('active')
                                     <div class="form-text text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                         </div>
-                        
+
                         <div class="col-md-4 row">
                             <div class="mb-3">
                                 <label class="form-label">Media:</label>
@@ -32,7 +31,7 @@
                                 @error('file')
                                     <div class="form-text text-danger">{{ $message }}</div>
                                 @enderror
-                                
+
                             </div>
                         </div>
                         <div class="col-md-4 row">
@@ -42,7 +41,7 @@
                                 @error('publish_it_at')
                                     <div class="form-text text-danger">{{ $message }}</div>
                                 @enderror
-                                
+
                             </div>
                         </div>
                         @foreach ($langs as $lang)
@@ -67,7 +66,6 @@
                                 </div>
                             </div>
                         @endforeach
-                        <input type="file" name="media" multiple class="fomr-control" />
                         <textarea id="editor-en" name="content[en]"></textarea>
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary">Submit</button>
@@ -135,6 +133,15 @@
         ClassicEditor
             .create(document.querySelector('#editor-en'), {
                 extraPlugins: [MyCustomUploadAdapterPlugin],
+                // toolbar: {
+                //     items: [
+                //         'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList',
+                //         '|', 'alignment', 'insertImage', 'blockQuote', 'undo', 'redo'
+                //     ]
+                // },
+                // alignment: {
+                //     options: ['left', 'center', 'right', 'justify'] // Alignment options
+                // },
             })
             .then(editor => {
                 console.log('CKEditor initialized with custom upload adapter:', editor);

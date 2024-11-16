@@ -180,7 +180,7 @@ return [
          */
         // Tymon\JWTAuth\Providers\LaravelServiceProvider::class,
 
-
+        \WaleedAhmad\Pinterest\ServiceProviders\PinterestServiceProvider::class,
         /*
          * Application Service Providers...
          */

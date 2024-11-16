@@ -63,9 +63,9 @@
                             <h4>{{ __('Stay Informed with the Latest Pet Health Tips!') }}</h4>
                             <p class="pera">
                                 {{ __('Don’t miss out on expert advice, pet care tips, and exclusive updates tailored for pet
-                                                                                                parents like you. Subscribe to our newsletter to receive the latest on pet health
-                                                                
-                                                                                                Join Our Pet Parent Community Today!') }}
+                                                                                                                                                                                                parents like you. Subscribe to our newsletter to receive the latest on pet health
+                                                                                                                                                                
+                                                                                                                                                                                                Join Our Pet Parent Community Today!') }}
                             </p>
                         </div>
                         <div class="footer-right">
@@ -100,6 +100,9 @@
                                 <p class="pera">{{ __('Powered by') }} {{ config('app.name') }}</p>
                             </div>
                             <div class="col-md-4 col-lg-4">
+                                <a class="pera" href="{{route('privacy-policy')}}">{{ __('Privacy Policy') }}</a>
+                            </div>
+                            <div class="row col-md-12 col-lg-12">
                                 <a href="{{ config('app.pinterest_url') }}" target="_blank">
                                     <i class="ri-pinterest-fill" style="font-size: 2rem;"></i>
                                 </a>
