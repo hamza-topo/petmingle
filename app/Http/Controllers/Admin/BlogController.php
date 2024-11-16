@@ -70,8 +70,7 @@ class BlogController extends Controller
     {
         try {
             $request = $request->all();
-
-            if ($request['active'] === "1") {
+            if (!empty($request['active']) && $request['active'] === "1") {
                 $request['active'] = false;
             }
 
@@ -86,11 +85,9 @@ class BlogController extends Controller
             }
 
             $request['user_id'] = auth()->user()->id;
-
             if (!empty($request['media'])) {
                 $request['media'] =  $this->uploadAll([$request['media']]);
             }
-
             $this->blogRepository->create($request);
 
             return redirect(route('admin.blogs.index'));
