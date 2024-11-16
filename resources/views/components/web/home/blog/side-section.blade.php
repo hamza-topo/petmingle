@@ -18,7 +18,7 @@
                     </div>
                     <h4 class="title line-clamp-2">
                         <a
-                            href="{{ route('blogs.read', $blog->slug[app()->getLocale()] ?? slugify($blog->title[app()->getLocale()] ?? '')) }}">{!! generateTextPreview($blog->content[app()->getLocale()] ?? '') !!}</a>
+                            href="{{ route('blogs.read', $blog->slug[app()->getLocale()] ?? slugify($blog->title[app()->getLocale()] ?? '')) }}">{!! strip_tags(generateTextPreview($blog->content[app()->getLocale()]) ?? '') !!}</a>
                     </h4>
                     <div class="news-info">
                         <a
