@@ -329,8 +329,8 @@ return [
             'icon' => 'fas fa-fw fa-user',
         ],
         [
-            'text' => 'change_password',
-            'url' => 'admin/settings',
+            'text' => 'Mail List',
+            'url' => 'admin/mail-list',
             'icon' => 'fas fa-fw fa-lock',
         ],
         [
@@ -347,25 +347,25 @@ return [
             'text' => 'Pets',
             'url' => 'admin/pets',
             'icon' => 'fas fa-fw fa-dog',
-           
+
         ],
         [
             'text' => 'Adoptions',
             'url' => 'admin/adoptions',
             'icon' => 'fas fa-fw fa-hand-holding',
-           
+
         ],
         [
             'text' => 'Users',
             'url' => 'admin/users',
             'icon' => 'fas fa-fw fa-users',
-           
+
         ],
         [
             'text' => 'News Letters',
             'url' => 'admin/news-letters',
             'icon' => 'fas fa-fw fa-blog',
-           
+
         ],
         [
             'text' => 'SEO',
@@ -433,7 +433,7 @@ return [
                     'type' => 'js',
                     'asset' => false,
                     'location' => '//cdn.datatables.net/1.10.19/js/dataTables.bootstrap4.min.js',
-                ],//TODO:use our local assets
+                ], //TODO:use our local assets
                 [
                     'type' => 'css',
                     'asset' => false,

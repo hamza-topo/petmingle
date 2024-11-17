@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SpeciesController;
 use App\Http\Controllers\Admin\AdoptionController;
 use App\Http\Controllers\Admin\ComponentController;
+use App\Http\Controllers\Admin\NewsLetterController;
 
 /*
 |--------------------------------------------------------------------------
@@ -42,6 +43,7 @@ Route::prefix('/admin')->middleware(['admin'])->name('admin.')->group(function (
     Route::resource('blogs', BlogController::class);
     Route::post('blogs/upload', [BlogController::class, 'uploadMedia'])->name('blogs.upload');
     Route::get('blogs-scheduled', [BlogController::class, 'scheduled'])->name('blogs.scheduled');
+    Route::get('mail-list', [NewsLetterController::class, 'index'])->name('mail.list');
 
     Route::post('/trashed/toggle', [ConfigController::class, 'toggleShowTrashed'])->name('trash.toggle');
     Route::put('/species/restore/{id}', [SpeciesController::class, 'restore'])->name('species.restore');
