@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 use Spatie\Sitemap\SitemapGenerator;
 
 class SiteMap extends Command
@@ -38,6 +39,12 @@ class SiteMap extends Command
      */
     public function handle(): void
     {
-        SitemapGenerator::create(env('APP_URL'))->writeToFile(public_path('sitemap.xml'));
+        try {
+            Log::info('start crawling sitemap');
+            SitemapGenerator::create(env('APP_URL'))->writeToFile(public_path('sitemap.xml'));
+            Log::info('end crawling sitemap');
+        } catch (\Exception $e) {
+            Log::error($e->getMessage());
+        }
     }
 }
