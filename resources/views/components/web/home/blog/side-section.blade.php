@@ -38,6 +38,7 @@
                                     </div>
                                 </div>
                                 <p class="time" style="margin:4px">{{ $blog->author->name ?? '' }}</p>
+                                <p class="time" style="margin:4px;text-align:end">10 min</p>
 
                             </div>
                         </a>
