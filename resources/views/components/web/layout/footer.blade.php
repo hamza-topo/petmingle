@@ -73,11 +73,10 @@
                             <div class="subscribe-wraper">
                                 <form action="{{ route('news-letter.subscribe') }}" method="post">
                                     @csrf
-                                    <input class="footer-search" type="search" name="email"
+                                    <input class="footer-search" type="email" name="email"
                                         placeholder="Enter Your Email">
                                     <button class="subscribe-btn" submit>{{ __('Subscribe') }}</button>
                                 </form>
-
                             </div>
                         </div>
                     </div>

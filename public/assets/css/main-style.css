@@ -14096,7 +14096,7 @@ object {
 .progressParent::after {
   position: absolute;
   font-family: "remixicon" !important;
-  content: "\f005";
+  content: "\2191";
   text-align: center;
   line-height: 36px;
   font-size: 20px;
