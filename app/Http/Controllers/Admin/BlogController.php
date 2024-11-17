@@ -133,7 +133,7 @@ class BlogController extends Controller
         try {
             $request = $request->all();
 
-            if ($request['active'] === "1") {
+            if (!empty($request['active']) && $request['active'] === "1") {
                 $request['active'] = false;
             }
 
