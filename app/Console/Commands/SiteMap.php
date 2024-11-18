@@ -39,12 +39,8 @@ class SiteMap extends Command
      */
     public function handle(): void
     {
-        try {
-            Log::info('start crawling sitemap');
-            SitemapGenerator::create(config('app.url'))->writeToFile(public_path('sitemap.xml'));
-            Log::info('end crawling sitemap');
-        } catch (\Exception $e) {
-            Log::error($e->getMessage());
-        }
+        Log::info('start crawling sitemap');
+        SitemapGenerator::create(config('app.url'))->writeToFile(public_path('sitemap.xml'));
+        Log::info('end crawling sitemap');
     }
 }

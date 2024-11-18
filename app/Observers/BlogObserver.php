@@ -3,13 +3,14 @@
 namespace App\Observers;
 
 use App\Models\Blog;
+use App\Events\AutoSiteMapEvent;
 use Illuminate\Support\Facades\Artisan;
 
 class BlogObserver
 {
     public function __construct()
     {
-        Artisan::call('site:map');
+        dispatch(new AutoSiteMapEvent());
     }
     /**
      * Handle the Blog "created" event.
