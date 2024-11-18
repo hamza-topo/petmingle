@@ -10,7 +10,7 @@ class BlogObserver
 {
     public function __construct()
     {
-        dispatch(new AutoSiteMapEvent());
+        // dispatch(new AutoSiteMapEvent());
     }
     /**
      * Handle the Blog "created" event.
