@@ -37,7 +37,7 @@
                         <div class="col-md-4 row">
                             <div class="mb-3">
                                 <label class="form-label">Publish It At:</label>
-                                <input type="datetime" name="publish_it_at" class="fomr-control col-sm-6" />
+                                <input type="datetime-local" name="publish_it_at" class="fomr-control col-sm-6" />
                                 @error('publish_it_at')
                                     <div class="form-text text-danger">{{ $message }}</div>
                                 @enderror

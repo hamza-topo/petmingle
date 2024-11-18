@@ -88,6 +88,7 @@ class BlogController extends Controller
             if (!empty($request['media'])) {
                 $request['media'] =  $this->uploadAll([$request['media']]);
             }
+            
             $this->blogRepository->create($request);
 
             return redirect(route('admin.blogs.index'));
