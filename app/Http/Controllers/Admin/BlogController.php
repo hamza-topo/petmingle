@@ -68,16 +68,13 @@ class BlogController extends Controller
      */
     public function store(Request $request)
     {
+        $active = 1;
+        if ($request->get('active') === "1" || !empty($request->get('publish_it_at'))) {
+            $active = 0;
+        }
         try {
             $request = $request->all();
-            if (!empty($request['active']) && $request['active'] === "1") {
-                $request['active'] = false;
-            }
-
-            if (!empty($request['publish_it_at'])) {
-                $request['active'] = false;
-            }
-
+            $request['active'] = $active;
             foreach ($request['slug'] as $lang => &$slug) {
                 if (empty($slug) && !empty($request['title'][$lang])) {
                     $slug = Str::slug($request['title'][$lang]);
@@ -88,7 +85,7 @@ class BlogController extends Controller
             if (!empty($request['media'])) {
                 $request['media'] =  $this->uploadAll([$request['media']]);
             }
-            
+
             $this->blogRepository->create($request);
 
             return redirect(route('admin.blogs.index'));
@@ -131,16 +128,13 @@ class BlogController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $active = 1;
+        if ($request->get('active') === "1" || !empty($request->get('publish_it_at'))) {
+            $active = 0;
+        }
         try {
             $request = $request->all();
-
-            if (!empty($request['active']) && $request['active'] === "1") {
-                $request['active'] = false;
-            }
-
-            if (!empty($request['publish_it_at'])) {
-                $request['active'] = false;
-            }
+            $request['active'] = $active;
 
             foreach ($request['slug'] as $lang => &$slug) {
                 if (empty($slug) && !empty($request['title'][$lang])) {
