@@ -165,6 +165,14 @@ class BlogController extends Controller
      */
     public function destroy($id)
     {
-        //
+        try {
+            $this->blogRepository->delete($id);
+
+            return redirect(route('admin.blogs.index'))->with('success');
+        } catch (\Exception $e) {
+
+            Log::error($e->getMessage());
+            return redirect()->back();
+        }
     }
 }
