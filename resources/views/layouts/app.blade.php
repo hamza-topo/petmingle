@@ -70,6 +70,8 @@
     <script src="{{ asset('assets/js/plugin.js') }}"></script>
     <!-- Main js-->
     <script src="{{ asset('assets/js/main.js') }}"></script>
+    <script type="text/javascript" async defer src="//assets.pinterest.com/js/pinit.js"></script>
+
     <script>
         function setTheme() {
             localStorage.theme = 'light';

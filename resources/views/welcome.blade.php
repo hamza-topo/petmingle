@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('title')
-{{config('app.name')}}
+    {{ config('app.name') }}
 @endsection
 @section('main')
     <x-web.home.hero />
