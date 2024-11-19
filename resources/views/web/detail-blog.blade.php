@@ -12,7 +12,7 @@
             <div class="tour-details-banner">
             </div>
             <!-- / Slider-->
-            <div class="tour-details-container">
+            <div class="tour-details-container" >
                 <div class="container">
                     <!-- Details Heading -->
                     <div class="details-heading">
@@ -23,7 +23,7 @@
                         </div>
                     </div>
                     <!-- / Details Heading -->
-                    <div class="mt-30">
+                    <div class="mt-30" style="border-bottom: 1px solid var(--tertiary-border);">
                         <div class="row g-4">
                             <!-- Left content -->
                             <div class="col-xl-8 col-lg-7">
