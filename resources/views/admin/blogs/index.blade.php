@@ -34,7 +34,7 @@
                                 @endphp
                                 @php
                                     $blogUrl =
-                                        $blog->slug[app()->getLocale()] ?? slugify($blog->title[app()->getLocale()]);
+                                        $blog->slug[app()->getLocale()] ?? slugify($blog->title[app()->getLocale()] ?? '');
                                 @endphp
                                 <tr>
                                     <th scope="row">{{ $blog->slug[app()->getLocale()] ?? '' }}</th>
