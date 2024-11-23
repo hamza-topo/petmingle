@@ -1,7 +1,7 @@
 <div class="row p-2 g-4">
     @foreach ($blogs as $blog)
     @php 
-        $blogUrl = $blog->slug[app()->getLocale()] ?? slugify($blog->title[app()->getLocale()]);
+        $blogUrl = $blog->slug[app()->getLocale()] ?? slugify($blog->title[app()->getLocale()] ?? '');
     @endphp
         <div class="col-xl-4 col-lg-4 col-sm-6">
             <article class="news-card-two" onclick="window.location.href=">
