@@ -33,6 +33,44 @@ If you have any questions, suggestions, or need assistance, please reach out to 
 - **Requires:** PHP 8
 - **Note:** Additional features will be added as the API evolves.
 
+## 🐳 Docker Development
+
+This project includes a local Docker stack for Laravel 8:
+
+- `nginx` serves the app on `http://localhost:8000`
+- `app` runs PHP 8.2 FPM with Composer
+- `mysql` runs MySQL 8
+- `node` runs Laravel Mix asset watching when enabled
+- `mailpit` captures local emails on `http://localhost:8025`
+
+### First run
+
+```bash
+cp .env.example .env
+docker compose up -d --build
+docker compose exec -u www-data app php artisan key:generate
+docker compose exec -u www-data app php artisan migrate --seed
+```
+
+Open the application at `http://localhost:8000`.
+
+### Useful commands
+
+```bash
+docker compose exec -u www-data app php artisan test
+docker compose exec -u www-data app php artisan migrate:fresh --seed
+docker compose exec -u www-data app composer install
+docker compose run --rm node npm run dev
+docker compose --profile assets up node
+```
+
+### Notes
+
+- Composer dependencies live in a Docker named volume, so the host does not need PHP installed.
+- Node dependencies live in a Docker named volume, so the host does not need Node installed.
+- Database data is persisted in the `mysql_data` Docker volume.
+- Local overrides can be placed in `docker-compose.override.yml`, which is intentionally ignored by git.
+
 ## 📱 Consumption Platforms
 
 This API is designed to be consumed by a mobile app and a front-end framework (framework to be decided).

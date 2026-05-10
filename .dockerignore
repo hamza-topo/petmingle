@@ -1,0 +1,17 @@
+.git
+.github
+.idea
+.vscode
+node_modules
+vendor
+storage/framework/cache/data/*
+storage/framework/sessions/*
+storage/framework/testing/*
+storage/framework/views/*
+storage/logs/*
+.env
+.env.backup
+.phpunit.result.cache
+npm-debug.log
+yarn-error.log
+docker-compose.override.yml
