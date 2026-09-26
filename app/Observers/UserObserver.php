@@ -22,7 +22,7 @@ class UserObserver
     public function created(User $user)
     {
         try {
-            Log::error('start sending welcome mail ');
+            Log::info('start sending welcome mail ');
 
             $this->userService->welcome($user);
         } catch (\Exception $e) {
@@ -50,7 +50,7 @@ class UserObserver
     public function deleted(User $user)
     {
         try {
-            Log::error('start sending goodBye mail ');
+            Log::info('start sending goodBye mail ');
             $this->userService->goodBye($user);
         } catch (\Exception $e) {
             Log::error('sending goodBye mail failed: ' . $e->getMessage());
@@ -66,7 +66,7 @@ class UserObserver
     public function restored(User $user)
     {
         try {
-            Log::error('start sending welcomeBack mail ');
+            Log::info('start sending welcomeBack mail ');
             $this->userService->welcomeBack($user);
         } catch (\Exception $e) {
             Log::error('sending welcomeBack mail failed: ' . $e->getMessage());

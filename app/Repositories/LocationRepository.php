@@ -63,7 +63,7 @@ class LocationRepository
         return Location::paginate(EnumsLocation::PAGINATE);
     }
 
-    public function getAllFromCache(): mixed
+    public function getAllFromCache(?string $key = ''): mixed
     {
         return [];
     }

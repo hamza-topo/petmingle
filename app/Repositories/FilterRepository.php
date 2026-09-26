@@ -46,7 +46,7 @@ class FilterRepository implements RepositoryInterface
         return Filter::all();
     }
 
-    public function getAllFromCache(): mixed
+    public function getAllFromCache(?string $key = ''): mixed
     {
         return [];
     }

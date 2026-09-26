@@ -73,7 +73,7 @@ class DislikeRepository implements RepositoryInterface
         $isLikedBefore === true ? $this->likeRepository->dislike($like) : null;
     }
 
-    public function getAllFromCache(): mixed
+    public function getAllFromCache(?string $key = ''): mixed
     {
         return [];
     }
