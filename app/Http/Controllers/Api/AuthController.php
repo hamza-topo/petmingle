@@ -4,7 +4,6 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Auth\GetUser;
-use App\Http\Requests\Api\Auth\Logout;
 use App\Http\Requests\Api\Auth\SignIn;
 use App\Http\Requests\Api\Auth\SignUp;
 use App\Providers\RouteServiceProvider;
@@ -12,16 +11,14 @@ use App\Repositories\AuthRepository;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use Symfony\Component\HttpFoundation\Response;
-use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthController extends Controller
 {
     public function __construct(protected AuthRepository $authRepository)
     {
-        $this->middleware('guest')->except('logout');
     }
 
     /**
@@ -60,43 +57,34 @@ class AuthController extends Controller
      */
     public function signIn(SignIn $request): Response
     {
-        try {
-            $credentials = $request->only(['email', 'password']);
-            if (Auth::attempt($credentials)) {
-                $user = Auth::user();
-                $token = JWTAuth::fromUser($user);
+        $credentials = $request->only(['email', 'password']);
 
-                return response()->json(['token' => $token]);
-            }
-
+        if (!Auth::attempt($credentials)) {
             return response()->json([
                 'success' => false,
-                'message' => \__('Login credentials are invalid.'),
+                'message' => __('Login credentials are invalid.'),
             ], Response::HTTP_UNAUTHORIZED);
-        } catch (JWTException $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => 'Could not create token.',
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+
+        /** @var \App\Models\User $user */
+        $user = Auth::user();
+
+        $token = $user->createToken('api')->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'token' => $token,
+        ]);
     }
 
-    public function signOut(Logout $request)
+    public function signOut(Request $request): Response
     {
-        try {
-            JWTAuth::invalidate($request->token);
+        $request->user()->currentAccessToken()?->delete();
 
-            return response()->json([
-                'success' => true,
-                'message' => \__('User has been logged out.')
-            ]);
-        } catch (JWTException $e) {
-            return response()->json([
-                'success' => false,
-                'message' => \__('Sorry, user cannot be logged out.')
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => __('User has been logged out.'),
+        ]);
     }
 
     public function getUser(GetUser $request)
