@@ -73,7 +73,7 @@ class MatchRepository implements RepositoryInterface
         return MatchTable::paginate();
     }
 
-    public function getAllFromCache(): mixed
+    public function getAllFromCache(?string $key = ''): mixed
     {
         return [];
     }

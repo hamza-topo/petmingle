@@ -98,7 +98,7 @@ class LikeRepository implements RepositoryInterface
         return $isMatch->count() > 0 ? true : false;
     }
 
-    public function getAllFromCache(): mixed
+    public function getAllFromCache(?string $key = ''): mixed
     {
         return [];
     }
