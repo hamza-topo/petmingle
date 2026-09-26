@@ -56,7 +56,7 @@ class LocationController extends Controller
                 'data' => new LocationNear($resources),
             ]);
         } catch (\Exception $e) {
-            dd($e->getMessage());
+           
             return response()->json([
                 'success' => false,
                 'message' => \__('Sorry, cannot fetch Locations.'),
