@@ -37,7 +37,7 @@
                         <div class="d-flex flex-column gap-20">
                             <div class="logo">
                                 <a href="{{ route('home') }}"><img
-                                        src="{{ asset('storage/' . $component->media ?? '') }}" width="50"
+                                        src="{{ asset('storage/' . $component?->media ?? '') }}" width="50"
                                         alt="{{ config('app.name') }}" class="changeLogo"></a>
                             </div>
                             <h4>{{ __('Stay Informed with the Latest Pet Health Tips!') }}</h4>
