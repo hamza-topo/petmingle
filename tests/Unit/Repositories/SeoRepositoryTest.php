@@ -95,7 +95,7 @@ class SeoRepositoryTest extends TestCase
 
         $this->cacheService->expects($this->once())
             ->method('remember')
-            ->with($page, CacheDuration::SHORT->value, $this->isType('callable'))
+            ->with($page, CacheDuration::SHORT->value, $this->isCallable())
             ->willReturn($seo);
 
         $cachedSeo = $this->repository->getAllFromCache($page);
