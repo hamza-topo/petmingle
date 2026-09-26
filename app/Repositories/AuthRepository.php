@@ -4,36 +4,12 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Reducers\Socialite;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Tymon\JWTAuth\Facades\JWTAuth;
 use Illuminate\Support\Str;
 
 class AuthRepository
 {
-    public function signUp(array $user): User
-    {
-        $user['password'] = $this->hash($user['password']);
-
-        return User::create($user);
-    }
-
-    public function signin(array $request): bool
-    {
-        if (!auth()->attempt($request))
-            return false;
-        return JWTAuth::fromUser(Auth::user());
-    }
-
-    public function logout(string $token)
-    {
-        return JWTAuth::invalidate($token);
-    }
-
-    public function getUser(string $token)
-    {
-        return JWTAuth::authenticate($token);
-    }
+   
     //TODO::we no longer need this 
     /**
      * Undocumented function
@@ -41,12 +17,12 @@ class AuthRepository
      * @see firstOrCreateProviderUser()
      * @deprecated version
      */
-    public function firstOrCreate(array $criteria, $user)
+    public function firstOrCreate(array $criteria,array $user)
     {
         return User::firstOrCreate($criteria, $user);
     }
 
-    public function firstOrCreateProviderUser(array $providerUser = [], string $provider): User
+    public function firstOrCreateProviderUser(?array $providerUser, string $provider): User
     {
         $reducer = new Socialite($providerUser, $provider);
 

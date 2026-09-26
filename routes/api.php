@@ -30,7 +30,6 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('v.0')->group(function () {
     Route::post('/sign-in', [AuthController::class, 'signIn']);
     Route::post('/sign-up', [AuthController::class, 'signUp']);
-    Route::post('/sign-out', [AuthController::class, 'signOut']);
     Route::get('/login/{provider}', [AuthController::class, 'redirectToProvider']);
     Route::get('/login/{provider}/callback', [AuthController::class, 'handleProviderCallback']);
 });
@@ -45,7 +44,9 @@ Route::prefix('v.0')->group(function () {
 | is assigned the "api" middleware group. Enjoy building your API!
 |
 */
-Route::prefix('v.0')->middleware('jwt.verify')->group(function () {
+Route::prefix('v.0')->middleware('auth:sanctum')->group(function () {
+
+    Route::post('/sign-out', [AuthController::class, 'signOut']);
 
     Route::put('remove-avatar/{id}', [AuthController::class, 'removeAvatar']);
     Route::delete('disable-account/{id}', [AuthController::class, 'disable']);
@@ -83,5 +84,5 @@ Route::prefix('v.0')->middleware('jwt.verify')->group(function () {
     Route::put('/messages/restore/{id}', [MessageController::class, 'restore']);
     Route::resources(['messages' => MessageController::class]);
 
-    Route::get('filters',[FilterController::class, 'index']);
+    Route::get('filters', [FilterController::class, 'index']);
 });
