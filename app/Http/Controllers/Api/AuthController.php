@@ -3,11 +3,11 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Api\Auth\GetUser;
 use App\Http\Requests\Api\Auth\SignIn;
 use App\Http\Requests\Api\Auth\SignUp;
 use App\Providers\RouteServiceProvider;
 use App\Repositories\AuthRepository;
+use App\Traits\ImageTrait;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
@@ -17,6 +17,8 @@ use Symfony\Component\HttpFoundation\Response;
 
 class AuthController extends Controller
 {
+    use ImageTrait;
+
     public function __construct(protected AuthRepository $authRepository)
     {
     }
@@ -26,13 +28,13 @@ class AuthController extends Controller
      *
      * @return Symfony\Component\HttpFoundation\Response
      */
-    public function signUp(SignUp $request)
+    public function signUp(SignUp $request): Response
     {
         try {
             $user = $request->all();
             $user['avatar'] = $this->setFile($request->file('avatar'))
                 ->setName()
-                ->upload()[0];
+                ->upload();
             $user = $this->authRepository->signUp($user);
 
             return response()->json([
@@ -85,20 +87,6 @@ class AuthController extends Controller
             'success' => true,
             'message' => __('User has been logged out.'),
         ]);
-    }
-
-    public function getUser(GetUser $request)
-    {
-        try {
-
-            return response()->json(['user' => $this->authRepository->getUser($request->token)]);
-        } catch (\Exception $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => __('Sorry, user cannot be found.')
-            ], Response::HTTP_NOT_FOUND);
-        }
     }
 
     /**

@@ -17,7 +17,7 @@ class AuthRepository
      * @see firstOrCreateProviderUser()
      * @deprecated version
      */
-    public function firstOrCreate(array $criteria,array $user)
+    public function firstOrCreate(array $criteria, array $user)
     {
         return User::firstOrCreate($criteria, $user);
     }
@@ -53,6 +53,17 @@ class AuthRepository
         $user->update(['avatar' => '']);
         $user->refresh();
         return $user;
+    }
+
+    public function signUp(array $user): User
+    {
+        if (!isset($user['password']) || !is_string($user['password']) || $user['password'] === '') {
+            throw new \InvalidArgumentException('Password is required for sign up.');
+        }
+
+        $user['password'] = $this->hash($user['password']);
+
+        return User::create($user);
     }
 
     protected function hash(string $key): string
