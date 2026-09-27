@@ -30,15 +30,14 @@ trait ImageTrait
         return $this;
     }
 
-    public function upload(string $folder, ?string $disk, ?string $filename): mixed
+    public function upload(string $folder = self::DIRECTORY, string $disk = self::DISK, ?string $filename = null): mixed
     {
-        if($disk === null) {
-            $disk = self::DISK;
-        }
-
         $filePath = 'uploads/' . $this->file->getClientOriginalName();
-        
-        if( Storage::disk($disk)->put($filePath, file_get_contents($this->file->getRealPath()))){
+
+        if (Storage::disk($disk)->put(
+            $filePath,
+            file_get_contents($this->file->getRealPath())
+        )) {
             return $filePath;
         }
 
