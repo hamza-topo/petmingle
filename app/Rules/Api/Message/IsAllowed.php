@@ -15,7 +15,7 @@ class IsAllowed implements Rule
     {
         $this->likeRepository = new LikeRepository();
     }
-   /**
+    /**
      * Determine if the validation rule passes.
      *
      * @param  string  $attribute
@@ -24,7 +24,18 @@ class IsAllowed implements Rule
      */
     public function passes($attribute, $value)
     {
-        return $this->likeRepository->isMatch(['from'=> auth()->user()->id, 'to'=> $value]);
+        $senderPet = auth()->user()?->pet;
+
+        $receiverPet = \App\Models\User::find($value)?->pet;
+
+        if (!$senderPet || !$receiverPet) {
+            return false;
+        }
+
+        return $this->likeRepository->isMatch([
+            'from' => $senderPet->id,
+            'to' => $receiverPet->id,
+        ]);
     }
 
     /**

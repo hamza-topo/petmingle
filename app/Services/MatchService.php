@@ -10,6 +10,7 @@ use App\Repositories\MatchRepository;
 use App\Repositories\PetRepository;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\DB;
 
 class MatchService
 {
@@ -19,18 +20,29 @@ class MatchService
     public function __construct(
         protected MatchRepository $matchRepository,
         protected PetRepository $petRepository
-    ) {
-    }
+    ) {}
 
     public function create(array $like): self
     {
         Log::info('start creating the match');
-        $likeSeconde = ['from' => $like['to'], 'to' => $like['from']];
-        $this->fromMatch =  $this->matchRepository->create($like);
-        Log::info('created from :' . json_encode($this->fromMatch));
-        $this->toMatch = $this->matchRepository->create($likeSeconde);
-        Log::info('created to :' . json_encode($this->toMatch));
+
+        $likeSeconde = [
+            'from' => $like['to'],
+            'to' => $like['from'],
+        ];
+
+        DB::transaction(function () use ($like, $likeSeconde) {
+            $this->fromMatch = $this->matchRepository->create($like);
+
+            Log::info('created from :' . json_encode($this->fromMatch));
+
+            $this->toMatch = $this->matchRepository->create($likeSeconde);
+
+            Log::info('created to :' . json_encode($this->toMatch));
+        });
+
         Log::info('end of creating the match');
+
         return $this;
     }
 
