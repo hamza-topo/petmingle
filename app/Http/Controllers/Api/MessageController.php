@@ -29,7 +29,7 @@ class MessageController extends Controller
                 'success' => true,
                 'message' => \__('Messages has been fetched successfully.'),
                 'data' => new Chat($this->messageRepository->messages(auth()->user()->id, $request->receiver_id))
-            ]);ب
+            ]);
     }
 
     /**
