@@ -8,7 +8,7 @@ use Illuminate\Support\Collection;
 
 class MessageRepository
 {
-    
+
     /**
      * create
      *
@@ -19,7 +19,7 @@ class MessageRepository
     {
         return Message::create($chat);
     }
-    
+
     /**
      * update
      *
@@ -35,7 +35,7 @@ class MessageRepository
 
         return $message;
     }
-    
+
     /**
      * getById
      *
@@ -44,9 +44,9 @@ class MessageRepository
      */
     public function getById(int $messageId): Message
     {
-        return Message::find($messageId);
+        return Message::findOrFail($messageId);
     }
-    
+
     /**
      * delete
      *
@@ -57,7 +57,7 @@ class MessageRepository
     {
         return Message::destroy($messageId);
     }
-    
+
     /**
      * restore
      *
@@ -66,9 +66,14 @@ class MessageRepository
      */
     public function restore(int $messageId): bool
     {
-        return Message::withTrashed()->find($messageId)->restore();
+        return $this->getByIdWithTrashed($messageId)->restore();
     }
-    
+
+    public function getByIdWithTrashed(int $messageId): Message
+    {
+        return Message::withTrashed()->findOrFail($messageId);
+    }
+
     /**
      * messages
      *
@@ -79,7 +84,7 @@ class MessageRepository
     public function messages(int $senderId, int $receiverId): LengthAwarePaginator
     {
         return Message::where(['sender_id' => $senderId, 'receiver_id' => $receiverId])
-        ->with(['receiver.pet', 'sender.pet'])
-        ->paginate();
+            ->with(['receiver.pet', 'sender.pet'])
+            ->paginate();
     }
 }

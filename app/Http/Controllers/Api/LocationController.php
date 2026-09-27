@@ -23,7 +23,7 @@ class LocationController extends Controller
         return response()->json([
             'success' => true,
             'message' => \__('List of Locations.'),
-            'data' => $this->locationRepository->all()
+            'data' => $this->locationRepository->forUser(request()->user()->id)
         ]);
     }
     /**
@@ -76,10 +76,14 @@ class LocationController extends Controller
      */
     public function store(Store $request)
     {
+        $data = $request->validated();
+
+        $data['user_id'] = $request->user()->id;
+
         return response()->json([
             'success' => true,
-            'message' => \__('Location has been created.'),
-            'data' => $this->locationRepository->create($request->all())
+            'message' => __('Location has been created.'),
+            'data' => $this->locationRepository->create($data),
         ]);
     }
 
@@ -91,10 +95,14 @@ class LocationController extends Controller
      */
     public function show(string $id)
     {
+        $location = $this->locationRepository->getById((int) $id);
+
+        $this->authorize('view', $location);
+
         return response()->json([
             'success' => true,
-            'message' => \__('Location has been found.'),
-            'data' => $this->locationRepository->getById($id)
+            'message' => __('Location has been found.'),
+            'data' => $location,
         ]);
     }
 
@@ -118,10 +126,14 @@ class LocationController extends Controller
      */
     public function destroy($id)
     {
+        $location = $this->locationRepository->getById((int) $id);
+
+        $this->authorize('delete', $location);
+
         return response()->json([
             'success' => true,
-            'message' => \__('Location has been deleted successfully.'),
-            'data' => $this->locationRepository->delete($id)
+            'message' => __('Location has been deleted successfully.'),
+            'data' => $this->locationRepository->delete((int) $id),
         ]);
     }
 
@@ -133,10 +145,14 @@ class LocationController extends Controller
      */
     public function restore($id)
     {
+        $location = $this->locationRepository->getByIdWithTrashed((int) $id);
+
+        $this->authorize('restore', $location);
+
         return response()->json([
             'success' => true,
-            'message' => \__('Location has been restored successfully.'),
-            'data' => $this->locationRepository->restore($id)
+            'message' => __('Location has been restored successfully.'),
+            'data' => $this->locationRepository->restore((int) $id),
         ]);
     }
 }

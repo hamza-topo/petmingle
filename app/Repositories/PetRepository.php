@@ -51,6 +51,11 @@ class PetRepository implements RepositoryInterface
         return Pet::withTrashed()->findOrFail($petId)->restore();
     }
 
+    public function getByIdWithTrashed(int $petId): Pet
+    {
+        return Pet::withTrashed()->findOrFail($petId);
+    }
+
     public function all(): Collection
     {
         return Pet::all();

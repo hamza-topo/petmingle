@@ -132,6 +132,49 @@ class AuthController extends Controller
         }
     }
 
+    public function removeAvatar(Request $request, int $id): Response
+    {
+        $user = $this->authRepository->getById($id);
+
+        $this->authorize('removeAvatar', $user);
+
+        return response()->json([
+            'success' => true,
+            'message' => __('Avatar has been removed successfully.'),
+            'data' => $this->authRepository->removeAvatar($id),
+        ]);
+    }
+
+    public function enable(Request $request, int $id): Response
+    {
+        $user = $this->authRepository->getByIdWithTrashed($id);
+
+        $this->authorize('enable', $user);
+
+        $this->authRepository->restore($id);
+
+        return response()->json([
+            'success' => true,
+            'message' => __('Account has been enabled successfully.'),
+        ]);
+    }
+
+    public function disable(Request $request, int $id): Response
+    {
+        $user = $this->authRepository->getById($id);
+
+        $this->authorize('disable', $user);
+
+        $user->tokens()->delete();
+
+        $this->authRepository->delete($id);
+
+        return response()->json([
+            'success' => true,
+            'message' => __('Account has been disabled successfully.'),
+        ]);
+    }
+
     /**
      * @param $provider
      * @return JsonResponse

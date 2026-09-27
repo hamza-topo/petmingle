@@ -16,8 +16,7 @@ class MessageController extends Controller
     public function __construct(
         protected ConversationRepository $conversationRepository,
         protected MessageRepository $messageRepository
-    ) {
-    }
+    ) {}
     /**
      * Display a listing of the resource.
      *
@@ -26,10 +25,10 @@ class MessageController extends Controller
     public function index(Request $request)
     {
         return response()->json([
-                'success' => true,
-                'message' => \__('Messages has been fetched successfully.'),
-                'data' => new Chat($this->messageRepository->messages(auth()->user()->id, $request->receiver_id))
-            ]);
+            'success' => true,
+            'message' => \__('Messages has been fetched successfully.'),
+            'data' => new Chat($this->messageRepository->messages(auth()->user()->id, $request->receiver_id))
+        ]);
     }
 
     /**
@@ -50,18 +49,27 @@ class MessageController extends Controller
      */
     public function store(Store $request)
     {
-        $request = $request->all();
-            if (empty($request['conversation_id'])) {
-                $reducer = new Conversation();
-                $conversation = $this->conversationRepository->create($reducer->reduce($request));
-                if (!empty($conversation))
-                    $request['conversation_id'] = $conversation->id;
+        $data = $request->validated();
+
+        $data['sender_id'] = $request->user()->id;
+
+        if (empty($data['conversation_id'])) {
+            $reducer = new Conversation();
+
+            $conversation = $this->conversationRepository->create(
+                $reducer->reduce($data)
+            );
+
+            if (!empty($conversation)) {
+                $data['conversation_id'] = $conversation->id;
             }
-            return response()->json([
-                'success' => true,
-                'message' => \__('Messages has been fetched successfully.'),
-                'data' => $this->messageRepository->create($request),
-            ]);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => __('Messages has been fetched successfully.'),
+            'data' => $this->messageRepository->create($data),
+        ]);
     }
     /**
      * Update the specified resource in storage.
@@ -72,11 +80,15 @@ class MessageController extends Controller
      */
     public function update(Update $request, $id)
     {
+        $message = $this->messageRepository->getById((int) $id);
+
+        $this->authorize('update', $message);
+
         return response()->json([
-                'success' => true,
-                'message' => \__('Messages has been modified successfully.'),
-                'data' => $this->messageRepository->update($id, $request->all()),
-            ]);
+            'success' => true,
+            'message' => __('Messages has been modified successfully.'),
+            'data' => $this->messageRepository->update((int) $id, $request->all()),
+        ]);
     }
 
     /**
@@ -87,11 +99,15 @@ class MessageController extends Controller
      */
     public function destroy($id)
     {
+        $message = $this->messageRepository->getById((int) $id);
+
+        $this->authorize('delete', $message);
+
         return response()->json([
-                'success' => true,
-                'message' => \__('Messages has been deleted successfully.'),
-                'data' => $this->messageRepository->delete($id),
-            ]);
+            'success' => true,
+            'message' => __('Messages has been deleted successfully.'),
+            'data' => $this->messageRepository->delete((int) $id),
+        ]);
     }
 
     /**
@@ -102,10 +118,14 @@ class MessageController extends Controller
      */
     public function restore(int $id)
     {
-         return response()->json([
-                'success' => true,
-                'message' => \__('Messages has been restored successfully.'),
-                'data' => $this->messageRepository->restore($id),
-            ]);
+        $message = $this->messageRepository->getByIdWithTrashed($id);
+
+        $this->authorize('restore', $message);
+
+        return response()->json([
+            'success' => true,
+            'message' => __('Messages has been restored successfully.'),
+            'data' => $this->messageRepository->restore($id),
+        ]);
     }
 }
