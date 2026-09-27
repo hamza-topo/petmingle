@@ -9,6 +9,8 @@ use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Race;
+use App\Models\Species;
 
 class PetAuthorizationTest extends TestCase
 {
@@ -20,13 +22,14 @@ class PetAuthorizationTest extends TestCase
 
         $user = User::factory()->create();
         $otherUser = User::factory()->create();
+        $pet = $this->createPet($user);
 
         Sanctum::actingAs($user);
 
         $response = $this->postJson('/api/v.0/pets', [
             'user_id' => $otherUser->id,
-            'species_id' => 1,
-            'race_id' => 1,
+            'species_id' => $pet->species_id,
+            'race_id' => $pet->race_id,
             'name' => 'Nala',
             'age' => 3,
             'sexe' => 1,
@@ -54,17 +57,7 @@ class PetAuthorizationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $pet = Pet::create([
-            'user_id' => $user->id,
-            'species_id' => 1,
-            'race_id' => 1,
-            'name' => 'Nala',
-            'age' => 3,
-            'sexe' => 1,
-            'color' => 'brown',
-            'images' => [],
-            'about' => 'Test pet',
-        ]);
+        $pet = $this->createPet($user);
 
         $pet->delete();
 
@@ -84,17 +77,7 @@ class PetAuthorizationTest extends TestCase
         $owner = User::factory()->create();
         $otherUser = User::factory()->create();
 
-        $pet = Pet::create([
-            'user_id' => $owner->id,
-            'species_id' => 1,
-            'race_id' => 1,
-            'name' => 'Nala',
-            'age' => 3,
-            'sexe' => 1,
-            'color' => 'brown',
-            'images' => [],
-            'about' => 'Test pet',
-        ]);
+        $pet = $this->createPet($owner);
 
         $pet->delete();
 
@@ -112,17 +95,7 @@ class PetAuthorizationTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $pet = Pet::create([
-            'user_id' => $user->id,
-            'species_id' => 1,
-            'race_id' => 1,
-            'name' => 'Nala',
-            'age' => 3,
-            'sexe' => 1,
-            'color' => 'brown',
-            'images' => [],
-            'about' => 'Test pet',
-        ]);
+        $pet = $this->createPet($user);
 
         Sanctum::actingAs($user);
 
@@ -139,17 +112,7 @@ class PetAuthorizationTest extends TestCase
         $owner = User::factory()->create();
         $otherUser = User::factory()->create();
 
-        $pet = Pet::create([
-            'user_id' => $owner->id,
-            'species_id' => 1,
-            'race_id' => 1,
-            'name' => 'Nala',
-            'age' => 3,
-            'sexe' => 1,
-            'color' => 'brown',
-            'images' => [],
-            'about' => 'Test pet',
-        ]);
+        $pet = $this->createPet($owner);
 
         Sanctum::actingAs($otherUser);
 
@@ -159,6 +122,31 @@ class PetAuthorizationTest extends TestCase
         $this->assertDatabaseHas('pets', [
             'id' => $pet->id,
             'deleted_at' => null,
+        ]);
+    }
+
+    private function createPet(User $user): Pet
+    {
+        $species = Species::create([
+            'name' => 'Dog',
+            'description' => 'Test species',
+        ]);
+
+        $race = Race::create([
+            'species_id' => $species->id,
+            'name' => 'Mixed',
+        ]);
+
+        return Pet::create([
+            'user_id' => $user->id,
+            'species_id' => $species->id,
+            'race_id' => $race->id,
+            'name' => 'Nala',
+            'age' => 3,
+            'sexe' => 1,
+            'color' => 'brown',
+            'images' => [],
+            'about' => 'Test pet',
         ]);
     }
 }

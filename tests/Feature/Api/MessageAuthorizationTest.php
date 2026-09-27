@@ -11,6 +11,9 @@ use Tests\TestCase;
 use App\Events\MessageEvent;
 use Illuminate\Support\Facades\Event;
 use App\Models\Like;
+use App\Models\Pet;
+use App\Models\Race;
+use App\Models\Species;
 
 class MessageAuthorizationTest extends TestCase
 {
@@ -233,10 +236,12 @@ class MessageAuthorizationTest extends TestCase
     {
         $sender = User::factory()->create();
         $receiver = User::factory()->create();
+        $senderPet = $this->createPet($sender);
+        $receiverPet = $this->createPet($receiver);
 
         Like::create([
-            'from' => $receiver->id,
-            'to' => $sender->id,
+            'from' => $receiverPet->id,
+            'to' => $senderPet->id,
         ]);
 
         Sanctum::actingAs($sender);
@@ -259,9 +264,12 @@ class MessageAuthorizationTest extends TestCase
         $receiver = User::factory()->create();
         $spoofedUser = User::factory()->create();
 
+        $senderPet = $this->createPet($sender);
+        $receiverPet = $this->createPet($receiver);
+
         Like::create([
-            'from' => $receiver->id,
-            'to' => $sender->id,
+            'from' => $receiverPet->id,
+            'to' => $senderPet->id,
         ]);
 
         Sanctum::actingAs($sender);
@@ -281,6 +289,31 @@ class MessageAuthorizationTest extends TestCase
         $this->assertDatabaseMissing('messages', [
             'sender_id' => $spoofedUser->id,
             'content' => 'Hello',
+        ]);
+    }
+
+    private function createPet(User $user): Pet
+    {
+        $species = Species::create([
+            'name' => 'Dog',
+            'description' => 'Test species',
+        ]);
+
+        $race = Race::create([
+            'species_id' => $species->id,
+            'name' => 'Mixed',
+        ]);
+
+        return Pet::create([
+            'user_id' => $user->id,
+            'species_id' => $species->id,
+            'race_id' => $race->id,
+            'name' => 'Nala',
+            'age' => 3,
+            'sexe' => 1,
+            'color' => 'brown',
+            'images' => [],
+            'about' => 'Test pet',
         ]);
     }
 }
