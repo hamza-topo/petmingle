@@ -5,14 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Repositories\FilterRepository;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class FilterController extends Controller
 {
 
-    public function __construct(protected FilterRepository $filterRepository)
-    {
-    }
+    public function __construct(protected FilterRepository $filterRepository) {}
 
     /**
      * Display a listing of the resource.
@@ -21,21 +18,11 @@ class FilterController extends Controller
      */
     public function index()
     {
-        try {
-
-            return response()->json([
-                'success' => true,
-                'message' => \__('corresponding default filters of :' . auth()->user()->name),
-                'data' => $this->filterRepository->all()
-            ]);
-        } catch (\Exception $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => \__('Sorry, cannot fetch filters.'),
-                'trace' => $e->getMessage(),
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => __('corresponding default filters of :' . auth()->user()->name),
+            'data' => $this->filterRepository->all(),
+        ]);
     }
 
     /**

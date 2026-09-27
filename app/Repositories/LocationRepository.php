@@ -40,7 +40,7 @@ class LocationRepository
      */
     public function getById(string $locationId): Location
     {
-        return Location::find($locationId);
+        return Location::findOrFail($locationId);
     }
 
     public function delete(int $locationId): bool

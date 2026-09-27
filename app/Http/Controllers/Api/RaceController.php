@@ -6,15 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Race\Store;
 use App\Http\Requests\Api\Race\Update;
 use App\Repositories\RaceRepository;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class RaceController extends Controller
 {
 
-    public function __construct(protected RaceRepository $raceRepository)
-    {
-    }
+    public function __construct(protected RaceRepository $raceRepository) {}
     /**
      * Display a listing of the resource.
      *
@@ -22,11 +18,7 @@ class RaceController extends Controller
      */
     public function index()
     {
-        try {
-            return $this->raceRepository->all();
-        } catch (\Exception $e) {
-            throw new HttpException(500, $e->getMessage());
-        }
+        return $this->raceRepository->all();
     }
     /**
      * Store a newly created resource in storage.
@@ -36,11 +28,7 @@ class RaceController extends Controller
      */
     public function store(Store $request)
     {
-        try {
-            return $this->raceRepository->create($request->all());
-        } catch (\Exception $e) {
-            throw new HttpException(500, $e->getMessage());
-        }
+        return $this->raceRepository->create($request->all());
     }
     /**
      * Display the specified resource.
@@ -50,11 +38,7 @@ class RaceController extends Controller
      */
     public function show(int $id)
     {
-        try {
-            return $this->raceRepository->getById($id);
-        } catch (\Exception $e) {
-            throw new HttpException(500, $e->getMessage());
-        }
+        return $this->raceRepository->getById($id);
     }
     /**
      * Update the specified resource in storage.
@@ -65,11 +49,7 @@ class RaceController extends Controller
      */
     public function update(Update $request, $id)
     {
-        try {
-            return $this->raceRepository->update($id, $request->all());
-        } catch (\Exception $e) {
-            throw new HttpException(500, $e->getMessage());
-        }
+        return $this->raceRepository->update($id, $request->all());
     }
 
     /**
@@ -80,11 +60,7 @@ class RaceController extends Controller
      */
     public function destroy(int $id)
     {
-        try {
-            return $this->raceRepository->delete($id);
-        } catch (\Exception $e) {
-            throw new HttpException(500, $e->getMessage());
-        }
+        return $this->raceRepository->delete($id);
     }
 
     /**
@@ -95,10 +71,6 @@ class RaceController extends Controller
      */
     public function restore(int $id)
     {
-        try {
-            return $this->raceRepository->restore($id);
-        } catch (\Exception $e) {
-            throw new HttpException(500, $e->getMessage());
-        }
+        return $this->raceRepository->restore($id);
     }
 }

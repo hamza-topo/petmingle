@@ -10,10 +10,7 @@ use Illuminate\Http\Response;
 class MatchController extends Controller
 {
 
-    public function __construct(protected MatchRepository $matchRepository)
-    {
-        
-    }
+    public function __construct(protected MatchRepository $matchRepository) {}
     /**
      * Display a listing of the resource.
      *
@@ -21,21 +18,11 @@ class MatchController extends Controller
      */
     public function matches()
     {
-        try {
-
-            return response()->json([
-                'success' => true,
-                'message' => \__('corresponding matches of :' . auth()->user()->pet->name),
-                'data' => $this->matchRepository->matches(auth()->user()->pet->id)
-            ]);
-        } catch (\Exception $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => \__('Sorry, cannot fetch matches.'),
-                'trace' => $e->getMessage(),
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => \__('corresponding matches of :' . auth()->user()->pet->name),
+            'data' => $this->matchRepository->matches(auth()->user()->pet->id)
+        ]);
     }
 
     /**
@@ -45,21 +32,11 @@ class MatchController extends Controller
      */
     public function mismatches()
     {
-        try {
-
-            return response()->json([
-                'success' => true,
-                'message' => \__('corresponding mismatches of :' . auth()->user()->pet->name),
-                'data' => $this->matchRepository->mismatches(auth()->user()->pet->id)
-            ]);
-        } catch (\Exception $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => \__('Sorry, cannot fetch mismatches.'),
-                'trace' => $e->getMessage(),
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => \__('corresponding mismatches of :' . auth()->user()->pet->name),
+            'data' => $this->matchRepository->mismatches(auth()->user()->pet->id)
+        ]);
     }
 
     /**

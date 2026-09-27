@@ -10,9 +10,7 @@ use Illuminate\Http\Response;
 
 class LikeController extends Controller
 {
-    public function __construct(protected LikeRepository $likeRepository)
-    {
-    }
+    public function __construct(protected LikeRepository $likeRepository) {}
     /**
      * Display a listing of the resource.
      *
@@ -20,21 +18,11 @@ class LikeController extends Controller
      */
     public function index()
     {
-        try {
-
-            return response()->json([
-                'success' => true,
-                'message' => \__('corresponding Likes of :' . auth()->user()->pet->name),
-                'data' => $this->likeRepository->likes(auth()->user()->pet->id)
-            ]);
-        } catch (\Exception $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => \__('Sorry, cannot fetch pets.'),
-                'trace' => $e->getMessage(),
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => \__('corresponding Likes of :' . auth()->user()->pet->name),
+            'data' => $this->likeRepository->likes(auth()->user()->pet->id)
+        ]);
     }
 
     /**
@@ -55,23 +43,14 @@ class LikeController extends Controller
      */
     public function store(Store $request)
     {
-        try {
-            //After storing check if there is the inverse in db then create a matche;
-            $like = $this->likeRepository->create($request->all());
+        //After storing check if there is the inverse in db then create a matche;
+        $like = $this->likeRepository->create($request->all());
 
-            return response()->json([
-                'success' => true,
-                'message' => \__('like ok'),
-                'data' => $like
-            ]);
-        } catch (\Exception $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => \__('Sorry, cannot like pets.'),
-                'trace' => $e->getMessage(),
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => \__('like ok'),
+            'data' => $like
+        ]);
     }
 
     /**

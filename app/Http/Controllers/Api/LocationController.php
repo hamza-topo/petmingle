@@ -9,13 +9,10 @@ use App\Http\Requests\Api\Location\Store;
 use App\Http\Resources\Api\Location\Near as LocationNear;
 use App\Repositories\LocationRepository;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 
 class LocationController extends Controller
 {
-    public function __construct(protected LocationRepository $locationRepository)
-    {
-    }
+    public function __construct(protected LocationRepository $locationRepository) {}
     /**
      * Display a listing of the resource.
      *
@@ -23,21 +20,11 @@ class LocationController extends Controller
      */
     public function index()
     {
-        try {
-
-            return response()->json([
-                'success' => true,
-                'message' => \__('List of Locations.'),
-                'data' => $this->locationRepository->all()
-            ]);
-        } catch (\Exception $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => \__('Sorry, cannot fetch Locations.'),
-                'trace' => $e->getMessage(),
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => \__('List of Locations.'),
+            'data' => $this->locationRepository->all()
+        ]);
     }
     /**
      * Display a listing of the resource.
@@ -47,22 +34,13 @@ class LocationController extends Controller
      */
     public function near(Near $request)
     {
-        try {
-            $resources = $this->locationRepository->near($request->all());
+        $resources = $this->locationRepository->near($request->all());
 
-            return response()->json([
-                'success' => true,
-                'message' => \__('List of Locations nears to you.'),
-                'data' => new LocationNear($resources),
-            ]);
-        } catch (\Exception $e) {
-           
-            return response()->json([
-                'success' => false,
-                'message' => \__('Sorry, cannot fetch Locations.'),
-                'trace' => $e->getMessage(),
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => \__('List of Locations nears to you.'),
+            'data' => new LocationNear($resources),
+        ]);
     }
 
     /**
@@ -73,32 +51,22 @@ class LocationController extends Controller
      */
     public function filter(Request $request)
     {
-        try {
+        $coordinates = [
+            'latitude' => $request->filters['latitude'],
+            'longitude' => $request->filters['longitude'],
+            'perimetre' => $request->filters['perimetre'],
+            'user_id' => $request->user_id ?? auth()->user()->id,
+        ];
 
-            $coordinates = [
-                'latitude' => $request->filters['latitude'],
-                'longitude' => $request->filters['longitude'],
-                'perimetre' => $request->filters['perimetre'],
-                'user_id' => $request->user_id ?? auth()->user()->id,
-            ];
+        $resources = $this->locationRepository->near($coordinates);
+        $petFilter = new PetFilter;
+        $resources = $petFilter->filter($resources, $request->all());
 
-            $resources = $this->locationRepository->near($coordinates);
-            $petFilter = new PetFilter;
-            $resources = $petFilter->filter($resources, $request->all());
-
-            return response()->json([
-                'success' => true,
-                'message' => \__('List of Locations nears to you.'),
-                'data' => new LocationNear($resources),
-            ]);
-        } catch (\Exception $e) {
-            dd($e->getMessage());
-            return response()->json([
-                'success' => false,
-                'message' => \__('Sorry, cannot fetch Locations.'),
-                'trace' => $e->getMessage(),
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => \__('List of Locations nears to you.'),
+            'data' => new LocationNear($resources),
+        ]);
     }
     /**
      * Store a newly created resource in storage.
@@ -108,20 +76,11 @@ class LocationController extends Controller
      */
     public function store(Store $request)
     {
-        try {
-            //Create Or Update
-            return response()->json([
-                'success' => true,
-                'message' => \__('Location has been created.'),
-                'data' => $this->locationRepository->create($request->all())
-            ]);
-        } catch (\Exception $e) {
-            return response()->json([
-                'success' => false,
-                'message' => \__('Sorry, Location cannot be created out.'),
-                'trace' => $e->getMessage(),
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => \__('Location has been created.'),
+            'data' => $this->locationRepository->create($request->all())
+        ]);
     }
 
     /**
@@ -132,21 +91,11 @@ class LocationController extends Controller
      */
     public function show(string $id)
     {
-        try {
-
-            return response()->json([
-                'success' => true,
-                'message' => \__('Location has been found.'),
-                'data' => $this->locationRepository->getById($id)
-            ]);
-        } catch (\Exception $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => \__('Sorry, Location cannot be found.'),
-                'trace' => $e->getMessage(),
-            ], Response::HTTP_NOT_FOUND);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => \__('Location has been found.'),
+            'data' => $this->locationRepository->getById($id)
+        ]);
     }
 
     /**
@@ -169,21 +118,11 @@ class LocationController extends Controller
      */
     public function destroy($id)
     {
-        try {
-
-            return response()->json([
-                'success' => true,
-                'message' => \__('Location has been deleted successfully.'),
-                'data' => $this->locationRepository->delete($id)
-            ]);
-        } catch (\Exception $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => \__('Sorry, Location cannot be delted.'),
-                'trace' => $e->getMessage(),
-            ], Response::HTTP_NOT_FOUND);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => \__('Location has been deleted successfully.'),
+            'data' => $this->locationRepository->delete($id)
+        ]);
     }
 
     /**
@@ -194,19 +133,10 @@ class LocationController extends Controller
      */
     public function restore($id)
     {
-        try {
-            return response()->json([
-                'success' => true,
-                'message' => \__('Location has been restored successfully.'),
-                'data' => $this->locationRepository->restore($id)
-            ]);
-        } catch (\Exception $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => \__('Sorry, Location cannot be restored.'),
-                'trace' => $e->getMessage(),
-            ], Response::HTTP_NOT_FOUND);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => \__('Location has been restored successfully.'),
+            'data' => $this->locationRepository->restore($id)
+        ]);
     }
 }
