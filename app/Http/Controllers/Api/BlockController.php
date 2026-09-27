@@ -11,9 +11,7 @@ use Illuminate\Http\Response;
 class BlockController extends Controller
 {
 
-    public function __construct(protected BlockRepository $blockRepository)
-    {
-    }
+    public function __construct(protected BlockRepository $blockRepository) {}
     /**
      * Display a listing of the resource.
      *
@@ -21,21 +19,11 @@ class BlockController extends Controller
      */
     public function index()
     {
-        try {
-
-            return response()->json([
-                'success' => true,
-                'message' => \__('corresponding List of Blocks of :' . auth()->user()->name),
-                'data' => $this->blockRepository->blocks(auth()->user()->id)
-            ]);
-        } catch (\Exception $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => \__('Sorry, cannot fetch blocked list.'),
-                'trace' => $e->getMessage(),
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => \__('corresponding List of Blocks of :' . auth()->user()->name),
+            'data' => $this->blockRepository->blocks(auth()->user()->id)
+        ]);
     }
 
     /**
@@ -56,23 +44,14 @@ class BlockController extends Controller
      */
     public function store(Store $request)
     {
-        try {
-            //After blocking check likes remove and matches remove;
-            $block = $this->blockRepository->create($request->all());
+        //After blocking check likes remove and matches remove;
+        $block = $this->blockRepository->create($request->all());
 
-            return response()->json([
-                'success' => true,
-                'message' => \__('Block ok'),
-                'data' => $block
-            ]);
-        } catch (\Exception $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => \__('Sorry, cannot block this user.'),
-                'trace' => $e->getMessage(),
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => \__('Block ok'),
+            'data' => $block
+        ]);
     }
 
     /**

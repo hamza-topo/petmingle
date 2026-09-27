@@ -6,14 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Species\Store;
 use App\Http\Requests\Api\Species\Update;
 use App\Repositories\SpeciesRepository;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class SpeciesController extends Controller
 {
-    public function __construct(protected SpeciesRepository $speciesRepository)
-    {
-    }
+    public function __construct(protected SpeciesRepository $speciesRepository) {}
     /**
      * Display a listing of the resource.
      *
@@ -21,11 +17,7 @@ class SpeciesController extends Controller
      */
     public function index()
     {
-        try {
-            return $this->speciesRepository->all();
-        } catch (\Exception $e) {
-            throw new HttpException(500, $e->getMessage());
-        }
+        return $this->speciesRepository->all();
     }
     /**
      * Store a newly created resource in storage.
@@ -35,11 +27,7 @@ class SpeciesController extends Controller
      */
     public function store(Store $request)
     {
-        try {
-            return $this->speciesRepository->create($request->all());
-        } catch (\Exception $e) {
-            throw new HttpException(500, $e->getMessage());
-        }
+        return $this->speciesRepository->create($request->all());
     }
     /**
      * Display the specified resource.
@@ -49,11 +37,7 @@ class SpeciesController extends Controller
      */
     public function show(int $id)
     {
-        try {
-            return $this->speciesRepository->getById($id);
-        } catch (\Exception $e) {
-            throw new HttpException(500, $e->getMessage());
-        }
+        return $this->speciesRepository->getById($id);
     }
     /**
      * Update the specified resource in storage.
@@ -64,11 +48,7 @@ class SpeciesController extends Controller
      */
     public function update(Update $request, $id)
     {
-        try {
-            return $this->speciesRepository->update($id, $request->all());
-        } catch (\Exception $e) {
-            throw new HttpException(500, $e->getMessage());
-        }
+        return $this->speciesRepository->update($id, $request->all());
     }
 
     /**
@@ -79,11 +59,7 @@ class SpeciesController extends Controller
      */
     public function destroy(int $id)
     {
-        try {
-            return $this->speciesRepository->delete($id);
-        } catch (\Exception $e) {
-            throw new HttpException(500, $e->getMessage());
-        }
+        return $this->speciesRepository->delete($id);
     }
 
     /**
@@ -94,10 +70,6 @@ class SpeciesController extends Controller
      */
     public function restore(int $id)
     {
-        try {
-            return $this->speciesRepository->restore($id);
-        } catch (\Exception $e) {
-            throw new HttpException(500, $e->getMessage());
-        }
+        return $this->speciesRepository->restore($id);
     }
 }

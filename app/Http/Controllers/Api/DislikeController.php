@@ -10,9 +10,7 @@ use Illuminate\Http\Response;
 
 class DislikeController extends Controller
 {
-    public function __construct(protected DislikeRepository $dislikeRepository)
-    {
-    }
+    public function __construct(protected DislikeRepository $dislikeRepository) {}
     /**
      * Display a listing of the resource.
      *
@@ -20,21 +18,11 @@ class DislikeController extends Controller
      */
     public function index()
     {
-        try {
-
-            return response()->json([
-                'success' => true,
-                'message' => \__('corresponding disLikes of :' . auth()->user()->pet->name),
-                'data' => $this->dislikeRepository->dislikes(auth()->user()->pet->id)
-            ]);
-        } catch (\Exception $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => \__('Sorry, cannot fetch disliked pets.'),
-                'trace' => $e->getMessage(),
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => \__('corresponding disLikes of :' . auth()->user()->pet->name),
+            'data' => $this->dislikeRepository->dislikes(auth()->user()->pet->id)
+        ]);
     }
 
     /**
@@ -55,22 +43,13 @@ class DislikeController extends Controller
      */
     public function store(Store $request)
     {
-        try {
-            $like = $this->dislikeRepository->create($request->all());
+        $like = $this->dislikeRepository->create($request->all());
 
-            return response()->json([
-                'success' => true,
-                'message' => \__('Dislike ok'),
-                'data' => $like
-            ]);
-        } catch (\Exception $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => \__('Sorry, cannot dislike pet.'),
-                'trace' => $e->getMessage(),
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => \__('Dislike ok'),
+            'data' => $like
+        ]);
     }
 
     /**

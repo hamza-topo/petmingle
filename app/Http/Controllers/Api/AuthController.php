@@ -8,20 +8,19 @@ use App\Http\Requests\Api\Auth\SignUp;
 use App\Providers\RouteServiceProvider;
 use App\Repositories\AuthRepository;
 use App\Traits\ImageTrait;
-use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
 use Laravel\Socialite\Facades\Socialite;
 use Symfony\Component\HttpFoundation\Response;
+use GuzzleHttp\Exception\ClientException;
+use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
     use ImageTrait;
 
-    public function __construct(protected AuthRepository $authRepository)
-    {
-    }
+    public function __construct(protected AuthRepository $authRepository) {}
 
     /**
      * SignUp Method.
@@ -30,26 +29,17 @@ class AuthController extends Controller
      */
     public function signUp(SignUp $request): Response
     {
-        try {
-            $user = $request->all();
-            $user['avatar'] = $this->setFile($request->file('avatar'))
-                ->setName()
-                ->upload();
-            $user = $this->authRepository->signUp($user);
+        $user = $request->all();
+        $user['avatar'] = $this->setFile($request->file('avatar'))
+            ->setName()
+            ->upload();
+        $user = $this->authRepository->signUp($user);
 
-            return response()->json([
-                'success' => true,
-                'message' => \__('User created successfully'),
-                'data' => $user
-            ], Response::HTTP_OK);
-        } catch (\Exception $e) {
-
-            return response()->json([
-                'success' => false,
-                'message' => \__('Enable to create this user'),
-                'data' => $e->getMessage()
-            ], Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
+        return response()->json([
+            'success' => true,
+            'message' => \__('User created successfully'),
+            'data' => $user
+        ], Response::HTTP_OK);
     }
 
     /**
@@ -97,12 +87,7 @@ class AuthController extends Controller
      */
     public function redirectToProvider(string $provider)
     {
-        $validated = $this->validateProvider($provider);
-
-        if (!is_null($validated)) {
-            return $validated;
-        }
-
+        $this->validateProvider($provider);
 
         return Socialite::driver($provider)->stateless()->redirect();
     }
@@ -115,29 +100,35 @@ class AuthController extends Controller
      */
     public function handleProviderCallback($provider)
     {
-        $validated = $this->validateProvider($provider);
+        $this->validateProvider($provider);
 
-        if (!is_null($validated)) {
-            return $validated;
-        }
         try {
             $providerUser = Socialite::driver($provider)->stateless()->user();
-            $user = $this->authRepository->firstOrCreateProviderUser($providerUser->user, $provider);
+
+            $user = $this->authRepository->firstOrCreateProviderUser(
+                $providerUser->user,
+                $provider
+            );
+
             Auth::login($user, true);
-            //TODO:we may have a probleme here         ->   fix default value for password
+
             if (request()->wantsJson()) {
                 return response()->json([
                     'success' => true,
                     'message' => __('User logged in successfully'),
                     'data' => $user,
                 ], Response::HTTP_OK);
-            } else {
-                return redirect()->intended(RouteServiceProvider::HOME);
             }
+
+            return redirect()->intended(RouteServiceProvider::HOME);
         } catch (ClientException $e) {
             Log::error($e->getMessage());
 
-            return response()->json(['error' => 'Invalid credentials provided.'], 422);
+            throw ValidationException::withMessages([
+                'provider' => [
+                    'Invalid credentials provided.',
+                ],
+            ]);
         }
     }
 
@@ -147,8 +138,12 @@ class AuthController extends Controller
      */
     protected function validateProvider($provider)
     {
-        if (!in_array($provider, ['facebook', 'github', 'google'])) {
-            return response()->json(['error' => 'Please login using facebook, github or google'], 422);
+        if (!in_array($provider, ['facebook', 'github', 'google'], true)) {
+            throw ValidationException::withMessages([
+                'provider' => [
+                    'Please login using facebook, github or google.',
+                ],
+            ]);
         }
     }
 }
