@@ -16,7 +16,6 @@ class Store extends FormRequest
     public function rules()
     {
         return [
-            'user_id' => 'required|integer',
             'species_id' => 'required|integer',
             'race_id' => 'required|integer',
             'name' => 'required|min:3|max:25',
@@ -34,8 +33,6 @@ class Store extends FormRequest
     public function messages()
     {
         return [
-            'user_id.required' => \__('The Field User Id is required!'),
-            'user_id.integer' => \__('The Value of user is invalid!'),
             'species_id.required' => \__('The Species Id is required!'),
             'species_id.integer' => \__('The Value of Species Id is invalid!'),
             'name.required' => \__('The Field Name is required!'),

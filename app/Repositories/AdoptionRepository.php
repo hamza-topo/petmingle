@@ -31,7 +31,7 @@ class AdoptionRepository implements RepositoryInterface
      */
     public function getById(int $adoptionId): Adoption
     {
-        return Adoption::find($adoptionId);
+        return Adoption::findOrFail($adoptionId);
     }
 
     public function delete(int $adoptionId): bool

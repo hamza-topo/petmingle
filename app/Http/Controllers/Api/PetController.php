@@ -38,6 +38,7 @@ class PetController extends Controller
     public function store(Store $request)
     {
         $pet = $request->all();
+        $pet['user_id'] = $request->user()->id;
         $pet['images'] = $this->setFile($request->file('images'))
             ->setName()
             ->upload();
@@ -83,10 +84,14 @@ class PetController extends Controller
      */
     public function destroy($id)
     {
+        $pet = $this->petRepository->getById((int) $id);
+
+        $this->authorize('delete', $pet);
+
         return response()->json([
             'success' => true,
-            'message' => \__('Pet has been deleted successfully.'),
-            'data' => $this->petRepository->delete($id)
+            'message' => __('Pet has been deleted successfully.'),
+            'data' => $this->petRepository->delete((int) $id),
         ]);
     }
 
@@ -98,10 +103,14 @@ class PetController extends Controller
      */
     public function restore($id)
     {
+        $pet = $this->petRepository->getByIdWithTrashed((int) $id);
+
+        $this->authorize('restore', $pet);
+
         return response()->json([
             'success' => true,
-            'message' => \__('Pet has been restored successfully.'),
-            'data' => $this->petRepository->restore($id)
+            'message' => __('Pet has been restored successfully.'),
+            'data' => $this->petRepository->restore((int) $id),
         ]);
     }
 }

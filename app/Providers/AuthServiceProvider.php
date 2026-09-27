@@ -2,8 +2,17 @@
 
 namespace App\Providers;
 
+use App\Models\Pet;
+use App\Policies\PetPolicy;
+use App\Models\Message;
+use App\Policies\MessagePolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Gate;
+use App\Models\Location;
+use App\Policies\LocationPolicy;
+use App\Models\User;
+use App\Policies\UserPolicy;
+use App\Models\Adoption;
+use App\Policies\AdoptionPolicy;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -13,7 +22,11 @@ class AuthServiceProvider extends ServiceProvider
      * @var array<class-string, class-string>
      */
     protected $policies = [
-        // 'App\Models\Model' => 'App\Policies\ModelPolicy',
+        Pet::class => PetPolicy::class,
+        Message::class => MessagePolicy::class,
+        Location::class => LocationPolicy::class,
+        User::class => UserPolicy::class,
+        Adoption::class => AdoptionPolicy::class,
     ];
 
     /**

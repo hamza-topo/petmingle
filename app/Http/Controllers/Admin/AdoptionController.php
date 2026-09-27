@@ -10,6 +10,7 @@ use App\Repositories\UserRepository;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
+use App\Models\Adoption;
 
 class AdoptionController extends Controller
 {
@@ -25,7 +26,13 @@ class AdoptionController extends Controller
      */
     public function index()
     {
-        return view('admin.adoptions.index', ['adoptions' => $this->adoptionRepository->paginate(request()->get('paginate'))]);
+        $this->authorize('viewAny', Adoption::class);
+
+        return view('admin.adoptions.index', [
+            'adoptions' => $this->adoptionRepository->paginate(
+                request()->get('paginate')
+            ),
+        ]);
     }
 
     /**
@@ -35,6 +42,8 @@ class AdoptionController extends Controller
      */
     public function create()
     {
+        $this->authorize('create', Adoption::class);
+
         return view('admin.adoptions.create', [
             'users' => $this->plucker($this->userRepository->all(), 'name', 'Owner'),
         ]);
@@ -48,16 +57,22 @@ class AdoptionController extends Controller
      */
     public function store(Store $request)
     {
+        $this->authorize('create', Adoption::class);
+
         try {
             $this->adoptionRepository->create($request->all());
 
-            return redirect()->route('admin.adoptions.index')->with('success', Response::HTTP_ACCEPTED);
+            return redirect()
+                ->route('admin.adoptions.index')
+                ->with('success', Response::HTTP_ACCEPTED);
         } catch (\Exception $e) {
             Log::error('error while saving the adoption:', $request->all());
             Log::error('error while saving the adoption:', [$e->getMessage()]);
 
-            return redirect()->route('admin.adoptions.create')
-                ->withErrors(['error' => $e->getMessage()])->withInput();
+            return redirect()
+                ->route('admin.adoptions.create')
+                ->withErrors(['error' => $e->getMessage()])
+                ->withInput();
         }
     }
 
@@ -69,11 +84,13 @@ class AdoptionController extends Controller
      */
     public function show($id)
     {
-        $adoption = $this->adoptionRepository->getById($id);
+        $adoption = $this->adoptionRepository->getById((int) $id);
+
+        $this->authorize('view', $adoption);
 
         return view('admin.adoptions.show', [
             'users' => $this->plucker($this->userRepository->all(), 'name', 'Owner'),
-            'adoption' => $adoption
+            'adoption' => $adoption,
         ]);
     }
 
@@ -85,11 +102,13 @@ class AdoptionController extends Controller
      */
     public function edit($id)
     {
-        $adoption = $this->adoptionRepository->getById($id);
+        $adoption = $this->adoptionRepository->getById((int) $id);
+
+        $this->authorize('view', $adoption);
 
         return view('admin.adoptions.edit', [
             'users' => $this->plucker($this->userRepository->all(), 'name', 'Owner'),
-            'adoption' => $adoption
+            'adoption' => $adoption,
         ]);
     }
 
@@ -102,16 +121,24 @@ class AdoptionController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try {
-            $this->adoptionRepository->update($id, $request->all());
+        $adoption = $this->adoptionRepository->getById((int) $id);
 
-            return redirect()->route('admin.adoptions.index')->with('success', Response::HTTP_ACCEPTED);
+        $this->authorize('update', $adoption);
+
+        try {
+            $this->adoptionRepository->update((int) $id, $request->all());
+
+            return redirect()
+                ->route('admin.adoptions.index')
+                ->with('success', Response::HTTP_ACCEPTED);
         } catch (\Exception $e) {
             Log::error('error while saving the adoption:', $request->all());
             Log::error('error while saving the adoption:', [$e->getMessage()]);
 
-            return redirect()->route('admin.adoptions.edit', $id)
-                ->withErrors(['error' => $e->getMessage()])->withInput();
+            return redirect()
+                ->route('admin.adoptions.edit', $id)
+                ->withErrors(['error' => $e->getMessage()])
+                ->withInput();
         }
     }
 

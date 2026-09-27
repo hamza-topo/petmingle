@@ -50,12 +50,17 @@ class LocationRepository
 
     public function restore(int $locationId): bool
     {
-        return Location::withTrashed()->findOrFail($locationId)->restore();
+        return $this->getByIdWithTrashed($locationId)->restore();
     }
 
     public function all(): Collection
     {
         return Location::all();
+    }
+
+    public function forUser(int $userId): Collection
+    {
+        return Location::where('user_id', $userId)->get();
     }
 
     public function paginate()
@@ -90,5 +95,10 @@ class LocationRepository
                 });
             })
             ->get();
+    }
+
+    public function getByIdWithTrashed(int $locationId): Location
+    {
+        return Location::withTrashed()->findOrFail($locationId);
     }
 }

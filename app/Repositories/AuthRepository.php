@@ -9,6 +9,15 @@ use Illuminate\Support\Str;
 
 class AuthRepository
 {
+    public function getById(int $id): User
+    {
+        return User::findOrFail($id);
+    }
+
+    public function getByIdWithTrashed(int $id): User
+    {
+        return User::withTrashed()->findOrFail($id);
+    }
    
     //TODO::we no longer need this 
     /**
