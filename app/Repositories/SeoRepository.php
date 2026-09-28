@@ -7,11 +7,13 @@ use App\Enums\CacheDuration;
 use App\Enums\Pages as EnumsSeo;
 use App\Models\Seo;
 use App\Services\CacheService;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 /**
  * Seo Repository class
  */
-class SeoRepository implements RepositoryInterface
+class SeoRepository
 {
     /**
      * SeoRepository constructor
@@ -36,9 +38,9 @@ class SeoRepository implements RepositoryInterface
      *
      * @param integer $seoId
      * @param array $newSeo
-     * @return mixed
+     * @return Seo
      */
-    public function update(int $seoId, array $newSeo): mixed
+    public function update(int $seoId, array $newSeo): Seo
     {
         $seo = $this->getById($seoId);
         $seo->update($newSeo);
@@ -51,9 +53,9 @@ class SeoRepository implements RepositoryInterface
      * getById Method
      *
      * @param integer $seoId
-     * @return void
+     * @return Seo
      */
-    public function getById(int $seoId)
+    public function getById(int $seoId): ?Seo
     {
         return Seo::findOrFail($seoId);
     }
@@ -85,7 +87,7 @@ class SeoRepository implements RepositoryInterface
      *
      * @return void
      */
-    public function all()
+    public function all(): Collection
     {
         return Seo::all();
     }
@@ -111,9 +113,9 @@ class SeoRepository implements RepositoryInterface
      * Get Seo that Are available similare
      * Its based on @see App\Enums\Pages::CASES()
      *
-     * @return void
+     * @return array
      */
-    public function getAvvaillable()
+    public function getAvvaillable(): array
     {
         $pages = array_map(function ($page) {
             return $page->value;
@@ -129,28 +131,22 @@ class SeoRepository implements RepositoryInterface
      *
      * @author Topo <hamzaaitsidisaid.11@gmail.com>
      * @param ?string $page
-     * @return mixed
+     * @return Seo
      */
-    public function getAllFromCache(?string $page = ''): mixed
+    public function getAllFromCache(?string $page = ''): Seo
     {
         return $this->cacheService->remember($page, CacheDuration::SHORT->value, function ($page) {
             return Seo::where('key', $page)->firstOrFail();
         });
     }
 
-
-    public function clearCache(): bool
-    {
-        throw new \Exception("This method is not used use: clearAllCache", 1);
-    }
-
     /**
      * Pagination method
      *
      * @param int|null $paginate
-     * @return void
+     * @return LengthAwarePaginator
      */
-    public function paginate(int|null $paginate = App::PAGINATE)
+    public function paginate(?int $paginate = App::PAGINATE): LengthAwarePaginator
     {
         return Seo::OrderBy('id', App::ORDER)->paginate($paginate);
     }

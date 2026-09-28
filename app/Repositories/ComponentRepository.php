@@ -6,7 +6,7 @@ use App\Models\Component;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
-class ComponentRepository implements RepositoryInterface
+class ComponentRepository
 {
 
     public function create(array $component): Component
@@ -29,7 +29,7 @@ class ComponentRepository implements RepositoryInterface
      * @param  mixed $adoptionId
      * @return Component
      */
-    public function getById(int $adoptionId): Component
+    public function getById(int $adoptionId): ?Component
     {
         return Component::find($adoptionId);
     }
@@ -72,19 +72,8 @@ class ComponentRepository implements RepositoryInterface
         return Component::Where('name', $name)->first();
     }
 
-    public function paginate()
+    public function paginate(): LengthAwarePaginator
     {
         return Component::paginate();
-    }
-
-    public function getAllFromCache(?string $key = ''): mixed
-    {
-        throw new \Exception('Method [getAllFromCache]. Not implemented yest!');
-        return [];
-    }
-
-    public function clearCache(): bool
-    {
-        return true;
     }
 }

@@ -8,15 +8,15 @@ use App\Factories\TrashedFactory;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Services\CacheService;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * User Repository
  */
-class UserRepository implements RepositoryInterface
+class UserRepository
 {
-    public function __construct(protected CacheService $cacheService)
-    {
-    }
+    public function __construct(protected CacheService $cacheService) {}
     public function create(array $user): User
     {
         $user['password'] = Hash::make($user['password']);
@@ -26,14 +26,14 @@ class UserRepository implements RepositoryInterface
 
     public function update(int $id, array $userData): User
     {
-            if (isset($userData['password']) && !empty($userData['password'])) {
-                $userData['password'] = Hash::make($userData['password']);
-            } else {
-                unset($userData['password']);
-            }
-            $user = $this->getById($id);
-            $user->update($userData);
-            return $user;
+        if (isset($userData['password']) && !empty($userData['password'])) {
+            $userData['password'] = Hash::make($userData['password']);
+        } else {
+            unset($userData['password']);
+        }
+        $user = $this->getById($id);
+        $user->update($userData);
+        return $user;
     }
 
     public function delete(int $userId): bool
@@ -47,13 +47,13 @@ class UserRepository implements RepositoryInterface
     }
 
 
-    public function restore(int $modelId)
+    public function restore(int $modelId): bool
     {
         $user = User::onlyTrashed()->findOrFail($modelId);
         $user->restore();
     }
 
-    public function all()
+    public function all(): Collection
     {
         return User::orderBy('id', 'desc')->get();
     }
@@ -64,7 +64,7 @@ class UserRepository implements RepositoryInterface
      * @param int $page
      * @return void
      */
-    public function paginate(int|null $page = EnumsUser::PAGINATE)
+    public function paginate(?int $page = EnumsUser::PAGINATE): LengthAwarePaginator
     {
         return TrashedFactory::apply(User::orderBy('created_at', 'DESC'))->paginate($page);
     }
@@ -75,7 +75,7 @@ class UserRepository implements RepositoryInterface
      * @author Topo <hamzaaitsidisaid.11@gmail.com>
      * @return mixed
      */
-    public function getAllFromCache(?string $key = ''): mixed
+    public function getAllFromCache(?string $key = ''): Collection
     {
         return $this->cacheService->remember(EnumsUser::CACHEKEY, CacheDuration::SHORT->value, function () {
             return User::all();
@@ -89,8 +89,8 @@ class UserRepository implements RepositoryInterface
      * @return bool
      */
 
-     public function clearCache(): bool
-     {
-         return $this->cacheService->clear(EnumsUser::CACHEKEY);
-     }
+    public function clearCache(): bool
+    {
+        return $this->cacheService->clear(EnumsUser::CACHEKEY);
+    }
 }

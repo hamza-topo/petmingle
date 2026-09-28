@@ -103,13 +103,6 @@ class SeoRepositoryTest extends TestCase
         $this->assertEquals($seo, $cachedSeo);
     }
 
-    public function testClearCache()
-    {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage("This method is not used use: clearAllCache");
-        $this->repository->clearCache();
-    }
-
     public function testPaginate()
     {
         Seo::factory(1)->create();

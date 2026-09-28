@@ -7,6 +7,7 @@ namespace App\Repositories;
 use App\Enums\Location as EnumsLocation;
 use App\Models\Location;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Pet Repository Class
@@ -63,22 +64,12 @@ class LocationRepository
         return Location::where('user_id', $userId)->get();
     }
 
-    public function paginate()
+    public function paginate(): LengthAwarePaginator
     {
         return Location::paginate(EnumsLocation::PAGINATE);
     }
 
-    public function getAllFromCache(?string $key = ''): mixed
-    {
-        return [];
-    }
-
-    public function clearCache(): bool
-    {
-        return true;
-    }
-
-    public function near(array $coordinates = [])
+    public function near(array $coordinates = []) : Collection
     {
         //TODO:index fields, cache the result and add observers
         return Location::selectRaw('DISTINCT user_id')

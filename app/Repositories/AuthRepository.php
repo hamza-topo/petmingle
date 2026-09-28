@@ -26,7 +26,7 @@ class AuthRepository
      * @see firstOrCreateProviderUser()
      * @deprecated version
      */
-    public function firstOrCreate(array $criteria, array $user)
+    public function firstOrCreate(array $criteria, array $user): User
     {
         return User::firstOrCreate($criteria, $user);
     }
@@ -51,7 +51,7 @@ class AuthRepository
         return User::destroy($id);
     }
 
-    public function restore(int $id)
+    public function restore(int $id): bool
     {
         return User::withTrashed()->findOrFail($id)->restore();
     }

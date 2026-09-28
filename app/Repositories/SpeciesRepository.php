@@ -7,9 +7,10 @@ use App\Enums\Species as EnumsSpecies;
 use App\Factories\TrashedFactory;
 use App\Models\Species;
 use App\Services\CacheService;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
-class SpeciesRepository implements RepositoryInterface
+class SpeciesRepository
 {
     public function __construct(protected CacheService $cacheService)
     {
@@ -59,12 +60,12 @@ class SpeciesRepository implements RepositoryInterface
      * @param int|null $paginate
      * @return void
      */
-    public function paginate(int|null $paginate = EnumsSpecies::PAGINATE )
+    public function paginate(?int $paginate = EnumsSpecies::PAGINATE ): LengthAwarePaginator
     {
         return TrashedFactory::apply(Species::query())->paginate($paginate);
     }
 
-    public function getAllFromCache(?string $key = ''): mixed
+    public function getAllFromCache(?string $key = ''): Collection
     {
         return $this->cacheService->remember(EnumsSpecies::CACHEKEY, CacheDuration::SHORT->value, function () {
             return Species::all();

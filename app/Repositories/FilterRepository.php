@@ -4,7 +4,7 @@ namespace App\Repositories;
 use App\Models\Filter;
 use Illuminate\Support\Collection;
 
-class FilterRepository implements RepositoryInterface
+class FilterRepository
 {
     public function create(array $filter): Filter
     {
@@ -26,7 +26,7 @@ class FilterRepository implements RepositoryInterface
      * @param  mixed $filterId
      * @return Filter
      */
-    public function getById(int $filterId): Filter
+    public function getById(int $filterId): ?Filter
     {
         return Filter::find($filterId);
     }
@@ -44,15 +44,5 @@ class FilterRepository implements RepositoryInterface
     public function all(): Collection
     {
         return Filter::all();
-    }
-
-    public function getAllFromCache(?string $key = ''): mixed
-    {
-        return [];
-    }
-
-    public function clearCache(): bool
-    {
-        return true;
     }
 }
