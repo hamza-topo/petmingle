@@ -8,9 +8,8 @@ use App\Models\Like;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
-use function PHPUnit\Framework\isTrue;
 
-class DislikeRepository implements RepositoryInterface
+class DislikeRepository
 {
     public function __construct(protected LikeRepository $likeRepository)
     {
@@ -37,7 +36,7 @@ class DislikeRepository implements RepositoryInterface
      * @param  mixed $likeId
      * @return Dislike
      */
-    public function getById(int $likeId): DisLike
+    public function getById(int $likeId): ?DisLike
     {
         return Dislike::find($likeId);
     }
@@ -62,7 +61,7 @@ class DislikeRepository implements RepositoryInterface
         return Dislike::with(['to', 'from'])->where('from', $petId)->paginate(EnumsLike::PAGINATE);
     }
 
-    public function paginate()
+    public function paginate(): LengthAwarePaginator
     {
         return Dislike::paginate(EnumsLike::PAGINATE);
     }
@@ -71,15 +70,5 @@ class DislikeRepository implements RepositoryInterface
     {
         $isLikedBefore = $this->likeRepository->isLikedBefore($like);
         $isLikedBefore === true ? $this->likeRepository->dislike($like) : null;
-    }
-
-    public function getAllFromCache(?string $key = ''): mixed
-    {
-        return [];
-    }
-
-    public function clearCache(): bool
-    {
-        return true;
     }
 }

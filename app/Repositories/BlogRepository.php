@@ -11,7 +11,7 @@ use Illuminate\Support\Collection;
 use function PHPUnit\Framework\isTrue;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class BlogRepository implements RepositoryInterface
+class BlogRepository
 {
     public function create(array $like): Blog
     {
@@ -33,7 +33,7 @@ class BlogRepository implements RepositoryInterface
      * @param  mixed $likeId
      * @return Blog
      */
-    public function getById(int $likeId): Blog
+    public function getById(int $likeId): ?Blog
     {
         return Blog::find($likeId);
     }
@@ -68,7 +68,7 @@ class BlogRepository implements RepositoryInterface
         return Blog::with(['to', 'from'])->where('from', $petId)->paginate(EnumsLike::PAGINATE);
     }
 
-    public function paginate(bool $exlude = false)
+    public function paginate(bool $exlude = false): LengthAwarePaginator
     {
         $locale = app()->getLocale(); // Get the current locale
         $slugs = collect(Pages::cases())->pluck('value')->map(function ($slug) {
@@ -96,7 +96,7 @@ class BlogRepository implements RepositoryInterface
         return Blog::where('active', false)->where('publish_it_at', '!=', null)->get();
     }
 
-    public function getScheduledFor(array $condition)
+    public function getScheduledFor(array $condition): Collection
     {
         $query = Blog::where('active', false)
             ->where('publish_it_at', '!=', null)
@@ -105,7 +105,7 @@ class BlogRepository implements RepositoryInterface
         return $query->get();
     }
 
-    public function publishBulk(array $ids = [])
+    public function publishBulk(array $ids = []): int
     {
         return Blog::whereIn('id', $ids)->update([
             'active' => true,
@@ -114,29 +114,10 @@ class BlogRepository implements RepositoryInterface
     }
 
     //TODO::create another enum class for blog
-    public function take(?int $limit = EnumsLike::PAGINATE)
+    public function take(?int $limit = EnumsLike::PAGINATE): Collection
     {
         return Blog::orderBy('created_at')->limit($limit)->get()->filter(function ($row) {
             return !empty($row->slug['en']) && $row->slug['en'] != 'about';
         });
-    }
-
-
-
-    /**
-     * getAllFromCache method
-     *
-     * @author Topo <hamzaaitsidisaid.11@gmail.com>
-     * @param ?string $key
-     * @return mixed
-     */
-    public function getAllFromCache(?string $key = ''): mixed
-    {
-        return [];
-    }
-
-    public function clearCache(): bool
-    {
-        return true;
     }
 }

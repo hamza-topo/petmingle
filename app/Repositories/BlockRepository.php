@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\Block;
+use \Illuminate\Support\Collection;
 
 class BlockRepository
 {
@@ -13,7 +14,7 @@ class BlockRepository
     }
 
     //TODO:pagination and caching 
-    public function blocks(int $userId)
+    public function blocks(int $userId): Collection
     {
         return Block::where('from', $userId)->get();
     }

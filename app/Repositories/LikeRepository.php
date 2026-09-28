@@ -6,9 +6,8 @@ use App\Enums\Like as EnumsLike;
 use App\Models\Like;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-use PHPUnit\Framework\Constraint\IsTrue;
 
-class LikeRepository implements RepositoryInterface
+class LikeRepository
 {
     protected $matchRepository;
 
@@ -17,7 +16,7 @@ class LikeRepository implements RepositoryInterface
         $this->matchRepository = new MatchRepository;
     }
 
-    public function create(array $like): Like
+    public function create(array $like): ?Like
     {
         if (!$this->isLikedBefore($like))
             return Like::create($like);
@@ -38,7 +37,7 @@ class LikeRepository implements RepositoryInterface
      * @param  mixed $likeId
      * @return Like
      */
-    public function getById(int $likeId): Like
+    public function getById(int $likeId): ?Like
     {
         return Like::find($likeId);
     }
@@ -63,7 +62,7 @@ class LikeRepository implements RepositoryInterface
         return Like::with(['to', 'from'])->where('from', $petId)->paginate(EnumsLike::PAGINATE);
     }
 
-    public function paginate()
+    public function paginate(): LengthAwarePaginator
     {
         return Like::paginate(EnumsLike::PAGINATE);
     }
@@ -96,15 +95,5 @@ class LikeRepository implements RepositoryInterface
         ])->get();
 
         return $isMatch->count() > 0 ? true : false;
-    }
-
-    public function getAllFromCache(?string $key = ''): mixed
-    {
-        return [];
-    }
-
-    public function clearCache(): bool
-    {
-        return true;
     }
 }

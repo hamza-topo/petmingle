@@ -7,16 +7,14 @@ use App\Enums\CacheDuration;
 use App\Enums\Race as EnumsRace;
 use App\Models\Race;
 use App\Services\CacheService;
-use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
-class RaceRepository implements RepositoryInterface
+
+class RaceRepository
 {
 
-    public function __construct(protected CacheService $cacheService)
-    {
-        
-    }
+    public function __construct(protected CacheService $cacheService) {}
 
     public function create(array $race): Race
     {
@@ -32,9 +30,11 @@ class RaceRepository implements RepositoryInterface
         return $race;
     }
 
-    public function getById(int $raceId) 
+    public function getById(int $raceId): ?Race
     {
-        return Race::with('species')->where('id', $raceId)->first();
+        return Race::with('species')
+            ->where('id', $raceId)
+            ->first();
     }
 
     public function delete(int $raceId): bool
@@ -44,23 +44,25 @@ class RaceRepository implements RepositoryInterface
 
     public function restore(int $raceId): bool
     {
-        return Race::withTrashed()->find($raceId)->restore();
+        return Race::withTrashed()
+            ->findOrFail($raceId)
+            ->restore();
     }
 
-    public function all()
+    public function all(): Collection
     {
         return Race::all();
     }
 
-    public function getAllFromCache(?string $key = ''): mixed
+
+    public function getAllFromCache(?string $key = ''): Collection
     {
         return $this->cacheService->remember(EnumsRace::CACHEKEY, CacheDuration::SHORT->value, function () {
             return Race::whereHas('species')->get();
         });
-       
     }
 
-    
+
     public function clearCache(): bool
     {
         return $this->cacheService->clear(EnumsRace::CACHEKEY);
@@ -72,8 +74,10 @@ class RaceRepository implements RepositoryInterface
      * @param int|null $paginate
      * @return void
      */
-    public function paginate(int|null $paginate = App::PAGINATE)
-    {   
-        return Race::OrderBy('id', App::ORDER)->with('species')->paginate($paginate);
+    public function paginate(?int $paginate = App::PAGINATE): LengthAwarePaginator
+    {
+        return Race::orderBy('id', App::ORDER)
+            ->with('species')
+            ->paginate($paginate);
     }
 }

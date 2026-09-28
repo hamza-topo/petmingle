@@ -5,6 +5,7 @@ namespace App\Repositories;
 use App\Enums\Pet as EnumsPet;
 use App\Models\Pet;
 use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 
 /**
  * Pet Repository Class
@@ -12,7 +13,7 @@ use Illuminate\Database\Eloquent\Collection;
  * @author Topo <hamzaaitsidisaid.11@gmail.com>
  * @return mixed
  */
-class PetRepository implements RepositoryInterface
+class PetRepository
 {
     //TODO::make this as enum
 
@@ -61,7 +62,7 @@ class PetRepository implements RepositoryInterface
         return Pet::all();
     }
 
-    public function getLastNewPets()
+    public function getLastNewPets(): Collection
     {
         return Pet::orderBy('created_at', 'desc')->with(['adoptions', 'likes', 'race', 'owner'])->limit(6)->get();
     }
@@ -72,18 +73,8 @@ class PetRepository implements RepositoryInterface
      * @param int $page
      * @return void
      */
-    public function paginate(int|null $page = EnumsPet::PAGINATE)
+    public function paginate(?int $page = EnumsPet::PAGINATE): LengthAwarePaginator
     {
         return Pet::orderBy('created_at', 'DESC')->paginate($page);
-    }
-
-    public function getAllFromCache(?string $key = ''): mixed
-    {
-        return [];
-    }
-
-    public function clearCache(): bool
-    {
-        return true;
     }
 }

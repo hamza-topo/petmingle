@@ -4,10 +4,10 @@ namespace App\Repositories;
 
 use App\Enums\NewsLetter as EnumsNewsLetter;
 use App\Models\NewsLetter;
-use Exception;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
-class NewsLetterRepository implements RepositoryInterface
+class NewsLetterRepository
 {
     public function create(array $newsLetter): NewsLetter
     {
@@ -38,7 +38,7 @@ class NewsLetterRepository implements RepositoryInterface
         return NewsLetter::findOrFail($newsLetterId);
     }
 
-    public function all()
+    public function all(): Collection
     {
         return NewsLetter::all();
     }
@@ -48,18 +48,18 @@ class NewsLetterRepository implements RepositoryInterface
      * @param [type] $take
      * @return void
      */
-    public function take(int $take = EnumsNewsLetter::TAKE)
+    public function take(int $take = EnumsNewsLetter::TAKE): Collection
     {
         return NewsLetter::take($take)->get();
     }
 
-    public function paginate(int|null $page = EnumsNewsLetter::PAGINATE)
+    public function paginate(?int $page = EnumsNewsLetter::PAGINATE): LengthAwarePaginator
     {
         return NewsLetter::paginate($page);
     }
 
 
-    public function getByActivity(bool $isActive = true)
+    public function getByActivity(bool $isActive = true): Collection
     {
         return NewsLetter::where('active', $isActive)->get();
     }
@@ -67,27 +67,5 @@ class NewsLetterRepository implements RepositoryInterface
     public function getByTypes(array $types, bool $isActive = true): Collection
     {
         return NewsLetter::whereIn('type', $types)->where('active', $isActive)->get();
-    }
-
-    /**
-     * getAllFromCache method
-     *
-     * @author Topo <hamzaaitsidisaid.11@gmail.com>
-     * @param ?string $key
-     * @return mixed
-     */
-    public function getAllFromCache(?string $key = ''): mixed
-    {
-        throw new Exception('Not defined yet');
-    }
-
-    /**
-     * Undocumented function
-     *
-     * @return boolean
-     */
-    public function clearCache(): bool
-    {
-        throw  new Exception('Not defined yet');
     }
 }

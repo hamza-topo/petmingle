@@ -6,7 +6,7 @@ use App\Models\Adoption;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
-class AdoptionRepository implements RepositoryInterface
+class AdoptionRepository
 {
 
     public function create(array $adoption): Adoption
@@ -67,18 +67,8 @@ class AdoptionRepository implements RepositoryInterface
         return Adoption::onlyTrashed()->where('from', $petId)->get();
     }
 
-    public function paginate()
+    public function paginate(): LengthAwarePaginator
     {
         return Adoption::paginate();
-    }
-
-    public function getAllFromCache(?string $key = ''): mixed
-    {
-        return [];
-    }
-
-    public function clearCache(): bool
-    {
-        return true;
     }
 }

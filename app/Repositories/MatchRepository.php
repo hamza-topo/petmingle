@@ -3,11 +3,11 @@
 namespace App\Repositories;
 
 use App\Models\MatchTable;
-// use App\Enums\Matched as MatchedEnum;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
-class MatchRepository implements RepositoryInterface
+
+class MatchRepository
 {
 
     public function create(array $match): MatchTable
@@ -30,9 +30,9 @@ class MatchRepository implements RepositoryInterface
      * @param  mixed $matchId
      * @return MatchTable
      */
-    public function getById(int $matchId): MatchTable
+    public function getById(int $matchId): ?MatchTable
     {
-        return MatchTable::find($matchId);
+        return MatchTable::findOrFail($matchId);
     }
 
     public function delete(int $matchId): bool
@@ -68,18 +68,8 @@ class MatchRepository implements RepositoryInterface
         return MatchTable::onlyTrashed()->where('from', $petId)->get();
     }
 
-    public function paginate()
+    public function paginate():LengthAwarePaginator
     {
         return MatchTable::paginate();
-    }
-
-    public function getAllFromCache(?string $key = ''): mixed
-    {
-        return [];
-    }
-
-    public function clearCache(): bool
-    {
-        return true;
     }
 }
