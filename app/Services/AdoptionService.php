@@ -1,6 +1,6 @@
 <?php
 
-namespace APP\Services;
+namespace App\Services;
 
 use App\Events\AdoptionEvent;
 use App\Mail\ItsAdoption;
@@ -20,7 +20,7 @@ class AdoptionService
         return $this;
     }
 
-    public function notify()
+    public function notify(): self
     {
         AdoptionEvent::dispatch($this->adoption);
 

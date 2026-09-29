@@ -7,44 +7,22 @@ use App\Models\Block;
 use App\Models\Blog;
 use App\Models\Like;
 use App\Models\Message;
+use App\Models\Species;
 use App\Models\User;
 use App\Observers\AdoptionObserver;
 use App\Observers\BlockObserver;
 use App\Observers\BlogObserver;
 use App\Observers\LikeObserver;
 use App\Observers\MessageObserver;
+use App\Observers\SpeciesObserver;
 use App\Observers\UserObserver;
-use Illuminate\Auth\Events\Registered;
-use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
-use Illuminate\Support\Facades\Event;
 
 class EventServiceProvider extends ServiceProvider
 {
-    /**
-     * The event listener mappings for the application.
-     *
-     * @var array<class-string, array<int, class-string>>
-     */
-    protected $listen = [
-        User::class => [
-            UserObserver::class,
-        ],
-        Adoption::class => [
-            AdoptionObserver::class,
-        ],
-        Blog::class => [
-            BlogObserver::class,
-        ],
+    protected $listen = [];
 
-    ];
-
-    /**
-     * Register any events for your application.
-     *
-     * @return void
-     */
-    public function boot()
+    public function boot(): void
     {
         Like::observe(LikeObserver::class);
         Block::observe(BlockObserver::class);
@@ -52,5 +30,6 @@ class EventServiceProvider extends ServiceProvider
         User::observe(UserObserver::class);
         Adoption::observe(AdoptionObserver::class);
         Blog::observe(BlogObserver::class);
+        Species::observe(SpeciesObserver::class);
     }
 }

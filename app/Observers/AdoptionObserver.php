@@ -5,11 +5,11 @@ namespace App\Observers;
 use App\Models\Adoption;
 use App\Repositories\AdoptionRepository;
 use App\Services\AdoptionService;
+use Illuminate\Contracts\Events\ShouldHandleEventsAfterCommit;
 
-class AdoptionObserver
+class AdoptionObserver implements ShouldHandleEventsAfterCommit
 {
     public function __construct(
-        protected AdoptionRepository $adoptionRepository,
         protected AdoptionService $adoptionService
     ) {}
     /**
@@ -18,9 +18,10 @@ class AdoptionObserver
      * @param  \App\Models\Adoption  $adoption
      * @return void
      */
-    public function created(Adoption $adoption)
+    public function created(Adoption $adoption): void
     {
-        $this->adoptionService->setAdoption($adoption)
+        $this->adoptionService
+            ->setAdoption($adoption)
             ->notify()
             ->mail();
     }

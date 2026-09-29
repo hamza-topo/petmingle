@@ -31,8 +31,8 @@ class LikeObserverTest extends TestCase
             ->once()
             ->andThrow(new RuntimeException('Match creation failed.'));
 
-        $matchService
-            ->shouldNotReceive('mail');
+        $matchService->shouldNotReceive('notify');
+        $matchService->shouldNotReceive('mail');
 
         $observer = new LikeObserver(
             $likeRepository,
@@ -63,7 +63,12 @@ class LikeObserverTest extends TestCase
             ->shouldReceive('create')
             ->once()
             ->with($like->toArray())
-            ->andReturn($matchService);
+            ->andReturnSelf();
+
+        $matchService
+            ->shouldReceive('notify')
+            ->once()
+            ->andReturnSelf();
 
         $matchService
             ->shouldReceive('mail')

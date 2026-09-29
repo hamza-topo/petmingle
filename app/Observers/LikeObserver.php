@@ -5,16 +5,16 @@ namespace App\Observers;
 use App\Models\Like;
 use App\Repositories\LikeRepository;
 use App\Services\MatchService;
+use Illuminate\Contracts\Events\ShouldHandleEventsAfterCommit;
 use Illuminate\Support\Facades\Log;
 
-class LikeObserver
+class LikeObserver implements ShouldHandleEventsAfterCommit
 {
     public function __construct(
         protected LikeRepository $likeRepository,
         protected MatchService $matchService,
 
-    ) {
-    }
+    ) {}
     /**
      * Handle the Like "created" event.
      *
@@ -27,9 +27,10 @@ class LikeObserver
             try {
                 $this->matchService
                     ->create($like->toArray())
+                    ->notify()
                     ->mail();
             } catch (\Exception $e) {
-                Log::error('sending mail is matching failed: '.$e->getMessage());
+                Log::error('sending mail is matching failed: ' . $e->getMessage());
                 return $e->getMessage();
             }
         }

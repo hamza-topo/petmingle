@@ -3,15 +3,15 @@
 namespace App\Events;
 
 use App\Enums\PusherEvent;
+use App\Models\Adoption;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Broadcasting\PresenceChannel;
-use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class AdoptionEvent implements ShouldBroadcast
+class AdoptionEvent implements ShouldBroadcastNow, ShouldDispatchAfterCommit
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
@@ -20,8 +20,9 @@ class AdoptionEvent implements ShouldBroadcast
      *
      * @return void
      */
-    public function __construct()
-    {
+    public function __construct(
+        public Adoption $adoption
+    ) {
         //
     }
 
