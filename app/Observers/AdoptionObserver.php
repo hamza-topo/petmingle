@@ -3,7 +3,6 @@
 namespace App\Observers;
 
 use App\Models\Adoption;
-use App\Repositories\AdoptionRepository;
 use App\Services\AdoptionService;
 use Illuminate\Contracts\Events\ShouldHandleEventsAfterCommit;
 

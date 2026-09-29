@@ -24,7 +24,7 @@ use Tests\TestCase;
 
 class ObserverAfterCommitTest extends TestCase
 {
-     use DatabaseTruncation;
+    use DatabaseTruncation;
 
     protected function setUp(): void
     {
@@ -83,23 +83,14 @@ class ObserverAfterCommitTest extends TestCase
 
         DB::beginTransaction();
 
-
         Like::create([
             'from' => $firstPet->id,
             'to' => $secondPet->id,
         ]);
 
-
-        // The observer implements ShouldHandleEventsAfterCommit,
-        // therefore no external side effect should happen yet.
+        // BEFORE COMMIT
         Event::assertNotDispatched(MatchEvent::class);
         Mail::assertNothingQueued();
-
-        Event::assertDispatchedTimes(MatchEvent::class, 1);
-
-
-        Mail::assertQueued(ItsAMatch::class, 2);
-
 
         $this->assertDatabaseMissing('matches', [
             'from' => $firstPet->id,
@@ -112,6 +103,20 @@ class ObserverAfterCommitTest extends TestCase
         ]);
 
         DB::commit();
+
+        // AFTER COMMIT
+        Event::assertDispatchedTimes(MatchEvent::class, 1);
+        Mail::assertQueued(ItsAMatch::class, 2);
+
+        $this->assertDatabaseHas('matches', [
+            'from' => $firstPet->id,
+            'to' => $secondPet->id,
+        ]);
+
+        $this->assertDatabaseHas('matches', [
+            'from' => $secondPet->id,
+            'to' => $firstPet->id,
+        ]);
     }
 
     public function test_like_side_effects_do_not_run_after_rollback(): void
@@ -156,6 +161,29 @@ class ObserverAfterCommitTest extends TestCase
         ]);
 
         DB::rollBack();
+
+        Event::assertNotDispatched(MatchEvent::class);
+        Mail::assertNothingQueued();
+
+        $this->assertDatabaseMissing('matches', [
+            'from' => $firstPet->id,
+            'to' => $secondPet->id,
+        ]);
+
+        $this->assertDatabaseMissing('matches', [
+            'from' => $secondPet->id,
+            'to' => $firstPet->id,
+        ]);
+
+        $this->assertDatabaseMissing('likes', [
+            'from' => $firstPet->id,
+            'to' => $secondPet->id,
+        ]);
+
+        $this->assertDatabaseHas('likes', [
+            'from' => $secondPet->id,
+            'to' => $firstPet->id,
+        ]);
     }
 
     public function test_message_notification_runs_after_commit(): void

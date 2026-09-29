@@ -19,8 +19,4 @@ class CacheServiceProvider extends ServiceProvider
             return new CacheService();
         });
     }
-
-    public function boot()
-    {
-    }
 }
