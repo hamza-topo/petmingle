@@ -4,9 +4,10 @@ namespace App\Observers;
 
 use App\Models\User;
 use App\Services\UserService;
+use Illuminate\Contracts\Events\ShouldHandleEventsAfterCommit;
 use Illuminate\Support\Facades\Log;
 
-class UserObserver
+class UserObserver implements ShouldHandleEventsAfterCommit
 {
     public function __construct(
         protected UserService $userService,

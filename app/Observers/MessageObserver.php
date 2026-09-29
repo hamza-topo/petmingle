@@ -4,15 +4,13 @@ namespace App\Observers;
 
 use App\Models\Message;
 use App\Services\MessageService;
+use Illuminate\Contracts\Events\ShouldHandleEventsAfterCommit;
 
-class MessageObserver
+class MessageObserver implements ShouldHandleEventsAfterCommit
 {
 
-    protected MessageService $messageService;
-
-    public function __construct()
+    public function __construct(protected MessageService $messageService)
     {
-        $this->messageService = new MessageService;
     }
     /**
      * Handle the Message "created" event.
@@ -20,7 +18,7 @@ class MessageObserver
      * @param  \App\Models\Message  $message
      * @return void
      */
-    public function created(Message $message)
+    public function created(Message $message): void
     {
         $this->messageService->notify($message);
     }
