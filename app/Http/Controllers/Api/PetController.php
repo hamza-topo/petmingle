@@ -6,7 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Pet\Store;
 use App\Repositories\PetRepository;
 use App\Traits\ImageTrait;
-use Illuminate\Http\Request;
+use App\Http\Requests\Api\Pet\Update;
 
 class PetController extends Controller
 {
@@ -67,13 +67,31 @@ class PetController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\Api\Pet\Update  $request
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Update $request, $id)
     {
-        //
+        $pet = $this->petRepository->getById((int) $id);
+
+        $this->authorize('update', $pet);
+
+        $data = $request->validated();
+
+        if ($request->hasFile('images')) {
+            $data['images'] = $this->setFile($request->file('images'))
+                ->setName()
+                ->upload();
+        }
+
+        unset($data['user_id']);
+
+        return response()->json([
+            'success' => true,
+            'message' => __('Pet has been updated successfully.'),
+            'data' => $this->petRepository->update((int) $id, $data),
+        ]);
     }
 
     /**

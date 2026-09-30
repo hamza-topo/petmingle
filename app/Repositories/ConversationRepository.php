@@ -15,10 +15,11 @@ class ConversationRepository
         return $this->getConversation($conversation)->first();
     }
 
-    public function delete(array $condition): void
+    public function delete(array $conditions): int
     {
-        //TODO: This conception will lead to a probleme
-        //more fields need to be added (delete for first_user, but should be accessible for seconde user)
+        return Conversation::where($this->conditions($conditions))
+            ->orWhere($this->conditions($conditions, true))
+            ->delete();
     }
 
     public function isNew(array $conditions = []): bool

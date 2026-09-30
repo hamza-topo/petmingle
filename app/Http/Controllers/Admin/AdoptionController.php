@@ -150,6 +150,14 @@ class AdoptionController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $adoption = $this->adoptionRepository->getById((int) $id);
+
+        $this->authorize('delete', $adoption);
+
+        $this->adoptionRepository->delete((int) $id);
+
+        return redirect()
+            ->route('admin.adoptions.index')
+            ->with('success', Response::HTTP_ACCEPTED);
     }
 }
