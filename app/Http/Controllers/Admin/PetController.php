@@ -170,7 +170,11 @@ class PetController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $this->petRepository->delete((int) $id);
+
+        return redirect()
+            ->route('admin.pets.index')
+            ->with('success', Response::HTTP_ACCEPTED);
     }
 
 }

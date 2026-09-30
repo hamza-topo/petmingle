@@ -125,6 +125,52 @@ class PetAuthorizationTest extends TestCase
         ]);
     }
 
+    public function test_owner_can_update_own_pet(): void
+    {
+        $owner = User::factory()->create();
+        $otherUser = User::factory()->create();
+
+        $pet = $this->createPet($owner);
+
+        Sanctum::actingAs($owner);
+
+        $this->putJson("/api/v.0/pets/{$pet->id}", [
+            'name' => 'Milo',
+            'user_id' => $otherUser->id,
+        ])->assertOk();
+
+        $this->assertDatabaseHas('pets', [
+            'id' => $pet->id,
+            'name' => 'Milo',
+            'user_id' => $owner->id,
+        ]);
+
+        $this->assertDatabaseMissing('pets', [
+            'id' => $pet->id,
+            'user_id' => $otherUser->id,
+        ]);
+    }
+
+    public function test_user_cannot_update_another_users_pet(): void
+    {
+        $owner = User::factory()->create();
+        $otherUser = User::factory()->create();
+
+        $pet = $this->createPet($owner);
+
+        Sanctum::actingAs($otherUser);
+
+        $this->putJson("/api/v.0/pets/{$pet->id}", [
+            'name' => 'Milo',
+        ])->assertForbidden();
+
+        $this->assertDatabaseHas('pets', [
+            'id' => $pet->id,
+            'name' => 'Nala',
+            'user_id' => $owner->id,
+        ]);
+    }
+
     private function createPet(User $user): Pet
     {
         $species = Species::create([

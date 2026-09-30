@@ -3,6 +3,7 @@
 namespace App\Jobs;
 
 use App\Enums\NewsLetter;
+use App\Mail\NewsLetterMail;
 use App\Repositories\NewsLetterRepository;
 use App\Repositories\PetRepository;
 use Illuminate\Bus\Queueable;
@@ -11,46 +12,35 @@ use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\NewsLatter;
-use App\Services\NewsLetterService;
 
 class ProcessNewsLetters implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
-
-
-    /**
-     * Create a new job instance.
-     * @author Youssef tamri <yousseftam100@gmail.com>
-     * @return void
-     */
-    public function __construct(protected NewsLetterRepository $newsLetterRepository  , protected PetRepository $petRepository)
-    {
-
-    }
-
-    public function handle()
-    {
-        //TODO:get the newsLetter where the type is for emailing or all and active
-        $newsLetters = $this->newsLetterRepository->getByTypes([NewsLetter::ALL, NewsLetter::EMAIL]);
+    public function handle(
+        NewsLetterRepository $newsLetterRepository,
+        PetRepository $petRepository
+    ): void {
+        $newsLetters = $newsLetterRepository->getByTypes([
+            NewsLetter::ALL,
+            NewsLetter::EMAIL,
+        ]);
 
         foreach ($newsLetters as $newsLetter) {
-            if (!empty($newsLetter)) {
-                $pets = $newsLetter->species_id 
-                    ? $this->petRepository->getById($newsLetter->species_id) 
-                    : $this->petRepository->all();
+            $pets = $newsLetter->species_id
+                ? $petRepository->getBySpeciesId((int) $newsLetter->species_id)
+                : $petRepository->all();
 
-                    foreach ($pets as $pet) {
-                        // Send email to the pet owner
-                        Mail::to($pet->owner()->email)->queue(new NewsLatter($newsLetter));
-                    }
+            $emails = $pets
+                ->map(fn ($pet) => $pet->owner?->email)
+                ->filter()
+                ->unique();
+
+            foreach ($emails as $email) {
+                Mail::to($email)->queue(
+                    new NewsLetterMail($newsLetter)
+                );
             }
         }
-
-        //TODO:loop each newsLetter and get the included species for 
-        //TODO:list all users that has same pet species
-        //TODO:run bulk send Mailing process
-        //TODO:fetch all 
     }
 }

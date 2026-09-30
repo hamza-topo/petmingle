@@ -10,13 +10,13 @@ use App\Models\User;
 use App\Repositories\MatchRepository;
 use App\Repositories\PetRepository;
 use App\Services\MatchService;
-use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Foundation\Testing\DatabaseTruncation;
 use RuntimeException;
 use Tests\TestCase;
 
 class MatchServiceTransactionTest extends TestCase
 {
-    use RefreshDatabase;
+    use DatabaseTruncation;
 
     public function test_failed_reciprocal_match_creation_leaves_no_partial_state(): void
     {

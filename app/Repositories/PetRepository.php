@@ -77,4 +77,9 @@ class PetRepository
     {
         return Pet::orderBy('created_at', 'DESC')->paginate($page);
     }
+
+    public function getBySpeciesId(int $speciesId): Collection
+    {
+        return Pet::where('species_id', $speciesId)->get();
+    }
 }
