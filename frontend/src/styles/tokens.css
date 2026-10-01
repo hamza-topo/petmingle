@@ -1,0 +1,61 @@
+/* Raster-derived candidates from docs/ui/DESIGN_SYSTEM.md, not new brand colors.
+   Tailwind's static theme also makes every token available as a CSS variable. */
+@theme static {
+  --color-*: initial;
+  --color-ink: #080d50;
+  --color-text-secondary: #5e75ad;
+  --color-brand-pink: #fc3d7c;
+  --color-brand-blue: #0088ff;
+  --color-surface: #fefefe;
+  --color-canvas: #edf8ff;
+  --color-surface-blue: #e3f4fe;
+  --color-surface-pink: #fef3f8;
+  --color-surface-pink-strong: #fce3ed;
+  /* Sampled from the blue benefit icon disk in M1 (RGB 211, 235, 253). */
+  --color-icon-blue: #d3ebfd;
+  --color-border: #d7e7f7;
+  --color-border-action: #8acbff;
+  --color-bubble-incoming: #eff3f8;
+  --color-bubble-outgoing: #d8efff;
+  --color-trait-teal: #00ad9b;
+  --color-trait-teal-bg: #ddfbf7;
+  --color-trait-purple: #8648ef;
+  --color-trait-purple-bg: #f0eaff;
+  --color-success: #12c644;
+  --color-success-bg: #bdf4c8;
+
+  /* Temporary local font stack: exact source font is not supplied. */
+  --font-sans: "Nunito", "Trebuchet MS", Arial, sans-serif;
+  --font-display: "Nunito", "Arial Rounded MT Bold", "Trebuchet MS", Arial, "DejaVu Sans Condensed", sans-serif;
+  --text-hero: 68px;
+  --text-hero--line-height: 78px;
+  --text-section: 36px;
+  --text-section--line-height: 1.17;
+  --text-feature: 21px;
+  --text-feature--line-height: 1.25;
+  --text-body: 16px;
+  --text-body--line-height: 1.4;
+  --text-meta: 14px;
+  --text-meta--line-height: 1.3;
+
+  --spacing: 4px;
+  --radius-card: 10px;
+  --radius-panel: 20px;
+  --radius-pill: 999px;
+  --shadow-card: 0 2px 6px rgb(8 13 80 / 0.06);
+}
+
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+  --space-12: 48px;
+  --landing-width: 1310px;
+  /* Neutral asset slots reuse an existing documented color, not a new palette. */
+  --asset-placeholder-background: var(--color-bubble-incoming);
+}
