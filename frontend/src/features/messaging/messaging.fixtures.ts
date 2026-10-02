@@ -1,7 +1,8 @@
+import { nalaIdentity } from '../../fixtures/petIdentity';
 import type { ReferenceAsset } from '../../assets/landingAssets';
 
 export interface ChatPet { id: string; name: string; photo: ReferenceAsset; breed?: string; ageYears?: number; sex?: 'female' | 'male' }
-export interface ChatOwner { id: string; name: string | null; petId: string }
+export interface ChatOwner { id: string; name: string | null; representedPetId: string }
 export interface ChatMessage { id: string; senderId: string; content: string; timestamp: string; receipt?: 'read' }
 export interface Conversation {
   id: string; pets: [ChatPet, ChatPet]; owners: [ChatOwner, ChatOwner]; currentOwnerId: string;
@@ -27,14 +28,14 @@ export const conversations: Conversation[] = pairs.map(([first, second, preview,
   ];
   // Account identities are intentionally anonymous. The reference only names pets.
   const owners: [ChatOwner, ChatOwner] = [
-    { id: `${id}-owner-a`, name: null, petId: pets[0].id },
-    { id: 'current-owner', name: null, petId: pets[1].id },
+    { id: `${id}-owner-a`, name: null, representedPetId: pets[0].id },
+    { id: 'current-owner', name: null, representedPetId: pets[1].id },
   ];
   return { id, pets, owners, currentOwnerId: 'current-owner', preview, activityLabel, unreadCount: index === 0 ? 1 : 0,
     messages: [{ id: `${id}-preview`, senderId: owners[0].id, content: preview, timestamp: `${index < 3 || index === 7 ? '2024-04-12' : index < 5 ? '2024-04-08' : '2024-04-07'}T09:30:00` }], interests: [] };
 });
 const initial = conversations[0];
-Object.assign(initial.pets[0], { breed: 'Golden Retriever', ageYears: 3, sex: 'female' });
+Object.assign(initial.pets[0], { breed: nalaIdentity.breed, ageYears: nalaIdentity.ageYears, sex: 'female' });
 Object.assign(initial.pets[1], { breed: 'Pembroke Welsh Corgi', ageYears: 2, sex: 'male' });
 initial.matchedOn = '2024-03-28';
 initial.messages = [
@@ -48,7 +49,7 @@ initial.interests = [
   { id: 'fetch', label: 'Playtime & fetch', artwork: placeholder('Fetch artwork') },
   { id: 'outdoor', label: 'Outdoor exploration', artwork: placeholder('Outdoor artwork') },
 ];
-export const messagingAccount = { ownerId: 'current-owner', name: null, photo: placeholder('Owner'), location: 'San Diego, CA' };
+export const messagingAccount = { photo: placeholder('Owner'), location: 'San Diego, CA' };
 export const pairName = (conversation: Conversation) => conversation.pets.map(pet => pet.name).join(' & ');
 export const messageTime = (timestamp: string) => new Date(timestamp).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' });
 

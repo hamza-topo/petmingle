@@ -1,6 +1,6 @@
-# PetMingle desktop design system — analysis cycle 1
+# PetMingle desktop design system
 
-Status: reference analysis only. No frontend initialization or implementation is authorized in this cycle. The five local images are the visual source of truth, not the existing Laravel styles. See [COMPONENTS.md](COMPONENTS.md) for screen inventories, component boundaries, source architecture, and dependency proposal.
+Status: five desktop screens implemented and consolidated through Cycle 7. The five local images remain the visual source of truth. The reference measurements below originated in Cycle 1; current implementation notes and `frontend/src/styles/tokens.css` take precedence over initial estimates. See [COMPONENTS.md](COMPONENTS.md) for the implemented architecture and [GLOBAL_UI_REVIEW.md](GLOBAL_UI_REVIEW.md) for verification and remaining limitations.
 
 ## Reference inventory and measurement method
 
@@ -24,13 +24,13 @@ The outer blue glow, rounded browser window, traffic-light controls, address bar
 | --- | --- | --- |
 | `color-ink` | `#080D50` | Very dark navy headings, labels, outline icons; high confidence in role, medium in exact value; references vary roughly from deep indigo to navy |
 | `color-text-secondary` | `#5E75AD` | Blue-gray body copy, metadata, field labels; approximate |
-| `color-brand-pink` | `#FC387F` | Primary CTAs, hearts, selected badges, required markers; strong sampled cluster around `#F83878`–`#F84080` |
+| `color-brand-pink` | `#FC3D7C` | Primary CTAs, hearts, selected badges, required markers; strong sampled cluster around `#F83878`–`#F84080` |
 | `color-brand-blue` | `#0088FF` | Links, secondary actions, active navigation text; sampled clusters around `#0080F8`–`#0890F8` |
 | `color-surface` | `#FEFEFE` | Dominant near-white panels; measured common pixel value, with white variation |
 | `color-canvas` | `#EDF8FF` | Pale blue application backdrop on M2–M5; approximate |
 | `color-surface-blue` | `#E3F4FE` | Feature tiles, selected-soft treatments, chips; exact recurring M1 pixel, approximate across screens |
 | `color-surface-pink` | `#FEF3F8` | Feature tiles and selected/spotlight regions; exact recurring M1 pixel, stronger pink tints elsewhere |
-| `color-surface-pink-strong` | `#FDE5F0` | Icon disks, completion prompt, selected conversation tint; approximate |
+| `color-surface-pink-strong` | `#FCE3ED` | Icon disks, completion prompt, selected conversation tint; approximate |
 | `color-border` | `#D7E7F7` | Fine input outlines, separators, lightly bounded cards; approximate |
 | `color-border-action` | `#8ACBFF` | Blue outlined buttons and selected filter chips; approximate |
 | `color-bubble-incoming` | `#EFF3F8` | M4 incoming messages and composer input; approximate |
@@ -42,6 +42,18 @@ The outer blue glow, rounded browser window, traffic-light controls, address bar
 Semantic colors are role-based; do not make each pet trait a permanently assigned universal color because trait colors differ between references. Gender symbols, crown/star promotion icons, checks, and unread markers retain their source treatments.
 
 Some pink CTAs and blue selected controls have slight tonal variation; M5 has a very faint pink premium backdrop. Preserve these only where visible. Do not add broad gradients, glows, glossy cards, or extra decorative surfaces. Contrast has not been certified from these raster estimates; verify actual text/control colors at implementation without changing the visual hierarchy.
+
+## Implemented shared tokens — Cycle 7
+
+The original palette is retained, including Landing-calibrated pink `#FC3D7C`, pink disk `#FCE3ED`, and blue disk `#D3EBFD`. Repeated gold `#FFBF24` is now `--color-accent-gold` (Discovery's Plus star and Own Profile's energy icon). Isolated Messaging shield/smile colors remain local rather than expanding the shared palette.
+
+- Existing spacing aliases 8/12/16/24px are reused for recurring gaps; exact screenshot-derived offsets and widths remain feature-specific.
+- Radius tokens: control8px, card10px, media12px, panel20px, pill999px. Distinct bubble/gallery shapes stay local when their source differs.
+- One small-card shadow: `0 2px 6px rgb(8 13 80 / 0.06)`.
+- Fonts remain local fallback stacks; no remote request or exact-font claim. Hero68px/78px line height, section36px, feature21px, body16px, metadata14px; source-specific headings may differ.
+- Neutral missing-asset surface aliases `--color-bubble-incoming`.
+
+Shared badge/location rules live in `styles/shared.css`; creation choices use a distinct class to prevent style leakage. Per-screen widths, headers and dense-control sizes deliberately follow each reference. Home is visually underlined on Own Profile, but its link does not falsely claim to be the current URL.
 
 ## Typography
 

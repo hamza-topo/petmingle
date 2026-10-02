@@ -1,3 +1,4 @@
+import { nalaIdentity } from '../../fixtures/petIdentity';
 import { z } from 'zod';
 
 export const traits = ['Playful', 'Friendly', 'Outdoorsy', 'Gentle', 'Curious', 'Social'] as const;
@@ -17,6 +18,6 @@ export const profileSchema = z.object({
 });
 export type PetProfileValues = z.infer<typeof profileSchema>;
 export const initialProfile: PetProfileValues = {
-  name: 'Nala', species: 'Dog', breed: 'Golden Retriever', age: '3', size: 'Large',
+  name: nalaIdentity.name, species: 'Dog', breed: nalaIdentity.breed, age: String(nalaIdentity.ageYears), size: 'Large',
   traits: ['Playful'], energy: 'High energy', playdate: 'Active play', photo: null,
 };

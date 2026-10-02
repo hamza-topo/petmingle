@@ -1,6 +1,6 @@
-# PetMingle frontend — Cycles 2–3
+# PetMingle frontend — five-screen desktop prototype
 
-Standalone React/TypeScript/Vite app. Landing/Home and Discovery are implemented from their desktop references. Laravel, its root npm package, Mix pipeline, Blade views, public assets, routes, and API remain separate.
+Standalone React/TypeScript/Vite app. Landing, Discovery, Pet Profile Creation, Messaging and Own Profile are implemented from their desktop references. Laravel, its root npm package, Mix pipeline, Blade views, public assets, routes, and API remain separate.
 
 ## Run
 
@@ -14,7 +14,7 @@ npm test
 npm run typecheck
 ```
 
-The Vite server binds to `127.0.0.1` and uses port 5173 by default. Build output stays in `frontend/dist`. No API proxy, network data client, or Laravel integration is configured. React Router exposes `/` (Landing) and `/discover` (Discovery); unknown paths return to Home.
+The Vite server binds to `127.0.0.1` and uses port 5173 by default. Build output stays in `frontend/dist`. No API proxy, network data client, or Laravel integration is configured. React Router exposes `/`, `/discover`, `/pet/create`, `/messages` and `/profile`; existing controls connect the five screens and unknown paths return Home.
 
 ## Implementation
 
@@ -58,3 +58,7 @@ Tool integration follows [Tailwind's Vite installation](https://tailwindcss.com/
 Local interactions: radio-chip selection/reset, editable search text, and the Show button scrolling to the fixed fixture grid. Search and filters do not fetch or change results. Single selection per group is a minimal preview assumption because cardinality is not specified in the image. Distance and sort show only the reference option; list view, gallery arrows, Save, Say Hello, notification/account/location menus, companion profiles, and other sidebar destinations remain inactive. There is no local favorite state, matching, authentication, persistence, or API integration.
 
 All Discovery photographs and the owner portrait remain isolated neutral placeholders. No generated/stock images or screenshot crops were introduced. The original font and some bespoke icons are still unavailable. See `docs/ui/DISCOVERY_VISUAL_REVIEW.md` at the repository root for measurements and verification results.
+
+## Consolidation review
+
+See [GLOBAL_UI_REVIEW.md](../docs/ui/GLOBAL_UI_REVIEW.md) for the current component architecture, navigation, verification, missing assets and API prerequisites. Earlier cycle notes below/above are historical; all data and interactions still remain local. No API, authentication, billing or persistence is implemented.

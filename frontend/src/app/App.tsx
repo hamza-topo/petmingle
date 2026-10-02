@@ -1,3 +1,4 @@
+import { RouteScroll } from './RouteScroll';
 import { Navigate, Route, Routes } from 'react-router';
 import { LandingPage } from '../features/landing/LandingPage';
 import { DiscoveryPage } from '../features/discovery/DiscoveryPage';
@@ -10,6 +11,8 @@ import { OwnProfilePage } from '../features/own-profile/OwnProfilePage';
 
 export function App() {
   return (
+    <>
+    <RouteScroll />
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/profile" element={<OwnProfilePage />} />
@@ -18,5 +21,6 @@ export function App() {
       <Route path="/discover" element={<DiscoveryPage />} />
       <Route path="*" element={<Navigate to="/" replace />} />
     </Routes>
+    </>
   );
 }

@@ -7,7 +7,7 @@ import { MessageComposer } from './MessageComposer';
 function MessageBubble({ message, conversation }: { message: ChatMessage; conversation: Conversation }) {
   const outgoing = message.senderId === conversation.currentOwnerId;
   const owner = conversation.owners.find(item => item.id === message.senderId)!;
-  const pet = conversation.pets.find(item => item.id === owner.petId)!;
+  const pet = conversation.pets.find(item => item.id === owner.representedPetId)!;
   return <li className={`chat-message chat-message--${outgoing ? 'outgoing' : 'incoming'}`} aria-label={`Message from ${pet.name}’s owner`}>
     <PetAvatar pet={pet} /><div className="chat-message-content"><p>{message.content.split(/(🐾|🙂)/u).map((part, index) => part === '🐾' || part === '🙂' ? <Fragment key={index}><span className="sr-only">{part}</span>{part === '🐾' ? <PawPrint size={19} className="message-emoji" fill="currentColor" aria-hidden="true" /> : <Smile size={19} className="message-emoji message-emoji--smile" aria-hidden="true" />}</Fragment> : part)}</p><div className="chat-message-meta"><time dateTime={message.timestamp}>{messageTime(message.timestamp)}</time>{message.receipt === 'read' && <CheckCheck size={20} aria-label="Read receipt shown in reference" />}</div></div>
   </li>;

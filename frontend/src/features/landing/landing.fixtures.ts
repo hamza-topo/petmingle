@@ -1,3 +1,4 @@
+import { nalaIdentity } from '../../fixtures/petIdentity';
 import { CalendarDays, ContactRound, Heart, MapPin, MessageCircle, Search, UsersRound } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { FeaturedPet } from '../../components/PetCard';
@@ -23,7 +24,7 @@ export const processSteps: LandingItem[] = [
 ];
 
 export const featuredPets: FeaturedPet[] = [
-  { id: 'nala', name: 'Nala', breed: 'Golden Retriever', photo: { src: null, alt: 'Nala, a golden retriever', placeholder: 'Nala · photo placeholder' } },
+  { ...nalaIdentity, photo: { src: null, alt: 'Nala, a golden retriever', placeholder: 'Nala · photo placeholder' } },
   { id: 'mochi', name: 'Mochi', breed: 'Domestic Shorthair', photo: { src: null, alt: 'Mochi, a domestic shorthair cat', placeholder: 'Mochi · photo placeholder' } },
   { id: 'toby', name: 'Toby', breed: 'Pembroke Welsh Corgi', photo: { src: null, alt: 'Toby, a Pembroke Welsh corgi', placeholder: 'Toby · photo placeholder' } },
   { id: 'luna', name: 'Luna', breed: 'Cavapoo', photo: { src: null, alt: 'Luna, a cavapoo', placeholder: 'Luna · photo placeholder' } },

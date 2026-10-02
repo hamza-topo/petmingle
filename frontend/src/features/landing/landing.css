@@ -1,0 +1,342 @@
+@layer components {
+  /* Preserve desktop columns. No mobile transformation is defined in Cycle 2. */
+  .landing-page {
+    width: calc(100% - 64px);
+    max-width: var(--landing-width);
+    margin-inline: auto;
+    background: var(--color-surface);
+    min-height: 100vh;
+  }
+
+  .get-started {
+    height: 55px;
+    width: 242px;
+    padding-inline: 24px;
+  }
+
+  .landing-hero {
+    height: 319px;
+    position: relative;
+    background: var(--color-canvas);
+  }
+
+  .hero-artwork {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+  }
+
+  .hero-artwork.reference-placeholder {
+    justify-content: flex-end;
+    padding-right: 9%;
+  }
+
+  .hero-artwork.reference-placeholder>span {
+    padding: 24px;
+  }
+
+  .hero-copy {
+    position: relative;
+    width: max-content;
+    padding: 34px 0 0 7.8%;
+  }
+
+  .hero-copy h1 {
+    font-size: var(--text-hero);
+    line-height: var(--text-hero--line-height);
+    letter-spacing: -2.8px;
+    font-weight: 900;
+  }
+
+  .hero-copy p {
+    margin-top: 5px;
+    color: var(--color-text-secondary);
+    font-size: 29px;
+    line-height: 1.18;
+    font-weight: 500;
+    letter-spacing: -0.7px;
+  }
+
+  .hero-actions {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-top: 20px;
+  }
+
+  .hero-actions .action--secondary {
+    width: 173px;
+    min-height: 50px;
+    padding-inline: 20px;
+  }
+
+  .landing-content {
+    position: relative;
+    margin: -28px 35px 0;
+    padding-top: 11px;
+    background: var(--color-surface);
+    border-radius: 24px 24px 0 0;
+  }
+
+  .benefit-strip {
+    display: grid;
+    grid-template-columns: 1.025fr 1fr 1.025fr;
+    gap: 15px;
+    padding-inline: 18px;
+  }
+
+  .tone-pink {
+    --tone: var(--color-brand-pink);
+    --tone-soft: var(--color-surface-pink);
+    --tone-disk: var(--color-surface-pink-strong);
+  }
+
+  .tone-blue {
+    --tone: var(--color-brand-blue);
+    --tone-soft: var(--color-canvas);
+    --tone-disk: var(--color-icon-blue);
+  }
+
+  .benefit {
+    display: flex;
+    align-items: center;
+    gap: 27px;
+    min-height: 116px;
+    padding: 16px 32px;
+    border-radius: 18px;
+    background: var(--tone-soft);
+  }
+
+  .benefit-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 78px;
+    height: 78px;
+    border-radius: 50%;
+    background: var(--tone-disk);
+    color: var(--tone);
+  }
+
+  .benefit-icon .lucide-heart,
+  .benefit-icon .lucide-map-pin,
+  .step-icon .lucide-message-circle {
+    fill: currentColor;
+  }
+
+  .benefit-icon .lucide-map-pin circle {
+    fill: var(--tone-disk);
+    stroke: var(--tone-disk);
+  }
+
+  .benefit h2 {
+    font-size: var(--text-feature);
+    line-height: 1.25;
+    letter-spacing: -0.6px;
+  }
+
+  .benefit p {
+    margin-top: 4px;
+    color: var(--color-text-secondary);
+    line-height: 1.35;
+    white-space: pre-line;
+  }
+
+  .content-inset {
+    padding-inline: 18px;
+  }
+
+  .how-it-works {
+    margin-top: 23px;
+  }
+
+  .how-it-works .section-heading {
+    justify-content: space-between;
+  }
+
+  .how-it-works .section-heading p {
+    font-size: 15px;
+  }
+
+  .process-steps {
+    display: grid;
+    grid-template-columns: 311fr 273fr 294fr 262fr;
+    gap: 22px;
+    padding: 0;
+    margin: 8px 0 0;
+    list-style: none;
+  }
+
+  .step-marker {
+    display: flex;
+    align-items: center;
+    gap: var(--space-4);
+    height: 52px;
+  }
+
+  .step-number {
+    display: grid;
+    place-items: center;
+    flex: 0 0 41px;
+    height: 41px;
+    border-radius: 50%;
+    background: var(--tone-soft);
+    color: var(--tone);
+    font-size: 21px;
+    font-weight: 800;
+  }
+
+  .step-icon {
+    display: grid;
+    place-items: center;
+    flex: 0 0 53px;
+    height: 53px;
+    border-radius: 50%;
+    background: var(--tone-soft);
+    color: var(--tone);
+  }
+
+  .step-connector {
+    display: flex;
+    align-items: center;
+    color: var(--color-border);
+    flex: 1;
+    padding-left: 4px;
+  }
+
+  .step-connector::before {
+    content: "";
+    flex: 1;
+    border-top: 2px dashed var(--color-border);
+  }
+
+  .step-copy {
+    padding-left: 58px;
+  }
+
+  .step-copy h3 {
+    font-size: 16px;
+    line-height: 1.4;
+    margin-top: 3px;
+  }
+
+  .step-copy p {
+    color: var(--color-text-secondary);
+    font-size: 16px;
+    line-height: 1.25;
+    white-space: pre-line;
+  }
+
+  .featured-pets {
+    margin-top: 22px;
+  }
+
+  .featured-pets .section-heading {
+    gap: var(--space-6);
+  }
+
+  .featured-pets .section-heading h2 {
+    font-size: 32px;
+    line-height: 40px;
+  }
+
+  .see-more {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    color: var(--color-brand-blue);
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .featured-pet-grid {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 14px;
+    list-style: none;
+    margin: 7px 0 0;
+    padding: 0;
+  }
+
+  .join-banner {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 252px 256px;
+    align-items: center;
+    gap: var(--space-6);
+    min-height: 101px;
+    margin-top: 16px;
+    padding-left: 58px;
+    border-radius: 18px;
+    background: var(--color-surface-blue);
+    overflow: hidden;
+  }
+
+  .join-copy h2 {
+    font-size: 32px;
+    line-height: 1.2;
+    letter-spacing: -1.2px;
+  }
+
+  .join-copy p {
+    font-size: 16px;
+    color: var(--color-text-secondary);
+    line-height: 1.4;
+    margin-top: 2px;
+  }
+
+  .join-banner .get-started {
+    width: 252px;
+  }
+
+  .high-five-artwork {
+    height: 101px;
+    width: 256px;
+  }
+
+  .high-five-artwork.reference-placeholder {
+    background: transparent;
+  }
+
+  @media (max-width: 1360px) {
+.hero-copy h1 {
+      font-size: 66px;
+    }
+
+  .benefit {
+      padding-inline: 20px;
+      gap: var(--space-4);
+    }
+
+  .benefit-icon {
+      flex-basis: 64px;
+      height: 64px;
+    }
+
+  .benefit p {
+      font-size: 15px;
+    }
+
+  .step-copy {
+      padding-left: 0;
+    }
+
+  .join-banner {
+      padding-left: 30px;
+      grid-template-columns: minmax(0, 1fr) auto 150px;
+      gap: 18px;
+    }
+
+  .join-copy h2 {
+      font-size: 30px;
+    }
+
+  .join-copy p {
+      font-size: 14px;
+    }
+
+  .high-five-artwork {
+      width: 150px;
+    }
+  }
+}

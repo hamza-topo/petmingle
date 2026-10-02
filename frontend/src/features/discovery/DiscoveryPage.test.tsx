@@ -17,12 +17,13 @@ describe('Discovery page', () => {
     expect(screen.getByRole('heading', { name: 'More Amazing Pets Nearby' })).toBeVisible();
   });
 
-  it('renders navigation with Discover active and other screens unavailable', () => {
+  it('renders navigation with Discover active and links to implemented screens', () => {
     renderDiscovery();
     const nav = within(screen.getByRole('navigation', { name: 'PetMingle navigation' }));
     expect(nav.getByRole('link', { name: /Discover/ })).toHaveAttribute('aria-current', 'page');
-    for (const name of ['Matches', 'Messages', 'Profile', 'PetMingle Plus']) {
-      expect(nav.getByRole('button', { name: new RegExp(name) })).toBeDisabled();
+    expect(nav.getByRole('button', { name: /^Matches/ })).toBeDisabled();
+    for (const [name, href] of [['Messages', '/messages'], ['Profile', '/profile'], ['PetMingle Plus', '/profile#petmingle-plus']]) {
+      expect(nav.getByRole('link', { name: new RegExp(name) })).toHaveAttribute('href', href);
     }
   });
 

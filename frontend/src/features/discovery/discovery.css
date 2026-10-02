@@ -24,7 +24,7 @@
     height: 52px;
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: var(--space-4);
     border: 1px solid var(--color-border);
     border-radius: var(--radius-pill);
     padding-inline: 20px;
@@ -45,7 +45,6 @@
     border-radius: 50%;
     background: var(--color-canvas);
   }
-  .notification-dot { position: absolute; top: 8px; right: 4px; width: 11px; height: 11px; border-radius: 50%; background: var(--color-brand-pink); border: 1px solid var(--color-surface); }
   .discovery-account { display: flex; align-items: center; gap: 14px; font-size: 14px; font-weight: 700; }
   .owner-avatar { width: 52px; height: 52px; border-radius: 50%; flex-shrink: 0; font-size: 10px; }
   .discovery-account > svg { margin-left: auto; flex-shrink: 0; }
@@ -54,7 +53,7 @@
   .discovery-layout { display: grid; grid-template-columns: minmax(0, 1fr) 262px; align-items: start; gap: 18px; padding: 22px 12px 14px; }
   .discovery-results, .discovery-spotlight { min-width: 0; }
   .discovery-upper { display: grid; grid-template-columns: 224px minmax(0, 1fr); gap: 37px; }
-  .discovery-sidebar { display: flex; flex-direction: column; gap: 8px; align-self: start; padding-top: 8px; }
+  .discovery-sidebar { display: flex; flex-direction: column; gap: var(--space-2); align-self: start; padding-top: 8px; }
   .discovery-nav-item { position: relative; display: flex; align-items: center; gap: 20px; min-height: 68px; padding: 12px 12px 12px 23px; text-align: left; border-radius: 18px; }
   .discovery-nav-item > svg { flex-shrink: 0; }
   .discovery-nav-item > span:not(.navigation-count) { min-width: 0; }
@@ -65,7 +64,7 @@
   .discovery-nav-item[aria-current="page"]::before { content: ""; position: absolute; left: -1px; top: 15px; bottom: 15px; width: 5px; border-radius: var(--radius-pill); background: var(--color-brand-pink); }
   .navigation-count { position: absolute; right: 0; top: 8px; display: grid; place-items: center; min-width: 24px; height: 24px; border-radius: 50%; background: var(--color-brand-pink); color: var(--color-surface); font-size: 14px; }
   .discovery-nav-item:last-child { margin-top: 4px; }
-  .discovery-nav-item .lucide-star { color: #ffbf24; fill: currentColor; }
+  .discovery-nav-item .lucide-star { color: var(--color-accent-gold); fill: currentColor; }
 
   .discovery-intro { min-height: 90px; display: flex; justify-content: space-between; align-items: start; gap: 20px; padding-top: 4px; }
   .discovery-intro > div:first-child { min-width: 0; }
@@ -80,37 +79,28 @@
   .featured-discovery-pet { display: grid; grid-template-columns: 54% minmax(0, 1fr); min-height: 512px; background: var(--color-surface); border-radius: 18px; overflow: hidden; }
   .featured-pet-gallery { position: relative; min-height: 504px; margin-bottom: 8px; border-radius: 16px; overflow: hidden; }
   .featured-pet-photo { position: absolute; inset: 0; width: 100%; height: 100%; }
-  .featured-label { position: absolute; top: 16px; left: 18px; display: flex; align-items: center; gap: 8px; height: 36px; padding-inline: 14px; border-radius: var(--radius-pill); color: var(--color-surface); background: var(--color-brand-pink); font-size: 14px; }
+  .featured-label { position: absolute; top: 16px; left: 18px; display: flex; align-items: center; gap: var(--space-2); height: 36px; padding-inline: 14px; border-radius: var(--radius-pill); color: var(--color-surface); background: var(--color-brand-pink); font-size: 14px; }
   .gallery-arrow { position: absolute; top: 41%; width: 43px; height: 43px; border-radius: 50%; display: grid; place-items: center; background: var(--color-surface); }
   .gallery-arrow--previous { left: 10px; }
   .gallery-arrow--next { right: 10px; }
   .gallery-count { position: absolute; bottom: 16px; left: 18px; display: flex; align-items: center; gap: 5px; height: 34px; padding-inline: 14px; border-radius: var(--radius-pill); background: color-mix(in srgb, var(--color-ink) 55%, transparent); color: var(--color-surface); font-size: 14px; }
   .featured-pet-details { display: flex; flex-direction: column; gap: 15px; min-width: 0; padding: 16px 16px 18px 20px; }
-  .featured-pet-details h2 { display: flex; align-items: center; gap: 12px; font-size: 34px; line-height: 39px; letter-spacing: -0.8px; }
-  .featured-name-row { display: flex; align-items: center; gap: 12px; }
+  .featured-pet-details h2 { display: flex; align-items: center; gap: var(--space-3); font-size: 34px; line-height: 39px; letter-spacing: -0.8px; }
+  .featured-name-row { display: flex; align-items: center; gap: var(--space-3); }
   .pet-verified { fill: var(--color-brand-pink); color: var(--color-surface); }
   .featured-pet-identity { color: var(--color-text-secondary); font-size: 16px; font-weight: 600; line-height: 23px; }
   .featured-pet-identity > span { margin-inline: 8px; }
-  .pet-location { display: flex; align-items: flex-start; gap: 5px; color: var(--color-text-secondary); font-size: 14px; line-height: 20px; }
-  .pet-location > svg { flex-shrink: 0; margin-top: 2px; }
   .featured-pet-details .pet-location { margin-top: 4px; }
   .featured-pet-description { color: var(--color-text-secondary); font-size: 14px; line-height: 21px; }
-  .pet-traits { display: flex; flex-wrap: wrap; gap: 7px; }
-  .pet-trait { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 7px 12px; border-radius: var(--radius-pill); font-size: 12px; line-height: 18px; white-space: nowrap; }
-  .pet-trait > svg { flex-shrink: 0; }
-  .pet-trait--pink { background: var(--color-surface-pink); color: var(--color-brand-pink); }
-  .pet-trait--blue { background: var(--color-surface-blue); color: var(--color-brand-blue); }
-  .pet-trait--teal { background: var(--color-trait-teal-bg); color: var(--color-trait-teal); }
-  .pet-trait--purple { background: var(--color-trait-purple-bg); color: var(--color-trait-purple); }
   .featured-pet-traits { gap: 8px 5px; }
   .featured-pet-traits .pet-trait { padding-inline: 8px; font-size: 11px; gap: 4px; }
-  .companion-pet { display: flex; align-items: center; gap: 12px; padding: 8px; border: 1px solid var(--color-border); border-radius: 20px; text-align: left; }
+  .companion-pet { display: flex; align-items: center; gap: var(--space-3); padding: 8px; border: 1px solid var(--color-border); border-radius: 20px; text-align: left; }
   .companion-avatar { width: 60px; height: 60px; flex-shrink: 0; border-radius: 50%; font-size: 10px; }
   .companion-pet > span { min-width: 0; }
   .companion-pet small { display: block; color: var(--color-text-secondary); font-size: 12px; line-height: 17px; }
   .companion-pet strong { display: block; font-family: var(--font-display); font-size: 18px; line-height: 20px; }
   .companion-pet > svg { margin-left: auto; flex-shrink: 0; }
-  .featured-pet-actions { margin-top: auto; display: grid; grid-template-columns: 40% minmax(0, 1fr); gap: 12px; }
+  .featured-pet-actions { margin-top: auto; display: grid; grid-template-columns: 40% minmax(0, 1fr); gap: var(--space-3); }
   .featured-pet-actions .action { min-height: 52px; padding-inline: 12px; font-size: 18px; gap: 10px; }
   .featured-pet-actions .featured-save { color: var(--color-brand-pink); border-color: var(--color-surface-pink-strong); }
 
@@ -136,7 +126,7 @@
   .show-pets > svg { flex-shrink: 0; }
 
   .nearby-pets { margin: 18px 6px 0 20px; }
-  .nearby-pets .section-heading { align-items: center; justify-content: space-between; gap: 16px; }
+  .nearby-pets .section-heading { align-items: center; justify-content: space-between; gap: var(--space-4); }
   .nearby-pets .section-heading h2 { font-size: 32px; line-height: 40px; letter-spacing: -0.8px; }
   .nearby-toolbar { display: flex; align-items: center; gap: 10px; font-size: 14px; color: var(--color-text-secondary); }
   .nearby-toolbar > label { white-space: nowrap; }
@@ -165,8 +155,8 @@
     .discovery-header .brand-artwork-placeholder { width: 54px; height: 58px; }
     .discovery-header .brand-artwork { width: 215px; }
     .discovery-location { padding-inline: 14px; gap: 10px; font-size: 13px; }
-    .discovery-upper { grid-template-columns: 184px minmax(0, 1fr); gap: 24px; }
-    .discovery-nav-item { gap: 12px; padding-left: 12px; }
+    .discovery-upper { grid-template-columns: 184px minmax(0, 1fr); gap: var(--space-6); }
+    .discovery-nav-item { gap: var(--space-3); padding-left: 12px; }
     .discovery-nav-item small { font-size: 10px; }
     .discovery-intro h1 { font-size: 30px; line-height: 38px; }
     .discovery-intro > div > p { font-size: 12px; line-height: 18px; }
@@ -175,7 +165,7 @@
     .nearby-count p { font-size: 12px; }
     .nearby-count small { font-size: 11px; }
     .featured-discovery-pet { grid-template-columns: 47% minmax(0, 1fr); }
-    .featured-pet-details { padding-inline: 14px; gap: 12px; }
+    .featured-pet-details { padding-inline: 14px; gap: var(--space-3); }
     .featured-pet-description { font-size: 14px; line-height: 20px; }
     .featured-pet-identity { font-size: 14px; }
     .featured-pet-actions .action { font-size: 16px; gap: 7px; padding-inline: 6px; }
@@ -193,13 +183,13 @@
     .discovery-header .brand-artwork-placeholder { width: 44px; height: 52px; }
     .discovery-header .brand-artwork { width: 195px; }
     .discovery-location { font-size: 12px; padding-inline: 10px; gap: 6px; }
-    .discovery-search { padding-inline: 12px; gap: 8px; }
+    .discovery-search { padding-inline: 12px; gap: var(--space-2); }
     .discovery-search input { font-size: 12px; }
     .discovery-notifications, .owner-avatar { width: 42px; height: 42px; }
-    .discovery-account { gap: 8px; font-size: 12px; }
+    .discovery-account { gap: var(--space-2); font-size: 12px; }
     .discovery-layout { grid-template-columns: minmax(0, 1fr) 236px; gap: 14px; }
     .discovery-upper { grid-template-columns: 156px minmax(0, 1fr); gap: 20px; }
-    .discovery-nav-item { gap: 8px; padding-left: 9px; }
+    .discovery-nav-item { gap: var(--space-2); padding-left: 9px; }
     .discovery-nav-item > svg { width: 27px; }
     .discovery-nav-item strong { font-size: 14px; }
     .discovery-nav-item small { white-space: normal; }
@@ -213,7 +203,7 @@
     .featured-pet-details { padding-inline: 12px; }
     .featured-pet-traits .pet-trait { padding-inline: 6px; font-size: 10px; gap: 4px; }
     .featured-pet-details .pet-location { font-size: 12px; }
-    .companion-pet { gap: 8px; }
+    .companion-pet { gap: var(--space-2); }
     .companion-avatar { width: 46px; height: 46px; }
     .companion-pet small { font-size: 11px; }
     .discovery-filters { padding-inline: 16px; }

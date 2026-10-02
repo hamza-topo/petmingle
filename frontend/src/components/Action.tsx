@@ -1,5 +1,6 @@
 import type { ComponentPropsWithoutRef } from 'react';
 import clsx from 'clsx';
+import { Link } from 'react-router';
 
 type Appearance = 'primary' | 'secondary';
 
@@ -25,8 +26,8 @@ export function ActionButton({
   );
 }
 
-type LinkProps = ComponentPropsWithoutRef<'a'> & { variant?: Appearance };
+type LinkProps = ComponentPropsWithoutRef<typeof Link> & { variant?: Appearance };
 
 export function ActionLink({ variant = 'secondary', className, ...props }: LinkProps) {
-  return <a {...props} className={clsx('action', `action--${variant}`, className)} />;
+  return <Link {...props} className={clsx('action', `action--${variant}`, className)} />;
 }

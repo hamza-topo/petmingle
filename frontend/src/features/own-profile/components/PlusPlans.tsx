@@ -14,7 +14,7 @@ function PlusPlanCard({ plan, selected, onSelect }: { plan: PlusPlan; selected: 
 }
 export function PlusPlans() {
   const [selected, setSelected] = useState('annual');
-  return <aside className="own-plus" aria-labelledby="own-plus-title">
+  return <aside id="petmingle-plus" className="own-plus" aria-labelledby="own-plus-title">
     <h2 id="own-plus-title"><Crown size={52} fill="currentColor" aria-hidden="true" /><span>PetMingle <strong>Plus</strong></span></h2>
     <h3>More connections. More adventures.</h3>
     <p className="own-plus-intro">Unlock premium features and help Nala meet even more amazing friends. PetMingle Plus gives you everything you need to make meaningful connections.</p>

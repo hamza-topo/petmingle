@@ -23,17 +23,17 @@ describe('Landing page', () => {
     const nav = within(screen.getByRole('navigation', { name: 'Primary navigation' }));
     expect(nav.getByRole('link', { name: 'Home' })).toHaveAttribute('aria-current', 'page');
     expect(nav.getByRole('link', { name: 'Explore' })).toHaveAttribute('href', '/discover');
-    expect(nav.getByRole('link', { name: 'How It Works' })).toHaveAttribute('href', '#how-it-works');
+    expect(nav.getByRole('link', { name: 'How It Works' })).toHaveAttribute('href', '/#how-it-works');
     expect(nav.getByRole('button', { name: 'Stories' })).toBeDisabled();
     expect(nav.getByRole('button', { name: 'Resources' })).toBeDisabled();
   });
 
-  it('renders the primary CTA without pretending signup is implemented', () => {
+  it('links the primary CTA to pet profile creation', () => {
     renderHome();
     const hero = within(screen.getByRole('region', { name: 'Find their people' }));
-    expect(hero.getByRole('button', { name: /Get Started/ })).toBeVisible();
-    expect(hero.getByRole('button', { name: /Get Started/ })).toBeDisabled();
-    expect(screen.getAllByRole('button', { name: /Get Started/ })).toHaveLength(3);
+    expect(hero.getByRole('link', { name: /Get Started/ })).toBeVisible();
+    expect(hero.getByRole('link', { name: /Get Started/ })).toHaveAttribute('href', '/pet/create');
+    expect(screen.getAllByRole('link', { name: /Get Started/ })).toHaveLength(3);
     expect(hero.getByRole('link', { name: 'Explore Pets' })).toHaveAttribute('href', '/discover');
   });
 

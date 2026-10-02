@@ -1,6 +1,7 @@
 import { ChevronLeft, ChevronRight, Heart, Image, PawPrint, ShieldCheck, Star } from 'lucide-react';
 import { ActionButton } from '../../../components/Action';
 import { ReferenceImage } from '../../../components/ReferenceImage';
+import { Avatar } from '../../../components/Avatar';
 import { PetLocation } from '../../../components/PetLocation';
 import { PetTraitBadge } from '../../../components/PetTraitBadge';
 import { featuredDiscoveryPet as pet } from '../discovery.fixtures';
@@ -26,7 +27,7 @@ export function FeaturedPetCard() {
           {pet.traits.map((trait) => <PetTraitBadge key={trait.label} trait={trait} />)}
         </div>
         <button className="companion-pet" type="button" disabled title="Companion profiles are unavailable in this preview">
-          <ReferenceImage asset={pet.companion.photo} className="companion-avatar" />
+          <Avatar asset={pet.companion.photo} className="companion-avatar" />
           <span><small>Lives with</small><strong>{pet.companion.name}</strong><small>{pet.companion.breed} <span aria-hidden="true"> · </span> {pet.companion.ageYears} years</small></span>
           <ChevronRight size={22} aria-hidden="true" />
         </button>

@@ -38,7 +38,7 @@ describe('Pet profile creation', () => {
     await user.selectOptions(screen.getByLabelText('Ideal playdate type'), 'Gentle play');
     await user.click(screen.getByRole('button', { name: 'Continue' }));
     await waitFor(() => expect(submit).toHaveBeenCalledWith(expect.objectContaining({ name: 'Nala', traits: ['Friendly'], energy: 'Low energy', playdate: 'Gentle play', photo: null })));
-    expect(screen.getByRole('status')).toHaveTextContent('Nothing has been uploaded or saved.');
+    expect(screen.getByRole('status')).toHaveTextContent('Pet details are valid.');
   });
   it('previews, replaces and removes a local photo, releasing object URLs', async () => {
     const user = userEvent.setup(); const { unmount } = renderForm();

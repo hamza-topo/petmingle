@@ -43,9 +43,8 @@ describe('Own pet profile', () => {
     expect(screen.getByText('Most Popular')).toBeVisible();
     expect(screen.getByRole('button', { name: /Try PetMingle Plus/ })).toBeDisabled();
   });
-  it('keeps the reference Home styling and opens the implemented Messaging route', async () => {
+  it('opens Messaging while Home remains a destination rather than the current route', async () => {
     const user = userEvent.setup(); renderProfile();
-    expect(screen.getByRole('link', { name: 'Home' })).toHaveAttribute('data-reference-active', 'true');
     expect(screen.getByRole('link', { name: 'Home' })).not.toHaveAttribute('aria-current');
     expect(screen.getByRole('button', { name: 'Nala pet menu — unavailable' })).toBeVisible();
     await user.click(screen.getByRole('link', { name: 'Messages' }));

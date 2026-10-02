@@ -1,6 +1,6 @@
-# PetMingle screen inventory and frontend proposal
+# PetMingle screen inventory and component architecture
 
-Analysis only; this document proposes future work. No application code, dependency installation, API integration, route change, or commit is part of this cycle. Reference IDs and visual tokens are defined in [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md).
+Updated through Cycle 7. The screen inventory records the original mockups; the implemented architecture section describes the current five-route frontend. No Laravel/API/mobile integration has started. Reference IDs and visual tokens are defined in [DESIGN_SYSTEM.md](DESIGN_SYSTEM.md).
 
 ## Repository findings and safest location
 
@@ -75,7 +75,7 @@ Plus: crown and branded title, introduction, four feature rows (Advanced Filters
 
 Actions/forms: profile/photo edits, add photo, complete profile, Messages, account dropdown, three-choice plan selection, upgrade CTA. No edit modal, checkout, photo management dialog, or actual purchase flow is provided.
 
-## Reusable component boundaries
+## Reference component families (analysis inventory)
 
 Prefer named PetMingle components with a small number of explicit variants. Reuse repeated anatomy without forcing these differing screens into one universal card or shell.
 
@@ -109,132 +109,50 @@ Screen-owned compositions:
 
 Avoid speculative shared components for future screens. Keep plain content sections flat where the reference is flat. A display trait is not an interactive choice; a selected conversation is not a generic pet card. Header variants should be explicit compositions, not dozens of boolean props.
 
-## Proposed source architecture (not created)
+## Implemented architecture — Cycle 7
+
+The five screens are implemented in the isolated `frontend/` application. Earlier screen inventories remain the reference interpretation; this section supersedes the Cycle 1 architecture/dependency proposal.
 
 ```text
-frontend/
-  package.json
-  package-lock.json
-  .gitignore
-  index.html
-  vite.config.ts
-  tsconfig.json
-  tsconfig.app.json
-  tsconfig.node.json
-  public/                       # separately supplied static frontend assets
-  src/
-    main.tsx
-    app/
-      App.tsx
-      router.tsx
-      providers.tsx             # QueryClientProvider; no network requests
-      layouts/
-        PublicLayout.tsx
-        DiscoveryLayout.tsx
-        ConversationLayout.tsx
-        PetAccountLayout.tsx
-    styles/
-      tokens.css                # semantic PetMingle tokens
-      app.css                   # Tailwind entry + scoped base styles
-    assets/
-      brand/
-      pets/                     # approved standalone assets, never /design copies
-    components/
-      brand/
-      navigation/
-      controls/
-      pets/
-    features/
-      landing/
-        LandingPage.tsx
-        components/
-      discovery/
-        DiscoveryPage.tsx
-        components/
-        types.ts
-      profile-creation/
-        CreatePetProfilePage.tsx
-        components/
-        schema.ts
-      messages/
-        MessagesPage.tsx
-        components/
-        types.ts
-      pet-profile/
-        PetProfilePage.tsx
-        components/
-      plus/
-        components/             # embedded on profile, no new Plus page
-        types.ts
-    fixtures/
-      landing.ts
-      discovery.ts
-      profile-creation.ts
-      messages.ts
-      pet-profile.ts
-    types/
-      pet.ts                    # UI model only, no assumed API response shape
-    test/
-      setup.ts
-      render.tsx
+frontend/src/
+  app/              App routes, RouteScroll, navigation regression test
+  components/       Shared visual/semantic primitives
+  fixtures/         petIdentity.ts (only concordant Nala facts)
+  assets/           Typed references for missing original assets
+  features/
+    landing/        Page, compositions, fixtures, landing.css, tests
+    discovery/      Page, compositions, fixtures, discovery.css, tests
+    profile-creation/ Page, form components, schema, profile.css, tests
+    messaging/      Page, conversations/thread/details, fixtures, messaging.css, tests
+    own-profile/    Page, gallery/details/Plus, fixtures, profile.css, tests
+  styles/           tokens.css, shared.css, app.css
+  test/             jsdom setup
 ```
 
-Tests should live beside the features/components they verify. Fixtures remain screen-specific where source data conflicts; common pet display types can still be reused. Do not encode screenshot text directly throughout component markup. Feature components may import shared components/types; shared components should not import page features.
+Shared components now include:
 
-Proposed frontend-only routes: `/` → M1; `/explore` → M2; `/pets/new` → M3; `/messages` → M4; `/profile` → M5. Only `/explore` is evidenced by a reference URL. These paths run on a separate frontend origin initially; they do not change Laravel routing. No fabricated pages for Stories, Resources, authentication, Matches, or purchase flows are part of the five-screen scope.
+- `PrimaryNavigation`: public and Messaging link sets; reference-only Home treatment on Own Profile.
+- `SiteHeader`: public and pet-identity utilities. `DiscoveryHeader` and `MessagingHeader` retain their source-specific compositions rather than becoming one large configurable shell.
+- `Avatar`: common circular image/placeholder behavior for owner, pet and companion contexts. Messaging's pair overlap remains feature-owned.
+- `NotificationButton`: common inactive notification control with source-specific sizing.
+- `ActionButton` and router-backed `ActionLink`: real actions versus navigation with shared appearance.
+- `PetLocation`: optional distance and/or location; no invented distance on Own Profile.
+- `PetTraitBadge`, `PetCard`, `ReferenceImage`, `PetMingleLogo`, `SectionHeading`: retained shared primitives.
 
-Use local React state for visible selections and fixture-driven interactions in a later implementation. React Hook Form plus Zod owns the creation form; only visible requirements should become validation constraints. TanStack Query is included in the requested stack, but no endpoint hooks, services, fetch calls, Axios client, or socket connection should be added yet. React Router owns navigation between the five agreed screens. Motion is available for restrained transitions when behavior is specified; static mockups do not justify a new animation system.
+Header heights remain 81/86/76/82/76px for Landing/Discovery/Creation/Messaging/Profile respectively; this reflects the screenshots, not inconsistent use of one header variant. Shared badge/location CSS is in `styles/shared.css`; the creation choice grid has its own `pet-trait-choices` class. Landing-only layout moved out of the global stylesheet.
 
-Later verification: desktop comparison against each local reference, meaningful Testing Library tests for implemented selection/form/navigation behavior, TypeScript checks, and production build. Exact fonts and source imagery must be resolved before claiming visual parity. No application tests or builds are necessary for these documentation-only changes.
+Routes: `/`, `/discover`, `/pet/create`, `/messages`, `/profile`. Existing controls connect these routes. Get Started and Complete your profile open the local pet form; they do not register an account or save edits. Discovery links to Messages, Profile and `/profile#petmingle-plus`. `RouteScroll` handles section anchors and route scroll resets. Unknown routes return Home.
 
-## Exact proposed npm package list
+Fixtures remain local where references conflict. Nala's name, breed and age agree and share one identity constant; location, owner association and contextual traits are not globally merged. Chat owner accounts use `representedPetId` for avatar association, not an asserted ownership relationship.
 
-This is the complete proposed direct package-name list for a future standalone `frontend/package.json`, not an installation instruction. Nothing has been installed. Version pins remain to be resolved together against engine/peer requirements at initialization and then locked in the frontend lockfile; no unverified exact version numbers are asserted here.
+## Installed dependencies
 
-### Runtime dependencies — 10
+The manifest and lockfile are authoritative. No package was added in Cycle 7.
 
-| Package | Purpose |
-| --- | --- |
-| `react` | UI runtime |
-| `react-dom` | Browser rendering |
-| `react-router` | Declarative routing for the five screens |
-| `@tanstack/react-query` | Requested query/state infrastructure; API use deferred |
-| `react-hook-form` | Profile creation form state |
-| `@hookform/resolvers` | Zod / React Hook Form bridge |
-| `zod` | Form validation and inferred types |
-| `motion` | Requested Motion for React package |
-| `lucide-react` | Ordinary interface icons |
-| `clsx` | Small conditional class utility for explicit variants |
+Runtime: `react`, `react-dom`, `react-router`, `clsx`, `lucide-react`, `react-hook-form`, `@hookform/resolvers`, `zod`.
 
-### Development dependencies — 12
+Development: `typescript`, `vite`, `@vitejs/plugin-react`, `@types/react`, `@types/react-dom`, `@types/node`, `tailwindcss`, `@tailwindcss/vite`, `vitest`, `@testing-library/react`, `@testing-library/jest-dom`, `@testing-library/user-event`, `jsdom`.
 
-| Package | Purpose |
-| --- | --- |
-| `typescript` | Type checking |
-| `vite` | Isolated dev server and build |
-| `@vitejs/plugin-react` | React Vite integration |
-| `@types/react` | React types |
-| `@types/react-dom` | DOM-renderer types |
-| `@types/node` | Build/config Node types |
-| `tailwindcss` | Requested styling tooling |
-| `@tailwindcss/vite` | Tailwind Vite integration |
-| `vitest` | Test runner |
-| `@testing-library/react` | Component behavior tests |
-| `@testing-library/jest-dom` | DOM assertions for Vitest |
-| `@testing-library/user-event` | User interaction simulation |
+TanStack Query, Motion, state stores, API clients, chat/payment SDKs and UI frameworks are not installed. Laravel's root dependencies and pipeline remain separate.
 
-### Test environment dependency — 1 (also a devDependency)
-
-| Package | Purpose |
-| --- | --- |
-| `jsdom` | Browser-like DOM test environment |
-
-Total: **10 runtime + 13 development = 23 direct packages**. The test environment is separated above only for clarity, not a separate manifest section.
-
-Use the Vite Tailwind plugin; no extra PostCSS/Autoprefixer package is proposed. Use `react-router` directly for the documented declarative installation; no duplicate `react-router-dom` dependency is proposed. Use `motion` (imports from `motion/react`), not a second `framer-motion` package. No Bootstrap, Vue, large UI framework, Radix/shadcn component collection, state store, API client, payment SDK, or icon pack beyond Lucide is proposed for this frontend. Existing root dependencies remain untouched. No additional lint/format tooling is silently included.
-
-Package-choice references checked during this analysis: [Vite guide](https://vite.dev/guide/), [Tailwind Vite installation](https://tailwindcss.com/docs/installation/using-vite), [React Router declarative installation](https://reactrouter.com/start/declarative/installation), [Motion React installation](https://motion.dev/docs/react-installation). These support the integration/package choices, not a claim that every future version combination has already been tested.
-
-## Cycle 1 completion boundary
-
-Deliverables are only `docs/ui/DESIGN_SYSTEM.md` and `docs/ui/COMPONENTS.md`. No `RESPONSIVE_RULES.md`, React initialization, page components, frontend folder, package changes, backend changes, API calls, design assets, or commits are included. Outstanding visual/product ambiguities are listed in the design system document; they remain explicit rather than being resolved through invented screens or behavior.
+See [GLOBAL_UI_REVIEW.md](GLOBAL_UI_REVIEW.md) for consolidation decisions, verification, missing assets and integration prerequisites.

@@ -45,7 +45,7 @@ export function PetCreatePage({ onLocalSubmit }: { onLocalSubmit?: (values: PetP
         </section>
         <section className="pet-form-section pet-personality-section" aria-labelledby="personality-title">
           <h2 id="personality-title">Personality</h2><p>Choose a few words that best describe your pet.</p>
-          <div className="pet-traits">{traits.map((trait, index) => { const Icon = traitIcons[index]; return <label key={trait} className={`pet-choice pet-choice--${index % 2 ? 'pink' : 'blue'}`}>
+          <div className="pet-trait-choices">{traits.map((trait, index) => { const Icon = traitIcons[index]; return <label key={trait} className={`pet-choice pet-choice--${index % 2 ? 'pink' : 'blue'}`}>
             <input type="checkbox" value={trait} {...register('traits')} /><span><Icon size={25} aria-hidden="true" />{trait}</span>
           </label>; })}</div>
         </section>
@@ -56,7 +56,7 @@ export function PetCreatePage({ onLocalSubmit }: { onLocalSubmit?: (values: PetP
             {select('playdate', 'Ideal playdate type', Users, options(['Active play', 'Gentle play', 'Relaxed walks']))}
           </div>
           <div className="pet-form-actions"><ActionButton type="submit">Continue <ArrowRight size={27} aria-hidden="true" /></ActionButton><button type="button" disabled title="Saving is not available in this local preview">Save and finish later</button></div>
-          {submitted && <p className="pet-submit-status" role="status">Pet details validated locally. Nothing has been uploaded or saved.</p>}
+          {submitted && <p className="pet-submit-status" role="status">Pet details are valid.</p>}
         </section>
       </form>
     </main>

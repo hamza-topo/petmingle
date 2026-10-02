@@ -1,3 +1,4 @@
+import { nalaIdentity } from '../../fixtures/petIdentity';
 import { Cat, Heart, PawPrint, Shield, Trees, UsersRound, Zap } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { ReferenceAsset } from '../../assets/landingAssets';
@@ -34,7 +35,7 @@ export const discoveryContext: {
 };
 
 export const featuredDiscoveryPet: FeaturedDiscoveryPet = {
-  id: 'nala', name: 'Nala', breed: 'Golden Retriever', ageYears: 3,
+  ...nalaIdentity,
   distanceMiles: 1.2, location: discoveryContext.location, verified: true,
   description: "Nala is a happy, affectionate golden who loves making new friends — both furry and human! She’s always up for an adventure, whether it’s a hike in the hills or a day at the dog park. Her best friend Mochi (the kitty!) goes everywhere with her. They’re a package deal.",
   photo: { src: null, alt: 'Nala the golden retriever with Mochi the cat', placeholder: 'Nala & Mochi · photo placeholder' },
