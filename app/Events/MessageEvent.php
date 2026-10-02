@@ -3,7 +3,7 @@
 namespace App\Events;
 
 use App\Models\Message;
-use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -31,7 +31,18 @@ class MessageEvent implements ShouldBroadcastNow, ShouldDispatchAfterCommit
      */
     public function broadcastOn()
     {
-        return new Channel('new-message');
+        return array_map(
+            fn ($id) => new PrivateChannel('App.Models.User.' . $id),
+            array_unique([$this->message->sender_id, $this->message->receiver_id])
+        );
+    }
+
+    public function broadcastWith(): array
+    {
+        return ['message' => $this->message->only([
+            'id', 'conversation_id', 'sender_id', 'receiver_id', 'content',
+            'is_seen', 'created_at', 'updated_at', 'deleted_at',
+        ])];
     }
 
     public function broadcastAs()

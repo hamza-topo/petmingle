@@ -292,6 +292,38 @@ class MessageAuthorizationTest extends TestCase
         ]);
     }
 
+
+    public function test_sender_can_edit_content_but_cannot_reassign_message_or_mark_it_read(): void
+    {
+        $sender = User::factory()->create();
+        $receiver = User::factory()->create();
+        $outsider = User::factory()->create();
+        $conversation = Conversation::create(['first_user_id' => $sender->id, 'seconde_user_id' => $receiver->id]);
+        $otherConversation = Conversation::create(['first_user_id' => $outsider->id, 'seconde_user_id' => $receiver->id]);
+        $message = Message::create([
+            'conversation_id' => $conversation->id, 'sender_id' => $sender->id,
+            'receiver_id' => $receiver->id, 'content' => 'Original', 'is_seen' => false,
+        ]);
+        Sanctum::actingAs($sender);
+
+        foreach (['PUT', 'PATCH'] as $method) {
+            $this->json($method, '/api/v.0/messages/' . $message->id, [
+                'content' => 'Edited with ' . $method, 'sender_id' => $outsider->id,
+                'receiver_id' => $outsider->id, 'conversation_id' => $otherConversation->id,
+                'is_seen' => true, 'first_user_id' => $outsider->id, 'seconde_user_id' => $outsider->id,
+            ])->assertOk();
+
+            $message->refresh();
+            $this->assertSame('Edited with ' . $method, $message->content);
+            $this->assertSame($sender->id, $message->sender_id);
+            $this->assertSame($receiver->id, $message->receiver_id);
+            $this->assertSame($conversation->id, $message->conversation_id);
+            $this->assertFalse((bool) $message->is_seen);
+            $this->assertSame($sender->id, $conversation->fresh()->first_user_id);
+            $this->assertSame($receiver->id, $conversation->fresh()->seconde_user_id);
+        }
+    }
+
     private function createPet(User $user): Pet
     {
         $species = Species::create([

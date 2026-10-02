@@ -1,0 +1,83 @@
+<?php
+
+namespace Tests\Feature\Events;
+
+use App\Events\AdoptionEvent;
+use App\Events\IsWritingEvent;
+use App\Events\MatchEvent;
+use App\Events\MessageEvent;
+use App\Models\Adoption;
+use App\Models\MatchTable;
+use App\Models\Message;
+use App\Models\Pet;
+use App\Models\User;
+use Illuminate\Broadcasting\Broadcasters\RedisBroadcaster;
+use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Contracts\Redis\Factory;
+use Illuminate\Support\Facades\Broadcast;
+use Mockery;
+use Tests\TestCase;
+
+class PrivateBroadcastTest extends TestCase
+{
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Exercise Laravel's real channel authorizer without contacting Redis/Pusher.
+        config([
+            'broadcasting.default' => 'private-test',
+            'broadcasting.connections.private-test' => ['driver' => 'private-test'],
+        ]);
+        Broadcast::extend('private-test', fn () => new RedisBroadcaster(Mockery::mock(Factory::class)));
+        $this->app->register(\App\Providers\BroadcastServiceProvider::class);
+    }
+
+    public function test_private_events_target_only_participant_accounts_and_omit_loaded_relations(): void
+    {
+        $message = new Message(['sender_id' => 101, 'receiver_id' => 102, 'content' => 'Private message']);
+        $message->setRelation('sender', new User(['email' => 'private@example.com']));
+        $match = new MatchTable(['from' => 41, 'to' => 42]);
+        $match->setRelation('fromPet', new Pet(['user_id' => 101]));
+        $match->setRelation('toPet', new Pet(['user_id' => 102]));
+        $reverse = new MatchTable(['from' => 42, 'to' => 41]);
+        $adoption = new Adoption(['from' => 101, 'to' => 102, 'pet_id' => 41]);
+        $adoption->setRelation('owner', new User(['email' => 'private@example.com']));
+
+        foreach ([new MessageEvent($message), new MatchEvent($match, $reverse), new AdoptionEvent($adoption)] as $event) {
+            $channels = $event->broadcastOn();
+            $this->assertCount(2, $channels);
+            foreach ($channels as $channel) {
+                $this->assertInstanceOf(PrivateChannel::class, $channel);
+            }
+            $this->assertSame(['private-App.Models.User.101', 'private-App.Models.User.102'], array_map(fn ($c) => $c->name, $channels));
+            $this->assertStringNotContainsString('private@example.com', json_encode($event->broadcastWith()));
+        }
+        $this->assertArrayNotHasKey('fromPet', (new MatchEvent($match, $reverse))->broadcastWith()['fromMatch']);
+        $this->assertArrayNotHasKey('sender', (new MessageEvent($message))->broadcastWith()['message']);
+        $this->assertSame('Private message', (new MessageEvent($message))->broadcastWith()['message']['content']);
+        $typing = new IsWritingEvent(102, true);
+        $this->assertInstanceOf(PrivateChannel::class, $typing->broadcastOn());
+        $this->assertSame('private-App.Models.User.102', $typing->broadcastOn()->name);
+    }
+
+    public function test_account_can_authorize_only_its_own_private_channel(): void
+    {
+        $this->actingAs(User::factory()->make(['id' => 101, 'is_admin' => false]));
+        $this->postJson('/broadcasting/auth', ['channel_name' => 'private-App.Models.User.101'])->assertOk();
+        $this->postJson('/broadcasting/auth', ['channel_name' => 'private-App.Models.User.102'])->assertForbidden();
+        $this->postJson('/broadcasting/auth', ['channel_name' => 'private-auto-sitemap'])->assertForbidden();
+    }
+
+    public function test_administrator_cannot_subscribe_to_another_users_channel(): void
+    {
+        $this->actingAs(User::factory()->make(['id' => 101, 'is_admin' => true]));
+        $this->postJson('/broadcasting/auth', ['channel_name' => 'private-App.Models.User.102'])->assertForbidden();
+        $this->postJson('/broadcasting/auth', ['channel_name' => 'private-auto-sitemap'])->assertOk();
+    }
+
+    public function test_anonymous_subscriber_is_rejected(): void
+    {
+        $this->postJson('/broadcasting/auth', ['channel_name' => 'private-App.Models.User.101'])->assertUnauthorized();
+    }
+}

@@ -4,7 +4,7 @@ namespace App\Events;
 
 use App\Enums\PusherEvent;
 use App\Models\Adoption;
-use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
@@ -33,7 +33,17 @@ class AdoptionEvent implements ShouldBroadcast, ShouldDispatchAfterCommit
      */
     public function broadcastOn()
     {
-        return new Channel('new-adoption');
+        return array_map(
+            fn ($id) => new PrivateChannel('App.Models.User.' . $id),
+            array_unique([$this->adoption->from, $this->adoption->to])
+        );
+    }
+
+    public function broadcastWith(): array
+    {
+        return ['adoption' => $this->adoption->only([
+            'id', 'from', 'pet_id', 'to', 'created_at', 'updated_at', 'deleted_at',
+        ])];
     }
 
     /**

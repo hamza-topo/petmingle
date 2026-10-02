@@ -3,7 +3,6 @@
 namespace App\Events;
 
 use App\Enums\PusherEvent;
-use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
@@ -19,7 +18,7 @@ class IsWritingEvent implements ShouldBroadcastNow
      *
      * @return void
      */
-    public function __construct(int $receiverId, bool $isWriting = false)
+    public function __construct(private int $receiverId, public bool $isWriting = false)
     {
         //
     }
@@ -31,7 +30,7 @@ class IsWritingEvent implements ShouldBroadcastNow
      */
     public function broadcastOn()
     {
-        return new Channel('new-message');
+        return new PrivateChannel('App.Models.User.' . $this->receiverId);
     }
 
     public function broadcastAs()

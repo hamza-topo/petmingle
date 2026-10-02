@@ -70,6 +70,9 @@ class AuthRepository
             throw new \InvalidArgumentException('Password is required for sign up.');
         }
 
+        // Public registration cannot assign roles, provider identities or internal state.
+        $user = \Illuminate\Support\Arr::only($user, ['name', 'email', 'password', 'avatar']);
+        $user['is_admin'] = false;
         $user['password'] = $this->hash($user['password']);
 
         return User::create($user);

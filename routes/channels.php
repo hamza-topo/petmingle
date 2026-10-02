@@ -17,4 +17,6 @@ Broadcast::channel('App.Models.User.{id}', function ($user, $id) {
     return (int) $user->id === (int) $id;
 });
 
-//TODO::private broadcasting for matches
+Broadcast::channel('auto-sitemap', function ($user) {
+    return (bool) $user->is_admin;
+});

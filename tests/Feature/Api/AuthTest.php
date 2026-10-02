@@ -26,7 +26,10 @@ class AuthTest extends TestCase
             ->assertOk()
             ->assertJsonStructure([
                 'token',
-            ]);
+            ])
+            ->assertJsonPath('token_type', 'Bearer')
+            ->assertJsonMissingPath('user')
+            ->assertJsonMissingPath('data');
 
         $this->assertDatabaseCount('personal_access_tokens', 1);
     }
@@ -112,4 +115,39 @@ class AuthTest extends TestCase
             Hash::check('password123', $user->password)
         );
     }
+    public function test_public_signup_ignores_privileged_and_internal_attributes(): void
+    {
+        Storage::fake('public');
+
+        $this->postJson('/api/v.0/sign-up', [
+            'name' => 'Public User', 'email' => 'public@example.com',
+            'password' => 'password123', 'password_confirmation' => 'password123',
+            'avatar' => UploadedFile::fake()->image('public.jpg'),
+            'is_admin' => true, 'provider_id' => 'forged-provider', 'provider_name' => 'google',
+            'is_verified' => true, 'email_verified_at' => '2026-01-01', 'id' => 999999,
+        ])->assertOk()->assertJsonPath('success', true);
+
+        $user = User::where('email', 'public@example.com')->firstOrFail();
+        $this->assertFalse($user->is_admin);
+        $this->assertNull($user->provider_id);
+        $this->assertNull($user->provider_name);
+        $this->assertFalse((bool) $user->is_verified);
+        $this->assertNull($user->email_verified_at);
+        $this->assertNotEquals(999999, $user->id);
+    }
+
+    public function test_shared_signup_repository_also_protects_web_registration(): void
+    {
+        $this->post('/user/register', [
+            'name' => 'Web User', 'email' => 'web@example.com',
+            'password' => 'password123', 'password_confirmation' => 'password123',
+            'is_admin' => true, 'provider_id' => 'forged', 'provider_name' => 'google',
+        ])->assertRedirect();
+
+        $user = User::where('email', 'web@example.com')->firstOrFail();
+        $this->assertFalse($user->is_admin);
+        $this->assertNull($user->provider_id);
+        $this->assertNull($user->provider_name);
+    }
+
 }
