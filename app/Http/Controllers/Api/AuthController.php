@@ -66,7 +66,31 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'token' => $token,
+            'token_type' => 'Bearer',
         ]);
+    }
+
+    public function me(Request $request): Response
+    {
+        $user = $request->user();
+        $pet = $user->pet;
+
+        return response()->json([
+            'success' => true,
+            'message' => __('Authenticated identity.'),
+            'data' => [
+                'user' => [
+                    'id' => $user->id,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                ],
+                'pet' => $pet ? [
+                    'id' => $pet->id,
+                    'user_id' => $pet->user_id,
+                    'name' => $pet->name,
+                ] : null,
+            ],
+        ])->header('Cache-Control', 'private, no-store');
     }
 
     public function signOut(Request $request): Response

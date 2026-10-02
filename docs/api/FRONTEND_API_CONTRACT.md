@@ -1,14 +1,14 @@
 # PetMingle frontend/API contract audit
 
-Cycle 8 · 2026-10-02 · branch `feat/react-api-integration`
+Cycle 8 audit, updated through Cycle 9B · 2026-10-02 · branch `feat/react-api-integration`
 
 ## Scope and conclusion
 
-This is a source-code audit, not an integration or a live API certification. The four authenticated React screens still use local fixtures; Landing remains outside the authenticated contract. No application code, configuration, database, dependencies, or fixtures were changed. No migrations, write requests, authentication attempts, or backend tests that reset databases were run.
+This document started as the Cycle 8 source audit. Cycle 9A hardened selected security boundaries; Cycle 9B establishes the current bearer-authentication, identity and browser transport contract. The four authenticated-looking React screens still use local fixtures. No React network client, auth UI, token storage, dependency or application-schema migration has been introduced.
 
-The existing API supplies useful pet, taxonomy, location and relationship data, but cannot yet populate all four screens faithfully. The first blockers are authenticated identity, cross-origin transport, upload/schema inconsistencies, incomplete Discovery responses, and incomplete Messaging reads. Security findings must be resolved separately before enabling affected writes. [API_GAPS.md](API_GAPS.md) classifies each finding and its integration gate.
+Authentication and minimal identity are now available for the first React integration. Pet creation/media, Discovery proximity/filtering and Messaging still have the contract and security gaps described below. [API_GAPS.md](API_GAPS.md) retains the original findings and marks only resolved items.
 
-Evidence is the checked-in routes, controllers, requests, repositories, models, policies, observers, migrations, configuration, frontend types, and existing tests. Selected framework serialization/validation behavior was checked against the vendor source inside the existing PHP Docker container. Database migration *definitions* were inspected; their deployment state and existing row contents were not queried. Environment overrides, storage links, and live CORS headers were not verified.
+Evidence includes routes, controllers, requests, repositories, models, policies, observers, migrations, configuration, frontend types and tests. Cycle 9B inspected Docker port mappings and checked live unauthenticated HTTP/preflight responses through nginx; bearer identity/revocation are tested on the isolated PHPUnit database. Production environment overrides, storage links, real user records and deployment migration state were not inspected.
 
 ## Sources of truth
 
@@ -42,7 +42,7 @@ type StandardValidation = {
 type ApiError = { success: false; message: string };
 ```
 
-Most controller successes use HTTP 200 and `Envelope<T>`, including creates. Sign-in is `{success:true,token}`. Species/races return bare models/arrays: reads/updates use 200, newly created models use 201 through Laravel's router. Taxonomy deletes/restores return PHP booleans directly, resulting in a 200 text/html response (`1` or empty), rather than a JSON envelope; these are not frontend integration targets.
+Most controller successes use HTTP 200 and `Envelope<T>`, including creates. Sign-in is `{success:true,token,token_type:"Bearer"}`. Species/races return bare models/arrays: reads/updates use 200, newly created models use 201 through Laravel's router. Taxonomy deletes/restores return PHP booleans directly, resulting in a 200 text/html response (`1` or empty), rather than a JSON envelope; these are not frontend integration targets.
 
 Most custom API FormRequests throw an `HttpResponseException` containing **HTTP 200** `LegacyValidation`. Pet Update explicitly uses 422 with the same legacy body. Laravel's `Route::run()` catches these exceptions and returns their embedded responses. Consequently, the custom exception handler does **not** normalize these controller argument-validation responses. Block validation uses ordinary `ValidationException`: HTTP 422 `StandardValidation` through [Handler](../../app/Exceptions/Handler.php). Authentication/authorization/not-found/internal exceptions use HTTP 401/403/404/500 `ApiError`; throttling can return 429. A future adapter must check both status and `success`, support both field-error keys, and not treat a 200 validation failure as saved data.
 
@@ -79,8 +79,9 @@ Frontend slugs such as `nala`, `profile-owner`, and `nala-pet-a` are fixture ide
 
 | Endpoint | Auth | Request | Result / constraint |
 | --- | --- | --- | --- |
-| `POST /sign-in` | P | JSON `email: required email`, `password: required string` | 200 `{success:true,token:string}`; validly shaped bad credentials → 401; malformed payload → legacy validation |
+| `POST /sign-in` | P | JSON `email: required email`, `password: required string` | 200 `{success:true,token:string,token_type:"Bearer"}`; validly shaped bad credentials → 401; malformed payload → legacy validation |
 | `POST /sign-up` | P | `name`, unique email, password 6–50 chars, `password_confirmation`; effectively multipart `avatar` too | 200 `Envelope<User>`; **no token**. Avatar rules are commented out but controller unconditionally requires an UploadedFile |
+| `GET /me` | A | No body or identity selector | 200 `Envelope<{user:{id,name,email},pet:{id,user_id,name}\|null}>`; private/no-store |
 | `POST /sign-out` | A | No body | 200 `{success:true,message}`; deletes current access token only |
 | `GET /login/{provider}` | P | Provider `facebook`, `github`, or `google` | Stateless Socialite redirect |
 | `GET /login/{provider}/callback` | P | Provider callback parameters | Auth::login; JSON `Envelope<User>` when requested, otherwise `/home` redirect; no PAT handoff |
@@ -88,15 +89,55 @@ Frontend slugs such as `nala`, `profile-owner`, and `nala-pet-a` are fixture ide
 | `DELETE /disable-account/{userId}` | A + self | No body | Success message; revokes user's tokens and soft-deletes user |
 | `PUT /enable-account/{userId}` | A + admin | No body | Success message; restores user |
 
-Password sign-in uses `Auth::attempt` through the default `web` guard, then explicitly issues `createToken('api')->plainTextToken`. **The implemented API login contract is Sanctum personal access tokens sent as `Authorization: Bearer <token>`**, with `Accept: application/json`. There is no refresh endpoint, expiry metadata, or user/pet object in sign-in. Checked-in Sanctum expiration is null and this creation call supplies no expiry. [Existing AuthTest](../../tests/Feature/Api/AuthTest.php) explicitly exercises bearer access and revocation; it was inspected, not rerun.
+Password sign-in uses `Auth::attempt` through the default `web` guard, then explicitly issues `createToken('api')->plainTextToken`. The existing `/sign-in` path and `token` key remain unchanged; Cycle 9B adds only `token_type: "Bearer"`. Full profile data is not duplicated into login. There is no `/signin` alias, refresh endpoint or expiry metadata. Checked-in Sanctum expiration remains null; token storage/lifetime policy remains a future frontend decision.
 
-The presence of the `web` fallback in Sanctum does not mean SPA cookie authentication is configured. The API middleware has `EnsureFrontendRequestsAreStateful` commented out and no session middleware. CORS permits wildcard origins/headers/methods in its file but `HandleCors` is absent from the bound HTTP kernel. The checked-in nginx configuration adds no CORS headers and Vite has no proxy. Different localhost ports are different origins: direct browser Vite→Laravel bearer requests cannot be considered supported by the current checked-in setup. CORS middleware/proxy deployment needs a separate decision and verification.
+Use `Accept: application/json` and `Authorization: Bearer <token>` on protected calls. `POST /sign-out` retains its existing behavior: it deletes only the token presented on the request, not other devices' tokens. Subsequent `/me` with that token returns 401, while a different token for the same account remains valid. Missing/invalid/revoked tokens return 401. Tests use real Sanctum personal access tokens, not `Sanctum::actingAs`, for this contract.
 
-Cookie auth additionally conflicts with `supports_credentials:false`; default stateful domains do not list Vite's 5173/5174 ports. Environment overrides were not read. Neither obtaining a CSRF cookie nor using `credentials: include` alone fixes this configuration. No switch to cookie auth is proposed in this cycle.
+### Authenticated identity response (Cycle 9B)
 
-Future frontend auth state needs: opaque token (if retaining the existing mechanism), authentication status, authoritative user ID/name/avatar, optional current pet ID, and onboarding/no-pet state. Decide token storage/lifetime separately; never retain passwords or infer IDs from the token. Clear local account-scoped data on sign-out/401. **There is no read-only authenticated identity endpoint** (`/me` or equivalent). Sign-up's returned user does not solve fresh sign-ins or page reloads. Do not use avatar removal, public pet enumeration, or OAuth callbacks as identity lookups.
+```json
+{
+  "success": true,
+  "message": "Authenticated identity.",
+  "data": {
+    "user": { "id": 7, "name": "Sarah", "email": "sarah@example.com" },
+    "pet": { "id": 42, "user_id": 7, "name": "Nala" }
+  }
+}
+```
 
-Social login is not interchangeable with password API login: its API callback lacks a usable token handoff and uses session login on the API group. The repository also includes a freshly randomized password in `firstOrCreate` lookup criteria, making repeated provider sign-ins unreliable. Defer social integration pending its own contract/security review. Public registration also currently mass-assigns `is_admin`; see S01 in the gap register.
+These numbers are illustrative and intentionally different. `data.user.id` is the authenticated human account ID. `data.pet.id` is the animal ID; `data.pet.user_id` references `data.user.id`. The pet is obtained only through the authenticated account's existing `User::pet()` relation. Accounts without an active pet (including a soft-deleted pet) receive `pet: null`, not an error or an unrelated animal. Query parameters such as `id`, `user_id` and `include` cannot change the authenticated subject or expand the explicit allowlist. The response has `Cache-Control: private, no-store`.
+
+Only the fields shown are returned. No hash/password, role, provider identity, verification/internal timestamps, access tokens, or arbitrary eager-loaded relations are serialized. Avatar/gallery URLs and detailed pet profile fields are deliberately outside this minimal identity contract until the existing media/profile gaps are resolved. `pet` is a singular object following the current hasOne model; the absence of a database uniqueness constraint remains P01, not a resolved multi-pet design. Existing data with multiple active pets inherits the current relation's selection behavior; the frontend must not infer a new active-pet rule.
+
+Future frontend state needs the opaque token (under a separately agreed storage policy), auth status, authoritative user identity, nullable pet identity, and a no-pet/onboarding state. `GET /me` after login or reload replaces guesses from fixture names, token prefixes or mutations. Clear account-scoped local state on sign-out/401. Do not retain passwords or put tokens in Vite environment variables.
+
+### Browser transport and environment (Cycle 9B)
+
+The checked running Docker frontend publishes `127.0.0.1:5174` → container `5173`; Vite runs with `--host 0.0.0.0 --port 5173 --strictPort`. Laravel nginx publishes host port 8000. A non-Docker Vite run normally uses host 5173. Browser origins are host URLs, never Docker service names or the ephemeral `172.*` container IP.
+
+`Illuminate\Http\Middleware\HandleCors` is now in the global HTTP kernel, before maintenance handling. Its `api/*` scope handles preflights before Sanctum authentication and adds CORS headers to API responses including unauthenticated errors. Allowed methods are GET/HEAD/POST/PUT/PATCH/DELETE/OPTIONS; allowed request headers are Accept/Authorization/Content-Type; preflight max age is 600 seconds. Cookie credentials remain disabled. `sanctum/csrf-cookie` is not in this bearer transport's CORS scope.
+
+Backend `CORS_ALLOWED_ORIGINS` is a comma-separated list of exact origins, trimmed and empty entries removed. If absent, **APP_ENV=local only** defaults to:
+
+- `http://localhost:5173`
+- `http://127.0.0.1:5173`
+- `http://localhost:5174`
+- `http://127.0.0.1:5174`
+
+Outside local, the unset default is an empty allowlist. The root `.env.example` explicitly lists local origins; production must replace them with deployed HTTPS frontend origins, e.g. `CORS_ALLOWED_ORIGINS=https://app.example.com`. An explicit empty value disables cross-origin access. Origin values contain scheme/host/port, no paths or trailing slash. Rebuild/clear Laravel's configuration cache through the normal deployment process after changes. CORS is a browser response-access policy, not a replacement for Sanctum authorization; nonbrowser requests still require valid tokens. With a single allowed origin the CORS library can emit that constant origin even on foreign-origin requests; the browser rejects the mismatch.
+
+`frontend/.env.example` declares the currently unused public build-time contract:
+
+```dotenv
+VITE_API_BASE_URL=http://localhost:8000/api/v.0
+```
+
+Copy to ignored `frontend/.env.local` when preparing integration. Use the browser-reachable backend base including the version prefix, without trailing slash; change the host/port for the deployment and restart Vite/rebuild after changes. No component hardcodes an API origin and no code consumes this variable yet. No Vite proxy is required by the chosen direct bearer/CORS approach.
+
+The API's stateful Sanctum middleware stays disabled; SPA cookies, `credentials: include`, and the CSRF-cookie handshake are **not** the selected React integration path. The `web` fallback remains for existing Laravel behavior. No stateful-domain/session setting was changed. Local nginx probes confirmed allowed preflight (204), readable unauthenticated `/me` (401 JSON), and lack of CORS permission for an unrelated origin. Production-origin behavior also has automated coverage.
+
+Social login is not interchangeable with password API login: its API callback lacks a usable token handoff and uses session login on the API group. The repository also includes a freshly randomized password in `firstOrCreate` lookup criteria, making repeated provider sign-ins unreliable. Defer social integration pending its own contract/security review. Cycle 9A removed public registration privilege assignment through an explicit signup allowlist and server-assigned `is_admin = false`; see resolved S01 in the gap register.
 
 ## Screen-to-endpoint matrix
 
@@ -104,7 +145,7 @@ All existing endpoints in this matrix require **A**. Request and DTO details fol
 
 | Screen / required frontend data | Existing endpoint and method | Request | Backend result | Expected frontend shape / mismatch |
 | --- | --- | --- | --- | --- |
-| All authenticated headers: account/pet | none | — | No identity read | Account name/avatar/User ID/current Pet ID; I01 |
+| All authenticated headers: account/pet | `GET /me` | None | `Envelope<{user:{id,name,email},pet:{id,user_id,name}\|null}>` | User and Pet IDs/name available; avatar/media remains deferred; I01 resolved |
 | Discovery: basic pet cards and featured details | `GET /pets`, `GET /pets/{petId}` | None | `Envelope<Pet[]>` / `Envelope<Pet>` | `FeaturedDiscoveryPet`/`NearbyPet`: name, breed, age, images, about partly derivable; no featured ranking, owner name, city, distance, traits, companion or pet verification |
 | Discovery: breed/species labels | `GET /races`, `GET /species` | None | Bare `Race[]`, `Species[]` | Join numeric IDs, not label/slugs; race list can be filtered by `species_id` locally |
 | Discovery: current coordinates | `GET /locations` | None | `Envelope<Location[]>`, current user only | UI has city string; no preferred/current location selection or city field |
@@ -117,7 +158,7 @@ All existing endpoints in this matrix require **A**. Request and DTO details fol
 | Pet Creation: select options | `GET /species`, `GET /races` | None | Bare arrays | Replace static species/breed values with ID-backed options only after an approved integration |
 | Pet Creation: form save | `POST /pets` | Multipart pet fields; see below | `Envelope<Pet>` | Cannot faithfully submit current schema: missing DB-required fields, inconsistent image contract, unsupported traits/preferences |
 | Pet Creation / Own Profile: later editing | `PUT/PATCH /pets/{petId}` | Validated partial pet fields | `Envelope<Pet>`; owner policy | No additional UI implied; unsupported profile fields still cannot persist |
-| Own Profile: animal details/gallery | `GET /pets/{petId}` + `GET /races` (or race detail) | None | Raw pet and breed | `OwnPet` partly derivable; need pet ID first, normalize media; owner ID exists but owner object absent |
+| Own Profile: animal details/gallery | `GET /pets/{petId}` + `GET /races` (or race detail) | None | Raw pet and breed | `OwnPet` partly derivable; pet ID and minimal owner identity come from `/me`; media still requires normalization |
 | Own Profile: location | `GET /locations` | None | Own coordinates only | No city label; do not fabricate San Diego from coordinates |
 | Own Profile: statistics | `GET /matches` only for matches | None | Active directional match rows | No views or favorites statistic; cannot call outgoing likes “Favorites” without a product decision |
 | Messaging: conversation summaries | none | — | No conversation-list endpoint | `Conversation[]`: pair identities, last message/time, unread count and current-owner context missing |
@@ -135,7 +176,7 @@ All existing endpoints in this matrix require **A**. Request and DTO details fol
 | --- | --- | --- |
 | Pets | `DELETE /pets/{id}`, `PUT /pets/restore/{id}` → `Envelope<boolean>`, owner only | `GET /pets/create`, `GET /pets/{id}/edit`: absent methods |
 | Locations | `POST /locations` latitude/longitude; `GET /locations/{id}`; delete/restore → boolean envelope; ownership enforced | PUT/PATCH update is empty; create/edit methods absent |
-| Species / races | POST, PUT/PATCH, DELETE, PUT restore exist; **no admin policy checks** | create/edit methods absent; taxonomy writes are not required by these screens |
+| Species / races | POST, PUT/PATCH, DELETE, PUT restore exist; **admin middleware since Cycle 9A** | create/edit methods absent; taxonomy writes are not required by these screens |
 | Likes / dislikes | GET list and POST store only | create/show/edit/update/delete methods empty; no usable unlike/delete endpoint |
 | Messages | PUT/PATCH content update, DELETE, PUT restore; sender policies | create method empty, show/edit absent |
 
@@ -164,7 +205,7 @@ The pets migration makes **sexe, color and about non-null without defaults**, de
 
 Pet Update permits the same fields with `sometimes`, plus `sexe,color,about`; uses validated data and removes `user_id`. Ownership is checked before update/delete/restore. Image upload has the same mismatch as create. Do not assume file uploads through every PUT/PATCH transport work without a later transport test.
 
-Taxonomy Store/Update only validate `name` (required, max 50; uniqueness on species Store and race Store/Update). Race `species_id` is fillable and DB-required but unvalidated; Species `description` is fillable and unvalidated. These global mutations have no role authorization in their API controllers. Use only read endpoints for frontend options.
+Taxonomy Store/Update only validate `name` (required, max 50; uniqueness on species Store and race Store/Update). Race `species_id` is fillable and DB-required but unvalidated; Species `description` is fillable and unvalidated. Cycle 9A restricts these global API mutations to administrators via the existing admin middleware. Use only read endpoints for frontend options.
 
 ### Pet Creation field compatibility
 
@@ -270,9 +311,9 @@ type ChatRow = {
 
 `IsAllowed` resolves both users' pets, then calls `LikeRepository::isMatch`. Despite that method's name, it checks **only the reverse Like** (receiver pet liked sender pet), not a reciprocal pair or MatchTable. Existing MessageAuthorizationTest intentionally sets up only that one like. It does not check blocks. A soft-deleted blocked conversation can be recreated. Conversation creation lacks a unique pair constraint/atomic get-or-create guarantee.
 
-`PUT/PATCH /messages/{id}` validates content and enforces sender ownership, but passes **all** request fields to a model fillable with `sender_id,receiver_id,conversation_id,is_seen`. Thus an authorized sender can mutate participant/conversation fields outside the validated contract. This is distinct from create, which correctly prevents sender spoofing. Delete/restore require the original sender. No dedicated recipient read-marking endpoint exists.
+`PUT/PATCH /messages/{id}` validates content and enforces sender ownership. Cycle 9A limits updates to validated content, protecting sender/receiver/conversation/read state from client reassignment. Create assigns the sender server-side. Delete/restore require the original sender. No dedicated recipient read-marking endpoint exists.
 
-MessageObserver also dispatches MessageEvent after creation; that event broadcasts the public message model on public `new-message`. MatchEvent uses public `new-match`. Actual exposure depends on broadcaster deployment (config default is `null`), but the events need participant authorization before enabling a network broadcaster. No sockets/polling are needed or proposed here.
+MessageObserver dispatches MessageEvent after creation. Cycle 9A moved message/match/adoption/typing events to private account channels and restricts model payloads; match Pet IDs are resolved to owner User IDs. The application broadcast provider remains disabled as before. Activation, compatible private client subscriptions and broadcasting transport remain deferred; Cycle 9B changes neither. No sockets/polling are needed or proposed here.
 
 ## Frontend view models and required adapters
 
@@ -298,14 +339,14 @@ There is **no sufficient set of current calls** to faithfully reproduce full Dis
 
 With an already known authenticated identity, a limited non-geographic pet listing can use **two reads**: `/pets` + `/races` (add `/species` for dynamic species options). This does not establish proximity, target city, featured ranking, companion, traits or verification. Do not join this list to `/locations/nears` by pet/user names.
 
-After an approved identity endpoint and normalized nearby response containing stable pet/owner IDs and basic card data, the intended minimum path is: identity → `/locations` if coordinates are not already available → one `/locations/nears` request. Save coordinates with `/locations` only on an explicit user action when none exist; do not invent a location. Add taxonomy reads when labels/options are not embedded. Match count needs `/matches`; outgoing selection state optionally needs all relevant `/likes` and `/dislikes` pages. The message badge still needs an unread-summary contract. These are conditional call budgets, not currently working integration code.
+With the available `/me` endpoint and a future normalized nearby response containing stable pet/owner IDs and basic card data, the intended minimum path is: identity → `/locations` if coordinates are not already available → one `/locations/nears` request. Save coordinates with `/locations` only on an explicit user action when none exist; do not invent a location. Add taxonomy reads when labels/options are not embedded. Match count needs `/matches`; outgoing selection state optionally needs all relevant `/likes` and `/dislikes` pages. The message badge still needs an unread-summary contract. These are conditional call budgets, not currently working integration code.
 
-Own Profile can eventually reuse identity/current-pet state, read `/pets/{id}`, resolve its race, and read own locations plus `/matches`. That covers basic identity, biography, potential photos and an active-match count. `users.is_verified` exists but is an account property, not proof of pet verification. Owner details are not eager-loaded by pet reads. No city/geocoding contract, rich pet attributes, view counter, favorites semantics, gallery write contract, or subscriptions are available. An all-pets scan filtered by known user ID is technically possible but should not replace a proper current-pet contract, especially while multiple pets per account are unresolved.
+Own Profile can eventually reuse identity/current-pet state, read `/pets/{id}`, resolve its race, and read own locations plus `/matches`. That covers basic identity, biography, potential photos and an active-match count. `users.is_verified` exists but is an account property, not proof of pet verification. Pet reads do not eager-load owner details; `/me` now supplies the current owner ID/name/email separately. No city/geocoding contract, rich pet attributes, view counter, favorites semantics, gallery write contract, or subscriptions are available. An all-pets scan filtered by known user ID is technically possible but should not replace a proper current-pet contract, especially while multiple pets per account are unresolved.
 
 ## Recommended integration order and gates
 
-1. **Approve prerequisite backend/security work separately.** Resolve registration privilege assignment, uploads, message mutation/contact authorization and public-event exposure before exposing affected features. Decide cross-origin bearer transport versus a separately designed cookie migration. This audit changes neither.
-2. **Password auth + authoritative identity together.** Existing bearer login/logout is the smallest established path; add/agree a safe current-user/current-pet read contract before wiring protected screens. Define unauthenticated, no-pet and invalid-token states. Social auth remains deferred.
+1. **Preserve the completed security boundaries.** Cycle 9A resolved S01/S03/S05/S06; upload validation/storage (S02), contact/block policy (S04) and proximity scope (S07) remain gates for the affected features. Do not re-enable those unsafe writes as part of auth UI work.
+2. **Integrate password bearer auth + authoritative identity next.** Cycle 9B now provides `/sign-in` token/type, `/me` identity, current-token `/sign-out` and direct browser CORS. No backend-contract blocker remains for an auth-only first React request in the verified local setup. The next cycle still must agree token storage/lifecycle, consume VITE_API_BASE_URL, implement auth state and handle 401/no-pet/error envelopes. No client code exists yet. Social auth remains deferred.
 3. **Read taxonomy, then pet/profile.** Species/races must precede pet creation because creation requires their IDs. Establish current-pet ownership/cardinality, no-pet handling, upload shape and required-field decisions first. Basic existing-profile reads can proceed before creation once identity is known.
 4. **Locations.** Define which coordinate is current and how a city label is represented. Resolve radius spelling, ownership scope and nullable relationships before proximity queries.
 5. **Read-only Discovery.** Normalize nearby IDs and required fields, then adapt stable card data and supported filters. Explicitly defer unsupported traits/preferences/companion metadata rather than manufacturing data.
@@ -315,6 +356,6 @@ Own Profile can eventually reuse identity/current-pet state, read `/pets/{id}`, 
 
 ### Endpoints usable without changing their successful basic contract
 
-Subject to authenticated transport and valid existing data: password sign-in/sign-out; GET pets/list/detail; GET species/list/detail and races/list (race detail has null-not-found caveat); own-location list/show/create/delete/restore; owner-authorized non-image pet update/delete/restore; outgoing relationship lists and matches/mismatches when the user has a pet; block list. These are useful building blocks, **not** a claim that a whole screen is ready. Taxonomy reads use bare JSON, relationship lists need shape adaptation, and location creation needs an agreed UX source for coordinates.
+Subject to configured transport and valid existing data: password sign-in/sign-out and `/me`; GET pets/list/detail; GET species/list/detail and races/list (race detail has null-not-found caveat); own-location list/show/create/delete/restore; owner-authorized non-image pet update/delete/restore; outgoing relationship lists and matches/mismatches when the user has a pet; block list. These are useful building blocks, **not** a claim that a whole screen is ready. Taxonomy reads use bare JSON, relationship lists need shape adaptation, and location creation needs an agreed UX source for coordinates.
 
 Do not label registration, pet image creation/update, filtered Discovery, Messaging reads/writes, or relationship mutations production-ready merely because routes exist. Documented response, authorization and data-model gaps precede those integrations. No existing fixture was replaced during this audit.

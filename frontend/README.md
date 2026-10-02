@@ -16,6 +16,22 @@ npm run typecheck
 
 The Vite server binds to `127.0.0.1` and uses port 5173 by default. Build output stays in `frontend/dist`. No API proxy, network data client, or Laravel integration is configured. React Router exposes `/`, `/discover`, `/pet/create`, `/messages` and `/profile`; existing controls connect the five screens and unknown paths return Home.
 
+## API environment contract — Cycle 9B
+
+Copy `.env.example` to `.env.local` when preparing the next integration cycle. The reserved public build-time setting is:
+
+```dotenv
+VITE_API_BASE_URL=http://localhost:8000/api/v.0
+```
+
+Use the **browser-facing** Laravel address with the `/api/v.0` prefix and no trailing slash. Do not use Docker service names (`app`, `nginx`) or container IPs. Vite-prefixed variables are public: never place tokens, passwords or server secrets in them. Nothing consumes this variable yet; fixtures and UI behavior remain unchanged. Restart Vite after changing it, and set the deployment value before production builds.
+
+The existing Docker frontend publishes host `127.0.0.1:5174` to container port 5173; Vite binds `0.0.0.0:5173` inside that container. Open `http://localhost:5174` or `http://127.0.0.1:5174` on the host. Laravel nginx publishes port 8000. A non-Docker Vite run uses host port 5173 instead. Laravel's local CORS defaults allow these four exact localhost/127.0.0.1 frontend origins; custom ports/domains must be listed in backend `CORS_ALLOWED_ORIGINS`.
+
+Future flow: `POST /sign-in` → `{success, token, token_type:"Bearer"}` → `GET /me` with `Authorization: Bearer <token>` and `Accept: application/json`. `/me` returns an envelope containing separate `data.user` and nullable `data.pet`. Logout is `POST /sign-out` with the active token. SPA cookies, `/sanctum/csrf-cookie`, and `credentials: include` are not the chosen React authentication path. No auth UI, client, token persistence or fetch call is introduced here.
+
+See [FRONTEND_API_CONTRACT.md](../docs/api/FRONTEND_API_CONTRACT.md) for the exact identity fields, production CORS configuration and remaining integration gates.
+
 ## Implementation
 
 - `src/app/App.tsx`: frontend-only router.

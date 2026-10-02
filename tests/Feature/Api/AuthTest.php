@@ -26,7 +26,10 @@ class AuthTest extends TestCase
             ->assertOk()
             ->assertJsonStructure([
                 'token',
-            ]);
+            ])
+            ->assertJsonPath('token_type', 'Bearer')
+            ->assertJsonMissingPath('user')
+            ->assertJsonMissingPath('data');
 
         $this->assertDatabaseCount('personal_access_tokens', 1);
     }

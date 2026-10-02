@@ -46,6 +46,7 @@ Route::prefix('v.0')->group(function () {
 */
 Route::prefix('v.0')->middleware('auth:sanctum')->group(function () {
 
+    Route::get('/me', [AuthController::class, 'me']);
     Route::post('/sign-out', [AuthController::class, 'signOut']);
 
     Route::put('remove-avatar/{id}', [AuthController::class, 'removeAvatar']);
