@@ -10,7 +10,10 @@ use App\Repositories\RaceRepository;
 class RaceController extends Controller
 {
 
-    public function __construct(protected RaceRepository $raceRepository) {}
+    public function __construct(protected RaceRepository $raceRepository)
+    {
+        $this->middleware('admin')->only(['store', 'update', 'destroy', 'restore']);
+    }
     /**
      * Display a listing of the resource.
      *

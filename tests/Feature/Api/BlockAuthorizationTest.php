@@ -62,4 +62,24 @@ class BlockAuthorizationTest extends TestCase
             'to' => $user->id,
         ]);
     }
+
+    public function test_block_list_cannot_be_scoped_to_another_account_by_client_input(): void
+    {
+        $actor = User::withoutEvents(fn () => User::factory()->create());
+        $other = User::withoutEvents(fn () => User::factory()->create());
+        $target = User::withoutEvents(fn () => User::factory()->create());
+        $ownBlock = \App\Models\Block::withoutEvents(fn () => \App\Models\Block::create(['from' => $actor->id, 'to' => $target->id]));
+        \App\Models\Block::withoutEvents(fn () => \App\Models\Block::create(['from' => $other->id, 'to' => $target->id]));
+        Sanctum::actingAs($actor);
+
+        $this->getJson('/api/v.0/blocks?from=' . $other->id . '&user_id=' . $other->id)
+            ->assertOk()->assertJsonCount(1, 'data')->assertJsonPath('data.0.id', $ownBlock->id);
+    }
+
+    public function test_anonymous_requests_cannot_list_or_create_blocks(): void
+    {
+        $this->getJson('/api/v.0/blocks')->assertUnauthorized();
+        $this->postJson('/api/v.0/blocks', ['from' => 1, 'to' => 2])->assertUnauthorized();
+        $this->assertDatabaseCount('blocks', 0);
+    }
 }

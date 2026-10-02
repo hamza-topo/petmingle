@@ -9,7 +9,10 @@ use App\Repositories\SpeciesRepository;
 
 class SpeciesController extends Controller
 {
-    public function __construct(protected SpeciesRepository $speciesRepository) {}
+    public function __construct(protected SpeciesRepository $speciesRepository)
+    {
+        $this->middleware('admin')->only(['store', 'update', 'destroy', 'restore']);
+    }
     /**
      * Display a listing of the resource.
      *

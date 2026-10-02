@@ -29,7 +29,7 @@ class AuthController extends Controller
      */
     public function signUp(SignUp $request): Response
     {
-        $user = $request->all();
+        $user = $request->validated();
         $user['avatar'] = $this->setFile($request->file('avatar'))
             ->setName()
             ->upload();

@@ -87,7 +87,7 @@ class MessageController extends Controller
         return response()->json([
             'success' => true,
             'message' => __('Messages has been modified successfully.'),
-            'data' => $this->messageRepository->update((int) $id, $request->all()),
+            'data' => $this->messageRepository->update((int) $id, $request->validated()),
         ]);
     }
 
