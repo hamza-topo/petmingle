@@ -1,10 +1,11 @@
 import { ChevronDown, MessageCircle, PawPrint, Search } from 'lucide-react';
 import { Link } from 'react-router';
-import { ActionButton, ActionLink } from './Action';
 import { PetMingleLogo } from './PetMingleLogo';
 import { Avatar } from './Avatar';
 import { PrimaryNavigation } from './PrimaryNavigation';
 import type { ReferenceAsset } from '../assets/landingAssets';
+import { ActionLink } from './Action';
+import { SignOutButton } from '../auth/SignOutButton';
 
 export function SiteHeader({ petIdentity }: { petIdentity?: { name: string; photo: ReferenceAsset } }) {
   return (
@@ -17,14 +18,21 @@ export function SiteHeader({ petIdentity }: { petIdentity?: { name: string; phot
         </button>
         {petIdentity ? <>
           <Link to="/messages" className="own-messages-link"><MessageCircle size={22} aria-hidden="true" />Messages</Link>
-          <button type="button" className="own-pet-menu" disabled aria-label={`${petIdentity.name} pet menu — unavailable`}><Avatar asset={petIdentity.photo} /><span>{petIdentity.name}</span><ChevronDown size={17} /></button>
+          <button type="button" className="own-pet-menu" disabled aria-label={`${petIdentity.name} pet menu — unavailable`}>
+            <Avatar asset={petIdentity.photo} /><span>{petIdentity.name}</span>
+            <ChevronDown size={17} />
+          </button>
+            <SignOutButton className="header-sign-out" />
         </> : <>
-        <ActionButton variant="secondary" unavailableReason="Sign in is not available in this preview">Sign In</ActionButton>
-        <ActionLink to="/pet/create" variant="primary">
-          <PawPrint size={23} fill="currentColor" aria-hidden="true" />
-          Get Started
-        </ActionLink>
+          <ActionLink to="/signin" variant="secondary">
+            Sign In
+          </ActionLink>
+          <ActionLink to="/pet/create" variant="primary">
+            <PawPrint size={23} fill="currentColor" aria-hidden="true" />
+            Get Started
+          </ActionLink>
         </>}
+
       </div>
     </header>
   );

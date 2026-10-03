@@ -3,6 +3,7 @@ import { PetMingleLogo } from '../../../components/PetMingleLogo';
 import { Avatar } from '../../../components/Avatar';
 import { NotificationButton } from '../../../components/NotificationButton';
 import { discoveryContext } from '../discovery.fixtures';
+import { SignOutButton } from '../../../auth/SignOutButton';
 
 export function DiscoveryHeader() {
   return (
@@ -25,6 +26,7 @@ export function DiscoveryHeader() {
         <span>{discoveryContext.owner.name}</span>
         <ChevronDown size={18} aria-hidden="true" />
       </button>
+      <SignOutButton className="discovery-sign-out" />
     </header>
   );
 }

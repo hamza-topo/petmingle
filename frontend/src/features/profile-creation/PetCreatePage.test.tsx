@@ -5,8 +5,25 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { App } from '../../app/App';
 import { PetCreatePage } from './PetCreatePage';
 
+import { useAuth } from '../../auth/AuthProvider';
+import { authenticatedAuthState } from '../../test/authFixtures';
+
+vi.mock('../../auth/AuthProvider', () => ({
+  useAuth: vi.fn(),
+}));
+
+const mockedUseAuth = vi.mocked(useAuth);
+
 beforeEach(() => {
-  vi.stubGlobal('URL', Object.assign(URL, { createObjectURL: vi.fn(() => 'blob:pet-preview'), revokeObjectURL: vi.fn() }));
+  mockedUseAuth.mockReturnValue(authenticatedAuthState());
+
+  vi.stubGlobal(
+    'URL',
+    Object.assign(URL, {
+      createObjectURL: vi.fn(() => 'blob:pet-preview'),
+      revokeObjectURL: vi.fn(),
+    }),
+  );
 });
 afterEach(() => vi.unstubAllGlobals());
 function renderForm() { return render(<MemoryRouter initialEntries={['/pet/create']}><App /></MemoryRouter>); }

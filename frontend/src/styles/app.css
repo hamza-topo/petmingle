@@ -6,6 +6,7 @@
 @import "../features/messaging/messaging.css";
 @import "../features/discovery/discovery.css";
 @import "../features/profile-creation/profile.css";
+@import "../features/auth/sign-in.css";
 
 @layer base {
   html {
