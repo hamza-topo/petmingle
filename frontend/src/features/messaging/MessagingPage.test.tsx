@@ -1,9 +1,22 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
-import { describe, expect, it } from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { App } from '../../app/App';
 import { conversations, pairName } from './messaging.fixtures';
+import { useAuth } from '../../auth/AuthProvider';
+import { authenticatedAuthState } from '../../test/authFixtures';
+
+vi.mock('../../auth/AuthProvider', () => ({
+  useAuth: vi.fn(),
+}));
+
+const mockedUseAuth = vi.mocked(useAuth);
+
+beforeEach(() => {
+  mockedUseAuth.mockReturnValue(authenticatedAuthState());
+});
+
 function renderMessages() { return render(<MemoryRouter initialEntries={['/messages']}><App /></MemoryRouter>); }
 
 describe('Messaging', () => {

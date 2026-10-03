@@ -4,6 +4,7 @@ import { NotificationButton } from '../../../components/NotificationButton';
 import { PetMingleLogo } from '../../../components/PetMingleLogo';
 import { Avatar } from '../../../components/Avatar';
 import { messagingAccount } from '../messaging.fixtures';
+import { SignOutButton } from '../../../auth/SignOutButton';
 export function MessagingHeader() {
   return <header className="messaging-header">
     <PetMingleLogo />
@@ -14,5 +15,6 @@ export function MessagingHeader() {
       <NotificationButton className="chat-round-control chat-notifications" dotClassName="notification-dot" size={23} />
       <button type="button" className="chat-account" disabled aria-label="Owner account — unavailable"><Avatar asset={messagingAccount.photo} /><ChevronDown size={20} /></button>
     </div>
+    <SignOutButton className="messaging-sign-out" />
   </header>;
 }

@@ -1,11 +1,37 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
-import { expect, it } from 'vitest';
+import { expect, it, vi } from 'vitest';
 import { App } from './App';
+import { useAuth } from '../auth/AuthProvider';
+
+vi.mock('../auth/AuthProvider', () => ({
+  useAuth: vi.fn(),
+}));
+
+const mockedUseAuth = vi.mocked(useAuth);
+
+
 
 it('connects all five screens and the Plus section using existing visible controls', async () => {
   const user = userEvent.setup();
+  mockedUseAuth.mockReturnValue({
+    status: 'authenticated',
+    user: {
+      id: 10,
+      name: 'Hamza',
+      email: 'hamza@example.com',
+    },
+    pet: {
+      id: 42,
+      user_id: 10,
+      name: 'Nala',
+    },
+    error: null,
+    isAuthenticated: true,
+    signIn: vi.fn(),
+    signOut: vi.fn(),
+  });
   render(<MemoryRouter><App /></MemoryRouter>);
   await user.click(within(screen.getByRole('region', { name: 'Find their people' })).getByRole('link', { name: /Get Started/ }));
   expect(screen.getByRole('form', { name: 'Create pet profile' })).toBeVisible();

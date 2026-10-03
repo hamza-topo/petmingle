@@ -1,14 +1,117 @@
 @layer components {
-  .notification-dot { position: absolute; top: 8px; right: 4px; width: 11px; height: 11px; border-radius: 50%; background: var(--color-brand-pink); border: 1px solid var(--color-surface); }
+  .notification-dot {
+    position: absolute;
+    top: 8px;
+    right: 4px;
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--color-brand-pink);
+    border: 1px solid var(--color-surface);
+  }
 
-  .identity-avatar { border-radius: 50%; flex-shrink: 0; object-fit: cover; overflow: hidden; }
-  .pet-location { display: flex; align-items: flex-start; gap: 5px; color: var(--color-text-secondary); font-size: 14px; line-height: 20px; }
-  .pet-location > svg { flex-shrink: 0; margin-top: 2px; }
-  .pet-traits { display: flex; flex-wrap: wrap; gap: 7px; }
-  .pet-trait { display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 7px 12px; border-radius: var(--radius-pill); font-size: 12px; line-height: 18px; white-space: nowrap; }
-  .pet-trait > svg { flex-shrink: 0; }
-  .pet-trait--pink { background: var(--color-surface-pink); color: var(--color-brand-pink); }
-  .pet-trait--blue { background: var(--color-surface-blue); color: var(--color-brand-blue); }
-  .pet-trait--teal { background: var(--color-trait-teal-bg); color: var(--color-trait-teal); }
-  .pet-trait--purple { background: var(--color-trait-purple-bg); color: var(--color-trait-purple); }
+  .identity-avatar {
+    border-radius: 50%;
+    flex-shrink: 0;
+    object-fit: cover;
+    overflow: hidden;
+  }
+
+  .pet-location {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+    line-height: 20px;
+  }
+
+  .pet-location>svg {
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .pet-traits {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+  }
+
+  .pet-trait {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 7px 12px;
+    border-radius: var(--radius-pill);
+    font-size: 12px;
+    line-height: 18px;
+    white-space: nowrap;
+  }
+
+  .pet-trait>svg {
+    flex-shrink: 0;
+  }
+
+  .pet-trait--pink {
+    background: var(--color-surface-pink);
+    color: var(--color-brand-pink);
+  }
+
+  .pet-trait--blue {
+    background: var(--color-surface-blue);
+    color: var(--color-brand-blue);
+  }
+
+  .pet-trait--teal {
+    background: var(--color-trait-teal-bg);
+    color: var(--color-trait-teal);
+  }
+
+  .pet-trait--purple {
+    background: var(--color-trait-purple-bg);
+    color: var(--color-trait-purple);
+  }
+
+  .sign-out-button {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding-inline: var(--space-3);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    color: var(--color-text-secondary);
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .sign-out-button:hover:not(:disabled) {
+    color: var(--color-brand-pink);
+    border-color: var(--color-surface-pink-strong);
+    background: var(--color-surface-pink);
+  }
+
+  .sign-out-button:disabled {
+    opacity: 0.6;
+  }
+
+  .sign-out-error {
+    position: absolute;
+    margin-top: var(--space-2);
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-control);
+    background: var(--color-surface-pink);
+    color: var(--color-brand-pink);
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  .header-sign-out,
+  .discovery-sign-out,
+  .messaging-sign-out {
+    position: relative;
+  }
 }

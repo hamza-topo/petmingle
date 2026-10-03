@@ -1,0 +1,132 @@
+@layer components {
+    .sign-in-page {
+        min-height: 100vh;
+        background:
+            linear-gradient(135deg,
+                var(--color-canvas) 0%,
+                var(--color-surface-pink) 100%);
+    }
+
+    .sign-in-header {
+        height: 81px;
+        display: flex;
+        align-items: center;
+        padding-inline: 7.8%;
+        background: var(--color-surface);
+    }
+
+    .sign-in-main {
+        min-height: calc(100vh - 81px);
+        display: grid;
+        place-items: center;
+        padding: var(--space-12);
+    }
+
+    .sign-in-panel {
+        width: min(460px, 100%);
+        padding: 44px;
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-panel);
+        box-shadow: var(--shadow-card);
+    }
+
+    .sign-in-copy {
+        margin-bottom: var(--space-8);
+    }
+
+    .sign-in-eyebrow {
+        margin-bottom: var(--space-2);
+        color: var(--color-brand-pink);
+        font-size: 14px;
+        font-weight: 800;
+    }
+
+    .sign-in-copy h1 {
+        margin-bottom: var(--space-3);
+        font-size: 36px;
+        line-height: 1.15;
+    }
+
+    .sign-in-copy>p:last-child {
+        color: var(--color-text-secondary);
+        line-height: 1.6;
+    }
+
+    .sign-in-form {
+        display: grid;
+        gap: var(--space-5);
+    }
+
+    .sign-in-field {
+        display: grid;
+        gap: var(--space-2);
+    }
+
+    .sign-in-field label {
+        font-size: 14px;
+        font-weight: 800;
+    }
+
+    .sign-in-field input {
+        width: 100%;
+        height: 52px;
+        box-sizing: border-box;
+        padding-inline: var(--space-4);
+        color: var(--color-ink);
+        background: var(--color-surface);
+        border: 1px solid var(--color-border);
+        border-radius: var(--radius-control);
+        font: inherit;
+    }
+
+    .sign-in-field input:focus {
+        border-color: var(--color-brand-blue);
+    }
+
+    .sign-in-field input[aria-invalid="true"] {
+        border-color: var(--color-brand-pink);
+    }
+
+    .sign-in-field-error,
+    .sign-in-error {
+        color: var(--color-brand-pink);
+        font-size: 13px;
+        line-height: 1.4;
+    }
+
+    .sign-in-error {
+        padding: var(--space-3) var(--space-4);
+        background: var(--color-surface-pink);
+        border-radius: var(--radius-control);
+    }
+
+    .sign-in-submit {
+        width: 100%;
+        margin-top: var(--space-1);
+    }
+
+    .auth-route-state {
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        padding: var(--space-8);
+        background: var(--color-canvas);
+        text-align: center;
+    }
+
+    .auth-route-message {
+        max-width: 480px;
+        display: grid;
+        gap: var(--space-3);
+    }
+
+    .auth-route-message h1 {
+        font-size: 32px;
+    }
+
+    .auth-route-message p,
+    .auth-route-state>p {
+        color: var(--color-text-secondary);
+    }
+}
