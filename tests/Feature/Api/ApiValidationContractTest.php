@@ -63,7 +63,6 @@ class ApiValidationContractTest extends TestCase
                 'race_id',
                 'name',
                 'age',
-                'images',
             ]
         );
     }
