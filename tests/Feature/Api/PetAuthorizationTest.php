@@ -26,18 +26,20 @@ class PetAuthorizationTest extends TestCase
 
         Sanctum::actingAs($user);
 
-        $response = $this->postJson('/api/v.0/pets', [
-            'user_id' => $otherUser->id,
-            'species_id' => $pet->species_id,
-            'race_id' => $pet->race_id,
-            'name' => 'Nala',
-            'age' => 3,
-            'sexe' => 1,
-            'color' => 'brown',
-            'about' => 'Test pet',
-            'image' => UploadedFile::fake()
-                ->image('pet.jpg'),
-        ]);
+        $response = $this
+            ->withHeader('Accept', 'application/json')
+            ->post('/api/v.0/pets', [
+                'user_id' => $otherUser->id,
+                'species_id' => $pet->species_id,
+                'race_id' => $pet->race_id,
+                'name' => 'Nala',
+                'age' => 3,
+                'sexe' => 1,
+                'color' => 'brown',
+                'about' => 'Test pet',
+                'image' => UploadedFile::fake()
+                    ->image('pet.jpg'),
+            ]);
 
         $response->assertCreated();
 
