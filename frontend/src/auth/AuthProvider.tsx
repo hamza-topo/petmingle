@@ -33,6 +33,7 @@ export type AuthContextValue = {
   isAuthenticated: boolean;
   signIn: (input: SignInInput) => Promise<void>;
   signOut: () => Promise<void>;
+  refreshIdentity: () => Promise<void>;
 };
 
 const AuthContext = createContext<AuthContextValue | null>(null);
@@ -138,6 +139,39 @@ export function AuthProvider({ children }: PropsWithChildren) {
     }
   }
 
+  async function refreshIdentity(): Promise<void> {
+    const token = tokenStorage.get();
+
+    if (!token) {
+      clearIdentity();
+      setError(null);
+      setStatus('unauthenticated');
+
+      throw new ApiError(
+        'Authentication token is missing.',
+        401,
+      );
+    }
+
+    try {
+      const identity = await authenticatedIdentityRequest(token);
+
+      setUser(identity.user);
+      setPet(identity.pet);
+      setError(null);
+      setStatus('authenticated');
+    } catch (caught) {
+      if (caught instanceof ApiError && caught.status === 401) {
+        tokenStorage.clear();
+        clearIdentity();
+        setError(null);
+        setStatus('unauthenticated');
+      }
+
+      throw caught;
+    }
+  }
+
   async function signOut(): Promise<void> {
     const token = tokenStorage.get();
 
@@ -176,6 +210,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       isAuthenticated: status === 'authenticated',
       signIn,
       signOut,
+      refreshIdentity,
     }),
     [status, user, pet, error],
   );
