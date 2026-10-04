@@ -5,7 +5,11 @@ import {
   within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { MemoryRouter } from 'react-router';
+import {
+  MemoryRouter,
+  Route,
+  Routes,
+} from 'react-router';
 import {
   afterEach,
   beforeEach,
@@ -24,6 +28,7 @@ import {
   authenticatedWithoutPetAuthState,
 } from '../../test/authFixtures';
 import { PetCreatePage } from './PetCreatePage';
+import { petCreateRequest } from './pet-create.api';
 import { taxonomyRequest } from './taxonomy.api';
 
 vi.mock('../../auth/AuthProvider', () => ({
@@ -34,17 +39,42 @@ vi.mock('./taxonomy.api', () => ({
   taxonomyRequest: vi.fn(),
 }));
 
+vi.mock('./pet-create.api', () => ({
+  petCreateRequest: vi.fn(),
+}));
+
 const mockedUseAuth = vi.mocked(useAuth);
 const mockedTaxonomyRequest = vi.mocked(taxonomyRequest);
+const mockedPetCreateRequest = vi.mocked(petCreateRequest);
+const refreshIdentity = vi.fn();
+
+const createdPet = {
+  id: 55,
+  user_id: 10,
+  species_id: 10,
+  race_id: 20,
+  name: 'Nala',
+  age: 3,
+  sexe: null,
+  color: null,
+  images: [],
+  about: null,
+};
 
 beforeEach(() => {
-  mockedUseAuth.mockReturnValue(
-    authenticatedAuthState(),
-  );
+  refreshIdentity.mockReset();
+  refreshIdentity.mockResolvedValue(undefined);
+
+  mockedUseAuth.mockReturnValue({
+    ...authenticatedWithoutPetAuthState(),
+    refreshIdentity,
+  });
 
   tokenStorage.set('test-token');
 
   mockedTaxonomyRequest.mockReset();
+  mockedPetCreateRequest.mockReset();
+  mockedPetCreateRequest.mockResolvedValue(createdPet);
 
   mockedTaxonomyRequest.mockResolvedValue({
     species: [
@@ -100,6 +130,25 @@ function renderForm() {
       initialEntries={['/pet/create']}
     >
       <App />
+    </MemoryRouter>,
+  );
+}
+
+function renderPersistenceForm() {
+  return render(
+    <MemoryRouter
+      initialEntries={['/pet/create']}
+    >
+      <Routes>
+        <Route
+          path="/pet/create"
+          element={<PetCreatePage />}
+        />
+        <Route
+          path="/profile"
+          element={<div>Persisted profile destination</div>}
+        />
+      </Routes>
     </MemoryRouter>,
   );
 }
@@ -360,51 +409,12 @@ describe('Pet profile creation', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('submits API taxonomy IDs with selected traits and preferences', async () => {
+  it('persists supported fields, refreshes identity, and navigates to profile', async () => {
     const user = userEvent.setup();
-    const submit = vi.fn();
 
-    render(
-      <MemoryRouter>
-        <PetCreatePage
-          onLocalSubmit={submit}
-        />
-      </MemoryRouter>,
-    );
+    renderPersistenceForm();
 
     await selectDogTaxonomy(user);
-
-    expect(
-      screen.getByRole('checkbox', {
-        name: 'Playful',
-      }),
-    ).toBeChecked();
-
-    await user.click(
-      screen.getByRole('checkbox', {
-        name: 'Friendly',
-      }),
-    );
-
-    await user.click(
-      screen.getByRole('checkbox', {
-        name: 'Playful',
-      }),
-    );
-
-    await user.selectOptions(
-      screen.getByLabelText(
-        'Energy level',
-      ),
-      'Low energy',
-    );
-
-    await user.selectOptions(
-      screen.getByLabelText(
-        'Ideal playdate type',
-      ),
-      'Gentle play',
-    );
 
     await user.click(
       screen.getByRole('button', {
@@ -414,25 +424,148 @@ describe('Pet profile creation', () => {
 
     await waitFor(() => {
       expect(
-        submit,
+        mockedPetCreateRequest,
       ).toHaveBeenCalledWith(
-        expect.objectContaining({
+        {
+          speciesId: 10,
+          raceId: 20,
           name: 'Nala',
-          speciesId: '10',
-          raceId: '20',
-          traits: ['Friendly'],
-          energy: 'Low energy',
-          playdate: 'Gentle play',
+          age: 3,
           photo: null,
-        }),
+        },
+        'test-token',
       );
     });
 
+    expect(refreshIdentity).toHaveBeenCalledTimes(1);
+
     expect(
-      screen.getByRole('status'),
-    ).toHaveTextContent(
-      'Pet details are valid.',
+      await screen.findByText(
+        'Persisted profile destination',
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it('maps Laravel validation errors to React form fields', async () => {
+    const user = userEvent.setup();
+
+    mockedPetCreateRequest.mockRejectedValueOnce(
+      new ApiError(
+        'Validation failed.',
+        422,
+        {
+          success: false,
+          message: 'Validation failed.',
+          errors: {
+            name: ['The pet name is invalid.'],
+            race_id: ['The selected breed is invalid.'],
+          },
+        },
+      ),
     );
+
+    renderPersistenceForm();
+
+    await selectDogTaxonomy(user);
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Continue',
+      }),
+    );
+
+    expect(
+      await screen.findByText(
+        'The pet name is invalid.',
+      ),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.getByText(
+        'The selected breed is invalid.',
+      ),
+    ).toBeInTheDocument();
+
+    expect(refreshIdentity).not.toHaveBeenCalled();
+  });
+
+  it('shows a safe create failure without exposing backend details', async () => {
+    const user = userEvent.setup();
+
+    mockedPetCreateRequest.mockRejectedValueOnce(
+      new ApiError(
+        'SQLSTATE internal details',
+        500,
+        {
+          success: false,
+          message: 'SQLSTATE internal details',
+        },
+      ),
+    );
+
+    renderPersistenceForm();
+
+    await selectDogTaxonomy(user);
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Continue',
+      }),
+    );
+
+    expect(
+      await screen.findByRole('alert'),
+    ).toHaveTextContent(
+      'PetMingle is temporarily unavailable. Please try again.',
+    );
+
+    expect(
+      screen.queryByText(/SQLSTATE internal details/),
+    ).not.toBeInTheDocument();
+  });
+
+  it('prevents duplicate submissions while pet creation is pending', async () => {
+    const user = userEvent.setup();
+
+    let resolveCreate:
+      | ((value: typeof createdPet) => void)
+      | undefined;
+
+    mockedPetCreateRequest.mockImplementationOnce(
+      () =>
+        new Promise(resolve => {
+          resolveCreate = resolve;
+        }),
+    );
+
+    renderPersistenceForm();
+
+    await selectDogTaxonomy(user);
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Continue',
+      }),
+    );
+
+    const pendingButton = screen.getByRole('button', {
+      name: 'Creating profile...',
+    });
+
+    expect(pendingButton).toBeDisabled();
+    expect(mockedPetCreateRequest).toHaveBeenCalledTimes(1);
+
+    await user.click(pendingButton);
+
+    expect(mockedPetCreateRequest).toHaveBeenCalledTimes(1);
+
+    resolveCreate?.(createdPet);
+
+    expect(
+      await screen.findByText(
+        'Persisted profile destination',
+      ),
+    ).toBeInTheDocument();
   });
 
   it('previews, replaces and removes a local photo, releasing object URLs', async () => {
