@@ -73,7 +73,6 @@ describe('ProtectedRoute', () => {
       isAuthenticated: true,
       signIn: vi.fn(),
       signOut: vi.fn(),
-    refreshIdentity: vi.fn(),
       refreshIdentity: vi.fn(),
     });
 
@@ -93,7 +92,6 @@ describe('ProtectedRoute', () => {
       isAuthenticated: false,
       signIn: vi.fn(),
       signOut: vi.fn(),
-    refreshIdentity: vi.fn(),
       refreshIdentity: vi.fn(),
     });
 
@@ -113,7 +111,6 @@ describe('ProtectedRoute', () => {
       isAuthenticated: false,
       signIn: vi.fn(),
       signOut: vi.fn(),
-    refreshIdentity: vi.fn(),
       refreshIdentity: vi.fn(),
     });
 
@@ -137,7 +134,6 @@ describe('ProtectedRoute', () => {
       isAuthenticated: false,
       signIn: vi.fn(),
       signOut: vi.fn(),
-    refreshIdentity: vi.fn(),
       refreshIdentity: vi.fn(),
     });
 
