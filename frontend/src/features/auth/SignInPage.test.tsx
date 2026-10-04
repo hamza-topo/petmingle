@@ -39,6 +39,8 @@ describe('SignInPage', () => {
       isAuthenticated: false,
       signIn,
       signOut: vi.fn(),
+    refreshIdentity: vi.fn(),
+      refreshIdentity: vi.fn(),
     });
   });
 
