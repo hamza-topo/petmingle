@@ -430,7 +430,6 @@ describe('Pet profile creation', () => {
           raceId: 20,
           name: 'Nala',
           age: 3,
-          photo: null,
         },
         'test-token',
       );
