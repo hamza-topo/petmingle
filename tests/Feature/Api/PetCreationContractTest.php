@@ -64,13 +64,15 @@ class PetCreationContractTest extends TestCase
 
         Sanctum::actingAs($user);
 
-        $response = $this->postJson('/api/v.0/pets', [
-            'species_id' => $species->id,
-            'race_id' => $race->id,
-            'name' => 'Milo',
-            'age' => 4,
-            'image' => UploadedFile::fake()->image('milo.png'),
-        ]);
+        $response = $this
+            ->withHeader('Accept', 'application/json')
+            ->post('/api/v.0/pets', [
+                'species_id' => $species->id,
+                'race_id' => $race->id,
+                'name' => 'Milo',
+                'age' => 4,
+                'image' => UploadedFile::fake()->image('milo.png'),
+            ]);
 
         $response->assertCreated();
 
