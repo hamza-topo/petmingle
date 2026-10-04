@@ -5,11 +5,15 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Block\Store;
 use App\Repositories\BlockRepository;
+use App\Http\Resources\Api\BlockResource;
+use App\Http\Responses\ApiResponse;
+
 
 class BlockController extends Controller
 {
 
     public function __construct(protected BlockRepository $blockRepository) {}
+
     /**
      * Display a listing of the resource.
      *
@@ -17,11 +21,14 @@ class BlockController extends Controller
      */
     public function index()
     {
-        return response()->json([
-            'success' => true,
-            'message' => \__('corresponding List of Blocks of :' . auth()->user()->name),
-            'data' => $this->blockRepository->blocks(auth()->user()->id)
-        ]);
+        return ApiResponse::success(
+            BlockResource::collection(
+                $this->blockRepository->blocks(
+                    auth()->user()->id
+                )
+            )->resolve(),
+            __('List of blocks.')
+        );
     }
 
     /**
@@ -38,10 +45,9 @@ class BlockController extends Controller
 
         $block = $this->blockRepository->create($data);
 
-        return response()->json([
-            'success' => true,
-            'message' => __('Block ok'),
-            'data' => $block,
-        ]);
+        return ApiResponse::created(
+            (new BlockResource($block))->resolve(),
+            __('Block has been created.')
+        );
     }
 }

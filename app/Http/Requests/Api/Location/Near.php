@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests\Api\Location;
 
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 class Near extends FormRequest
 {
@@ -38,14 +36,5 @@ class Near extends FormRequest
             'longitude.between' => \__('The longitude must be between -180 and 180 degrees.'),
             'perimetre.integer' => \__('The Perimetre of user is invalid!'),
         ];
-    }
-
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'success'   => false,
-            'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ]));
     }
 }

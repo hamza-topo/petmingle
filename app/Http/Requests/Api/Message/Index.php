@@ -4,9 +4,7 @@ namespace App\Http\Requests\Api\Message;
 
 use App\Rules\Api\Like\MatchUser;
 use App\Rules\Api\Message\IsAllowed;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 class Index extends FormRequest
 {
@@ -36,14 +34,5 @@ class Index extends FormRequest
             'receiver_id.integer' => \__('The Value of Receiver Id is invalid!'),
             'receiver_id.integer' => \__('The Value of Receiver Id is invalid!'),
         ];
-    }
-
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'success'   => false,
-            'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ]));
     }
 }

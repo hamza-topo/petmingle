@@ -32,7 +32,7 @@ class BlockAuthorizationTest extends TestCase
             'to' => $target->id,
             'cause' => 1,
             'why' => 'Test block',
-        ])->assertOk();
+        ])->assertCreated();
 
         $this->assertDatabaseHas('blocks', [
             'from' => $user->id,

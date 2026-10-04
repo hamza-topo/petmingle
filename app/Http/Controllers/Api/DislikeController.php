@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Like\Store;
 use App\Repositories\DislikeRepository;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\Http\Resources\Api\DislikeResource;
+use App\Http\Responses\ApiResponse;
 
 class DislikeController extends Controller
 {
     public function __construct(protected DislikeRepository $dislikeRepository) {}
+
     /**
      * Display a listing of the resource.
      *
@@ -18,11 +20,17 @@ class DislikeController extends Controller
      */
     public function index()
     {
-        return response()->json([
-            'success' => true,
-            'message' => \__('corresponding disLikes of :' . auth()->user()->pet->name),
-            'data' => $this->dislikeRepository->dislikes(auth()->user()->pet->id)
-        ]);
+        $dislikes = $this->dislikeRepository->dislikes(
+            auth()->user()->pet->id
+        );
+
+        return ApiResponse::paginated(
+            $dislikes,
+            DislikeResource::collection(
+                $dislikes->getCollection()
+            )->resolve(),
+            __('List of dislikes.')
+        );
     }
 
     /**
@@ -43,13 +51,14 @@ class DislikeController extends Controller
      */
     public function store(Store $request)
     {
-        $like = $this->dislikeRepository->create($request->all());
+        $dislike = $this->dislikeRepository->create(
+            $request->validated()
+        );
 
-        return response()->json([
-            'success' => true,
-            'message' => \__('Dislike ok'),
-            'data' => $like
-        ]);
+        return ApiResponse::created(
+            (new DislikeResource($dislike))->resolve(),
+            __('Dislike has been created.')
+        );
     }
 
     /**

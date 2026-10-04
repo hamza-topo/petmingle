@@ -142,7 +142,7 @@ class LocationAuthorizationTest extends TestCase
         $this->postJson('/api/v.0/locations', [
             'latitude' => 31.6295,
             'longitude' => -7.9811,
-        ])->assertOk();
+        ])->assertCreated();
 
         $this->assertDatabaseHas('locations', [
             'user_id' => $user->id,
@@ -160,7 +160,7 @@ class LocationAuthorizationTest extends TestCase
             'user_id' => $otherUser->id,
             'latitude' => 31.6295,
             'longitude' => -7.9811,
-        ])->assertOk();
+        ])->assertCreated();
 
         $this->assertDatabaseHas('locations', [
             'user_id' => $user->id,

@@ -3,8 +3,6 @@
 namespace App\Http\Requests\Api\Species;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 
 class Store extends FormRequest
 {
@@ -32,14 +30,5 @@ class Store extends FormRequest
             'name.unique' => \__('The Species Name already exist.'),
             'name.max' => \__('This Species Name is too much long.'),
         ];
-    }
-
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'success'   => false,
-            'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ]));
     }
 }

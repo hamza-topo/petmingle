@@ -30,11 +30,10 @@ class RaceRepository
         return $race;
     }
 
-    public function getById(int $raceId): ?Race
+    public function getById(int $raceId): Race
     {
         return Race::with('species')
-            ->where('id', $raceId)
-            ->first();
+            ->findOrFail($raceId);
     }
 
     public function delete(int $raceId): bool

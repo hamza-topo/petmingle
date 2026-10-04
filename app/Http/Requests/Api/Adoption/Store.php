@@ -2,10 +2,7 @@
 
 namespace App\Http\Requests\Api\Adoption;
 
-use App\Rules\Api\Like\MatchUser;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
-use Illuminate\Contracts\Validation\Validator;
 
 
 class Store extends FormRequest
@@ -49,14 +46,5 @@ class Store extends FormRequest
             'pet_id.required' => \__('The Value of To Pet Id  is required!'),
             'pet_id.integer' => \__('The Value of To Pet Id  invalid!'),
         ];
-    }
-
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'success'   => false,
-            'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ]));
     }
 }
