@@ -40,7 +40,7 @@ class PetAuthorizationTest extends TestCase
                 ->size(1024),
         ]);
 
-        $response->assertOk();
+        $response->assertCreated();
 
         $this->assertDatabaseHas('pets', [
             'name' => 'Nala',

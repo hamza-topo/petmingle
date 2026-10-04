@@ -7,6 +7,8 @@ use App\Http\Requests\Api\Pet\Store;
 use App\Repositories\PetRepository;
 use App\Traits\ImageTrait;
 use App\Http\Requests\Api\Pet\Update;
+use App\Http\Resources\Api\PetResource;
+use App\Http\Responses\ApiResponse;
 
 class PetController extends Controller
 {
@@ -21,12 +23,12 @@ class PetController extends Controller
      */
     public function index()
     {
-
-        return response()->json([
-            'success' => true,
-            'message' => \__('List of pets.'),
-            'data' => $this->petRepository->all()
-        ]);
+        return ApiResponse::success(
+            PetResource::collection(
+                $this->petRepository->all()
+            )->resolve(),
+            __('List of pets.')
+        );
     }
 
     /**
@@ -38,15 +40,21 @@ class PetController extends Controller
     public function store(Store $request)
     {
         $pet = $request->all();
+
         $pet['user_id'] = $request->user()->id;
-        $pet['images'] = $this->setFile($request->file('images'))
+
+        $pet['images'] = $this->setFile(
+            $request->file('images')
+        )
             ->setName()
             ->upload();
-        return response()->json([
-            'success' => true,
-            'message' => \__('Pet has been created.'),
-            'data' => $this->petRepository->create($pet)
-        ]);
+
+        $createdPet = $this->petRepository->create($pet);
+
+        return ApiResponse::created(
+            (new PetResource($createdPet))->resolve(),
+            __('Pet has been created.')
+        );
     }
 
     /**
@@ -57,11 +65,12 @@ class PetController extends Controller
      */
     public function show($id)
     {
-        return response()->json([
-            'success' => true,
-            'message' => \__('Pet has been found.'),
-            'data' => $this->petRepository->getById($id)
-        ]);
+        return ApiResponse::success(
+            (new PetResource(
+                $this->petRepository->getById((int) $id)
+            ))->resolve(),
+            __('Pet has been found.')
+        );
     }
 
     /**
@@ -87,11 +96,15 @@ class PetController extends Controller
 
         unset($data['user_id']);
 
-        return response()->json([
-            'success' => true,
-            'message' => __('Pet has been updated successfully.'),
-            'data' => $this->petRepository->update((int) $id, $data),
-        ]);
+        $updatedPet = $this->petRepository->update(
+            (int) $id,
+            $data
+        );
+
+        return ApiResponse::success(
+            (new PetResource($updatedPet))->resolve(),
+            __('Pet has been updated successfully.')
+        );
     }
 
     /**
@@ -106,11 +119,10 @@ class PetController extends Controller
 
         $this->authorize('delete', $pet);
 
-        return response()->json([
-            'success' => true,
-            'message' => __('Pet has been deleted successfully.'),
-            'data' => $this->petRepository->delete((int) $id),
-        ]);
+        return ApiResponse::success(
+            $this->petRepository->delete((int) $id),
+            __('Pet has been deleted successfully.')
+        );
     }
 
     /**
@@ -125,10 +137,9 @@ class PetController extends Controller
 
         $this->authorize('restore', $pet);
 
-        return response()->json([
-            'success' => true,
-            'message' => __('Pet has been restored successfully.'),
-            'data' => $this->petRepository->restore((int) $id),
-        ]);
+        return ApiResponse::success(
+            $this->petRepository->restore((int) $id),
+            __('Pet has been restored successfully.')
+        );
     }
 }

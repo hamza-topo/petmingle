@@ -5,7 +5,8 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Repositories\MatchRepository;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\Http\Resources\Api\MatchResource;
+use App\Http\Responses\ApiResponse;
 
 class MatchController extends Controller
 {
@@ -18,11 +19,14 @@ class MatchController extends Controller
      */
     public function matches()
     {
-        return response()->json([
-            'success' => true,
-            'message' => \__('corresponding matches of :' . auth()->user()->pet->name),
-            'data' => $this->matchRepository->matches(auth()->user()->pet->id)
-        ]);
+        return ApiResponse::success(
+            MatchResource::collection(
+                $this->matchRepository->matches(
+                    auth()->user()->pet->id
+                )
+            )->resolve(),
+            __('List of matches.')
+        );
     }
 
     /**
@@ -32,11 +36,14 @@ class MatchController extends Controller
      */
     public function mismatches()
     {
-        return response()->json([
-            'success' => true,
-            'message' => \__('corresponding mismatches of :' . auth()->user()->pet->name),
-            'data' => $this->matchRepository->mismatches(auth()->user()->pet->id)
-        ]);
+        return ApiResponse::success(
+            MatchResource::collection(
+                $this->matchRepository->mismatches(
+                    auth()->user()->pet->id
+                )
+            )->resolve(),
+            __('List of mismatches.')
+        );
     }
 
     /**

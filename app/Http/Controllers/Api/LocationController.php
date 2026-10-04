@@ -9,10 +9,13 @@ use App\Http\Requests\Api\Location\Store;
 use App\Http\Resources\Api\Location\Near as LocationNear;
 use App\Repositories\LocationRepository;
 use Illuminate\Http\Request;
+use App\Http\Resources\Api\LocationResource;
+use App\Http\Responses\ApiResponse;
 
 class LocationController extends Controller
 {
     public function __construct(protected LocationRepository $locationRepository) {}
+
     /**
      * Display a listing of the resource.
      *
@@ -20,12 +23,16 @@ class LocationController extends Controller
      */
     public function index()
     {
-        return response()->json([
-            'success' => true,
-            'message' => \__('List of Locations.'),
-            'data' => $this->locationRepository->forUser(request()->user()->id)
-        ]);
+        return ApiResponse::success(
+            LocationResource::collection(
+                $this->locationRepository->forUser(
+                    request()->user()->id
+                )
+            )->resolve(),
+            __('List of locations.')
+        );
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -80,11 +87,12 @@ class LocationController extends Controller
 
         $data['user_id'] = $request->user()->id;
 
-        return response()->json([
-            'success' => true,
-            'message' => __('Location has been created.'),
-            'data' => $this->locationRepository->create($data),
-        ]);
+        $location = $this->locationRepository->create($data);
+
+        return ApiResponse::created(
+            (new LocationResource($location))->resolve(),
+            __('Location has been created.')
+        );
     }
 
     /**
@@ -99,11 +107,10 @@ class LocationController extends Controller
 
         $this->authorize('view', $location);
 
-        return response()->json([
-            'success' => true,
-            'message' => __('Location has been found.'),
-            'data' => $location,
-        ]);
+        return ApiResponse::success(
+            (new LocationResource($location))->resolve(),
+            __('Location has been found.')
+        );
     }
 
     /**
@@ -149,10 +156,9 @@ class LocationController extends Controller
 
         $this->authorize('restore', $location);
 
-        return response()->json([
-            'success' => true,
-            'message' => __('Location has been restored successfully.'),
-            'data' => $this->locationRepository->restore((int) $id),
-        ]);
+        return ApiResponse::success(
+            $this->locationRepository->restore((int) $id),
+            __('Location has been restored successfully.')
+        );
     }
 }

@@ -6,11 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Like\Store;
 use App\Repositories\LikeRepository;
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
+use App\Http\Resources\Api\LikeResource;
+use App\Http\Responses\ApiResponse;
 
 class LikeController extends Controller
 {
     public function __construct(protected LikeRepository $likeRepository) {}
+
     /**
      * Display a listing of the resource.
      *
@@ -18,11 +20,17 @@ class LikeController extends Controller
      */
     public function index()
     {
-        return response()->json([
-            'success' => true,
-            'message' => \__('corresponding Likes of :' . auth()->user()->pet->name),
-            'data' => $this->likeRepository->likes(auth()->user()->pet->id)
-        ]);
+        $likes = $this->likeRepository->likes(
+            auth()->user()->pet->id
+        );
+
+        return ApiResponse::paginated(
+            $likes,
+            LikeResource::collection(
+                $likes->getCollection()
+            )->resolve(),
+            __('List of likes.')
+        );
     }
 
     /**
@@ -43,14 +51,16 @@ class LikeController extends Controller
      */
     public function store(Store $request)
     {
-        //After storing check if there is the inverse in db then create a matche;
-        $like = $this->likeRepository->create($request->all());
+        $like = $this->likeRepository->create(
+            $request->validated()
+        );
 
-        return response()->json([
-            'success' => true,
-            'message' => \__('like ok'),
-            'data' => $like
-        ]);
+        return ApiResponse::created(
+            $like
+                ? (new LikeResource($like))->resolve()
+                : null,
+            __('Like processed.')
+        );
     }
 
     /**

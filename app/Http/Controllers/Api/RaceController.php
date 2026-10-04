@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Race\Store;
 use App\Http\Requests\Api\Race\Update;
 use App\Repositories\RaceRepository;
+use App\Http\Resources\Api\RaceResource;
+use App\Http\Responses\ApiResponse;
 
 class RaceController extends Controller
 {
@@ -21,8 +23,14 @@ class RaceController extends Controller
      */
     public function index()
     {
-        return $this->raceRepository->all();
+        return ApiResponse::success(
+            RaceResource::collection(
+                $this->raceRepository->all()
+            )->resolve(),
+            __('List of races.')
+        );
     }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -31,8 +39,16 @@ class RaceController extends Controller
      */
     public function store(Store $request)
     {
-        return $this->raceRepository->create($request->all());
+        $race = $this->raceRepository->create(
+            $request->all()
+        );
+
+        return ApiResponse::created(
+            (new RaceResource($race))->resolve(),
+            __('Race has been created.')
+        );
     }
+
     /**
      * Display the specified resource.
      *
@@ -41,8 +57,14 @@ class RaceController extends Controller
      */
     public function show(int $id)
     {
-        return $this->raceRepository->getById($id);
+        return ApiResponse::success(
+            (new RaceResource(
+                $this->raceRepository->getById($id)
+            ))->resolve(),
+            __('Race has been found.')
+        );
     }
+
     /**
      * Update the specified resource in storage.
      *
@@ -52,7 +74,15 @@ class RaceController extends Controller
      */
     public function update(Update $request, $id)
     {
-        return $this->raceRepository->update($id, $request->all());
+        $race = $this->raceRepository->update(
+            (int) $id,
+            $request->all()
+        );
+
+        return ApiResponse::success(
+            (new RaceResource($race))->resolve(),
+            __('Race has been updated.')
+        );
     }
 
     /**
@@ -63,7 +93,10 @@ class RaceController extends Controller
      */
     public function destroy(int $id)
     {
-        return $this->raceRepository->delete($id);
+        return ApiResponse::success(
+            $this->raceRepository->delete($id),
+            __('Race has been deleted successfully.')
+        );
     }
 
     /**
@@ -74,6 +107,9 @@ class RaceController extends Controller
      */
     public function restore(int $id)
     {
-        return $this->raceRepository->restore($id);
+        return ApiResponse::success(
+            $this->raceRepository->restore($id),
+            __('Race has been restored successfully.')
+        );
     }
 }

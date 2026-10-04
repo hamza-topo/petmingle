@@ -3,9 +3,7 @@
 namespace App\Http\Requests\Api\Like;
 
 use App\Rules\Api\Like\MatchUser;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 class Store extends FormRequest
 {
@@ -34,14 +32,5 @@ class Store extends FormRequest
             'to.required' => \__('The Field To Id is required!'),
             'to.integer' => \__('The Value of To Id  invalid!'),
         ];
-    }
-
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'success'   => false,
-            'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ]));
     }
 }

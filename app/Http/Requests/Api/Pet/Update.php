@@ -2,9 +2,7 @@
 
 namespace App\Http\Requests\Api\Pet;
 
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 class Update extends FormRequest
 {
@@ -31,14 +29,5 @@ class Update extends FormRequest
             'name.max' => __('The Field Name is too long!'),
             'images.*' => __('The Images are invalid.'),
         ];
-    }
-
-    public function failedValidation(Validator $validator): void
-    {
-        throw new HttpResponseException(response()->json([
-            'success' => false,
-            'message' => 'Validation errors',
-            'data' => $validator->errors(),
-        ], 422));
     }
 }

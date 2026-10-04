@@ -3,9 +3,7 @@
 namespace App\Http\Requests\Api\Auth;
 
 use App\Rules\Api\User\Avatar as UserAvatar;
-use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Http\Exceptions\HttpResponseException;
 
 class Avatar extends FormRequest
 {
@@ -31,14 +29,5 @@ class Avatar extends FormRequest
         return [
             'id.required' => \__('The User Id is required.'),
         ];
-    }
-
-    public function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'success'   => false,
-            'message'   => 'Validation errors',
-            'data'      => $validator->errors()
-        ]));
     }
 }
