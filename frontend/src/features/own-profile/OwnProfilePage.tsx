@@ -83,7 +83,16 @@ export function OwnProfilePage() {
   if (!pet) {
     return (
       <div className="own-profile-page">
-        <SiteHeader />
+        <SiteHeader
+          identity={
+            user
+              ? {
+                  name: user.name,
+                  kind: 'account',
+                }
+              : undefined
+          }
+        />
 
         <main className="auth-route-state">
           <p role="status">
@@ -96,9 +105,9 @@ export function OwnProfilePage() {
 
   const header = (
     <SiteHeader
-      petIdentity={{
+      identity={{
         name: profile?.name ?? pet.name,
-        photo: ownPet.gallery[0].asset,
+        kind: 'pet',
       }}
     />
   );

@@ -29,6 +29,20 @@ describe('Messaging', () => {
     for (const conversation of conversations) expect(list.getByRole('button', { name: pairName(conversation) })).toBeVisible();
     expect(list.getByRole('button', { name: 'Nala & Milo' })).toHaveAttribute('aria-current', 'true');
   });
+  it('uses the authenticated account identity in the header', () => {
+    renderMessages();
+
+    const account = screen.getByRole('button', {
+      name: 'Hamza account — unavailable',
+    });
+
+    expect(account).toBeVisible();
+
+    expect(
+      within(account).getByRole('img'),
+    ).toHaveAccessibleName(/Hamza avatar/);
+  });
+
   it('renders the active thread and both matched pets from fixtures', () => {
     renderMessages();
     const thread = within(screen.getByRole('region', { name: 'Nala & Milo' }));

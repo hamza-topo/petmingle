@@ -1,20 +1,64 @@
-import { ChevronDown, MapPin, Search } from 'lucide-react';
-import { PrimaryNavigation } from '../../../components/PrimaryNavigation';
+import {
+  ChevronDown,
+  MapPin,
+  Search,
+} from 'lucide-react';
+
+import { SignOutButton } from '../../../auth/SignOutButton';
+import { useAuth } from '../../../auth/AuthProvider';
+import { Avatar } from '../../../components/Avatar';
 import { NotificationButton } from '../../../components/NotificationButton';
 import { PetMingleLogo } from '../../../components/PetMingleLogo';
-import { Avatar } from '../../../components/Avatar';
+import { PrimaryNavigation } from '../../../components/PrimaryNavigation';
 import { messagingAccount } from '../messaging.fixtures';
-import { SignOutButton } from '../../../auth/SignOutButton';
+
 export function MessagingHeader() {
-  return <header className="messaging-header">
-    <PetMingleLogo />
-    <PrimaryNavigation variant="messaging" />
-    <div className="messaging-utilities">
-      <button type="button" className="chat-round-control" disabled aria-label="Search — unavailable"><Search size={24} /></button>
-      <button type="button" className="chat-location" disabled><MapPin size={21} /><span>{messagingAccount.location}</span><ChevronDown size={16} /></button>
-      <NotificationButton className="chat-round-control chat-notifications" dotClassName="notification-dot" size={23} />
-      <button type="button" className="chat-account" disabled aria-label="Owner account — unavailable"><Avatar asset={messagingAccount.photo} /><ChevronDown size={20} /></button>
-    </div>
-    <SignOutButton className="messaging-sign-out" />
-  </header>;
+  const { user } = useAuth();
+  const accountName = user?.name ?? 'Account';
+
+  return (
+    <header className="messaging-header">
+      <PetMingleLogo />
+      <PrimaryNavigation variant="messaging" />
+
+      <div className="messaging-utilities">
+        <button
+          type="button"
+          className="chat-round-control"
+          disabled
+          aria-label="Search — unavailable"
+        >
+          <Search size={24} aria-hidden="true" />
+        </button>
+
+        <button
+          type="button"
+          className="chat-location"
+          disabled
+        >
+          <MapPin size={21} aria-hidden="true" />
+          <span>{messagingAccount.location}</span>
+          <ChevronDown size={16} aria-hidden="true" />
+        </button>
+
+        <NotificationButton
+          className="chat-round-control chat-notifications"
+          dotClassName="notification-dot"
+          size={23}
+        />
+
+        <button
+          type="button"
+          className="chat-account"
+          disabled
+          aria-label={`${accountName} account — unavailable`}
+        >
+          <Avatar name={accountName} />
+          <ChevronDown size={20} aria-hidden="true" />
+        </button>
+      </div>
+
+      <SignOutButton className="messaging-sign-out" />
+    </header>
+  );
 }
