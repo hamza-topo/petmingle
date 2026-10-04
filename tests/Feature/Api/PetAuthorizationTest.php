@@ -35,9 +35,8 @@ class PetAuthorizationTest extends TestCase
             'sexe' => 1,
             'color' => 'brown',
             'about' => 'Test pet',
-            'images' => UploadedFile::fake()
-                ->image('pet.jpg')
-                ->size(1024),
+            'image' => UploadedFile::fake()
+                ->image('pet.jpg'),
         ]);
 
         $response->assertCreated();

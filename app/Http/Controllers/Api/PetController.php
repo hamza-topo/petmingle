@@ -4,23 +4,19 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Pet\Store;
-use App\Repositories\PetRepository;
-use App\Traits\ImageTrait;
 use App\Http\Requests\Api\Pet\Update;
 use App\Http\Resources\Api\PetResource;
 use App\Http\Responses\ApiResponse;
+use App\Repositories\PetRepository;
+use App\Traits\ImageTrait;
+use RuntimeException;
 
 class PetController extends Controller
 {
-
     use ImageTrait;
 
     public function __construct(protected PetRepository $petRepository) {}
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+
     public function index()
     {
         return ApiResponse::success(
@@ -31,25 +27,39 @@ class PetController extends Controller
         );
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Store $request)
     {
-        $pet = $request->all();
+        $data = $request->validated();
 
-        $pet['user_id'] = $request->user()->id;
+        unset(
+            $data['image'],
+            $data['size'],
+            $data['traits'],
+            $data['energy'],
+            $data['playdate'],
+            $data['images']
+        );
 
-        $pet['images'] = $this->setFile(
-            $request->file('images')
-        )
-            ->setName()
-            ->upload();
+        $data['user_id'] = $request->user()->id;
+        $data['images'] = [];
 
-        $createdPet = $this->petRepository->create($pet);
+        if ($request->hasFile('image')) {
+            $storedImage = $this->setFile(
+                $request->file('image')
+            )
+                ->setName()
+                ->upload();
+
+            if ($storedImage === false) {
+                throw new RuntimeException(
+                    'Pet image upload failed.'
+                );
+            }
+
+            $data['images'] = [$storedImage];
+        }
+
+        $createdPet = $this->petRepository->create($data);
 
         return ApiResponse::created(
             (new PetResource($createdPet))->resolve(),
@@ -57,12 +67,6 @@ class PetController extends Controller
         );
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         return ApiResponse::success(
@@ -73,13 +77,6 @@ class PetController extends Controller
         );
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \App\Http\Requests\Api\Pet\Update  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Update $request, $id)
     {
         $pet = $this->petRepository->getById((int) $id);
@@ -107,12 +104,6 @@ class PetController extends Controller
         );
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $pet = $this->petRepository->getById((int) $id);
@@ -125,12 +116,6 @@ class PetController extends Controller
         );
     }
 
-    /**
-     * Restore the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function restore($id)
     {
         $pet = $this->petRepository->getByIdWithTrashed((int) $id);
