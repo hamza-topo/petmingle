@@ -19,3 +19,19 @@ export function authenticatedAuthState(): AuthContextValue {
     signOut: async () => {},
   };
 }
+
+export function authenticatedWithoutPetAuthState(): AuthContextValue {
+  return {
+    status: 'authenticated',
+    user: {
+      id: 10,
+      name: 'Hamza',
+      email: 'hamza@example.com',
+    },
+    pet: null,
+    error: null,
+    isAuthenticated: true,
+    signIn: async () => {},
+    signOut: async () => {},
+  };
+}
