@@ -38,6 +38,25 @@ function AuthProbe() {
   );
 }
 
+function RefreshIdentityProbe() {
+  const auth = useAuth();
+
+  return (
+    <>
+      <span data-testid="pet">
+        {auth.pet?.name ?? 'none'}
+      </span>
+
+      <button
+        type="button"
+        onClick={() => void auth.refreshIdentity()}
+      >
+        Refresh identity
+      </button>
+    </>
+  );
+}
+
 function SignOutProbe() {
   const auth = useAuth();
 
@@ -178,6 +197,66 @@ describe('AuthProvider', () => {
     expect(
       window.localStorage.getItem('petmingle.auth.token'),
     ).toBe('valid-token');
+  });
+
+  it('refreshes the current pet after a successful creation', async () => {
+    const user = userEvent.setup();
+
+    window.localStorage.setItem(
+      'petmingle.auth.token',
+      'active-token',
+    );
+
+    mockedIdentityRequest
+      .mockResolvedValueOnce({
+        user: {
+          id: 10,
+          name: 'Hamza',
+          email: 'hamza@example.com',
+        },
+        pet: null,
+      })
+      .mockResolvedValueOnce({
+        user: {
+          id: 10,
+          name: 'Hamza',
+          email: 'hamza@example.com',
+        },
+        pet: {
+          id: 55,
+          user_id: 10,
+          name: 'Milo',
+        },
+      });
+
+    render(
+      <AuthProvider>
+        <RefreshIdentityProbe />
+      </AuthProvider>,
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByTestId('pet'),
+      ).toHaveTextContent('none');
+    });
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Refresh identity',
+      }),
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByTestId('pet'),
+      ).toHaveTextContent('Milo');
+    });
+
+    expect(mockedIdentityRequest).toHaveBeenCalledTimes(2);
+    expect(mockedIdentityRequest).toHaveBeenLastCalledWith(
+      'active-token',
+    );
   });
 
   it('revokes the active token and clears local authentication on sign out', async () => {
