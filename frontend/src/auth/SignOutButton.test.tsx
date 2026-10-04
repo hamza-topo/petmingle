@@ -61,6 +61,7 @@ describe('SignOutButton', () => {
       isAuthenticated: true,
       signIn: vi.fn(),
       signOut,
+      refreshIdentity: vi.fn(),
     });
   });
 
