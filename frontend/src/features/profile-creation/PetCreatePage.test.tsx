@@ -24,7 +24,6 @@ import { App } from '../../app/App';
 import { useAuth } from '../../auth/AuthProvider';
 import { tokenStorage } from '../../auth/tokenStorage';
 import {
-  authenticatedAuthState,
   authenticatedWithoutPetAuthState,
 } from '../../test/authFixtures';
 import { PetCreatePage } from './PetCreatePage';
