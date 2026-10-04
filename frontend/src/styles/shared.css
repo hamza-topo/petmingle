@@ -114,4 +114,51 @@
   .messaging-sign-out {
     position: relative;
   }
+
+  .api-state {
+    max-width: 520px;
+    display: grid;
+    justify-items: center;
+    gap: var(--space-3);
+    padding: var(--space-6);
+    text-align: center;
+  }
+
+  .api-state--compact {
+    max-width: none;
+    justify-items: start;
+    padding: var(--space-3) 0;
+    text-align: left;
+  }
+
+  .api-state-title {
+    color: var(--color-ink);
+    font-family: var(--font-display);
+    font-size: 24px;
+    font-weight: 800;
+  }
+
+  .api-state--compact .api-state-title {
+    font-size: 16px;
+  }
+
+  .api-state > [role="status"],
+  .api-state > [role="alert"] {
+    color: var(--color-text-secondary);
+    line-height: 1.5;
+  }
+
+  .api-state--error > [role="alert"] {
+    color: var(--color-brand-pink);
+  }
+
+  .api-state-retry {
+    min-height: 42px;
+    padding-inline: var(--space-5);
+    border: 1px solid var(--color-border-action);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    color: var(--color-brand-blue);
+    font-weight: 700;
+  }
 }

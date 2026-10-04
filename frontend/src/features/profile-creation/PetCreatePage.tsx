@@ -20,9 +20,12 @@ import {
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
+import { ApiError } from '../../api/errors';
+import { describeApiFailure } from '../../api/presentation';
 import { useAuth } from '../../auth/AuthProvider';
 import { tokenStorage } from '../../auth/tokenStorage';
 import { ActionButton } from '../../components/Action';
+import { ApiState } from '../../components/ApiState';
 import { SiteHeader } from '../../components/SiteHeader';
 import { FormField } from './components/FormField';
 import { PhotoUploader } from './components/PhotoUploader';
@@ -74,7 +77,7 @@ export function PetCreatePage({
     useState(true);
 
   const [taxonomyError, setTaxonomyError] =
-    useState<string | null>(null);
+    useState<unknown | null>(null);
 
   const [taxonomyReloadKey, setTaxonomyReloadKey] =
     useState(0);
@@ -112,7 +115,10 @@ export function PetCreatePage({
       if (!token) {
         if (!cancelled) {
           setTaxonomyError(
-            'Unable to load pet taxonomy.',
+            new ApiError(
+              'Authentication token is missing.',
+              401,
+            ),
           );
           setTaxonomyLoading(false);
         }
@@ -129,11 +135,9 @@ export function PetCreatePage({
 
         setTaxonomy(result);
         setTaxonomyError(null);
-      } catch {
+      } catch (caught) {
         if (!cancelled) {
-          setTaxonomyError(
-            'Unable to load pet taxonomy.',
-          );
+          setTaxonomyError(caught);
         }
       } finally {
         if (!cancelled) {
@@ -148,6 +152,11 @@ export function PetCreatePage({
       cancelled = true;
     };
   }, [taxonomyReloadKey]);
+
+  const taxonomyFailure =
+    taxonomyError !== null
+      ? describeApiFailure(taxonomyError)
+      : null;
 
   const availableRaces = useMemo(() => {
     if (!speciesId) {
@@ -341,7 +350,7 @@ export function PetCreatePage({
                   ? 'Loading species...'
                   : 'Choose a species',
                 taxonomyLoading
-                  || !!taxonomyError
+                  || !!taxonomyFailure
                   || taxonomy.species.length === 0,
               )}
 
@@ -359,7 +368,7 @@ export function PetCreatePage({
                       ? 'No breeds available'
                       : 'Choose a breed',
                 taxonomyLoading
-                  || !!taxonomyError
+                  || !!taxonomyFailure
                   || !speciesId
                   || availableRaces.length === 0,
               )}
@@ -407,46 +416,49 @@ export function PetCreatePage({
             </div>
 
             {taxonomyLoading && (
-              <p role="status">
-                Loading pet taxonomy...
-              </p>
+              <ApiState
+                kind="loading"
+                compact
+                message="Loading pet taxonomy..."
+              />
             )}
 
-            {taxonomyError && (
-              <div role="alert">
-                <p>
-                  Unable to load species and breeds.
-                </p>
-
-                <button
-                  type="button"
-                  onClick={() =>
-                    setTaxonomyReloadKey(
-                      current => current + 1,
-                    )
-                  }
-                >
-                  Try again
-                </button>
-              </div>
+            {taxonomyFailure && (
+              <ApiState
+                kind="error"
+                compact
+                title="We couldn’t load species and breeds"
+                message={taxonomyFailure.message}
+                onRetry={
+                  taxonomyFailure.retryable
+                    ? () =>
+                        setTaxonomyReloadKey(
+                          current => current + 1,
+                        )
+                    : undefined
+                }
+              />
             )}
 
             {!taxonomyLoading
-              && !taxonomyError
+              && !taxonomyFailure
               && taxonomy.species.length === 0 && (
-                <p role="status">
-                  No species are available.
-                </p>
+                <ApiState
+                  kind="empty"
+                  compact
+                  message="No species are available."
+                />
               )}
 
             {!taxonomyLoading
-              && !taxonomyError
+              && !taxonomyFailure
               && speciesId
               && availableRaces.length === 0 && (
-                <p role="status">
-                  No breeds are available for the
-                  selected species.
-                </p>
+                <ApiState
+                  kind="empty"
+                  compact
+                  message="No breeds are available for the selected species."
+                />
               )}
           </section>
 
@@ -540,7 +552,7 @@ export function PetCreatePage({
                 type="submit"
                 disabled={
                   taxonomyLoading
-                  || !!taxonomyError
+                  || !!taxonomyFailure
                   || taxonomy.species.length === 0
                 }
               >

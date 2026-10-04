@@ -14,6 +14,7 @@ import {
   vi,
 } from 'vitest';
 
+import { ApiError } from '../../api/errors';
 import { App } from '../../app/App';
 import { useAuth } from '../../auth/AuthProvider';
 import { tokenStorage } from '../../auth/tokenStorage';
@@ -377,7 +378,7 @@ describe('Own pet profile', () => {
 
     mockedCurrentPetProfileRequest
       .mockRejectedValueOnce(
-        new Error('Network error'),
+        new TypeError('Failed to fetch private endpoint'),
       )
       .mockResolvedValueOnce(backendPet);
 
@@ -386,7 +387,7 @@ describe('Own pet profile', () => {
     expect(
       await screen.findByRole('alert'),
     ).toHaveTextContent(
-      'Unable to load the current pet profile.',
+      'Unable to reach PetMingle. Check your connection and try again.',
     );
 
     await user.click(
@@ -402,5 +403,32 @@ describe('Own pet profile', () => {
     expect(
       mockedCurrentPetProfileRequest,
     ).toHaveBeenCalledTimes(2);
+  });
+
+  it('shows a safe non-retryable state for a missing profile', async () => {
+    mockedCurrentPetProfileRequest.mockRejectedValueOnce(
+      new ApiError(
+        'Internal record details',
+        404,
+      ),
+    );
+
+    renderProfile();
+
+    expect(
+      await screen.findByRole('alert'),
+    ).toHaveTextContent(
+      'The requested information is no longer available.',
+    );
+
+    expect(
+      screen.queryByText('Internal record details'),
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByRole('button', {
+        name: 'Try again',
+      }),
+    ).not.toBeInTheDocument();
   });
 });

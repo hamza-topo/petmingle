@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 
+import { ApiError } from '../../api/errors';
+import { describeApiFailure } from '../../api/presentation';
 import { useAuth } from '../../auth/AuthProvider';
 import { tokenStorage } from '../../auth/tokenStorage';
+import { ApiState } from '../../components/ApiState';
 import { SiteHeader } from '../../components/SiteHeader';
 import { currentPetProfileRequest } from './profile.api';
 import type { CurrentPetProfile } from './profile.types';
@@ -24,7 +27,7 @@ export function OwnProfilePage() {
     useState<CurrentPetProfile | null>(null);
 
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<unknown | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
 
   const [activePhotoId, setActivePhotoId] =
@@ -46,7 +49,12 @@ export function OwnProfilePage() {
 
       if (!token) {
         setLoading(false);
-        setError('Unable to load the current pet profile.');
+        setError(
+          new ApiError(
+            'Authentication token is missing.',
+            401,
+          ),
+        );
         return;
       }
 
@@ -62,9 +70,9 @@ export function OwnProfilePage() {
         if (!cancelled) {
           setProfile(currentPet);
         }
-      } catch {
+      } catch (caught) {
         if (!cancelled) {
-          setError('Unable to load the current pet profile.');
+          setError(caught);
         }
       } finally {
         if (!cancelled) {
@@ -95,9 +103,11 @@ export function OwnProfilePage() {
         />
 
         <main className="auth-route-state">
-          <p role="status">
-            No current pet profile is available.
-          </p>
+          <ApiState
+            kind="empty"
+            title="No pet profile yet"
+            message="Create a pet profile to continue."
+          />
         </main>
       </div>
     );
@@ -118,36 +128,37 @@ export function OwnProfilePage() {
         {header}
 
         <main className="auth-route-state">
-          <p role="status">
-            Loading pet profile...
-          </p>
+          <ApiState
+            kind="loading"
+            message="Loading pet profile..."
+          />
         </main>
       </div>
     );
   }
 
   if (error || !profile) {
+    const failure = describeApiFailure(
+      error
+        ?? new Error('Current pet profile is missing.'),
+    );
+
     return (
       <div className="own-profile-page">
         {header}
 
         <main className="auth-route-state">
-          <div className="auth-route-message">
-            <h1>We couldn’t load your pet profile</h1>
-
-            <p role="alert">
-              {error ?? 'Unable to load the current pet profile.'}
-            </p>
-
-            <button
-              type="button"
-              onClick={() =>
-                setReloadKey(current => current + 1)
-              }
-            >
-              Try again
-            </button>
-          </div>
+          <ApiState
+            kind="error"
+            title="We couldn’t load your pet profile"
+            message={failure.message}
+            onRetry={
+              failure.retryable
+                ? () =>
+                    setReloadKey(current => current + 1)
+                : undefined
+            }
+          />
         </main>
       </div>
     );

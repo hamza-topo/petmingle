@@ -15,6 +15,7 @@ import {
   vi,
 } from 'vitest';
 
+import { ApiError } from '../../api/errors';
 import { App } from '../../app/App';
 import { useAuth } from '../../auth/AuthProvider';
 import { tokenStorage } from '../../auth/tokenStorage';
@@ -613,7 +614,7 @@ describe('Pet profile creation', () => {
 
     mockedTaxonomyRequest
       .mockRejectedValueOnce(
-        new Error('Network error'),
+        new TypeError('Failed to fetch internal URL'),
       )
       .mockResolvedValueOnce({
         species: [
@@ -637,7 +638,7 @@ describe('Pet profile creation', () => {
     expect(
       await screen.findByRole('alert'),
     ).toHaveTextContent(
-      'Unable to load species and breeds.',
+      'Unable to reach PetMingle. Check your connection and try again.',
     );
 
     expect(
@@ -661,6 +662,35 @@ describe('Pet profile creation', () => {
     expect(
       mockedTaxonomyRequest,
     ).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not offer retry for a non-retryable taxonomy error', async () => {
+    mockedTaxonomyRequest.mockRejectedValueOnce(
+      new ApiError(
+        'Sensitive forbidden response',
+        403,
+      ),
+    );
+
+    renderForm();
+
+    expect(
+      await screen.findByRole('alert'),
+    ).toHaveTextContent(
+      'You do not have permission to access this information.',
+    );
+
+    expect(
+      screen.queryByText(
+        'Sensitive forbidden response',
+      ),
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByRole('button', {
+        name: 'Try again',
+      }),
+    ).not.toBeInTheDocument();
   });
 
   it('shows an empty state when no species are available', async () => {
