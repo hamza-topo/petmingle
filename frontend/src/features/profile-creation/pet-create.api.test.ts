@@ -45,14 +45,6 @@ describe('petCreateRequest', () => {
 
     vi.stubGlobal('fetch', fetchMock);
 
-    const photo = new File(
-      ['photo'],
-      'milo.png',
-      {
-        type: 'image/png',
-      },
-    );
-
     await expect(
       petCreateRequest(
         {
@@ -60,7 +52,6 @@ describe('petCreateRequest', () => {
           raceId: 20,
           name: '  Milo  ',
           age: 4,
-          photo,
         },
         'test-token',
       ),
@@ -89,7 +80,7 @@ describe('petCreateRequest', () => {
     expect(body.get('race_id')).toBe('20');
     expect(body.get('name')).toBe('Milo');
     expect(body.get('age')).toBe('4');
-    expect(body.get('image')).toBe(photo);
+    expect(body.has('image')).toBe(false);
 
     expect(body.has('size')).toBe(false);
     expect(body.has('traits')).toBe(false);
