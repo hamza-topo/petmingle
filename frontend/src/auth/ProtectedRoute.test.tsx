@@ -138,8 +138,14 @@ describe('ProtectedRoute', () => {
     expect(
       screen.getByRole('alert'),
     ).toHaveTextContent(
-      'PetMingle could not reach the server',
+      'Unable to reach PetMingle. Refresh the page to try again.',
     );
+
+    expect(
+      screen.queryByRole('button', {
+        name: 'Try again',
+      }),
+    ).not.toBeInTheDocument();
 
     expect(
       screen.queryByText(/Sign in destination/),

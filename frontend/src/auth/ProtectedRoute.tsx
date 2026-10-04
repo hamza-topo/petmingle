@@ -1,4 +1,10 @@
-import { Navigate, Outlet, useLocation } from 'react-router';
+import {
+  Navigate,
+  Outlet,
+  useLocation,
+} from 'react-router';
+
+import { ApiState } from '../components/ApiState';
 import { useAuth } from './AuthProvider';
 
 export function ProtectedRoute() {
@@ -8,7 +14,10 @@ export function ProtectedRoute() {
   if (auth.status === 'loading') {
     return (
       <main className="auth-route-state">
-        <p role="status">Restoring your session…</p>
+        <ApiState
+          kind="loading"
+          message="Restoring your session…"
+        />
       </main>
     );
   }
@@ -16,13 +25,11 @@ export function ProtectedRoute() {
   if (auth.status === 'error') {
     return (
       <main className="auth-route-state">
-        <div className="auth-route-message">
-          <h1>We couldn’t verify your session</h1>
-          <p role="alert">
-            PetMingle could not reach the server. Refresh the page and try
-            again.
-          </p>
-        </div>
+        <ApiState
+          kind="error"
+          title="We couldn’t verify your session"
+          message="Unable to reach PetMingle. Refresh the page to try again."
+        />
       </main>
     );
   }
