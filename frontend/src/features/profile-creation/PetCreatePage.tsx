@@ -68,7 +68,6 @@ const serverFieldMap: Record<
   race_id: 'raceId',
   name: 'name',
   age: 'age',
-  image: 'photo',
 };
 
 export function PetCreatePage() {
@@ -274,7 +273,6 @@ export function PetCreatePage() {
           raceId: Number(values.raceId),
           name: values.name,
           age: Number(values.age),
-          photo: values.photo,
         },
         token,
       );
