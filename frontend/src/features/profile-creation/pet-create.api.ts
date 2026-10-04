@@ -5,7 +5,6 @@ export type CreatePetInput = {
   raceId: number;
   name: string;
   age: number;
-  photo: File | null;
 };
 
 export type CreatedPet = {
@@ -37,10 +36,6 @@ export async function petCreateRequest(
   body.set('race_id', String(input.raceId));
   body.set('name', input.name.trim());
   body.set('age', String(input.age));
-
-  if (input.photo) {
-    body.set('image', input.photo);
-  }
 
   const response = await apiRequest<CreatePetResponse>(
     '/pets',
