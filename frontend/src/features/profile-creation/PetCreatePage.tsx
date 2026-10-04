@@ -20,6 +20,7 @@ import {
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
+import { useAuth } from '../../auth/AuthProvider';
 import { tokenStorage } from '../../auth/tokenStorage';
 import { ActionButton } from '../../components/Action';
 import { SiteHeader } from '../../components/SiteHeader';
@@ -61,6 +62,7 @@ type PetCreatePageProps = {
 export function PetCreatePage({
   onLocalSubmit,
 }: PetCreatePageProps) {
+  const { user } = useAuth();
   const [submitted, setSubmitted] = useState(false);
 
   const [taxonomy, setTaxonomy] = useState<Taxonomy>({
@@ -242,7 +244,16 @@ export function PetCreatePage({
         Skip to pet profile form
       </a>
 
-      <SiteHeader />
+      <SiteHeader
+        identity={
+          user
+            ? {
+                name: user.name,
+                kind: 'account',
+              }
+            : undefined
+        }
+      />
 
       <main
         id="pet-create"

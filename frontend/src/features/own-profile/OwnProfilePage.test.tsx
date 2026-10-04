@@ -300,11 +300,19 @@ describe('Own pet profile', () => {
       }),
     ).not.toHaveAttribute('aria-current');
 
+    const petMenu = screen.getByRole('button', {
+      name: `${backendPet.name} pet menu — unavailable`,
+    });
+
+    expect(petMenu).toBeVisible();
+
     expect(
-      screen.getByRole('button', {
-        name: `${backendPet.name} pet menu — unavailable`,
-      }),
-    ).toBeVisible();
+      within(petMenu).getByRole('img'),
+    ).toHaveAccessibleName(/Milo avatar/);
+
+    expect(
+      within(petMenu).getByRole('img'),
+    ).not.toHaveAccessibleName(/Nala/);
 
     await user.click(
       screen.getByRole('link', {
@@ -325,11 +333,23 @@ describe('Own pet profile', () => {
 
     await waitForProfile();
 
+    expect(
+      screen.getByRole('button', {
+        name: `${backendPet.name} pet menu — unavailable`,
+      }),
+    ).toBeVisible();
+
     firstRender.unmount();
 
     renderProfile();
 
     await waitForProfile();
+
+    expect(
+      screen.getByRole('button', {
+        name: `${backendPet.name} pet menu — unavailable`,
+      }),
+    ).toBeVisible();
 
     expect(
       mockedCurrentPetProfileRequest,

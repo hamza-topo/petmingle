@@ -28,6 +28,24 @@ describe('Discovery page', () => {
     expect(screen.getByRole('heading', { name: 'More Amazing Pets Nearby' })).toBeVisible();
   });
 
+  it('renders the authenticated user identity in the header', () => {
+    renderDiscovery();
+
+    const account = screen.getByRole('button', {
+      name: 'Hamza account — unavailable in this preview',
+    });
+
+    expect(account).toBeVisible();
+    expect(account).toHaveTextContent('Hamza');
+    expect(
+      within(account).getByRole('img'),
+    ).toHaveAccessibleName(/Hamza avatar/);
+
+    expect(
+      screen.queryByText('Sarah'),
+    ).not.toBeInTheDocument();
+  });
+
   it('renders navigation with Discover active and links to implemented screens', () => {
     renderDiscovery();
     const nav = within(screen.getByRole('navigation', { name: 'PetMingle navigation' }));

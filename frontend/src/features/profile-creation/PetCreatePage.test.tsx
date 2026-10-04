@@ -2,6 +2,7 @@ import {
   render,
   screen,
   waitFor,
+  within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
@@ -17,7 +18,10 @@ import {
 import { App } from '../../app/App';
 import { useAuth } from '../../auth/AuthProvider';
 import { tokenStorage } from '../../auth/tokenStorage';
-import { authenticatedAuthState } from '../../test/authFixtures';
+import {
+  authenticatedAuthState,
+  authenticatedWithoutPetAuthState,
+} from '../../test/authFixtures';
 import { PetCreatePage } from './PetCreatePage';
 import { taxonomyRequest } from './taxonomy.api';
 
@@ -173,6 +177,36 @@ describe('Pet profile creation', () => {
         name: 'Dog',
       }),
     ).toBeInTheDocument();
+  });
+
+  it('keeps authenticated account identity when no pet exists', async () => {
+    mockedUseAuth.mockReturnValue(
+      authenticatedWithoutPetAuthState(),
+    );
+
+    renderForm();
+
+    expect(
+      await screen.findByRole('option', {
+        name: 'Dog',
+      }),
+    ).toBeInTheDocument();
+
+    expect(
+      screen.queryByRole('link', {
+        name: 'Sign In',
+      }),
+    ).not.toBeInTheDocument();
+
+    const account = screen.getByRole('button', {
+      name: 'Hamza account — unavailable',
+    });
+
+    expect(account).toHaveTextContent('Hamza');
+
+    expect(
+      within(account).getByRole('img'),
+    ).toHaveAccessibleName(/Hamza avatar/);
   });
 
   it('loads taxonomy using the authenticated token', async () => {
