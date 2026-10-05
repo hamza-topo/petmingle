@@ -21,69 +21,53 @@ describe('Matches API adapter', () => {
   });
 
   it('loads active and past relationships using Pet IDs only', async () => {
-    mockedApiRequest.mockImplementation(
-      async path => {
-        if (path === '/matches') {
-          return {
-            success: true,
-            message: 'List of matches.',
-            data: [
-              {
-                id: 11,
-                from_pet_id: 42,
-                to_pet_id: 51,
-              },
-            ],
-          };
-        }
-
-        if (path === '/mismatches') {
-          return {
-            success: true,
-            message: 'List of mismatches.',
-            data: [
-              {
-                id: 12,
-                from_pet_id: 42,
-                to_pet_id: 63,
-              },
-            ],
-          };
-        }
-
-        if (path === '/pets/51') {
-          return {
-            success: true,
-            message: 'Pet has been found.',
-            data: {
-              id: 51,
-              name: 'Milo',
-              age: 4,
-              sexe: 1,
-              images: ['pets/milo.jpg'],
-              about: 'Friendly and curious.',
-            },
-          };
-        }
-
-        if (path === '/pets/63') {
-          return {
-            success: true,
-            message: 'Pet has been found.',
-            data: {
-              id: 63,
-              name: 'Luna',
-              age: 3,
-              sexe: 2,
-              images: [],
-              about: null,
-            },
-          };
-        }
-
-        throw new Error(`Unexpected path: ${path}`);
-      },
-    );
+    mockedApiRequest
+      .mockResolvedValueOnce({
+        success: true,
+        message: 'List of matches.',
+        data: [
+          {
+            id: 11,
+            from_pet_id: 42,
+            to_pet_id: 51,
+          },
+        ],
+      })
+      .mockResolvedValueOnce({
+        success: true,
+        message: 'List of mismatches.',
+        data: [
+          {
+            id: 12,
+            from_pet_id: 42,
+            to_pet_id: 63,
+          },
+        ],
+      })
+      .mockResolvedValueOnce({
+        success: true,
+        message: 'Pet has been found.',
+        data: {
+          id: 51,
+          name: 'Milo',
+          age: 4,
+          sexe: 1,
+          images: ['pets/milo.jpg'],
+          about: 'Friendly and curious.',
+        },
+      })
+      .mockResolvedValueOnce({
+        success: true,
+        message: 'Pet has been found.',
+        data: {
+          id: 63,
+          name: 'Luna',
+          age: 3,
+          sexe: 2,
+          images: [],
+          about: null,
+        },
+      });
 
     await expect(
       relationshipsRequest({
@@ -153,22 +137,23 @@ describe('Matches API adapter', () => {
   });
 
   it('rejects a relationship whose source is not the authenticated pet', async () => {
-    mockedApiRequest.mockImplementation(
-      async path => ({
+    mockedApiRequest
+      .mockResolvedValueOnce({
         success: true,
-        message: 'Relationships.',
-        data:
-          path === '/matches'
-            ? [
-                {
-                  id: 11,
-                  from_pet_id: 10,
-                  to_pet_id: 51,
-                },
-              ]
-            : [],
-      }),
-    );
+        message: 'List of matches.',
+        data: [
+          {
+            id: 11,
+            from_pet_id: 10,
+            to_pet_id: 51,
+          },
+        ],
+      })
+      .mockResolvedValueOnce({
+        success: true,
+        message: 'List of mismatches.',
+        data: [],
+      });
 
     await expect(
       relationshipsRequest({
@@ -181,44 +166,35 @@ describe('Matches API adapter', () => {
   });
 
   it('rejects target pet lookups that return a different Pet ID', async () => {
-    mockedApiRequest.mockImplementation(
-      async path => {
-        if (path === '/matches') {
-          return {
-            success: true,
-            message: 'List of matches.',
-            data: [
-              {
-                id: 11,
-                from_pet_id: 42,
-                to_pet_id: 51,
-              },
-            ],
-          };
-        }
-
-        if (path === '/mismatches') {
-          return {
-            success: true,
-            message: 'List of mismatches.',
-            data: [],
-          };
-        }
-
-        return {
-          success: true,
-          message: 'Pet has been found.',
-          data: {
-            id: 999,
-            name: 'Wrong pet',
-            age: 4,
-            sexe: 1,
-            images: [],
-            about: null,
+    mockedApiRequest
+      .mockResolvedValueOnce({
+        success: true,
+        message: 'List of matches.',
+        data: [
+          {
+            id: 11,
+            from_pet_id: 42,
+            to_pet_id: 51,
           },
-        };
-      },
-    );
+        ],
+      })
+      .mockResolvedValueOnce({
+        success: true,
+        message: 'List of mismatches.',
+        data: [],
+      })
+      .mockResolvedValueOnce({
+        success: true,
+        message: 'Pet has been found.',
+        data: {
+          id: 999,
+          name: 'Wrong pet',
+          age: 4,
+          sexe: 1,
+          images: [],
+          about: null,
+        },
+      });
 
     await expect(
       relationshipsRequest({
