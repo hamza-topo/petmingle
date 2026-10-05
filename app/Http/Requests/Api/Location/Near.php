@@ -28,13 +28,16 @@ class Near extends FormRequest
             'species_id' => [
                 'sometimes',
                 'integer',
-                'exists:species,id',
+                Rule::exists('species', 'id')
+                    ->whereNull('deleted_at'),
             ],
             'race_id' => [
                 'sometimes',
                 'integer',
                 Rule::exists('races', 'id')->where(
                     function ($query) {
+                        $query->whereNull('deleted_at');
+
                         if ($this->filled('species_id')) {
                             $query->where(
                                 'species_id',
@@ -45,14 +48,10 @@ class Near extends FormRequest
                 ),
             ],
 
-            // Discovery origin and requester identity are server-owned.
             'user_id' => ['prohibited'],
             'latitude' => ['prohibited'],
             'longitude' => ['prohibited'],
             'perimetre' => ['prohibited'],
-
-            // Legacy nested filters stay prohibited. Supported filters
-            // are explicit top-level request fields.
             'filters' => ['prohibited'],
         ];
     }
