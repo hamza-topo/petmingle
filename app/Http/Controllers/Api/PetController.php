@@ -80,6 +80,21 @@ class PetController extends Controller
         );
     }
 
+    public function statistics($id)
+    {
+        $pet = $this->petRepository->getById((int) $id);
+
+        $this->authorize('view', $pet);
+
+        return ApiResponse::success(
+            [
+                'matches' => $pet->matches()->count(),
+                'likes_sent' => $pet->likes()->count(),
+            ],
+            __('Pet profile statistics.')
+        );
+    }
+
     public function update(Update $request, $id)
     {
         $pet = $this->petRepository->getById((int) $id);

@@ -3,6 +3,7 @@ import type {
   ApiEnvelope,
   CurrentPetProfile,
   PetApiRecord,
+  PetProfileStatisticsApiRecord,
   RaceApiRecord,
 } from './profile.types';
 
@@ -31,21 +32,43 @@ export async function currentPetProfileRequest({
     throw new Error('Current pet identity does not match the authenticated account.');
   }
 
-  const raceResponse = await apiRequest<ApiEnvelope<RaceApiRecord>>(
-    `/races/${pet.race_id}`,
-    {
-      method: 'GET',
-      token,
-    },
-  );
+  const [raceResponse, statisticsResponse] =
+    await Promise.all([
+      apiRequest<ApiEnvelope<RaceApiRecord>>(
+        `/races/${pet.race_id}`,
+        {
+          method: 'GET',
+          token,
+        },
+      ),
+      apiRequest<
+        ApiEnvelope<PetProfileStatisticsApiRecord>
+      >(
+        `/pets/${pet.id}/statistics`,
+        {
+          method: 'GET',
+          token,
+        },
+      ),
+    ]);
 
   const race = raceResponse.data;
+  const statistics = statisticsResponse.data;
 
   if (
     race.id !== pet.race_id
     || race.species_id !== pet.species_id
   ) {
     throw new Error('Current pet taxonomy does not match the pet record.');
+  }
+
+  if (
+    !Number.isInteger(statistics.matches)
+    || statistics.matches < 0
+    || !Number.isInteger(statistics.likes_sent)
+    || statistics.likes_sent < 0
+  ) {
+    throw new Error('Current pet statistics are invalid.');
   }
 
   return {
@@ -60,6 +83,10 @@ export async function currentPetProfileRequest({
     images: pet.images.filter(
       image => typeof image === 'string' && image.trim() !== '',
     ),
+    statistics: {
+      matches: statistics.matches,
+      likesSent: statistics.likes_sent,
+    },
   };
 }
 

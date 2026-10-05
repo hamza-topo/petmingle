@@ -4,7 +4,6 @@ import {
   Pencil,
 } from 'lucide-react';
 import { PetLocation } from '../../../components/PetLocation';
-import { profileStats } from '../profile.fixtures';
 import type { CurrentPetProfile } from '../profile.types';
 
 export function ProfileEdit({
@@ -14,6 +13,19 @@ export function ProfileEdit({
   label: string;
   onClick?: () => void;
 }) {
+  const statistics = [
+    {
+      id: 'matches',
+      label: 'Matches',
+      value: pet.statistics.matches,
+    },
+    {
+      id: 'likes-sent',
+      label: 'Likes sent',
+      value: pet.statistics.likesSent,
+    },
+  ];
+
   return (
     <button
       type="button"
@@ -71,7 +83,7 @@ export function PetProfileSummary({
         className="own-stats"
         aria-label="Pet profile statistics"
       >
-        {profileStats.map(stat => (
+        {statistics.map(stat => (
           <div key={stat.id}>
             <dt>{stat.label}</dt>
             <dd>{stat.value}</dd>

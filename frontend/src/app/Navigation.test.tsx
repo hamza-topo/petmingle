@@ -103,6 +103,10 @@ it('connects all five screens and the Plus section using existing visible contro
     breed: 'Golden Retriever',
     biography: 'Friendly dog',
     images: [],
+    statistics: {
+      matches: 0,
+      likesSent: 0,
+    },
   });
 
   render(
