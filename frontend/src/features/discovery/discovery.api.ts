@@ -69,6 +69,29 @@ export type DiscoveryResult = {
   meta: DiscoveryPageMeta;
 };
 
+export type DiscoveryFilterValue = {
+  radiusKm: number;
+  speciesId: number | null;
+  raceId: number | null;
+};
+
+export const DEFAULT_DISCOVERY_FILTERS: DiscoveryFilterValue = {
+  radiusKm: 5,
+  speciesId: null,
+  raceId: null,
+};
+
+export function discoveryFiltersEqual(
+  left: DiscoveryFilterValue,
+  right: DiscoveryFilterValue,
+): boolean {
+  return (
+    left.radiusKm === right.radiusKm
+    && left.speciesId === right.speciesId
+    && left.raceId === right.raceId
+  );
+}
+
 function isPositiveInteger(value: number): boolean {
   return Number.isInteger(value) && value > 0;
 }
@@ -134,25 +157,39 @@ export function mapDiscoveryItem(
 export async function discoveryRequest({
   token,
   radiusKm = 5,
+  speciesId = null,
+  raceId = null,
   page = 1,
   perPage = 24,
 }: {
   token: string;
   radiusKm?: number;
+  speciesId?: number | null;
+  raceId?: number | null;
   page?: number;
   perPage?: number;
 }): Promise<DiscoveryResult> {
+  const requestBody: Record<string, number> = {
+    radius_km: radiusKm,
+    page,
+    per_page: perPage,
+  };
+
+  if (speciesId !== null) {
+    requestBody.species_id = speciesId;
+  }
+
+  if (raceId !== null) {
+    requestBody.race_id = raceId;
+  }
+
   const response =
     await apiRequest<DiscoveryApiResponse>(
       '/locations/nears',
       {
         method: 'POST',
         token,
-        body: JSON.stringify({
-          radius_km: radiusKm,
-          page,
-          per_page: perPage,
-        }),
+        body: JSON.stringify(requestBody),
       },
     );
 

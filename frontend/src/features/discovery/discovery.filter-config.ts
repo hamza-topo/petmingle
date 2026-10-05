@@ -1,31 +1,18 @@
 import {
   Heart,
-  PawPrint,
   UsersRound,
   Zap,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
-export type FilterKey =
-  | 'species'
-  | 'size'
-  | 'energy'
-  | 'personality';
-
-export type FilterGroup = {
-  key: FilterKey;
+export type UnsupportedFilterGroup = {
+  key: 'size' | 'energy' | 'personality';
   label: string;
   icon: LucideIcon;
   options: readonly string[];
 };
 
-export const filterGroups: FilterGroup[] = [
-  {
-    key: 'species',
-    label: 'Species',
-    icon: PawPrint,
-    options: ['All', 'Dogs', 'Cats', 'Other'],
-  },
+export const unsupportedFilterGroups: UnsupportedFilterGroup[] = [
   {
     key: 'size',
     label: 'Size (dogs)',

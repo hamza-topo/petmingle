@@ -1,6 +1,7 @@
 import {
   useCallback,
   useEffect,
+  useRef,
   useState,
 } from 'react';
 import { PawPrint } from 'lucide-react';
@@ -13,18 +14,28 @@ import {
   accountLocationLabel,
   useAccountLocation,
 } from '../account-location/AccountLocationProvider';
+import { taxonomyRequest } from '../profile-creation/taxonomy.api';
+import type { Taxonomy } from '../profile-creation/taxonomy.types';
 import { DiscoveryFilters } from './components/DiscoveryFilters';
 import { DiscoveryHeader } from './components/DiscoveryHeader';
 import { DiscoverySidebar } from './components/DiscoverySidebar';
 import { FeaturedPetCard } from './components/FeaturedPetCard';
 import { PetGrid } from './components/PetGrid';
 import {
+  DEFAULT_DISCOVERY_FILTERS,
+  discoveryFiltersEqual,
   discoveryRequest,
+  type DiscoveryFilterValue,
   type DiscoveryPageMeta,
   type DiscoveryPet,
 } from './discovery.api';
 
 type DiscoveryStatus =
+  | 'loading'
+  | 'ready'
+  | 'error';
+
+type TaxonomyStatus =
   | 'loading'
   | 'ready'
   | 'error';
@@ -53,9 +64,71 @@ export function DiscoveryPage() {
   const [loadingMore, setLoadingMore] =
     useState(false);
 
+  const [filters, setFilters] =
+    useState<DiscoveryFilterValue>({
+      ...DEFAULT_DISCOVERY_FILTERS,
+    });
+
+  const [taxonomy, setTaxonomy] =
+    useState<Taxonomy | null>(null);
+  const [taxonomyStatus, setTaxonomyStatus] =
+    useState<TaxonomyStatus>('loading');
+  const [taxonomyError, setTaxonomyError] =
+    useState<unknown | null>(null);
+  const [taxonomyReloadKey, setTaxonomyReloadKey] =
+    useState(0);
+
+  const requestId = useRef(0);
+
+  useEffect(() => {
+    let cancelled = false;
+
+    async function loadTaxonomy() {
+      const token = tokenStorage.get();
+
+      if (!token) {
+        if (!cancelled) {
+          setTaxonomy(null);
+          setTaxonomyStatus('error');
+          setTaxonomyError(
+            new ApiError(
+              'Authentication token is missing.',
+              401,
+            ),
+          );
+        }
+        return;
+      }
+
+      setTaxonomyStatus('loading');
+      setTaxonomyError(null);
+
+      try {
+        const result = await taxonomyRequest(token);
+
+        if (!cancelled) {
+          setTaxonomy(result);
+          setTaxonomyStatus('ready');
+        }
+      } catch (caught) {
+        if (!cancelled) {
+          setTaxonomy(null);
+          setTaxonomyStatus('error');
+          setTaxonomyError(caught);
+        }
+      }
+    }
+
+    void loadTaxonomy();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [taxonomyReloadKey]);
+
   const loadPage = useCallback(
     async (
-      page: number,
+      pageNumber: number,
       append = false,
     ): Promise<void> => {
       const token = tokenStorage.get();
@@ -71,6 +144,9 @@ export function DiscoveryPage() {
         return;
       }
 
+      const currentRequestId =
+        ++requestId.current;
+
       if (append) {
         setLoadingMore(true);
       } else {
@@ -81,10 +157,18 @@ export function DiscoveryPage() {
       try {
         const result = await discoveryRequest({
           token,
-          radiusKm: 5,
-          page,
+          radiusKm: filters.radiusKm,
+          speciesId: filters.speciesId,
+          raceId: filters.raceId,
+          page: pageNumber,
           perPage: 24,
         });
+
+        if (
+          currentRequestId !== requestId.current
+        ) {
+          return;
+        }
 
         setPets(current => {
           if (!append) {
@@ -106,6 +190,12 @@ export function DiscoveryPage() {
         setLoadError(null);
         setStatus('ready');
       } catch (caught) {
+        if (
+          currentRequestId !== requestId.current
+        ) {
+          return;
+        }
+
         setLoadError(caught);
 
         if (!append) {
@@ -114,10 +204,18 @@ export function DiscoveryPage() {
           setStatus('error');
         }
       } finally {
-        setLoadingMore(false);
+        if (
+          currentRequestId === requestId.current
+        ) {
+          setLoadingMore(false);
+        }
       }
     },
-    [],
+    [
+      filters.radiusKm,
+      filters.speciesId,
+      filters.raceId,
+    ],
   );
 
   useEffect(() => {
@@ -125,6 +223,7 @@ export function DiscoveryPage() {
       accountLocation.status !== 'ready'
       || !accountLocation.currentLocation
     ) {
+      requestId.current += 1;
       setPets([]);
       setMeta(initialMeta);
       setLoadError(null);
@@ -141,6 +240,36 @@ export function DiscoveryPage() {
     loadPage,
   ]);
 
+  function applyFilters(
+    nextFilters: DiscoveryFilterValue,
+  ) {
+    if (
+      discoveryFiltersEqual(
+        filters,
+        nextFilters,
+      )
+    ) {
+      return;
+    }
+
+    setFilters({ ...nextFilters });
+  }
+
+  function resetFilters() {
+    if (
+      discoveryFiltersEqual(
+        filters,
+        DEFAULT_DISCOVERY_FILTERS,
+      )
+    ) {
+      return;
+    }
+
+    setFilters({
+      ...DEFAULT_DISCOVERY_FILTERS,
+    });
+  }
+
   const closestPet = pets[0] ?? null;
   const gridPets = pets.slice(1);
   const hasMore =
@@ -149,6 +278,11 @@ export function DiscoveryPage() {
   const failure =
     loadError !== null
       ? describeApiFailure(loadError)
+      : null;
+
+  const taxonomyFailure =
+    taxonomyError !== null
+      ? describeApiFailure(taxonomyError)
       : null;
 
   return (
@@ -267,7 +401,7 @@ export function DiscoveryPage() {
                   <ApiState
                     kind="empty"
                     title="No nearby pets yet"
-                    message="No persisted pet profiles were found within 5 km."
+                    message="No persisted pet profiles matched the current Discovery filters."
                   />
                 )}
 
@@ -298,7 +432,23 @@ export function DiscoveryPage() {
         </div>
 
         <DiscoveryFilters
+          value={filters}
           resultCount={meta.total}
+          taxonomy={taxonomy}
+          taxonomyLoading={
+            taxonomyStatus === 'loading'
+          }
+          taxonomyError={
+            taxonomyFailure?.message ?? null
+          }
+          loading={status === 'loading'}
+          onApply={applyFilters}
+          onReset={resetFilters}
+          onRetryTaxonomy={() =>
+            setTaxonomyReloadKey(
+              current => current + 1,
+            )
+          }
         />
       </main>
     </div>

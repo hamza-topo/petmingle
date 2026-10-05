@@ -32,9 +32,8 @@ class LocationController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Display nearby Discovery results.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function near(Near $request)
@@ -43,19 +42,18 @@ class LocationController extends Controller
     }
 
     /**
-     * Display a listing of the resource.
+     * Legacy route using the same normalized Discovery contract.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function filter(Near $request)
     {
         return $this->nearbyResponse($request);
     }
+
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Store $request)
@@ -75,7 +73,6 @@ class LocationController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  string  $id
      * @return \Illuminate\Http\Response
      */
     public function show(string $id)
@@ -93,8 +90,6 @@ class LocationController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function update(Store $request, $id)
@@ -117,7 +112,6 @@ class LocationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -136,7 +130,6 @@ class LocationController extends Controller
     /**
      * Restore the specified resource from storage.
      *
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
     public function restore($id)
@@ -180,6 +173,12 @@ class LocationController extends Controller
         $radiusKm = (int) ($validated['radius_km'] ?? 5);
         $perPage = (int) ($validated['per_page'] ?? 24);
         $page = (int) ($validated['page'] ?? 1);
+        $speciesId = isset($validated['species_id'])
+            ? (int) $validated['species_id']
+            : null;
+        $raceId = isset($validated['race_id'])
+            ? (int) $validated['race_id']
+            : null;
 
         $paginator = $this->locationRepository->nearbyForUser(
             requesterUserId: $user->id,
@@ -188,12 +187,24 @@ class LocationController extends Controller
             radiusKm: $radiusKm,
             perPage: $perPage,
             page: $page,
+            speciesId: $speciesId,
+            raceId: $raceId,
         );
 
-        $paginator->appends([
+        $query = [
             'radius_km' => $radiusKm,
             'per_page' => $perPage,
-        ]);
+        ];
+
+        if ($speciesId !== null) {
+            $query['species_id'] = $speciesId;
+        }
+
+        if ($raceId !== null) {
+            $query['race_id'] = $raceId;
+        }
+
+        $paginator->appends($query);
 
         return ApiResponse::paginated(
             $paginator,

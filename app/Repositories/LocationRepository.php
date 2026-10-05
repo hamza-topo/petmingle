@@ -87,7 +87,9 @@ class LocationRepository
         float $longitude,
         int $radiusKm = EnumsLocation::PERIMETRE,
         int $perPage = 24,
-        int $page = 1
+        int $page = 1,
+        ?int $speciesId = null,
+        ?int $raceId = null
     ): LengthAwarePaginator {
         $blockedUserIds = Block::query()
             ->where(function ($query) use ($requesterUserId) {
@@ -132,6 +134,30 @@ class LocationRepository
                     )
             )
             ->whereHas('user.pet.race')
+            ->when(
+                $speciesId !== null,
+                fn ($query) =>
+                    $query->whereHas(
+                        'user.pet',
+                        fn ($pet) =>
+                            $pet->where(
+                                'species_id',
+                                $speciesId
+                            )
+                    )
+            )
+            ->when(
+                $raceId !== null,
+                fn ($query) =>
+                    $query->whereHas(
+                        'user.pet',
+                        fn ($pet) =>
+                            $pet->where(
+                                'race_id',
+                                $raceId
+                            )
+                    )
+            )
             ->havingRaw('distance <= ?', [$radiusKm])
             ->orderBy('distance')
             ->orderBy('locations.id')
@@ -145,7 +171,6 @@ class LocationRepository
             'page',
             $page
         );
-
     }
 
     public function getByIdWithTrashed(int $locationId): Location

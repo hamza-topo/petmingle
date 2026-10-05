@@ -138,7 +138,10 @@
   .filter-choice span { display: block; min-width: 66px; padding: 8px 12px; border: 1px solid transparent; border-radius: var(--radius-pill); background: var(--color-canvas); color: var(--color-text-secondary); font-size: 13px; line-height: 18px; text-align: center; }
   .filter-choice input:checked + span { border-color: var(--color-brand-blue); background: var(--color-surface-blue); color: var(--color-brand-blue); box-shadow: inset 0 0 0 3px var(--color-surface); }
   .filter-choice input:focus-visible + span { outline: 3px solid var(--color-brand-blue); outline-offset: 3px; }
+  .discovery-taxonomy-error { margin-top: 14px; padding: 10px 12px; border-radius: 12px; background: var(--color-canvas); color: var(--color-brand-pink); font-size: 12px; line-height: 17px; }
+  .discovery-taxonomy-error button { margin-top: 6px; color: var(--color-brand-blue); font-weight: 700; }
   .discovery-filter-deferred { margin-top: 22px; color: var(--color-text-secondary); font-size: 12px; line-height: 18px; }
+  .discovery-filter-result-count { margin-top: 16px; color: var(--color-text-secondary); font-size: 12px; font-weight: 700; text-align: center; }
   .discovery-filters fieldset:disabled, .discovery-filters select:disabled { opacity: .6; cursor: not-allowed; }
   .discovery-filters .show-pets { width: 100%; margin-top: 25px; padding-inline: 10px; font-size: 18px; }
   .show-pets > svg { flex-shrink: 0; }

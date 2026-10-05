@@ -159,6 +159,88 @@ describe('Discovery API adapter', () => {
     );
   });
 
+  it('maps supported distance and taxonomy filters to explicit request fields', async () => {
+    mockedApiRequest.mockResolvedValueOnce({
+      success: true,
+      message: 'Nearby pets.',
+      data: [],
+      meta: {
+        current_page: 1,
+        last_page: 1,
+        per_page: 24,
+        total: 0,
+      },
+      links: {
+        first: null,
+        last: null,
+        prev: null,
+        next: null,
+      },
+    });
+
+    await discoveryRequest({
+      token: 'test-token',
+      radiusKm: 25,
+      speciesId: 3,
+      raceId: 9,
+    });
+
+    expect(mockedApiRequest).toHaveBeenCalledWith(
+      '/locations/nears',
+      {
+        method: 'POST',
+        token: 'test-token',
+        body: JSON.stringify({
+          radius_km: 25,
+          page: 1,
+          per_page: 24,
+          species_id: 3,
+          race_id: 9,
+        }),
+      },
+    );
+  });
+
+  it('omits empty taxonomy filters from the request body', async () => {
+    mockedApiRequest.mockResolvedValueOnce({
+      success: true,
+      message: 'Nearby pets.',
+      data: [],
+      meta: {
+        current_page: 1,
+        last_page: 1,
+        per_page: 24,
+        total: 0,
+      },
+      links: {
+        first: null,
+        last: null,
+        prev: null,
+        next: null,
+      },
+    });
+
+    await discoveryRequest({
+      token: 'test-token',
+      speciesId: null,
+      raceId: null,
+    });
+
+    const [, request] =
+      mockedApiRequest.mock.calls[0] as [
+        string,
+        RequestInit,
+      ];
+
+    expect(
+      JSON.parse(String(request.body)),
+    ).toEqual({
+      radius_km: 5,
+      page: 1,
+      per_page: 24,
+    });
+  });
+
   it('uses an explicit placeholder when a persisted pet has no image', () => {
     expect(
       mapDiscoveryItem({
