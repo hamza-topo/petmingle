@@ -8,6 +8,7 @@ import { LandingPage } from '../features/landing/LandingPage';
 import { MessagingPage } from '../features/messaging/MessagingPage';
 import { OwnProfilePage } from '../features/own-profile/OwnProfilePage';
 import { PetCreatePage } from '../features/profile-creation/PetCreatePage';
+import { AccountLocationRoute } from '../features/account-location/AccountLocationRoute';
 import { RouteScroll } from './RouteScroll';
 
 export function App() {
@@ -27,17 +28,20 @@ export function App() {
 
           <Route element={<PetRequiredRoute />}>
             <Route
-              path="/discover"
-              element={<DiscoveryPage />}
-            />
-            <Route
               path="/messages"
               element={<MessagingPage />}
             />
-            <Route
-              path="/profile"
-              element={<OwnProfilePage />}
-            />
+
+            <Route element={<AccountLocationRoute />}>
+              <Route
+                path="/discover"
+                element={<DiscoveryPage />}
+              />
+              <Route
+                path="/profile"
+                element={<OwnProfilePage />}
+              />
+            </Route>
           </Route>
         </Route>
 
