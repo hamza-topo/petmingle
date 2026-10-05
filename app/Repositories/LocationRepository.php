@@ -134,6 +134,7 @@ class LocationRepository
             ->whereHas('user.pet.race')
             ->havingRaw('distance <= ?', [$radiusKm])
             ->orderBy('distance')
+            ->orderBy('locations.id')
             ->with([
                 'user.pet.race',
             ]);
