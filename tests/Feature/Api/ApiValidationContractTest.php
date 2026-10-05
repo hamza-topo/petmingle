@@ -101,7 +101,7 @@ class ApiValidationContractTest extends TestCase
 
         $this->assertValidationContract(
             $response,
-            ['from', 'to']
+            ['to_pet_id']
         );
     }
 
