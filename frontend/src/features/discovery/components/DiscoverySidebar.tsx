@@ -10,9 +10,9 @@ import { Link, NavLink } from 'react-router';
 const navigation = [
   {
     label: 'Matches',
-    description: 'Pets & people you like',
+    description: 'Mutual pet connections',
     icon: Heart,
-    to: null,
+    to: '/matches',
   },
   {
     label: 'Messages',
@@ -69,7 +69,20 @@ export function DiscoverySidebar() {
             </>
           );
 
-          return to ? (
+          if (label === 'Matches') {
+            return (
+              <NavLink
+                key={label}
+                className="discovery-nav-item"
+                to={to}
+                end
+              >
+                {content}
+              </NavLink>
+            );
+          }
+
+          return (
             <Link
               key={label}
               className="discovery-nav-item"
@@ -77,16 +90,6 @@ export function DiscoverySidebar() {
             >
               {content}
             </Link>
-          ) : (
-            <button
-              key={label}
-              className="discovery-nav-item"
-              type="button"
-              disabled
-              title="Matches is not available yet"
-            >
-              {content}
-            </button>
           );
         },
       )}
