@@ -51,6 +51,14 @@ describe('current pet profile API', () => {
           species_id: 3,
           name: 'Labrador Retriever',
         },
+      })
+      .mockResolvedValueOnce({
+        success: true,
+        message: 'Pet profile statistics.',
+        data: {
+          matches: 12,
+          likes_sent: 8,
+        },
       });
 
     await expect(
@@ -69,6 +77,10 @@ describe('current pet profile API', () => {
       breed: 'Labrador Retriever',
       biography: 'Friendly and curious.',
       images: [],
+      statistics: {
+        matches: 12,
+        likesSent: 8,
+      },
     });
 
     expect(mockedApiRequest).toHaveBeenNthCalledWith(
@@ -83,6 +95,15 @@ describe('current pet profile API', () => {
     expect(mockedApiRequest).toHaveBeenNthCalledWith(
       2,
       '/races/7',
+      {
+        method: 'GET',
+        token: 'test-token',
+      },
+    );
+
+    expect(mockedApiRequest).toHaveBeenNthCalledWith(
+      3,
+      '/pets/42/statistics',
       {
         method: 'GET',
         token: 'test-token',
@@ -286,6 +307,14 @@ describe('current pet profile API', () => {
           id: 7,
           species_id: 3,
           name: 'Labrador Retriever',
+        },
+      })
+      .mockResolvedValueOnce({
+        success: true,
+        message: 'Pet profile statistics.',
+        data: {
+          matches: 0,
+          likes_sent: 0,
         },
       });
 
