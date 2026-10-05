@@ -4,7 +4,7 @@ import {
   Pencil,
 } from 'lucide-react';
 import { PetLocation } from '../../../components/PetLocation';
-import { ownPet, profileStats } from '../profile.fixtures';
+import { profileStats } from '../profile.fixtures';
 import type { CurrentPetProfile } from '../profile.types';
 
 export function ProfileEdit({
@@ -34,9 +34,11 @@ export function ProfileEdit({
 export function PetProfileSummary({
   pet,
   onEdit,
+  locationLabel,
 }: {
   pet: CurrentPetProfile;
   onEdit?: () => void;
+  locationLabel: string;
 }) {
   return (
     <section
@@ -62,7 +64,7 @@ export function PetProfileSummary({
 
       <PetLocation
         className="own-location"
-        location={ownPet.location}
+        location={locationLabel}
       />
 
       <dl
