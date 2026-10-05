@@ -6,18 +6,32 @@ import {
 
 import { PetCard } from '../../../components/PetCard';
 import { SectionHeading } from '../../../components/SectionHeading';
-import type { DiscoveryPet } from '../discovery.api';
+import type {
+  DiscoveryPet,
+  PetInteractionState,
+} from '../discovery.api';
 
 export function PetGrid({
   pets,
   hasMore,
   loadingMore,
   onLoadMore,
+  interactions,
+  pendingPetIds,
+  onLike,
+  onDislike,
 }: {
   pets: DiscoveryPet[];
   hasMore: boolean;
   loadingMore: boolean;
   onLoadMore: () => void;
+  interactions: ReadonlyMap<
+    number,
+    PetInteractionState
+  >;
+  pendingPetIds: ReadonlySet<number>;
+  onLike: (petId: number) => void;
+  onDislike: (petId: number) => void;
 }) {
   return (
     <section
@@ -93,6 +107,13 @@ export function PetGrid({
               <PetCard
                 pet={pet}
                 variant="nearby"
+                interaction={
+                  interactions.get(pet.id)
+                  ?? pet.interaction
+                }
+                pending={pendingPetIds.has(pet.id)}
+                onLike={() => onLike(pet.id)}
+                onDislike={() => onDislike(pet.id)}
               />
             </li>
           ))}
