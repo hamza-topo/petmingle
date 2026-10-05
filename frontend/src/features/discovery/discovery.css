@@ -94,6 +94,8 @@
   .featured-pet-gallery { position: relative; min-height: 504px; margin-bottom: 8px; border-radius: 16px; overflow: hidden; }
   .featured-pet-photo { position: absolute; inset: 0; width: 100%; height: 100%; }
   .featured-label { position: absolute; top: 16px; left: 18px; display: flex; align-items: center; gap: var(--space-2); height: 36px; padding-inline: 14px; border-radius: var(--radius-pill); color: var(--color-surface); background: var(--color-brand-pink); font-size: 14px; }
+  .discovery-new-pet { display: inline-flex; align-items: center; min-height: 28px; padding-inline: 10px; border-radius: var(--radius-pill); background: var(--color-surface-pink); color: var(--color-brand-pink); font-size: 12px; font-weight: 700; }
+  .discovery-owner-note { color: var(--color-text-secondary); font-size: 13px; font-weight: 600; }
   .gallery-arrow { position: absolute; top: 41%; width: 43px; height: 43px; border-radius: 50%; display: grid; place-items: center; background: var(--color-surface); }
   .gallery-arrow--previous { left: 10px; }
   .gallery-arrow--next { right: 10px; }
@@ -136,6 +138,8 @@
   .filter-choice span { display: block; min-width: 66px; padding: 8px 12px; border: 1px solid transparent; border-radius: var(--radius-pill); background: var(--color-canvas); color: var(--color-text-secondary); font-size: 13px; line-height: 18px; text-align: center; }
   .filter-choice input:checked + span { border-color: var(--color-brand-blue); background: var(--color-surface-blue); color: var(--color-brand-blue); box-shadow: inset 0 0 0 3px var(--color-surface); }
   .filter-choice input:focus-visible + span { outline: 3px solid var(--color-brand-blue); outline-offset: 3px; }
+  .discovery-filter-deferred { margin-top: 22px; color: var(--color-text-secondary); font-size: 12px; line-height: 18px; }
+  .discovery-filters fieldset:disabled, .discovery-filters select:disabled { opacity: .6; cursor: not-allowed; }
   .discovery-filters .show-pets { width: 100%; margin-top: 25px; padding-inline: 10px; font-size: 18px; }
   .show-pets > svg { flex-shrink: 0; }
 
@@ -159,8 +163,9 @@
   .nearby-pet-metadata { padding: 4px 11px 8px; margin-top: auto; }
   .nearby-pet-metadata .pet-location { font-size: 12px; line-height: 18px; white-space: nowrap; gap: 4px; }
   .nearby-pet-metadata .pet-location > svg { width: 13px; height: 13px; }
-  .nearby-pet-metadata .pet-traits { margin-top: 7px; gap: 6px; flex-wrap: nowrap; }
-  .nearby-pet-metadata .pet-trait { flex: 1; padding: 6px 8px; font-size: 11px; line-height: 17px; }
+  .discovery-grid-empty { margin-top: 14px; padding: 18px; border: 1px dashed var(--color-border); border-radius: 14px; color: var(--color-text-secondary); text-align: center; }
+  .discovery-load-more { display: block; min-height: 42px; margin: 18px auto 0; padding-inline: 20px; border: 1px solid var(--color-border-action); border-radius: var(--radius-pill); color: var(--color-brand-blue); font-weight: 700; }
+  .discovery-load-more:disabled { opacity: .55; cursor: not-allowed; }
 
   /* Keep all desktop regions visible; no mobile sidebar or stacked screen. */
   @media (max-width: 1360px) {

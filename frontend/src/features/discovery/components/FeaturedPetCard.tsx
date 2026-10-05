@@ -1,39 +1,98 @@
-import { ChevronLeft, ChevronRight, Heart, Image, PawPrint, ShieldCheck, Star } from 'lucide-react';
-import { ActionButton } from '../../../components/Action';
-import { ReferenceImage } from '../../../components/ReferenceImage';
-import { Avatar } from '../../../components/Avatar';
-import { PetLocation } from '../../../components/PetLocation';
-import { PetTraitBadge } from '../../../components/PetTraitBadge';
-import { featuredDiscoveryPet as pet } from '../discovery.fixtures';
+import {
+  Heart,
+  Image,
+  MapPin,
+  PawPrint,
+} from 'lucide-react';
 
-export function FeaturedPetCard() {
+import { ActionButton } from '../../../components/Action';
+import { PetLocation } from '../../../components/PetLocation';
+import { ReferenceImage } from '../../../components/ReferenceImage';
+import type { DiscoveryPet } from '../discovery.api';
+
+export function FeaturedPetCard({
+  pet,
+}: {
+  pet: DiscoveryPet;
+}) {
   return (
-    <article className="featured-discovery-pet" aria-labelledby="featured-pet-name">
+    <article
+      className="featured-discovery-pet"
+      aria-labelledby={`featured-pet-${pet.id}`}
+    >
       <div className="featured-pet-gallery">
-        <ReferenceImage asset={pet.photo} className="featured-pet-photo" />
-        <span className="featured-label"><Star size={21} aria-hidden="true" />Featured</span>
-        <button className="gallery-arrow gallery-arrow--previous" type="button" disabled aria-label="Previous photo — reference assets unavailable"><ChevronLeft size={26} aria-hidden="true" /></button>
-        <button className="gallery-arrow gallery-arrow--next" type="button" disabled aria-label="Next photo — reference assets unavailable"><ChevronRight size={26} aria-hidden="true" /></button>
-        <span className="gallery-count"><Image size={16} aria-hidden="true" />1 / {pet.photoCount}</span>
+        <ReferenceImage
+          asset={pet.photo}
+          className="featured-pet-photo"
+        />
+
+        <span className="featured-label">
+          <MapPin size={19} aria-hidden="true" />
+          Closest nearby
+        </span>
+
+        <span className="gallery-count">
+          <Image size={16} aria-hidden="true" />
+          {pet.photoCount > 0
+            ? `${pet.photoCount} saved photo${pet.photoCount === 1 ? '' : 's'}`
+            : 'No saved photos'}
+        </span>
       </div>
+
       <div className="featured-pet-details">
         <div>
-          <div className="featured-name-row"><h2 id="featured-pet-name">{pet.name}</h2>{pet.verified && <ShieldCheck className="pet-verified" size={28} role="img" aria-label="Verified pet" />}</div>
-          <p className="featured-pet-identity">{pet.breed}<span aria-hidden="true"> · </span>{pet.ageYears} years old</p>
-          <PetLocation distanceMiles={pet.distanceMiles} location={pet.location} />
+          <div className="featured-name-row">
+            <h2 id={`featured-pet-${pet.id}`}>
+              {pet.name}
+            </h2>
+
+            {pet.isNew && (
+              <span className="discovery-new-pet">
+                New
+              </span>
+            )}
+          </div>
+
+          <p className="featured-pet-identity">
+            {pet.breed}
+            <span aria-hidden="true"> · </span>
+            {pet.ageYears}{' '}
+            {pet.ageYears === 1 ? 'year' : 'years'} old
+          </p>
+
+          <PetLocation
+            distanceKm={pet.distanceKm}
+          />
         </div>
-        <p className="featured-pet-description">{pet.description}</p>
-        <div className="pet-traits featured-pet-traits">
-          {pet.traits.map((trait) => <PetTraitBadge key={trait.label} trait={trait} />)}
-        </div>
-        <button className="companion-pet" type="button" disabled title="Companion profiles are unavailable in this preview">
-          <Avatar asset={pet.companion.photo} className="companion-avatar" />
-          <span><small>Lives with</small><strong>{pet.companion.name}</strong><small>{pet.companion.breed} <span aria-hidden="true"> · </span> {pet.companion.ageYears} years</small></span>
-          <ChevronRight size={22} aria-hidden="true" />
-        </button>
+
+        <p className="featured-pet-description">
+          {pet.about ?? 'No biography available yet.'}
+        </p>
+
+        <p className="discovery-owner-note">
+          Shared by {pet.ownerName}
+        </p>
+
         <div className="featured-pet-actions">
-          <ActionButton variant="secondary" className="featured-save" unavailableReason="Saving pets is unavailable in this preview"><Heart size={26} aria-hidden="true" />Save</ActionButton>
-          <ActionButton unavailableReason="Matching is unavailable in this preview"><PawPrint size={28} fill="currentColor" aria-hidden="true" />Say Hello</ActionButton>
+          <ActionButton
+            variant="secondary"
+            className="featured-save"
+            unavailableReason="Saving pets is not available yet"
+          >
+            <Heart size={26} aria-hidden="true" />
+            Save
+          </ActionButton>
+
+          <ActionButton
+            unavailableReason="Pet interactions are not available yet"
+          >
+            <PawPrint
+              size={28}
+              fill="currentColor"
+              aria-hidden="true"
+            />
+            Say Hello
+          </ActionButton>
         </div>
       </div>
     </article>
