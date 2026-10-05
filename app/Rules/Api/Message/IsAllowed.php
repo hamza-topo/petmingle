@@ -2,49 +2,33 @@
 
 namespace App\Rules\Api\Message;
 
-use App\Repositories\LikeRepository;
-use App\Repositories\MatchRepository;
+use App\Services\InteractionPolicy;
 use Illuminate\Contracts\Validation\Rule;
 
 class IsAllowed implements Rule
 {
-
-    protected $likeRepository;
-
-    public function __construct()
-    {
-        $this->likeRepository = new LikeRepository();
-    }
-    /**
-     * Determine if the validation rule passes.
-     *
-     * @param  string  $attribute
-     * @param  mixed  $value
-     * @return bool
-     */
     public function passes($attribute, $value)
     {
-        $senderPet = auth()->user()?->pet;
+        $senderId = auth()->id();
 
-        $receiverPet = \App\Models\User::find($value)?->pet;
-
-        if (!$senderPet || !$receiverPet) {
+        if (
+            $senderId === null
+            || !is_numeric($value)
+        ) {
             return false;
         }
 
-        return $this->likeRepository->isMatch([
-            'from' => $senderPet->id,
-            'to' => $receiverPet->id,
-        ]);
+        return app(InteractionPolicy::class)
+            ->canContactUsers(
+                (int) $senderId,
+                (int) $value
+            );
     }
 
-    /**
-     * Get the validation error message.
-     *
-     * @return string
-     */
     public function message()
     {
-        return \__('You can\'t send a message to user :attribute . No match');
+        return __(
+            'An active match is required and blocked accounts cannot contact each other.'
+        );
     }
 }
