@@ -7,7 +7,10 @@ import {
 } from 'vitest';
 
 import { apiRequest } from '../../api/client';
-import { currentPetProfileRequest } from './profile.api';
+import {
+  currentPetProfileRequest,
+  updatePetProfileRequest,
+} from './profile.api';
 
 vi.mock('../../api/client', () => ({
   apiRequest: vi.fn(),
@@ -80,6 +83,61 @@ describe('current pet profile API', () => {
       {
         method: 'GET',
         token: 'test-token',
+      },
+    );
+  });
+
+  it('submits supported profile fields through the update contract', async () => {
+    mockedApiRequest.mockResolvedValueOnce({
+      success: true,
+      message: 'Pet has been updated successfully.',
+      data: {
+        id: 42,
+        user_id: 10,
+        species_id: 3,
+        race_id: 7,
+        name: 'Milo',
+        age: 5,
+        sexe: 1,
+        color: 'brown',
+        images: [],
+        about: 'Updated biography',
+      },
+    });
+
+    await expect(
+      updatePetProfileRequest({
+        petId: 42,
+        token: 'test-token',
+        input: {
+          speciesId: 3,
+          raceId: 7,
+          name: '  Milo  ',
+          ageYears: 5,
+          biography: ' Updated biography ',
+        },
+      }),
+    ).resolves.toEqual(
+      expect.objectContaining({
+        id: 42,
+        name: 'Milo',
+        age: 5,
+        about: 'Updated biography',
+      }),
+    );
+
+    expect(mockedApiRequest).toHaveBeenCalledWith(
+      '/pets/42',
+      {
+        method: 'PUT',
+        token: 'test-token',
+        body: JSON.stringify({
+          species_id: 3,
+          race_id: 7,
+          name: 'Milo',
+          age: 5,
+          about: 'Updated biography',
+        }),
       },
     );
   });
