@@ -2,18 +2,29 @@ import {
   Heart,
   Image,
   MapPin,
-  PawPrint,
+  X,
 } from 'lucide-react';
 
 import { ActionButton } from '../../../components/Action';
 import { PetLocation } from '../../../components/PetLocation';
 import { ReferenceImage } from '../../../components/ReferenceImage';
-import type { DiscoveryPet } from '../discovery.api';
+import type {
+  DiscoveryPet,
+  PetInteractionState,
+} from '../discovery.api';
 
 export function FeaturedPetCard({
   pet,
+  interaction,
+  pending,
+  onLike,
+  onDislike,
 }: {
   pet: DiscoveryPet;
+  interaction: PetInteractionState;
+  pending: boolean;
+  onLike: () => void;
+  onDislike: () => void;
 }) {
   return (
     <article
@@ -73,25 +84,42 @@ export function FeaturedPetCard({
           Shared by {pet.ownerName}
         </p>
 
-        <div className="featured-pet-actions">
+        <div
+          className="featured-pet-actions"
+          aria-label={`Interactions with ${pet.name}`}
+        >
           <ActionButton
             variant="secondary"
-            className="featured-save"
-            unavailableReason="Saving pets is not available yet"
+            className="featured-pass"
+            onClick={onDislike}
+            disabled={pending}
+            aria-pressed={interaction === 'disliked'}
           >
-            <Heart size={26} aria-hidden="true" />
-            Save
+            <X size={26} aria-hidden="true" />
+            {interaction === 'disliked'
+              ? 'Passed'
+              : 'Pass'}
           </ActionButton>
 
           <ActionButton
-            unavailableReason="Pet interactions are not available yet"
+            onClick={onLike}
+            disabled={pending}
+            aria-pressed={interaction === 'liked'}
           >
-            <PawPrint
-              size={28}
-              fill="currentColor"
+            <Heart
+              size={26}
+              fill={
+                interaction === 'liked'
+                  ? 'currentColor'
+                  : 'none'
+              }
               aria-hidden="true"
             />
-            Say Hello
+            {pending
+              ? 'Saving...'
+              : interaction === 'liked'
+                ? 'Liked'
+                : 'Like'}
           </ActionButton>
         </div>
       </div>
