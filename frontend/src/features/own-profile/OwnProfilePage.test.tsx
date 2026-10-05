@@ -26,6 +26,7 @@ import {
   updatePetProfileRequest,
 } from './profile.api';
 import { taxonomyRequest } from '../profile-creation/taxonomy.api';
+import { accountLocationsRequest } from '../account-location/location.api';
 import {
   ownPet,
   plusPlans,
@@ -47,6 +48,12 @@ vi.mock('../profile-creation/taxonomy.api', () => ({
   taxonomyRequest: vi.fn(),
 }));
 
+vi.mock('../account-location/location.api', () => ({
+  accountLocationsRequest: vi.fn(),
+  createAccountLocationRequest: vi.fn(),
+  updateAccountLocationRequest: vi.fn(),
+}));
+
 const mockedUseAuth = vi.mocked(useAuth);
 const mockedCurrentPetProfileRequest =
   vi.mocked(currentPetProfileRequest);
@@ -58,6 +65,8 @@ const mockedRemovePetImageRequest =
   vi.mocked(removePetImageRequest);
 const mockedTaxonomyRequest =
   vi.mocked(taxonomyRequest);
+const mockedAccountLocationsRequest =
+  vi.mocked(accountLocationsRequest);
 const refreshIdentity = vi.fn();
 
 const backendPet = {
@@ -82,6 +91,16 @@ beforeEach(() => {
   });
 
   tokenStorage.set('test-token');
+
+  mockedAccountLocationsRequest.mockReset();
+  mockedAccountLocationsRequest.mockResolvedValue([
+    {
+      id: 4,
+      user_id: 10,
+      latitude: 31.6295,
+      longitude: -7.9811,
+    },
+  ]);
 
   mockedCurrentPetProfileRequest.mockReset();
   mockedCurrentPetProfileRequest.mockResolvedValue(
@@ -258,7 +277,7 @@ describe('Own pet profile', () => {
     ).toBeVisible();
 
     expect(
-      details.getByText(ownPet.location),
+      details.getByText('31.629500, -7.981100'),
     ).toBeVisible();
 
     expect(
