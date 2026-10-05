@@ -30,6 +30,7 @@ import {
   type DiscoveryPet,
   type DiscoveryResult,
 } from './discovery.api';
+import { petInteractionRequest } from './interaction.api';
 
 vi.mock('../../auth/AuthProvider', () => ({
   useAuth: vi.fn(),
@@ -43,6 +44,10 @@ vi.mock('../account-location/location.api', () => ({
 
 vi.mock('../profile-creation/taxonomy.api', () => ({
   taxonomyRequest: vi.fn(),
+}));
+
+vi.mock('./interaction.api', () => ({
+  petInteractionRequest: vi.fn(),
 }));
 
 vi.mock('./discovery.api', async importOriginal => {
@@ -66,6 +71,8 @@ const mockedTaxonomyRequest =
   vi.mocked(taxonomyRequest);
 const mockedDiscoveryRequest =
   vi.mocked(discoveryRequest);
+const mockedPetInteractionRequest =
+  vi.mocked(petInteractionRequest);
 
 function pet(
   id: number,
@@ -92,6 +99,7 @@ function pet(
     about: `${name} persisted biography.`,
     distanceKm,
     isNew: id === 42,
+    interaction: null,
   };
 }
 
@@ -153,6 +161,7 @@ beforeEach(() => {
   mockedUpdateAccountLocationRequest.mockReset();
   mockedTaxonomyRequest.mockReset();
   mockedDiscoveryRequest.mockReset();
+  mockedPetInteractionRequest.mockReset();
 
   mockedAccountLocationsRequest.mockResolvedValue([
     {
@@ -179,6 +188,15 @@ beforeEach(() => {
 
   mockedTaxonomyRequest.mockResolvedValue(taxonomy);
   mockedDiscoveryRequest.mockResolvedValue(firstPage);
+
+  mockedPetInteractionRequest.mockImplementation(
+    async ({ targetPetId, interaction }) => ({
+      id: targetPetId + 1000,
+      from_pet_id: 1,
+      to_pet_id: targetPetId,
+      interaction,
+    }),
+  );
 });
 
 afterEach(() => {
@@ -209,6 +227,190 @@ async function waitForDiscovery() {
 }
 
 describe('Discovery page', () => {
+  it('persists a like with the target Pet ID and reflects the saved state', async () => {
+    const user = userEvent.setup();
+
+    renderDiscovery();
+    await waitForDiscovery();
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Like',
+      }),
+    );
+
+    expect(
+      mockedPetInteractionRequest,
+    ).toHaveBeenCalledWith({
+      token: 'test-token',
+      targetPetId: 42,
+      interaction: 'liked',
+    });
+
+    expect(
+      await screen.findByRole('button', {
+        name: 'Liked',
+      }),
+    ).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('switches an existing like to a persisted dislike', async () => {
+    const user = userEvent.setup();
+
+    mockedDiscoveryRequest.mockResolvedValueOnce({
+      ...firstPage,
+      pets: [
+        {
+          ...firstPage.pets[0],
+          interaction: 'liked',
+        },
+        ...firstPage.pets.slice(1),
+      ],
+    });
+
+    renderDiscovery();
+    await waitForDiscovery();
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Liked',
+      }),
+    ).toHaveAttribute('aria-pressed', 'true');
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Pass',
+      }),
+    );
+
+    expect(
+      mockedPetInteractionRequest,
+    ).toHaveBeenLastCalledWith({
+      token: 'test-token',
+      targetPetId: 42,
+      interaction: 'disliked',
+    });
+
+    expect(
+      await screen.findByRole('button', {
+        name: 'Passed',
+      }),
+    ).toHaveAttribute('aria-pressed', 'true');
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Like',
+      }),
+    ).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('uses stable Pet IDs for interactions from nearby cards', async () => {
+    const user = userEvent.setup();
+
+    renderDiscovery();
+    await waitForDiscovery();
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Like Luna',
+      }),
+    );
+
+    expect(
+      mockedPetInteractionRequest,
+    ).toHaveBeenCalledWith({
+      token: 'test-token',
+      targetPetId: 43,
+      interaction: 'liked',
+    });
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Like Luna',
+      }),
+    ).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('keeps the previous interaction state when persistence fails', async () => {
+    const user = userEvent.setup();
+
+    mockedPetInteractionRequest.mockRejectedValueOnce(
+      new TypeError('Failed to fetch'),
+    );
+
+    renderDiscovery();
+    await waitForDiscovery();
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Like',
+      }),
+    );
+
+    expect(
+      await screen.findByRole('alert'),
+    ).toHaveTextContent(
+      'Unable to reach PetMingle. Check your connection and try again.',
+    );
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Like',
+      }),
+    ).toHaveAttribute('aria-pressed', 'false');
+  });
+
+  it('disables repeated interaction clicks while the request is pending', async () => {
+    const user = userEvent.setup();
+
+    let resolveInteraction:
+      | ((value: {
+          id: number;
+          from_pet_id: number;
+          to_pet_id: number;
+          interaction: 'liked';
+        }) => void)
+      | undefined;
+
+    mockedPetInteractionRequest.mockReturnValueOnce(
+      new Promise(resolve => {
+        resolveInteraction = resolve;
+      }),
+    );
+
+    renderDiscovery();
+    await waitForDiscovery();
+
+    const like = screen.getByRole('button', {
+      name: 'Like',
+    });
+
+    await user.click(like);
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Saving...',
+      }),
+    ).toBeDisabled();
+
+    expect(
+      mockedPetInteractionRequest,
+    ).toHaveBeenCalledTimes(1);
+
+    resolveInteraction?.({
+      id: 1,
+      from_pet_id: 1,
+      to_pet_id: 42,
+      interaction: 'liked',
+    });
+
+    expect(
+      await screen.findByRole('button', {
+        name: 'Liked',
+      }),
+    ).toBeEnabled();
+  });
+
   it('loads the documented default Discovery query', async () => {
     renderDiscovery();
     await waitForDiscovery();

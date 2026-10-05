@@ -118,7 +118,9 @@
   .companion-pet > svg { margin-left: auto; flex-shrink: 0; }
   .featured-pet-actions { margin-top: auto; display: grid; grid-template-columns: 40% minmax(0, 1fr); gap: var(--space-3); }
   .featured-pet-actions .action { min-height: 52px; padding-inline: 12px; font-size: 18px; gap: 10px; }
-  .featured-pet-actions .featured-save { color: var(--color-brand-pink); border-color: var(--color-surface-pink-strong); }
+  .featured-pet-actions .featured-pass { color: var(--color-text-secondary); border-color: var(--color-border-action); }
+  .featured-pet-actions [aria-pressed="true"] { box-shadow: inset 0 0 0 2px currentColor; }
+  .discovery-interaction-error { margin: 10px 0; padding: 10px 12px; border-radius: 12px; background: var(--color-surface-pink); color: var(--color-brand-pink); font-size: 13px; font-weight: 600; }
 
   .discovery-filters { padding: 20px 16px 20px 20px; border-radius: 20px; background: var(--color-surface); }
   .filter-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
@@ -162,7 +164,10 @@
   .pet-card--nearby .pet-card-details { padding: 6px 11px 0; min-height: 42px; align-items: start; flex: 0; }
   .nearby-pet-grid .pet-card--nearby h3 { font-size: 16px; }
   .nearby-pet-grid .pet-card--nearby p { font-size: 12px; }
-  .pet-card--nearby .save-pet { position: absolute; top: 5px; right: 5px; width: 32px; height: 32px; background: var(--color-surface); border: 1px solid var(--color-border); }
+  .pet-card-interactions { position: absolute; top: 5px; right: 5px; display: flex; gap: 5px; }
+  .pet-card-interaction { display: grid; place-items: center; width: 32px; height: 32px; border: 1px solid var(--color-border); border-radius: 50%; background: var(--color-surface); color: var(--color-text-secondary); }
+  .pet-card-interaction[aria-pressed="true"] { color: var(--color-brand-pink); border-color: var(--color-brand-pink); background: var(--color-surface-pink); }
+  .pet-card-interaction:disabled { opacity: .55; cursor: wait; }
   .nearby-pet-metadata { padding: 4px 11px 8px; margin-top: auto; }
   .nearby-pet-metadata .pet-location { font-size: 12px; line-height: 18px; white-space: nowrap; gap: 4px; }
   .nearby-pet-metadata .pet-location > svg { width: 13px; height: 13px; }

@@ -43,6 +43,7 @@ const apiItem = {
   },
   distance_km: 1.24,
   is_new: true,
+  interaction: null,
 };
 
 describe('Discovery API adapter', () => {
@@ -95,6 +96,7 @@ describe('Discovery API adapter', () => {
           about: 'Friendly and curious.',
           distanceKm: 1.24,
           isNew: true,
+          interaction: null,
         },
       ],
       meta: {
@@ -239,6 +241,22 @@ describe('Discovery API adapter', () => {
       page: 1,
       per_page: 24,
     });
+  });
+
+  it('maps persisted relationship state from Discovery', () => {
+    expect(
+      mapDiscoveryItem({
+        ...apiItem,
+        interaction: 'liked',
+      }).interaction,
+    ).toBe('liked');
+
+    expect(
+      mapDiscoveryItem({
+        ...apiItem,
+        interaction: 'disliked',
+      }).interaction,
+    ).toBe('disliked');
   });
 
   it('uses an explicit placeholder when a persisted pet has no image', () => {

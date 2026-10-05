@@ -28,7 +28,9 @@ import {
   type DiscoveryFilterValue,
   type DiscoveryPageMeta,
   type DiscoveryPet,
+  type PetInteractionState,
 } from './discovery.api';
+import { petInteractionRequest } from './interaction.api';
 
 type DiscoveryStatus =
   | 'loading'
@@ -63,6 +65,14 @@ export function DiscoveryPage() {
     useState<unknown | null>(null);
   const [loadingMore, setLoadingMore] =
     useState(false);
+  const [interactions, setInteractions] =
+    useState<Map<number, PetInteractionState>>(
+      new Map(),
+    );
+  const [pendingPetIds, setPendingPetIds] =
+    useState<Set<number>>(new Set());
+  const [interactionError, setInteractionError] =
+    useState<string | null>(null);
 
   const [filters, setFilters] =
     useState<DiscoveryFilterValue>({
@@ -170,6 +180,16 @@ export function DiscoveryPage() {
           return;
         }
 
+        setInteractions(current => {
+          const next = new Map(current);
+
+          for (const pet of result.pets) {
+            next.set(pet.id, pet.interaction);
+          }
+
+          return next;
+        });
+
         setPets(current => {
           if (!append) {
             return result.pets;
@@ -253,6 +273,62 @@ export function DiscoveryPage() {
     }
 
     setFilters({ ...nextFilters });
+  }
+
+  async function persistInteraction(
+    petId: number,
+    interaction: Exclude<
+      PetInteractionState,
+      null
+    >,
+  ) {
+    if (pendingPetIds.has(petId)) {
+      return;
+    }
+
+    const token = tokenStorage.get();
+
+    if (!token) {
+      setInteractionError(
+        'Authentication token is missing.',
+      );
+      return;
+    }
+
+    setPendingPetIds(current => {
+      const next = new Set(current);
+      next.add(petId);
+      return next;
+    });
+    setInteractionError(null);
+
+    try {
+      const persisted =
+        await petInteractionRequest({
+          token,
+          targetPetId: petId,
+          interaction,
+        });
+
+      setInteractions(current => {
+        const next = new Map(current);
+        next.set(
+          petId,
+          persisted.interaction,
+        );
+        return next;
+      });
+    } catch (caught) {
+      setInteractionError(
+        describeApiFailure(caught).message,
+      );
+    } finally {
+      setPendingPetIds(current => {
+        const next = new Set(current);
+        next.delete(petId);
+        return next;
+      });
+    }
   }
 
   function resetFilters() {
@@ -405,12 +481,42 @@ export function DiscoveryPage() {
                   />
                 )}
 
+              {interactionError && (
+                <p
+                  className="discovery-interaction-error"
+                  role="alert"
+                >
+                  {interactionError}
+                </p>
+              )}
+
               {accountLocation.status === 'ready'
                 && accountLocation.currentLocation
                 && status === 'ready'
                 && closestPet && (
                   <FeaturedPetCard
                     pet={closestPet}
+                    interaction={
+                      interactions.get(
+                        closestPet.id,
+                      )
+                      ?? closestPet.interaction
+                    }
+                    pending={pendingPetIds.has(
+                      closestPet.id,
+                    )}
+                    onLike={() =>
+                      void persistInteraction(
+                        closestPet.id,
+                        'liked',
+                      )
+                    }
+                    onDislike={() =>
+                      void persistInteraction(
+                        closestPet.id,
+                        'disliked',
+                      )
+                    }
                   />
                 )}
             </section>
@@ -421,6 +527,20 @@ export function DiscoveryPage() {
               pets={gridPets}
               hasMore={hasMore}
               loadingMore={loadingMore}
+              interactions={interactions}
+              pendingPetIds={pendingPetIds}
+              onLike={petId =>
+                void persistInteraction(
+                  petId,
+                  'liked',
+                )
+              }
+              onDislike={petId =>
+                void persistInteraction(
+                  petId,
+                  'disliked',
+                )
+              }
               onLoadMore={() =>
                 void loadPage(
                   meta.current_page + 1,

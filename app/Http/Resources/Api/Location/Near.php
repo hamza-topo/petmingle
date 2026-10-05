@@ -2,14 +2,46 @@
 
 namespace App\Http\Resources\Api\Location;
 
+use App\Models\Dislike;
+use App\Models\Like;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class Near extends ResourceCollection
 {
     public function toArray($request): array
     {
+        $sourcePetId = $request->user()?->pet?->id;
+
+        $targetPetIds = $this->collection
+            ->map(
+                fn ($location) =>
+                    $location->user?->pet?->id
+            )
+            ->filter()
+            ->map(fn ($petId) => (int) $petId)
+            ->values();
+
+        $likedPetIds = $sourcePetId === null
+            ? collect()
+            : Like::where('from', $sourcePetId)
+                ->whereIn('to', $targetPetIds)
+                ->pluck('to')
+                ->map(fn ($petId) => (int) $petId)
+                ->flip();
+
+        $dislikedPetIds = $sourcePetId === null
+            ? collect()
+            : Dislike::where('from', $sourcePetId)
+                ->whereIn('to', $targetPetIds)
+                ->pluck('to')
+                ->map(fn ($petId) => (int) $petId)
+                ->flip();
+
         return $this->collection
-            ->map(function ($location): array {
+            ->map(function ($location) use (
+                $likedPetIds,
+                $dislikedPetIds
+            ): array {
                 $pet = $location->user->pet;
                 $race = $pet->race;
 
@@ -19,6 +51,16 @@ class Near extends ResourceCollection
                         is_string($image)
                         && trim($image) !== ''
                 ));
+
+                $interaction = null;
+
+                if ($likedPetIds->has((int) $pet->id)) {
+                    $interaction = 'liked';
+                } elseif (
+                    $dislikedPetIds->has((int) $pet->id)
+                ) {
+                    $interaction = 'disliked';
+                }
 
                 return [
                     'owner' => [
@@ -49,6 +91,7 @@ class Near extends ResourceCollection
                     'is_new' => (bool) isNew(
                         $pet->created_at
                     ),
+                    'interaction' => $interaction,
                 ];
             })
             ->values()

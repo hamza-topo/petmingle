@@ -13,6 +13,7 @@ class DislikeResource extends JsonResource
             'id' => $this->id,
             'from_pet_id' => $this->from,
             'to_pet_id' => $this->to,
+            'interaction' => 'disliked',
         ];
     }
 }

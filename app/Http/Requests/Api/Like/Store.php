@@ -2,35 +2,55 @@
 
 namespace App\Http\Requests\Api\Like;
 
-use App\Rules\Api\Like\MatchUser;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class Store extends FormRequest
 {
-    /**
-     * Get the validation rules that apply to the request.
-     *
-     * @return array
-     */
-    public function rules()
+    public function rules(): array
     {
+        $sourcePetId = $this->user()?->pet?->id;
+
         return [
-            'from' => ['required', 'integer', new MatchUser],
-            'to' => 'required|integer',
+            'to_pet_id' => [
+                'required',
+                'integer',
+                Rule::exists('pets', 'id')
+                    ->whereNull('deleted_at'),
+                Rule::notIn(
+                    $sourcePetId !== null
+                        ? [(int) $sourcePetId]
+                        : []
+                ),
+            ],
+
+            // Relationship source identity is server-owned.
+            'from' => ['prohibited'],
+            'to' => ['prohibited'],
         ];
     }
-    /**
-     * Get the error messages for the defined validation rules.
-     *
-     * @return array
-     */
-    public function messages()
+
+    public function messages(): array
     {
         return [
-            'from.required' => \__('The Field From Id is required!'),
-            'from.integer' => \__('The Value of From Id invalid!'),
-            'to.required' => \__('The Field To Id is required!'),
-            'to.integer' => \__('The Value of To Id  invalid!'),
+            'to_pet_id.required' => __(
+                'The target pet ID is required.'
+            ),
+            'to_pet_id.integer' => __(
+                'The target pet ID must be an integer.'
+            ),
+            'to_pet_id.exists' => __(
+                'The selected target pet does not exist.'
+            ),
+            'to_pet_id.not_in' => __(
+                'A pet cannot interact with itself.'
+            ),
+            'from.prohibited' => __(
+                'The source pet is derived from authentication.'
+            ),
+            'to.prohibited' => __(
+                'Use to_pet_id for the target pet.'
+            ),
         ];
     }
 }
