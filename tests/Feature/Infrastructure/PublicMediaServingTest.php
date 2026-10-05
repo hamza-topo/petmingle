@@ -22,4 +22,25 @@ class PublicMediaServingTest extends TestCase
             $config
         );
     }
+
+    public function test_app_and_nginx_share_the_public_media_volume(): void
+    {
+        $compose = file_get_contents(
+            base_path('docker-compose.yml')
+        );
+
+        $this->assertIsString($compose);
+        $this->assertStringContainsString(
+            'public_media:/var/www/html/storage/app/public',
+            $compose
+        );
+        $this->assertStringContainsString(
+            'public_media:/var/www/html/storage/app/public:ro',
+            $compose
+        );
+        $this->assertStringContainsString(
+            'public_media:',
+            $compose
+        );
+    }
 }
