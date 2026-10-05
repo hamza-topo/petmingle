@@ -4,6 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
+use RuntimeException;
 
 class RaceSeeder extends Seeder
 {
@@ -14,49 +15,40 @@ class RaceSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('races')->insert(
-            [
+        $dogsSpeciesId = DB::table('species')
+            ->where('name', 'Dogs')
+            ->value('id');
+
+        if ($dogsSpeciesId === null) {
+            throw new RuntimeException(
+                'Dogs species must be seeded before dog breeds.'
+            );
+        }
+
+        $breeds = [
+            'Labrador Retriever',
+            'German Shepherd',
+            'Golden Retriever',
+            'Bulldog',
+            'Beagle',
+            'Poodle',
+            'Rottweiler',
+            'Dachshund',
+            'Boxer',
+        ];
+
+        foreach ($breeds as $breed) {
+            DB::table('races')->updateOrInsert(
                 [
-                    'species_id' => 1,
-                    'name' => 'Labrador Retriever',
+                    'species_id' => $dogsSpeciesId,
+                    'name' => $breed,
                 ],
                 [
-                    'species_id' => 1,
-                    'name' => 'German Shepherd',
-                ],
-                [
-                    'species_id' => 1,
-                    'name' => 'Golden Retriever',
-                ],
-                [
-                    'species_id' => 1,
-                    'name' => 'Bulldog',
-                ],
-                [
-                    'species_id' => 1,
-                    'name' => 'Beagle',
-                ],
-                [
-                    'species_id' => 1,
-                    'name' => 'Guinea Pigs',
-                ],
-                [
-                    'species_id' => 1,
-                    'name' => 'Poodle',
-                ],
-                [
-                    'species_id' => 1,
-                    'name' => 'Rottweiler',
-                ],
-                [
-                    'species_id' => 1,
-                    'name' => 'Dachshund',
-                ],
-                [
-                    'species_id' => 1,
-                    'name' => 'Boxer',
+                    'deleted_at' => null,
+                    'updated_at' => now(),
+                    'created_at' => now(),
                 ]
-            ]
-        );
+            );
+        }
     }
 }
