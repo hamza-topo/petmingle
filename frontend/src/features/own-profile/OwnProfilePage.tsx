@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { ApiError } from '../../api/errors';
 import { mediaUrl } from '../../api/config';
@@ -205,14 +205,12 @@ export function OwnProfilePage() {
     }
   }
 
-  const persistedPhotos = useMemo(
-    () =>
-      profile.images.map((path, index) => ({
-        id: `saved-${index}-${path}`,
-        src: mediaUrl(path),
-        alt: `${profile.name} saved photo ${index + 1}`,
-      })),
-    [profile.images, profile.name],
+  const persistedPhotos = profile.images.map(
+    (path, index) => ({
+      id: `saved-${index}-${path}`,
+      src: mediaUrl(path),
+      alt: `${profile.name} saved photo ${index + 1}`,
+    }),
   );
 
   const previewPhoto = previewUrl
