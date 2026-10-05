@@ -57,6 +57,9 @@ export async function currentPetProfileRequest({
     ageYears: pet.age,
     breed: race.name,
     biography: pet.about?.trim() || 'No biography yet.',
+    images: pet.images.filter(
+      image => typeof image === 'string' && image.trim() !== '',
+    ),
   };
 }
 
@@ -91,6 +94,54 @@ export async function updatePetProfileRequest({
         name: input.name.trim(),
         age: input.ageYears,
         about: input.biography.trim() || null,
+      }),
+    },
+  );
+
+  return response.data;
+}
+
+
+type PetImageMutationRequest = {
+  petId: number;
+  token: string;
+};
+
+export async function replacePetImageRequest({
+  petId,
+  token,
+  image,
+}: PetImageMutationRequest & {
+  image: File;
+}): Promise<PetApiRecord> {
+  const body = new FormData();
+
+  body.set('_method', 'PUT');
+  body.set('image', image);
+
+  const response = await apiRequest<ApiEnvelope<PetApiRecord>>(
+    `/pets/${petId}`,
+    {
+      method: 'POST',
+      token,
+      body,
+    },
+  );
+
+  return response.data;
+}
+
+export async function removePetImageRequest({
+  petId,
+  token,
+}: PetImageMutationRequest): Promise<PetApiRecord> {
+  const response = await apiRequest<ApiEnvelope<PetApiRecord>>(
+    `/pets/${petId}`,
+    {
+      method: 'PUT',
+      token,
+      body: JSON.stringify({
+        remove_image: true,
       }),
     },
   );
