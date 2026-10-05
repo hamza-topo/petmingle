@@ -85,6 +85,138 @@ class RelationshipContractTest extends TestCase
             ->assertJsonPath('meta.total', 1);
     }
 
+    public function test_like_store_uses_authenticated_source_pet_and_is_idempotent(): void
+    {
+        [$user, $sourcePet] = $this->createUserWithPet('Source');
+        [, $targetPet] = $this->createUserWithPet('Target');
+
+        Sanctum::actingAs($user);
+
+        $first = $this->postJson('/api/v.0/likes', [
+            'to_pet_id' => $targetPet->id,
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.from_pet_id', $sourcePet->id)
+            ->assertJsonPath('data.to_pet_id', $targetPet->id)
+            ->assertJsonPath('data.interaction', 'liked');
+
+        $second = $this->postJson('/api/v.0/likes', [
+            'to_pet_id' => $targetPet->id,
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.id', $first->json('data.id'));
+
+        $this->assertDatabaseCount('likes', 1);
+    }
+
+    public function test_dislike_replaces_existing_like_and_is_idempotent(): void
+    {
+        [$user, $sourcePet] = $this->createUserWithPet('Source');
+        [, $targetPet] = $this->createUserWithPet('Target');
+
+        Like::withoutEvents(
+            fn () => Like::create([
+                'from' => $sourcePet->id,
+                'to' => $targetPet->id,
+            ])
+        );
+
+        Sanctum::actingAs($user);
+
+        $first = $this->postJson('/api/v.0/dislikes', [
+            'to_pet_id' => $targetPet->id,
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.from_pet_id', $sourcePet->id)
+            ->assertJsonPath('data.to_pet_id', $targetPet->id)
+            ->assertJsonPath('data.interaction', 'disliked');
+
+        $this->postJson('/api/v.0/dislikes', [
+            'to_pet_id' => $targetPet->id,
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.id', $first->json('data.id'));
+
+        $this->assertSoftDeleted('likes', [
+            'from' => $sourcePet->id,
+            'to' => $targetPet->id,
+        ]);
+
+        $this->assertDatabaseCount('dislikes', 1);
+    }
+
+    public function test_like_replaces_existing_dislike(): void
+    {
+        [$user, $sourcePet] = $this->createUserWithPet('Source');
+        [, $targetPet] = $this->createUserWithPet('Target');
+
+        Dislike::withoutEvents(
+            fn () => Dislike::create([
+                'from' => $sourcePet->id,
+                'to' => $targetPet->id,
+            ])
+        );
+
+        Sanctum::actingAs($user);
+
+        $this->postJson('/api/v.0/likes', [
+            'to_pet_id' => $targetPet->id,
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.interaction', 'liked');
+
+        $this->assertSoftDeleted('dislikes', [
+            'from' => $sourcePet->id,
+            'to' => $targetPet->id,
+        ]);
+
+        $this->assertDatabaseHas('likes', [
+            'from' => $sourcePet->id,
+            'to' => $targetPet->id,
+        ]);
+    }
+
+    public function test_interaction_store_rejects_user_id_style_source_and_target_fields(): void
+    {
+        [$user, $sourcePet] = $this->createUserWithPet('Source');
+        [, $targetPet] = $this->createUserWithPet('Target');
+
+        Sanctum::actingAs($user);
+
+        $this->postJson('/api/v.0/likes', [
+            'from' => $user->id,
+            'to' => $targetPet->user_id,
+            'to_pet_id' => $targetPet->id,
+        ])
+            ->assertUnprocessable()
+            ->assertJsonStructure([
+                'errors' => [
+                    'from',
+                    'to',
+                ],
+            ]);
+
+        $this->assertDatabaseMissing('likes', [
+            'from' => $sourcePet->id,
+            'to' => $targetPet->id,
+        ]);
+    }
+
+    public function test_pet_cannot_like_itself(): void
+    {
+        [$user, $pet] = $this->createUserWithPet();
+
+        Sanctum::actingAs($user);
+
+        $this->postJson('/api/v.0/likes', [
+            'to_pet_id' => $pet->id,
+        ])
+            ->assertUnprocessable()
+            ->assertJsonStructure([
+                'errors' => ['to_pet_id'],
+            ]);
+    }
+
     public function test_matches_use_pet_ids(): void
     {
         [$user, $pet] = $this->createUserWithPet();
