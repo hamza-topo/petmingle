@@ -4,6 +4,7 @@
 @import "../features/landing/landing.css";
 @import "../features/own-profile/profile.css";
 @import "../features/messaging/messaging.css";
+@import "../features/matches/matches.css";
 @import "../features/discovery/discovery.css";
 @import "../features/profile-creation/profile.css";
 @import "../features/auth/sign-in.css";
