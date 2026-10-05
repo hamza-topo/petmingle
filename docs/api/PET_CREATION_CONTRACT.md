@@ -14,7 +14,7 @@ Content type: `multipart/form-data` when an image is supplied. JSON is valid whe
 | `race_id` | yes | integer | Must reference an existing race belonging to `species_id` |
 | `name` | yes | string | Trimmed, 1–25 characters |
 | `age` | yes | integer | 0–30 years |
-| `image` | no | file | One JPG/PNG image, maximum 10 MB |
+| `image` | no | file | Valid JPG/JPEG/PNG, maximum 10 MB |
 | `sexe` | no | integer/null | Legacy field; `0` or `1` |
 | `color` | no | string/null | Legacy field; maximum 15 characters |
 | `about` | no | string/null | Legacy field |
@@ -36,7 +36,7 @@ The Pet model has no approved persistence model for these values yet. They must 
 
 Creation accepts **one optional upload** using the `image` field.
 
-The legacy `images` request field is not accepted for creation. The response continues to expose `images` as an array because persisted pet media is represented as a collection:
+The legacy `images` request field is not accepted for creation. Persisted media is returned as an array:
 
 ```json
 {
@@ -48,11 +48,11 @@ or:
 
 ```json
 {
-  "images": ["uploads/example.png"]
+  "images": ["pets/550e8400-e29b-41d4-a716-446655440000.jpg"]
 }
 ```
 
-Filename generation, replacement/deletion rules, and storage hardening are tracked separately by issue #115.
+Stored filenames are generated server-side and do not reuse the client filename. Full validation, visibility, replacement, and removal behavior is documented in `docs/api/PET_MEDIA_STORAGE.md`.
 
 ## Successful response
 

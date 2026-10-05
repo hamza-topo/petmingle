@@ -8,14 +8,15 @@ use App\Http\Requests\Api\Pet\Update;
 use App\Http\Resources\Api\PetResource;
 use App\Http\Responses\ApiResponse;
 use App\Repositories\PetRepository;
-use App\Traits\ImageTrait;
-use RuntimeException;
+use App\Services\PetImageStorage;
+use Throwable;
 
 class PetController extends Controller
 {
-    use ImageTrait;
-
-    public function __construct(protected PetRepository $petRepository) {}
+    public function __construct(
+        protected PetRepository $petRepository,
+        protected PetImageStorage $petImageStorage,
+    ) {}
 
     public function index()
     {
@@ -43,23 +44,25 @@ class PetController extends Controller
         $data['user_id'] = $request->user()->id;
         $data['images'] = [];
 
+        $newImage = null;
+
         if ($request->hasFile('image')) {
-            $storedImage = $this->setFile(
+            $newImage = $this->petImageStorage->store(
                 $request->file('image')
-            )
-                ->setName()
-                ->upload();
+            );
 
-            if ($storedImage === false) {
-                throw new RuntimeException(
-                    'Pet image upload failed.'
-                );
-            }
-
-            $data['images'] = [$storedImage];
+            $data['images'] = [$newImage];
         }
 
-        $createdPet = $this->petRepository->create($data);
+        try {
+            $createdPet = $this->petRepository->create($data);
+        } catch (Throwable $exception) {
+            if ($newImage !== null) {
+                $this->petImageStorage->delete([$newImage]);
+            }
+
+            throw $exception;
+        }
 
         return ApiResponse::created(
             (new PetResource($createdPet))->resolve(),
@@ -84,19 +87,46 @@ class PetController extends Controller
         $this->authorize('update', $pet);
 
         $data = $request->validated();
+        $oldImages = is_array($pet->images) ? $pet->images : [];
 
-        if ($request->hasFile('images')) {
-            $data['images'] = $this->setFile($request->file('images'))
-                ->setName()
-                ->upload();
+        unset(
+            $data['image'],
+            $data['remove_image'],
+            $data['images'],
+            $data['user_id']
+        );
+
+        $newImage = null;
+        $mediaChanged = false;
+
+        if ($request->hasFile('image')) {
+            $newImage = $this->petImageStorage->store(
+                $request->file('image')
+            );
+
+            $data['images'] = [$newImage];
+            $mediaChanged = true;
+        } elseif ($request->boolean('remove_image')) {
+            $data['images'] = [];
+            $mediaChanged = true;
         }
 
-        unset($data['user_id']);
+        try {
+            $updatedPet = $this->petRepository->update(
+                (int) $id,
+                $data
+            );
+        } catch (Throwable $exception) {
+            if ($newImage !== null) {
+                $this->petImageStorage->delete([$newImage]);
+            }
 
-        $updatedPet = $this->petRepository->update(
-            (int) $id,
-            $data
-        );
+            throw $exception;
+        }
+
+        if ($mediaChanged) {
+            $this->petImageStorage->delete($oldImages);
+        }
 
         return ApiResponse::success(
             (new PetResource($updatedPet))->resolve(),

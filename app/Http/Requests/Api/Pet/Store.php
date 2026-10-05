@@ -44,12 +44,7 @@ class Store extends FormRequest
                 'min:0',
                 'max:30',
             ],
-            'image' => [
-                'nullable',
-                'image',
-                'mimes:jpg,jpeg,png',
-                'max:10240',
-            ],
+            'image' => PetImageRules::optional(),
             'sexe' => [
                 'nullable',
                 'integer',
@@ -80,12 +75,10 @@ class Store extends FormRequest
     public function messages(): array
     {
         return [
+            ...PetImageRules::messages(),
             'race_id.exists' => __(
                 'The selected race does not belong to the selected species.'
             ),
-            'image.image' => __('The pet image must be an image.'),
-            'image.mimes' => __('The pet image must be a JPG or PNG file.'),
-            'image.max' => __('The pet image may not be larger than 10MB.'),
             'images.prohibited' => __(
                 'Upload a single pet image using the image field.'
             ),
