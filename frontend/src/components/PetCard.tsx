@@ -4,6 +4,7 @@ import clsx from 'clsx';
 import type { ReferenceAsset } from '../assets/landingAssets';
 import { ReferenceImage } from './ReferenceImage';
 import { PetLocation } from './PetLocation';
+import type { PetTrait } from './PetTraitBadge';
 
 export interface FeaturedPet {
   id: string | number;
@@ -13,7 +14,9 @@ export interface FeaturedPet {
 }
 
 export interface NearbyPet extends FeaturedPet {
-  distanceKm: number;
+  distanceKm?: number;
+  distanceMiles?: number;
+  traits?: PetTrait[];
 }
 
 type PetCardProps =
@@ -71,6 +74,7 @@ export function PetCard(props: PetCardProps) {
         <div className="nearby-pet-metadata">
           <PetLocation
             distanceKm={props.pet.distanceKm}
+            distanceMiles={props.pet.distanceMiles}
           />
         </div>
       )}
