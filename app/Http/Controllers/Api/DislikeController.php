@@ -4,24 +4,24 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Like\Store;
-use App\Repositories\DislikeRepository;
-use Illuminate\Http\Request;
 use App\Http\Resources\Api\DislikeResource;
 use App\Http\Responses\ApiResponse;
+use App\Repositories\DislikeRepository;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
 
 class DislikeController extends Controller
 {
-    public function __construct(protected DislikeRepository $dislikeRepository) {}
+    public function __construct(
+        protected DislikeRepository $dislikeRepository
+    ) {}
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
+        $petId = $this->sourcePetId(request());
+
         $dislikes = $this->dislikeRepository->dislikes(
-            auth()->user()->pet->id
+            $petId
         );
 
         return ApiResponse::paginated(
@@ -33,76 +33,56 @@ class DislikeController extends Controller
         );
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Store $request)
     {
-        $dislike = $this->dislikeRepository->create(
-            $request->validated()
+        $dislike = $this->dislikeRepository->process(
+            $this->sourcePetId($request),
+            (int) $request->validated('to_pet_id')
         );
 
-        return ApiResponse::created(
+        return ApiResponse::success(
             (new DislikeResource($dislike))->resolve(),
-            __('Dislike has been created.')
+            __('Dislike processed.')
         );
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function show($id)
     {
         //
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
         //
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(Request $request, $id)
     {
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         //
+    }
+
+    private function sourcePetId(Request $request): int
+    {
+        $petId = $request->user()?->pet?->id;
+
+        if ($petId === null) {
+            throw ValidationException::withMessages([
+                'pet' => [
+                    __('Create a pet profile before interacting with pets.'),
+                ],
+            ]);
+        }
+
+        return (int) $petId;
     }
 }

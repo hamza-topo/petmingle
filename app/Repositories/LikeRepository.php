@@ -3,23 +3,47 @@
 namespace App\Repositories;
 
 use App\Enums\Like as EnumsLike;
+use App\Models\Dislike;
 use App\Models\Like;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class LikeRepository
 {
-    protected $matchRepository;
+    protected MatchRepository $matchRepository;
 
     public function __construct()
     {
         $this->matchRepository = new MatchRepository;
     }
 
-    public function create(array $like): ?Like
+    public function process(
+        int $fromPetId,
+        int $toPetId
+    ): Like {
+        return DB::transaction(function () use (
+            $fromPetId,
+            $toPetId
+        ) {
+            Dislike::where([
+                'from' => $fromPetId,
+                'to' => $toPetId,
+            ])->delete();
+
+            return Like::firstOrCreate([
+                'from' => $fromPetId,
+                'to' => $toPetId,
+            ]);
+        });
+    }
+
+    public function create(array $like): Like
     {
-        if (!$this->isLikedBefore($like))
-            return Like::create($like);
+        return $this->process(
+            (int) $like['from'],
+            (int) $like['to']
+        );
     }
 
     public function update(int $likeId, array $newModel): Like
@@ -31,12 +55,6 @@ class LikeRepository
         return $like;
     }
 
-    /**
-     * getById
-     *
-     * @param  mixed $likeId
-     * @return Like
-     */
     public function getById(int $likeId): ?Like
     {
         return Like::find($likeId);
@@ -49,7 +67,9 @@ class LikeRepository
 
     public function restore(int $likeId): bool
     {
-        return Like::withTrashed()->findOrFail($likeId)->restore();
+        return Like::withTrashed()
+            ->findOrFail($likeId)
+            ->restore();
     }
 
     public function all(): Collection
@@ -59,7 +79,9 @@ class LikeRepository
 
     public function likes(int $petId): LengthAwarePaginator
     {
-        return Like::with(['to', 'from'])->where('from', $petId)->paginate(EnumsLike::PAGINATE);
+        return Like::with(['to', 'from'])
+            ->where('from', $petId)
+            ->paginate(EnumsLike::PAGINATE);
     }
 
     public function paginate(): LengthAwarePaginator
@@ -69,14 +91,17 @@ class LikeRepository
 
     public function isLikedBefore(array $like): bool
     {
-        $isLikedBefore = Like::where([
+        return Like::where([
             ['from', '=', $like['from']],
             ['to', '=', $like['to']],
-        ])->get();
-
-        return $isLikedBefore->count() > 0 ? true : false;
+        ])->exists();
     }
 
+    /**
+     * Remove an active like and any persisted match pair.
+     *
+     * Used internally by dislike/block flows.
+     */
     public function dislike(array $like): void
     {
         Like::where([
@@ -84,16 +109,14 @@ class LikeRepository
             ['to', '=', $like['to']],
         ])->delete();
 
-        $this->isMatch($like) === true ? $this->matchRepository->mismatch($like) : null;
+        $this->matchRepository->mismatch($like);
     }
 
     public function isMatch(array $like): bool
     {
-        $isMatch = Like::where([
+        return Like::where([
             ['from', '=', $like['to']],
-            ['to', '=',  $like['from']],
-        ])->get();
-
-        return $isMatch->count() > 0 ? true : false;
+            ['to', '=', $like['from']],
+        ])->exists();
     }
 }

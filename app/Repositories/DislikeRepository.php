@@ -4,25 +4,47 @@ namespace App\Repositories;
 
 use App\Enums\Like as EnumsLike;
 use App\Models\Dislike;
-use App\Models\Like;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
-
+use Illuminate\Support\Facades\DB;
 
 class DislikeRepository
 {
-    public function __construct(protected LikeRepository $likeRepository)
-    {
+    public function __construct(
+        protected LikeRepository $likeRepository
+    ) {}
+
+    public function process(
+        int $fromPetId,
+        int $toPetId
+    ): Dislike {
+        return DB::transaction(function () use (
+            $fromPetId,
+            $toPetId
+        ) {
+            $pair = [
+                'from' => $fromPetId,
+                'to' => $toPetId,
+            ];
+
+            $this->likeRepository->dislike($pair);
+
+            return Dislike::firstOrCreate($pair);
+        });
     }
 
     public function create(array $like): Dislike
     {
-        $this->isLikedBefore($like);
-        return Dislike::create($like);
+        return $this->process(
+            (int) $like['from'],
+            (int) $like['to']
+        );
     }
 
-    public function update(int $likeId, array $newModel): DisLike
-    {
+    public function update(
+        int $likeId,
+        array $newModel
+    ): Dislike {
         $like = $this->getById($likeId);
         $like->update($newModel);
         $like->refresh();
@@ -30,13 +52,7 @@ class DislikeRepository
         return $like;
     }
 
-    /**
-     * getById
-     *
-     * @param  mixed $likeId
-     * @return Dislike
-     */
-    public function getById(int $likeId): ?DisLike
+    public function getById(int $likeId): ?Dislike
     {
         return Dislike::find($likeId);
     }
@@ -48,7 +64,9 @@ class DislikeRepository
 
     public function restore(int $likeId): bool
     {
-        return Dislike::withTrashed()->findOrFail($likeId)->restore();
+        return Dislike::withTrashed()
+            ->findOrFail($likeId)
+            ->restore();
     }
 
     public function all(): Collection
@@ -58,17 +76,13 @@ class DislikeRepository
 
     public function dislikes(int $petId): LengthAwarePaginator
     {
-        return Dislike::with(['to', 'from'])->where('from', $petId)->paginate(EnumsLike::PAGINATE);
+        return Dislike::with(['to', 'from'])
+            ->where('from', $petId)
+            ->paginate(EnumsLike::PAGINATE);
     }
 
     public function paginate(): LengthAwarePaginator
     {
         return Dislike::paginate(EnumsLike::PAGINATE);
-    }
-
-    public function isLikedBefore(array $like): void
-    {
-        $isLikedBefore = $this->likeRepository->isLikedBefore($like);
-        $isLikedBefore === true ? $this->likeRepository->dislike($like) : null;
     }
 }
