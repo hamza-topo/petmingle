@@ -21,6 +21,8 @@ import { tokenStorage } from '../../auth/tokenStorage';
 import { authenticatedAuthState } from '../../test/authFixtures';
 import {
   currentPetProfileRequest,
+  removePetImageRequest,
+  replacePetImageRequest,
   updatePetProfileRequest,
 } from './profile.api';
 import { taxonomyRequest } from '../profile-creation/taxonomy.api';
@@ -36,6 +38,8 @@ vi.mock('../../auth/AuthProvider', () => ({
 
 vi.mock('./profile.api', () => ({
   currentPetProfileRequest: vi.fn(),
+  removePetImageRequest: vi.fn(),
+  replacePetImageRequest: vi.fn(),
   updatePetProfileRequest: vi.fn(),
 }));
 
@@ -48,6 +52,10 @@ const mockedCurrentPetProfileRequest =
   vi.mocked(currentPetProfileRequest);
 const mockedUpdatePetProfileRequest =
   vi.mocked(updatePetProfileRequest);
+const mockedReplacePetImageRequest =
+  vi.mocked(replacePetImageRequest);
+const mockedRemovePetImageRequest =
+  vi.mocked(removePetImageRequest);
 const mockedTaxonomyRequest =
   vi.mocked(taxonomyRequest);
 const refreshIdentity = vi.fn();
@@ -61,6 +69,7 @@ const backendPet = {
   ageYears: 4,
   breed: 'Labrador Retriever',
   biography: 'Friendly and curious backend biography.',
+  images: ['pets/milo.jpg'],
 };
 
 beforeEach(() => {
@@ -80,6 +89,34 @@ beforeEach(() => {
   );
 
   mockedUpdatePetProfileRequest.mockReset();
+  mockedReplacePetImageRequest.mockReset();
+  mockedRemovePetImageRequest.mockReset();
+  mockedReplacePetImageRequest.mockResolvedValue({
+    id: 42,
+    user_id: 10,
+    species_id: 3,
+    race_id: 7,
+    name: 'Milo',
+    age: 4,
+    sexe: 1,
+    color: 'brown',
+    images: ['pets/replaced.png'],
+    about: backendPet.biography,
+  });
+
+  mockedRemovePetImageRequest.mockResolvedValue({
+    id: 42,
+    user_id: 10,
+    species_id: 3,
+    race_id: 7,
+    name: 'Milo',
+    age: 4,
+    sexe: 1,
+    color: 'brown',
+    images: [],
+    about: backendPet.biography,
+  });
+
   mockedUpdatePetProfileRequest.mockResolvedValue({
     id: 42,
     user_id: 10,
@@ -94,6 +131,16 @@ beforeEach(() => {
   });
 
   mockedTaxonomyRequest.mockReset();
+  vi.stubGlobal(
+    'URL',
+    Object.assign(URL, {
+      createObjectURL: vi.fn(
+        () => 'blob:profile-preview',
+      ),
+      revokeObjectURL: vi.fn(),
+    }),
+  );
+
   mockedTaxonomyRequest.mockResolvedValue({
     species: [
       {
@@ -129,6 +176,7 @@ beforeEach(() => {
 
 afterEach(() => {
   tokenStorage.clear();
+  vi.unstubAllGlobals();
 });
 
 function renderProfile() {
@@ -165,6 +213,21 @@ describe('Own pet profile', () => {
       userId: 10,
       token: 'test-token',
     });
+
+    expect(
+      screen.getAllByRole('img', {
+        name: 'Milo saved photo 1',
+      }),
+    ).toHaveLength(2);
+
+    expect(
+      screen.getAllByRole('img', {
+        name: 'Milo saved photo 1',
+      })[0],
+    ).toHaveAttribute(
+      'src',
+      '/storage/pets/milo.jpg',
+    );
 
     expect(
       screen.getByRole('region', {
@@ -444,71 +507,187 @@ describe('Own pet profile', () => {
     }
   });
 
-  it('renders four thumbnails and changes the active main image locally', async () => {
+  it('previews a local replacement, persists it, and releases its object URL', async () => {
     const user = userEvent.setup();
+
+    const updatedProfile = {
+      ...backendPet,
+      images: ['pets/replaced.png'],
+    };
+
+    mockedCurrentPetProfileRequest
+      .mockResolvedValueOnce(backendPet)
+      .mockResolvedValueOnce(updatedProfile);
 
     renderProfile();
     await waitForProfile();
 
-    const gallery = within(
-      screen.getByRole('group', {
-        name: 'Pet photo gallery',
-      }),
-    );
-
-    expect(
-      gallery.getAllByRole('button', {
-        name: /View photo/,
-      }),
-    ).toHaveLength(ownPet.gallery.length);
-
-    expect(
-      gallery.getByRole('button', {
-        name: 'View photo 1',
-      }),
-    ).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
-
-    await user.click(
-      gallery.getByRole('button', {
-        name: 'View photo 3',
-      }),
-    );
-
-    expect(
-      gallery.getByRole('button', {
-        name: 'View photo 3',
-      }),
-    ).toHaveAttribute(
-      'aria-pressed',
-      'true',
-    );
-
-    expect(
-      gallery.getByRole('button', {
-        name: 'View photo 1',
-      }),
-    ).toHaveAttribute(
-      'aria-pressed',
-      'false',
-    );
-
-    const overview = screen.getByRole(
-      'region',
+    const photo = new File(
+      ['photo'],
+      'replacement.png',
       {
-        name: 'Pet profile overview',
+        type: 'image/png',
       },
     );
 
-    expect(
-      overview.querySelector(
-        '.own-main-photo [role="img"]',
-      ),
-    ).toHaveAccessibleName(
-      /Nala — Running outdoors/,
+    await user.upload(
+      screen.getByLabelText('Pet media upload'),
+      photo,
     );
+
+    expect(
+      screen.getByRole('img', {
+        name: 'Milo pending photo preview',
+      }),
+    ).toHaveAttribute(
+      'src',
+      'blob:profile-preview',
+    );
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Save photo',
+      }),
+    );
+
+    expect(
+      mockedReplacePetImageRequest,
+    ).toHaveBeenCalledWith({
+      petId: 42,
+      token: 'test-token',
+      image: photo,
+    });
+
+    expect(
+      URL.revokeObjectURL,
+    ).toHaveBeenCalledTimes(1);
+
+    expect(
+      await screen.findAllByRole('img', {
+        name: 'Milo saved photo 1',
+      }),
+    ).toSatisfy(images =>
+      images.some(
+        image =>
+          image.getAttribute('src')
+          === '/storage/pets/replaced.png',
+      ),
+    );
+  });
+
+  it('keeps saved media intact when replacement fails', async () => {
+    const user = userEvent.setup();
+
+    mockedReplacePetImageRequest.mockRejectedValueOnce(
+      new ApiError(
+        'Sensitive storage failure',
+        500,
+      ),
+    );
+
+    renderProfile();
+    await waitForProfile();
+
+    await user.upload(
+      screen.getByLabelText('Pet media upload'),
+      new File(
+        ['photo'],
+        'replacement.png',
+        {
+          type: 'image/png',
+        },
+      ),
+    );
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Save photo',
+      }),
+    );
+
+    expect(
+      await screen.findByRole('alert'),
+    ).toHaveTextContent(
+      'PetMingle is temporarily unavailable. Please try again.',
+    );
+
+    expect(
+      screen.queryByRole('img', {
+        name: 'Milo pending photo preview',
+      }),
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.getAllByRole('img', {
+        name: 'Milo saved photo 1',
+      })[0],
+    ).toHaveAttribute(
+      'src',
+      '/storage/pets/milo.jpg',
+    );
+
+    expect(
+      mockedCurrentPetProfileRequest,
+    ).toHaveBeenCalledTimes(1);
+  });
+
+  it('removes persisted media and renders the empty gallery state', async () => {
+    const user = userEvent.setup();
+
+    mockedCurrentPetProfileRequest
+      .mockResolvedValueOnce(backendPet)
+      .mockResolvedValueOnce({
+        ...backendPet,
+        images: [],
+      });
+
+    renderProfile();
+    await waitForProfile();
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Remove photo',
+      }),
+    );
+
+    expect(
+      mockedRemovePetImageRequest,
+    ).toHaveBeenCalledWith({
+      petId: 42,
+      token: 'test-token',
+    });
+
+    expect(
+      await screen.findByText(
+        'No saved pet photo yet.',
+      ),
+    ).toBeVisible();
+
+    expect(
+      screen.getByRole('img', {
+        name: 'No pet photo yet',
+      }),
+    ).toBeVisible();
+  });
+
+  it('supports a pet with no persisted media from the first render', async () => {
+    mockedCurrentPetProfileRequest.mockResolvedValueOnce({
+      ...backendPet,
+      images: [],
+    });
+
+    renderProfile();
+    await waitForProfile();
+
+    expect(
+      screen.getByText('No saved pet photo yet.'),
+    ).toBeVisible();
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Add Photo',
+      }),
+    ).toBeVisible();
   });
 
   it('renders Plus prices and changes the selected plan without enabling purchase', async () => {
