@@ -80,9 +80,16 @@ class PetCreationContractTest extends TestCase
 
         $this->assertIsArray($images);
         $this->assertCount(1, $images);
-        $this->assertSame('uploads/milo.png', $images[0]);
+        $this->assertMatchesRegularExpression(
+            '/^pets\/[0-9a-f-]{36}\.png$/',
+            $images[0]
+        );
 
-        Storage::disk('public')->assertExists('uploads/milo.png');
+        Storage::disk('public')->assertExists($images[0]);
+        $this->assertSame(
+            'public',
+            Storage::disk('public')->getVisibility($images[0])
+        );
     }
 
     public function test_validation_uses_standard_error_envelope(): void
