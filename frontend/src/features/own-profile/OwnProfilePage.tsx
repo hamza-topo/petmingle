@@ -19,9 +19,10 @@ import {
   ProfileDetails,
 } from './components/ProfileDetails';
 import { PlusPlans } from './components/PlusPlans';
+import { PetProfileEditForm } from './components/PetProfileEditForm';
 
 export function OwnProfilePage() {
-  const { user, pet } = useAuth();
+  const { user, pet, refreshIdentity } = useAuth();
 
   const [profile, setProfile] =
     useState<CurrentPetProfile | null>(null);
@@ -29,6 +30,7 @@ export function OwnProfilePage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<unknown | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
+  const [editing, setEditing] = useState(false);
 
   const [activePhotoId, setActivePhotoId] =
     useState(ownPet.gallery[0].id);
@@ -164,6 +166,17 @@ export function OwnProfilePage() {
     );
   }
 
+  async function handleProfileSaved() {
+    setEditing(false);
+    setReloadKey(current => current + 1);
+
+    try {
+      await refreshIdentity();
+    } catch {
+      // The profile reload below remains the source of truth for this screen.
+    }
+  }
+
   const activePhoto =
     ownPet.gallery.find(
       photo => photo.id === activePhotoId,
@@ -191,7 +204,10 @@ export function OwnProfilePage() {
           >
             <div className="own-overview-top">
               <ProfilePhoto photo={activePhoto} />
-              <PetProfileSummary pet={profile} />
+              <PetProfileSummary
+                pet={profile}
+                onEdit={() => setEditing(true)}
+              />
             </div>
 
             <PetProfileGallery
@@ -201,8 +217,22 @@ export function OwnProfilePage() {
             />
           </section>
 
-          <ProfileAbout pet={profile} />
-          <ProfileDetails pet={profile} />
+          {editing && (
+            <PetProfileEditForm
+              pet={profile}
+              onCancel={() => setEditing(false)}
+              onSaved={handleProfileSaved}
+            />
+          )}
+
+          <ProfileAbout
+            pet={profile}
+            onEdit={() => setEditing(true)}
+          />
+          <ProfileDetails
+            pet={profile}
+            onEdit={() => setEditing(true)}
+          />
         </div>
 
         <PlusPlans />

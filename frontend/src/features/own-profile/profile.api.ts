@@ -59,3 +59,41 @@ export async function currentPetProfileRequest({
     biography: pet.about?.trim() || 'No biography yet.',
   };
 }
+
+
+export type PetProfileUpdateInput = {
+  speciesId: number;
+  raceId: number;
+  name: string;
+  ageYears: number;
+  biography: string;
+};
+
+type PetProfileUpdateRequest = {
+  petId: number;
+  token: string;
+  input: PetProfileUpdateInput;
+};
+
+export async function updatePetProfileRequest({
+  petId,
+  token,
+  input,
+}: PetProfileUpdateRequest): Promise<PetApiRecord> {
+  const response = await apiRequest<ApiEnvelope<PetApiRecord>>(
+    `/pets/${petId}`,
+    {
+      method: 'PUT',
+      token,
+      body: JSON.stringify({
+        species_id: input.speciesId,
+        race_id: input.raceId,
+        name: input.name.trim(),
+        age: input.ageYears,
+        about: input.biography.trim() || null,
+      }),
+    },
+  );
+
+  return response.data;
+}

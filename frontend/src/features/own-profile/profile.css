@@ -48,6 +48,24 @@
   .own-traits .pet-trait--pink svg { color: var(--color-brand-pink); fill: currentColor; }
   .own-traits .pet-trait--blue svg { color: var(--color-accent-gold); fill: currentColor; }
   .own-traits .pet-trait--teal svg { color: var(--color-trait-teal); fill: currentColor; }
+  .own-profile-edit-panel { background: var(--color-surface); border-radius: var(--radius-panel); padding: 20px 24px; }
+  .own-profile-edit-heading { display: flex; justify-content: space-between; gap: var(--space-4); align-items: start; }
+  .own-profile-edit-heading h2 { font-size: 25px; line-height: 33px; }
+  .own-profile-edit-heading p { color: var(--color-text-secondary); margin-top: 3px; }
+  .own-edit-cancel { color: var(--color-brand-blue); font-weight: 700; padding: 8px 12px; border-radius: var(--radius-pill); }
+  .own-profile-edit-form { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 18px; margin-top: 18px; }
+  .own-profile-edit-form label { display: grid; gap: 7px; color: var(--color-brand-blue); font-size: 13px; font-weight: 700; }
+  .own-profile-edit-form input, .own-profile-edit-form select, .own-profile-edit-form textarea { width: 100%; border: 1px solid var(--color-border); border-radius: 12px; background: var(--color-canvas); color: var(--color-ink); padding: 11px 12px; font: inherit; }
+  .own-profile-edit-form textarea { resize: vertical; min-height: 96px; }
+  .own-profile-edit-form input:focus-visible, .own-profile-edit-form select:focus-visible, .own-profile-edit-form textarea:focus-visible { outline: 2px solid var(--color-brand-blue); outline-offset: 2px; }
+  .own-profile-edit-form small[role="alert"] { color: var(--color-brand-pink); font-weight: 600; line-height: 1.35; }
+  .own-profile-edit-about, .own-profile-edit-deferred, .own-profile-edit-actions, .own-profile-edit-form > .api-state { grid-column: 1 / -1; }
+  .own-profile-edit-deferred { margin: 0; padding: 12px 14px; border-radius: 12px; background: var(--color-canvas); color: var(--color-text-secondary); font-size: 13px; line-height: 1.45; }
+  .own-profile-edit-actions { display: flex; gap: 10px; align-items: center; }
+  .own-profile-edit-actions button { min-height: 43px; padding: 0 18px; border-radius: var(--radius-pill); font-weight: 700; }
+  .own-profile-edit-actions button[type="submit"] { background: var(--color-brand-blue); color: var(--color-surface); }
+  .own-profile-edit-actions button[type="button"] { border: 1px solid var(--color-border-action); color: var(--color-brand-blue); }
+  .own-profile-edit-actions button:disabled { opacity: .55; cursor: not-allowed; }
   .own-details { padding: 13px 24px 26px; }
   .own-details-columns { display: grid; grid-template-columns: .83fr 1.17fr; gap: 31px; margin-top: 4px; }
   .own-details dl { margin: 0; display: grid; gap: 13px; align-content: start; }
@@ -97,7 +115,7 @@
     .own-summary > p > span { margin-inline: 2px; }
     .own-complete { padding-inline: 12px; gap: 7px; font-size: 13px; }
     .own-stats dt { font-size: 11px; }
-    .own-about, .own-details { padding-inline: 18px; }
+    .own-about, .own-details, .own-profile-edit-panel { padding-inline: 18px; }
     .own-traits { flex-wrap: wrap; gap: 6px; }
     .own-traits .pet-trait { font-size: 12px; padding-inline: 7px; gap: 5px; }
     .own-traits .pet-trait svg { width: 25px; height: 25px; }
@@ -129,6 +147,8 @@
     .own-profile-page .brand-wordmark { font-size: 28px; }
     .own-messages-link { padding-inline: 12px; }
     .own-profile-layout { padding-inline: 12px; gap: var(--space-3); }
+    .own-profile-edit-form { grid-template-columns: 1fr; }
+    .own-profile-edit-about, .own-profile-edit-deferred, .own-profile-edit-actions, .own-profile-edit-form > .api-state { grid-column: 1; }
     .own-overview-top { gap: 13px; }
     .own-name h1 { font-size: 43px; }
     .own-summary > p { font-size: 12px; }
