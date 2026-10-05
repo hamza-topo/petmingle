@@ -2,13 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
-use App\Filters\PetFilter;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Location\Near;
 use App\Http\Requests\Api\Location\Store;
 use App\Http\Resources\Api\Location\Near as LocationNear;
 use App\Repositories\LocationRepository;
-use Illuminate\Http\Request;
 use App\Http\Resources\Api\LocationResource;
 use App\Http\Responses\ApiResponse;
 
@@ -41,13 +39,7 @@ class LocationController extends Controller
      */
     public function near(Near $request)
     {
-        $resources = $this->locationRepository->near($request->all());
-
-        return response()->json([
-            'success' => true,
-            'message' => \__('List of Locations nears to you.'),
-            'data' => new LocationNear($resources),
-        ]);
+        return $this->nearbyResponse($request);
     }
 
     /**
@@ -56,24 +48,9 @@ class LocationController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function filter(Request $request)
+    public function filter(Near $request)
     {
-        $coordinates = [
-            'latitude' => $request->filters['latitude'],
-            'longitude' => $request->filters['longitude'],
-            'perimetre' => $request->filters['perimetre'],
-            'user_id' => $request->user_id ?? auth()->user()->id,
-        ];
-
-        $resources = $this->locationRepository->near($coordinates);
-        $petFilter = new PetFilter;
-        $resources = $petFilter->filter($resources, $request->all());
-
-        return response()->json([
-            'success' => true,
-            'message' => \__('List of Locations nears to you.'),
-            'data' => new LocationNear($resources),
-        ]);
+        return $this->nearbyResponse($request);
     }
     /**
      * Store a newly created resource in storage.
@@ -171,6 +148,43 @@ class LocationController extends Controller
         return ApiResponse::success(
             $this->locationRepository->restore((int) $id),
             __('Location has been restored successfully.')
+        );
+    }
+
+    private function nearbyResponse(Near $request)
+    {
+        $user = $request->user();
+
+        if (!$user->pet) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'pet' => [
+                    __('Create a pet profile before using Discovery.'),
+                ],
+            ]);
+        }
+
+        $origin = $this->locationRepository->currentForUser(
+            $user->id
+        );
+
+        if (!$origin) {
+            throw \Illuminate\Validation\ValidationException::withMessages([
+                'location' => [
+                    __('Set a valid account location before using Discovery.'),
+                ],
+            ]);
+        }
+
+        $resources = $this->locationRepository->nearbyForUser(
+            requesterUserId: $user->id,
+            latitude: (float) $origin->latitude,
+            longitude: (float) $origin->longitude,
+            radiusKm: (int) $request->validated('radius_km', 5),
+        );
+
+        return ApiResponse::success(
+            (new LocationNear($resources))->resolve(),
+            __('List of locations near you.')
         );
     }
 }
