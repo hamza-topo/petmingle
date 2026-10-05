@@ -14,6 +14,11 @@ class LocationController extends Controller
 {
     public function __construct(protected LocationRepository $locationRepository) {}
 
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index()
     {
         return ApiResponse::success(
@@ -26,19 +31,35 @@ class LocationController extends Controller
         );
     }
 
+    /**
+     * Display nearby Discovery results.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function near(Near $request)
     {
         return $this->nearbyResponse($request);
     }
 
+    /**
+     * Legacy route using the same normalized Discovery contract.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function filter(Near $request)
     {
         return $this->nearbyResponse($request);
     }
 
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function store(Store $request)
     {
         $data = $request->validated();
+
         $data['user_id'] = $request->user()->id;
 
         $location = $this->locationRepository->create($data);
@@ -49,6 +70,11 @@ class LocationController extends Controller
         );
     }
 
+    /**
+     * Display the specified resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function show(string $id)
     {
         $location = $this->locationRepository->getById((int) $id);
@@ -61,6 +87,11 @@ class LocationController extends Controller
         );
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function update(Store $request, $id)
     {
         $location = $this->locationRepository->getById((int) $id);
@@ -78,6 +109,11 @@ class LocationController extends Controller
         );
     }
 
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function destroy($id)
     {
         $location = $this->locationRepository->getById((int) $id);
@@ -91,6 +127,11 @@ class LocationController extends Controller
         ]);
     }
 
+    /**
+     * Restore the specified resource from storage.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function restore($id)
     {
         $location = $this->locationRepository->getByIdWithTrashed((int) $id);
