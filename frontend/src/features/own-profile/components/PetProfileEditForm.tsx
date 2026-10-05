@@ -143,16 +143,25 @@ export function PetProfileEditForm({
         'Pet name may not be longer than 25 characters.';
     }
 
-    if (!Number.isInteger(normalizedSpeciesId)) {
+    if (
+      !speciesId
+      || !Number.isInteger(normalizedSpeciesId)
+      || normalizedSpeciesId <= 0
+    ) {
       nextErrors.speciesId = 'Choose a species.';
     }
 
-    if (!Number.isInteger(normalizedRaceId)) {
+    if (
+      !raceId
+      || !Number.isInteger(normalizedRaceId)
+      || normalizedRaceId <= 0
+    ) {
       nextErrors.raceId = 'Choose a breed.';
     }
 
     if (
-      !Number.isInteger(normalizedAge)
+      !ageYears.trim()
+      || !Number.isInteger(normalizedAge)
       || normalizedAge < 0
       || normalizedAge > 30
     ) {
