@@ -16,6 +16,7 @@ import { useAuth } from '../auth/AuthProvider';
 import { tokenStorage } from '../auth/tokenStorage';
 import { currentPetProfileRequest } from '../features/own-profile/profile.api';
 import { taxonomyRequest } from '../features/profile-creation/taxonomy.api';
+import { accountLocationsRequest } from '../features/account-location/location.api';
 import { App } from './App';
 
 vi.mock('../auth/AuthProvider', () => ({
@@ -31,11 +32,19 @@ vi.mock('../features/profile-creation/taxonomy.api', () => ({
   taxonomyRequest: vi.fn(),
 }));
 
+vi.mock('../features/account-location/location.api', () => ({
+  accountLocationsRequest: vi.fn(),
+  createAccountLocationRequest: vi.fn(),
+  updateAccountLocationRequest: vi.fn(),
+}));
+
 const mockedUseAuth = vi.mocked(useAuth);
 const mockedCurrentPetProfileRequest =
   vi.mocked(currentPetProfileRequest);
 const mockedTaxonomyRequest =
   vi.mocked(taxonomyRequest);
+const mockedAccountLocationsRequest =
+  vi.mocked(accountLocationsRequest);
 
 afterEach(() => {
   tokenStorage.clear();
@@ -45,6 +54,8 @@ it('connects all five screens and the Plus section using existing visible contro
   const user = userEvent.setup();
 
   tokenStorage.set('test-token');
+
+  mockedAccountLocationsRequest.mockResolvedValue([]);
 
   mockedUseAuth.mockReturnValue({
     status: 'authenticated',

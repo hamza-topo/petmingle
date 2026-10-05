@@ -120,9 +120,21 @@ class LocationController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Store $request, $id)
     {
-        //
+        $location = $this->locationRepository->getById((int) $id);
+
+        $this->authorize('update', $location);
+
+        $updatedLocation = $this->locationRepository->update(
+            (int) $id,
+            $request->validated()
+        );
+
+        return ApiResponse::success(
+            (new LocationResource($updatedLocation))->resolve(),
+            __('Location has been updated successfully.')
+        );
     }
 
     /**

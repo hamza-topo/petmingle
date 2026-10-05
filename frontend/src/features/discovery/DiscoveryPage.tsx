@@ -5,8 +5,16 @@ import { FeaturedPetCard } from './components/FeaturedPetCard';
 import { DiscoveryFilters } from './components/DiscoveryFilters';
 import { PetGrid } from './components/PetGrid';
 import { discoveryContext } from './discovery.fixtures';
+import {
+  accountLocationLabel,
+  useAccountLocation,
+} from '../account-location/AccountLocationProvider';
 
 export function DiscoveryPage() {
+  const accountLocation = useAccountLocation();
+  const locationLabel =
+    accountLocationLabel(accountLocation);
+
   return (
     <div className="discovery-page">
       <a href="#discovery-main" className="skip-link">Skip to content</a>
@@ -18,7 +26,7 @@ export function DiscoveryPage() {
             <section className="discovery-spotlight" aria-labelledby="discovery-heading">
               <div className="discovery-intro">
                 <div><h1 id="discovery-heading">Discover Amazing <span className="text-brand-pink">Pets</span></h1><p>Meet adorable pets near you who are looking for friends — and the people who love them.</p></div>
-                <div className="nearby-count"><span><PawPrint size={30} fill="currentColor" aria-hidden="true" /></span><p><strong>{discoveryContext.petCount}</strong> pets near<br /><small>{discoveryContext.location}</small></p></div>
+                <div className="nearby-count"><span><PawPrint size={30} fill="currentColor" aria-hidden="true" /></span><p><strong>{discoveryContext.petCount}</strong> pets near<br /><small>{locationLabel}</small></p></div>
               </div>
               <FeaturedPetCard />
             </section>

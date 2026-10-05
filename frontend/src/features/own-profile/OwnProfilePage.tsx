@@ -26,9 +26,16 @@ import {
 } from './components/ProfileDetails';
 import { PlusPlans } from './components/PlusPlans';
 import { PetProfileEditForm } from './components/PetProfileEditForm';
+import {
+  accountLocationLabel,
+  useAccountLocation,
+} from '../account-location/AccountLocationProvider';
 
 export function OwnProfilePage() {
   const { user, pet, refreshIdentity } = useAuth();
+  const accountLocation = useAccountLocation();
+  const locationLabel =
+    accountLocationLabel(accountLocation);
 
   const [profile, setProfile] =
     useState<CurrentPetProfile | null>(null);
@@ -363,6 +370,7 @@ export function OwnProfilePage() {
               <PetProfileSummary
                 pet={profile}
                 onEdit={() => setEditing(true)}
+                locationLabel={locationLabel}
               />
             </div>
 
@@ -410,6 +418,7 @@ export function OwnProfilePage() {
           <ProfileDetails
             pet={profile}
             onEdit={() => setEditing(true)}
+            locationLabel={locationLabel}
           />
         </div>
 
