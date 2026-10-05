@@ -175,11 +175,13 @@ class LocationController extends Controller
             ]);
         }
 
+        $validated = $request->validated();
+
         $resources = $this->locationRepository->nearbyForUser(
             requesterUserId: $user->id,
             latitude: (float) $origin->latitude,
             longitude: (float) $origin->longitude,
-            radiusKm: (int) $request->validated('radius_km', 5),
+            radiusKm: (int) ($validated['radius_km'] ?? 5),
         );
 
         return ApiResponse::success(
