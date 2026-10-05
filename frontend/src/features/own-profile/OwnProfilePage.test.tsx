@@ -30,7 +30,6 @@ import { accountLocationsRequest } from '../account-location/location.api';
 import {
   ownPet,
   plusPlans,
-  profileStats,
 } from './profile.fixtures';
 
 vi.mock('../../auth/AuthProvider', () => ({
@@ -79,6 +78,10 @@ const backendPet = {
   breed: 'Labrador Retriever',
   biography: 'Friendly and curious backend biography.',
   images: ['pets/milo.jpg'],
+  statistics: {
+    matches: 7,
+    likesSent: 11,
+  },
 };
 
 beforeEach(() => {
@@ -501,7 +504,7 @@ describe('Own pet profile', () => {
     ).not.toBeInTheDocument();
   });
 
-  it('renders exactly the three fixture statistics', async () => {
+  it('renders only persisted profile statistics', async () => {
     renderProfile();
     await waitForProfile();
 
@@ -511,18 +514,43 @@ describe('Own pet profile', () => {
       ),
     );
 
+    expect(stats.getAllByRole('term')).toHaveLength(2);
+    expect(stats.getByText('Matches')).toBeVisible();
+    expect(stats.getByText('7')).toBeVisible();
+    expect(stats.getByText('Likes sent')).toBeVisible();
+    expect(stats.getByText('11')).toBeVisible();
+
     expect(
-      stats.getAllByRole('term'),
-    ).toHaveLength(profileStats.length);
+      screen.queryByText('Profile views'),
+    ).not.toBeInTheDocument();
 
-    for (const stat of profileStats) {
-      expect(
-        stats.getByText(stat.label),
-      ).toBeVisible();
+    expect(
+      screen.queryByText('Favorites'),
+    ).not.toBeInTheDocument();
+  });
 
-      expect(
-        stats.getByText(String(stat.value)),
-      ).toBeVisible();
+  it('renders zero for empty persisted profile statistics', async () => {
+    mockedCurrentPetProfileRequest.mockResolvedValueOnce({
+      ...backendPet,
+      statistics: {
+        matches: 0,
+        likesSent: 0,
+      },
+    });
+
+    renderProfile();
+    await waitForProfile();
+
+    const stats = within(
+      screen.getByLabelText(
+        'Pet profile statistics',
+      ),
+    );
+
+    expect(stats.getAllByRole('definition')).toHaveLength(2);
+
+    for (const value of stats.getAllByRole('definition')) {
+      expect(value).toHaveTextContent('0');
     }
   });
 
