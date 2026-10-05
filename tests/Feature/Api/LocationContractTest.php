@@ -46,6 +46,84 @@ class LocationContractTest extends TestCase
             );
     }
 
+    public function test_location_index_returns_newest_account_location_first(): void
+    {
+        $user = User::factory()->create();
+
+        $older = Location::create([
+            'user_id' => $user->id,
+            'latitude' => 31.6295,
+            'longitude' => -7.9811,
+        ]);
+
+        $newer = Location::create([
+            'user_id' => $user->id,
+            'latitude' => 30.4278,
+            'longitude' => -9.5981,
+        ]);
+
+        Sanctum::actingAs($user);
+
+        $this->getJson('/api/v.0/locations')
+            ->assertOk()
+            ->assertJsonPath('data.0.id', $newer->id)
+            ->assertJsonPath('data.1.id', $older->id);
+    }
+
+    public function test_location_update_uses_standard_api_envelope(): void
+    {
+        $user = User::factory()->create();
+
+        $location = Location::create([
+            'user_id' => $user->id,
+            'latitude' => 31.6295,
+            'longitude' => -7.9811,
+        ]);
+
+        Sanctum::actingAs($user);
+
+        $this->putJson("/api/v.0/locations/{$location->id}", [
+            'latitude' => 30.4278,
+            'longitude' => -9.5981,
+        ])
+            ->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath(
+                'message',
+                'Location has been updated successfully.'
+            )
+            ->assertJsonPath('data.id', $location->id)
+            ->assertJsonPath('data.latitude', 30.4278)
+            ->assertJsonPath('data.longitude', -9.5981);
+    }
+
+    public function test_location_update_validates_coordinate_ranges(): void
+    {
+        $user = User::factory()->create();
+
+        $location = Location::create([
+            'user_id' => $user->id,
+            'latitude' => 31.6295,
+            'longitude' => -7.9811,
+        ]);
+
+        Sanctum::actingAs($user);
+
+        $this->putJson("/api/v.0/locations/{$location->id}", [
+            'latitude' => 91,
+            'longitude' => -181,
+        ])
+            ->assertUnprocessable()
+            ->assertJsonPath('success', false)
+            ->assertJsonPath('message', 'Validation failed.')
+            ->assertJsonStructure([
+                'errors' => [
+                    'latitude',
+                    'longitude',
+                ],
+            ]);
+    }
+
     public function test_location_show_uses_standard_api_envelope(): void
     {
         $user = User::factory()->create();
