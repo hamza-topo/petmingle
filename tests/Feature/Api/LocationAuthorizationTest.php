@@ -45,6 +45,62 @@ class LocationAuthorizationTest extends TestCase
             ->assertForbidden();
     }
 
+    public function test_owner_can_update_own_location(): void
+    {
+        $user = User::factory()->create();
+
+        $location = Location::create([
+            'user_id' => $user->id,
+            'latitude' => 31.6295,
+            'longitude' => -7.9811,
+        ]);
+
+        Sanctum::actingAs($user);
+
+        $this->putJson("/api/v.0/locations/{$location->id}", [
+            'user_id' => 999999,
+            'latitude' => 30.4278,
+            'longitude' => -9.5981,
+        ])
+            ->assertOk()
+            ->assertJsonPath('data.user_id', $user->id)
+            ->assertJsonPath('data.latitude', 30.4278)
+            ->assertJsonPath('data.longitude', -9.5981);
+
+        $this->assertDatabaseHas('locations', [
+            'id' => $location->id,
+            'user_id' => $user->id,
+            'latitude' => 30.4278,
+            'longitude' => -9.5981,
+        ]);
+    }
+
+    public function test_user_cannot_update_another_users_location(): void
+    {
+        $owner = User::factory()->create();
+        $otherUser = User::factory()->create();
+
+        $location = Location::create([
+            'user_id' => $owner->id,
+            'latitude' => 31.6295,
+            'longitude' => -7.9811,
+        ]);
+
+        Sanctum::actingAs($otherUser);
+
+        $this->putJson("/api/v.0/locations/{$location->id}", [
+            'latitude' => 30.4278,
+            'longitude' => -9.5981,
+        ])->assertForbidden();
+
+        $this->assertDatabaseHas('locations', [
+            'id' => $location->id,
+            'user_id' => $owner->id,
+            'latitude' => 31.6295,
+            'longitude' => -7.9811,
+        ]);
+    }
+
     public function test_owner_can_delete_own_location(): void
     {
         $user = User::factory()->create();
