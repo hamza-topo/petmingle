@@ -26,7 +26,7 @@ class DiscoveryResponseContractTest extends TestCase
         [$owner, $pet, $race] =
             $this->createUserWithPetAndLocation(
                 'Milo',
-                31.6295,
+                31.6305,
                 -7.9811,
                 [
                     'age' => 4,
@@ -89,7 +89,7 @@ class DiscoveryResponseContractTest extends TestCase
                 'data.0.pet.about',
                 'Friendly and curious.'
             )
-            ->assertJsonPath('data.0.distance_km', 0)
+            ->assertJsonPath('data.0.distance_km', 0.11)
             ->assertJsonPath('data.0.is_new', true)
             ->assertJsonPath('meta.current_page', 1)
             ->assertJsonPath('meta.last_page', 1)
