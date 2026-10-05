@@ -19,7 +19,11 @@ import { App } from '../../app/App';
 import { useAuth } from '../../auth/AuthProvider';
 import { tokenStorage } from '../../auth/tokenStorage';
 import { authenticatedAuthState } from '../../test/authFixtures';
-import { currentPetProfileRequest } from './profile.api';
+import {
+  currentPetProfileRequest,
+  updatePetProfileRequest,
+} from './profile.api';
+import { taxonomyRequest } from '../profile-creation/taxonomy.api';
 import {
   ownPet,
   plusPlans,
@@ -32,11 +36,21 @@ vi.mock('../../auth/AuthProvider', () => ({
 
 vi.mock('./profile.api', () => ({
   currentPetProfileRequest: vi.fn(),
+  updatePetProfileRequest: vi.fn(),
+}));
+
+vi.mock('../profile-creation/taxonomy.api', () => ({
+  taxonomyRequest: vi.fn(),
 }));
 
 const mockedUseAuth = vi.mocked(useAuth);
 const mockedCurrentPetProfileRequest =
   vi.mocked(currentPetProfileRequest);
+const mockedUpdatePetProfileRequest =
+  vi.mocked(updatePetProfileRequest);
+const mockedTaxonomyRequest =
+  vi.mocked(taxonomyRequest);
+const refreshIdentity = vi.fn();
 
 const backendPet = {
   id: 42,
@@ -50,9 +64,13 @@ const backendPet = {
 };
 
 beforeEach(() => {
-  mockedUseAuth.mockReturnValue(
-    authenticatedAuthState(),
-  );
+  refreshIdentity.mockReset();
+  refreshIdentity.mockResolvedValue(undefined);
+
+  mockedUseAuth.mockReturnValue({
+    ...authenticatedAuthState(),
+    refreshIdentity,
+  });
 
   tokenStorage.set('test-token');
 
@@ -60,6 +78,53 @@ beforeEach(() => {
   mockedCurrentPetProfileRequest.mockResolvedValue(
     backendPet,
   );
+
+  mockedUpdatePetProfileRequest.mockReset();
+  mockedUpdatePetProfileRequest.mockResolvedValue({
+    id: 42,
+    user_id: 10,
+    species_id: 3,
+    race_id: 7,
+    name: 'Milo',
+    age: 4,
+    sexe: 1,
+    color: 'brown',
+    images: [],
+    about: backendPet.biography,
+  });
+
+  mockedTaxonomyRequest.mockReset();
+  mockedTaxonomyRequest.mockResolvedValue({
+    species: [
+      {
+        id: 3,
+        name: 'Dog',
+        description: 'Dogs',
+      },
+      {
+        id: 4,
+        name: 'Cat',
+        description: 'Cats',
+      },
+    ],
+    races: [
+      {
+        id: 7,
+        species_id: 3,
+        name: 'Labrador Retriever',
+      },
+      {
+        id: 8,
+        species_id: 3,
+        name: 'Golden Retriever',
+      },
+      {
+        id: 9,
+        species_id: 4,
+        name: 'Domestic Shorthair',
+      },
+    ],
+  });
 });
 
 afterEach(() => {
@@ -142,6 +207,216 @@ describe('Own pet profile', () => {
         screen.getByText(trait.label),
       ).toBeVisible();
     }
+  });
+
+  it('edits persisted fields, refreshes identity, and reloads the profile', async () => {
+    const user = userEvent.setup();
+
+    const updatedPet = {
+      ...backendPet,
+      name: 'Luna',
+      ageYears: 5,
+      biography: 'Updated backend biography.',
+    };
+
+    mockedCurrentPetProfileRequest
+      .mockResolvedValueOnce(backendPet)
+      .mockResolvedValueOnce(updatedPet);
+
+    mockedUpdatePetProfileRequest.mockResolvedValueOnce({
+      id: 42,
+      user_id: 10,
+      species_id: 3,
+      race_id: 7,
+      name: 'Luna',
+      age: 5,
+      sexe: 1,
+      color: 'brown',
+      images: [],
+      about: 'Updated backend biography.',
+    });
+
+    renderProfile();
+    await waitForProfile();
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Edit pet name',
+      }),
+    );
+
+    const editForm = await screen.findByRole('form', {
+      name: 'Edit pet profile',
+    });
+
+    expect(editForm).toHaveTextContent(
+      'Location, weight, traits, compatibility',
+    );
+
+    await user.clear(
+      within(editForm).getByLabelText('Pet name'),
+    );
+    await user.type(
+      within(editForm).getByLabelText('Pet name'),
+      'Luna',
+    );
+
+    await user.clear(
+      within(editForm).getByLabelText('Age'),
+    );
+    await user.type(
+      within(editForm).getByLabelText('Age'),
+      '5',
+    );
+
+    await user.clear(
+      within(editForm).getByLabelText('Biography'),
+    );
+    await user.type(
+      within(editForm).getByLabelText('Biography'),
+      'Updated backend biography.',
+    );
+
+    await user.click(
+      within(editForm).getByRole('button', {
+        name: 'Save changes',
+      }),
+    );
+
+    expect(
+      mockedUpdatePetProfileRequest,
+    ).toHaveBeenCalledWith({
+      petId: 42,
+      token: 'test-token',
+      input: {
+        speciesId: 3,
+        raceId: 7,
+        name: 'Luna',
+        ageYears: 5,
+        biography: 'Updated backend biography.',
+      },
+    });
+
+    expect(refreshIdentity).toHaveBeenCalledTimes(1);
+
+    expect(
+      await screen.findByRole('heading', {
+        level: 1,
+        name: 'Luna',
+      }),
+    ).toBeVisible();
+
+    expect(
+      mockedCurrentPetProfileRequest,
+    ).toHaveBeenCalledTimes(2);
+  });
+
+  it('maps backend validation failures to edit controls', async () => {
+    const user = userEvent.setup();
+
+    mockedUpdatePetProfileRequest.mockRejectedValueOnce(
+      new ApiError(
+        'Validation failed.',
+        422,
+        {
+          success: false,
+          message: 'Validation failed.',
+          errors: {
+            name: ['The pet name is invalid.'],
+            about: ['The biography is invalid.'],
+          },
+        },
+      ),
+    );
+
+    renderProfile();
+    await waitForProfile();
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Edit pet biography',
+      }),
+    );
+
+    const editForm = await screen.findByRole('form', {
+      name: 'Edit pet profile',
+    });
+
+    await user.click(
+      within(editForm).getByRole('button', {
+        name: 'Save changes',
+      }),
+    );
+
+    expect(
+      await within(editForm).findByText(
+        'The pet name is invalid.',
+      ),
+    ).toBeVisible();
+
+    expect(
+      within(editForm).getByText(
+        'The biography is invalid.',
+      ),
+    ).toBeVisible();
+
+    expect(refreshIdentity).not.toHaveBeenCalled();
+  });
+
+  it('shows a safe authorization failure while preserving edit values', async () => {
+    const user = userEvent.setup();
+
+    mockedUpdatePetProfileRequest.mockRejectedValueOnce(
+      new ApiError(
+        'Sensitive policy detail',
+        403,
+        {
+          success: false,
+          message: 'Sensitive policy detail',
+        },
+      ),
+    );
+
+    renderProfile();
+    await waitForProfile();
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Edit pet details',
+      }),
+    );
+
+    const editForm = await screen.findByRole('form', {
+      name: 'Edit pet profile',
+    });
+
+    await user.clear(
+      within(editForm).getByLabelText('Pet name'),
+    );
+    await user.type(
+      within(editForm).getByLabelText('Pet name'),
+      'Luna',
+    );
+
+    await user.click(
+      within(editForm).getByRole('button', {
+        name: 'Save changes',
+      }),
+    );
+
+    expect(
+      await within(editForm).findByRole('alert'),
+    ).toHaveTextContent(
+      'You do not have permission to access this information.',
+    );
+
+    expect(
+      within(editForm).getByLabelText('Pet name'),
+    ).toHaveValue('Luna');
+
+    expect(
+      screen.queryByText('Sensitive policy detail'),
+    ).not.toBeInTheDocument();
   });
 
   it('renders exactly the three fixture statistics', async () => {

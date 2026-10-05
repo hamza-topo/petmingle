@@ -5,8 +5,10 @@ import { ProfileEdit } from './PetProfileSummary';
 
 export function ProfileAbout({
   pet,
+  onEdit,
 }: {
   pet: CurrentPetProfile;
+  onEdit?: () => void;
 }) {
   return (
     <section
@@ -18,7 +20,10 @@ export function ProfileAbout({
           About {pet.name}
         </h2>
 
-        <ProfileEdit label="Edit pet biography" />
+        <ProfileEdit
+          label="Edit pet biography"
+          onClick={onEdit}
+        />
       </div>
 
       <p>{pet.biography}</p>
@@ -37,8 +42,10 @@ export function ProfileAbout({
 
 export function ProfileDetails({
   pet,
+  onEdit,
 }: {
   pet: CurrentPetProfile;
+  onEdit?: () => void;
 }) {
   const details = profileDetails.map(column =>
     column.map(detail => {
@@ -70,7 +77,10 @@ export function ProfileDetails({
           Details
         </h2>
 
-        <ProfileEdit label="Edit pet details" />
+        <ProfileEdit
+          label="Edit pet details"
+          onClick={onEdit}
+        />
       </div>
 
       <div className="own-details-columns">

@@ -15,6 +15,7 @@ import {
 import { useAuth } from '../auth/AuthProvider';
 import { tokenStorage } from '../auth/tokenStorage';
 import { currentPetProfileRequest } from '../features/own-profile/profile.api';
+import { taxonomyRequest } from '../features/profile-creation/taxonomy.api';
 import { App } from './App';
 
 vi.mock('../auth/AuthProvider', () => ({
@@ -23,11 +24,18 @@ vi.mock('../auth/AuthProvider', () => ({
 
 vi.mock('../features/own-profile/profile.api', () => ({
   currentPetProfileRequest: vi.fn(),
+  updatePetProfileRequest: vi.fn(),
+}));
+
+vi.mock('../features/profile-creation/taxonomy.api', () => ({
+  taxonomyRequest: vi.fn(),
 }));
 
 const mockedUseAuth = vi.mocked(useAuth);
 const mockedCurrentPetProfileRequest =
   vi.mocked(currentPetProfileRequest);
+const mockedTaxonomyRequest =
+  vi.mocked(taxonomyRequest);
 
 afterEach(() => {
   tokenStorage.clear();
@@ -55,6 +63,23 @@ it('connects all five screens and the Plus section using existing visible contro
     signIn: vi.fn(),
     signOut: vi.fn(),
     refreshIdentity: vi.fn(),
+  });
+
+  mockedTaxonomyRequest.mockResolvedValue({
+    species: [
+      {
+        id: 1,
+        name: 'Dog',
+        description: 'Dogs',
+      },
+    ],
+    races: [
+      {
+        id: 1,
+        species_id: 1,
+        name: 'Golden Retriever',
+      },
+    ],
   });
 
   mockedCurrentPetProfileRequest.mockResolvedValue({
@@ -145,16 +170,26 @@ it('connects all five screens and the Plus section using existing visible contro
   ).toHaveBeenCalled();
 
   await user.click(
-    screen.getByRole('link', {
+    screen.getByRole('button', {
       name: 'Complete your profile',
     }),
   );
 
   expect(
-    screen.getByRole('form', {
-      name: 'Create pet profile',
+    await screen.findByRole('form', {
+      name: 'Edit pet profile',
     }),
   ).toBeVisible();
+
+  await user.click(
+    within(
+      screen.getByRole('form', {
+        name: 'Edit pet profile',
+      }),
+    ).getByRole('button', {
+      name: 'Cancel',
+    }),
+  );
 
   await user.click(
     screen.getByRole('link', {

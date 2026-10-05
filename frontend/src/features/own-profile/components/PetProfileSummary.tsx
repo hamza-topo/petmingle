@@ -3,23 +3,28 @@ import {
   PawPrint,
   Pencil,
 } from 'lucide-react';
-import { Link } from 'react-router';
-
 import { PetLocation } from '../../../components/PetLocation';
 import { ownPet, profileStats } from '../profile.fixtures';
 import type { CurrentPetProfile } from '../profile.types';
 
 export function ProfileEdit({
   label,
+  onClick,
 }: {
   label: string;
+  onClick?: () => void;
 }) {
   return (
     <button
       type="button"
       className="own-edit"
-      disabled
-      aria-label={`${label} — unavailable`}
+      disabled={!onClick}
+      onClick={onClick}
+      aria-label={
+        onClick
+          ? label
+          : `${label} — unavailable`
+      }
     >
       <Pencil size={17} />
     </button>
@@ -28,8 +33,10 @@ export function ProfileEdit({
 
 export function PetProfileSummary({
   pet,
+  onEdit,
 }: {
   pet: CurrentPetProfile;
+  onEdit?: () => void;
 }) {
   return (
     <section
@@ -41,7 +48,10 @@ export function PetProfileSummary({
           {pet.name}
         </h1>
 
-        <ProfileEdit label="Edit pet name" />
+        <ProfileEdit
+          label="Edit pet name"
+          onClick={onEdit}
+        />
       </div>
 
       <p>
@@ -67,9 +77,11 @@ export function PetProfileSummary({
         ))}
       </dl>
 
-      <Link
-        to="/pet/create"
+      <button
+        type="button"
         className="own-complete"
+        onClick={onEdit}
+        disabled={!onEdit}
       >
         <PawPrint
           size={30}
@@ -79,7 +91,7 @@ export function PetProfileSummary({
         <span>Complete your profile</span>
 
         <ChevronRight size={25} />
-      </Link>
+      </button>
     </section>
   );
 }
