@@ -5,6 +5,7 @@ import {
 } from 'react';
 import { PawPrint } from 'lucide-react';
 
+import { ApiError } from '../../api/errors';
 import { describeApiFailure } from '../../api/presentation';
 import { tokenStorage } from '../../auth/tokenStorage';
 import { ApiState } from '../../components/ApiState';
@@ -61,8 +62,9 @@ export function DiscoveryPage() {
 
       if (!token) {
         setLoadError(
-          new Error(
+          new ApiError(
             'Authentication token is missing.',
+            401,
           ),
         );
         setStatus('error');
