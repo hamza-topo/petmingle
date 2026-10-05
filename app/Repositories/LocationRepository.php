@@ -85,8 +85,10 @@ class LocationRepository
         int $requesterUserId,
         float $latitude,
         float $longitude,
-        int $radiusKm = EnumsLocation::PERIMETRE
-    ): Collection {
+        int $radiusKm = EnumsLocation::PERIMETRE,
+        int $perPage = 24,
+        int $page = 1
+    ): LengthAwarePaginator {
         $blockedUserIds = Block::query()
             ->where(function ($query) use ($requesterUserId) {
                 $query->where('from', $requesterUserId)
@@ -113,7 +115,7 @@ class LocationRepository
             ->whereNotNull('longitude')
             ->groupBy('user_id');
 
-        return Location::query()
+        $query = Location::query()
             ->select('locations.*')
             ->selectRaw(
                 '(6371 * acos(LEAST(1, GREATEST(-1, cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))))) AS distance',
@@ -134,8 +136,15 @@ class LocationRepository
             ->orderBy('distance')
             ->with([
                 'user.pet.race',
-            ])
-            ->get();
+            ]);
+
+        return $query->paginate(
+            $perPage,
+            ['*'],
+            'page',
+            $page
+        );
+
     }
 
     public function getByIdWithTrashed(int $locationId): Location
