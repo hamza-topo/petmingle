@@ -5,6 +5,7 @@ import { ProtectedRoute } from '../auth/ProtectedRoute';
 import { DiscoveryPage } from '../features/discovery/DiscoveryPage';
 import { SignInPage } from '../features/auth/SignInPage';
 import { LandingPage } from '../features/landing/LandingPage';
+import { MatchesPage } from '../features/matches/MatchesPage';
 import { MessagingPage } from '../features/messaging/MessagingPage';
 import { OwnProfilePage } from '../features/own-profile/OwnProfilePage';
 import { PetCreatePage } from '../features/profile-creation/PetCreatePage';
@@ -27,6 +28,10 @@ export function App() {
           />
 
           <Route element={<PetRequiredRoute />}>
+            <Route
+              path="/matches"
+              element={<MatchesPage />}
+            />
             <Route
               path="/messages"
               element={<MessagingPage />}
