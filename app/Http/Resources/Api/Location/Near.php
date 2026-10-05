@@ -2,37 +2,56 @@
 
 namespace App\Http\Resources\Api\Location;
 
-use App\Enums\Pet;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class Near extends ResourceCollection
 {
-    /**
-     * Transform the resource into an array.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
-     */
-    public function toArray($request)
+    public function toArray($request): array
     {
-        return $this->collection->map(function ($location) {
-            $pet = $location->user->pet;
+        return $this->collection
+            ->map(function ($location): array {
+                $pet = $location->user->pet;
+                $race = $pet->race;
 
-            $sex = match ($pet->sexe) {
-                Pet::FEMALE => __('Female'),
-                Pet::MALE => __('Male'),
-                default => null,
-            };
+                $images = array_values(array_filter(
+                    $pet->images ?? [],
+                    fn ($image) =>
+                        is_string($image)
+                        && trim($image) !== ''
+                ));
 
-            return [
-                'user_name' => $location->user->name,
-                'pet_name' => $pet->name,
-                'pet_sexe' => $sex,
-                'race' => $pet->race,
-                'images' => $pet->images ?? [],
-                'distance' => round($location->distance, 2) . ' km',
-                'is_new' => isNew($pet->created_at),
-            ];
-        });
+                return [
+                    'owner' => [
+                        'id' => (int) $location->user->id,
+                        'name' => $location->user->name,
+                    ],
+                    'pet' => [
+                        'id' => (int) $pet->id,
+                        'owner_id' => (int) $pet->user_id,
+                        'species_id' => (int) $pet->species_id,
+                        'name' => $pet->name,
+                        'age_years' => (int) $pet->age,
+                        'sex' => $pet->sexe !== null
+                            ? (int) $pet->sexe
+                            : null,
+                        'race' => [
+                            'id' => (int) $race->id,
+                            'species_id' => (int) $race->species_id,
+                            'name' => $race->name,
+                        ],
+                        'images' => $images,
+                        'about' => $pet->about,
+                    ],
+                    'distance_km' => round(
+                        (float) $location->distance,
+                        2
+                    ),
+                    'is_new' => (bool) isNew(
+                        $pet->created_at
+                    ),
+                ];
+            })
+            ->values()
+            ->all();
     }
 }

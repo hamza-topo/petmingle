@@ -1,4 +1,8 @@
-import { render, screen, within } from '@testing-library/react';
+import {
+  render,
+  screen,
+  within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
 import {
@@ -9,16 +13,20 @@ import {
   it,
   vi,
 } from 'vitest';
+
 import { App } from '../../app/App';
-import { discoveryContext, featuredDiscoveryPet, filterGroups, nearbyPets } from './discovery.fixtures';
 import { useAuth } from '../../auth/AuthProvider';
-import { authenticatedAuthState } from '../../test/authFixtures';
 import { tokenStorage } from '../../auth/tokenStorage';
+import { authenticatedAuthState } from '../../test/authFixtures';
 import {
   accountLocationsRequest,
   createAccountLocationRequest,
   updateAccountLocationRequest,
 } from '../account-location/location.api';
+import {
+  discoveryRequest,
+  type DiscoveryPet,
+} from './discovery.api';
 
 vi.mock('../../auth/AuthProvider', () => ({
   useAuth: vi.fn(),
@@ -30,6 +38,10 @@ vi.mock('../account-location/location.api', () => ({
   updateAccountLocationRequest: vi.fn(),
 }));
 
+vi.mock('./discovery.api', () => ({
+  discoveryRequest: vi.fn(),
+}));
+
 const mockedUseAuth = vi.mocked(useAuth);
 const mockedAccountLocationsRequest =
   vi.mocked(accountLocationsRequest);
@@ -37,77 +49,345 @@ const mockedCreateAccountLocationRequest =
   vi.mocked(createAccountLocationRequest);
 const mockedUpdateAccountLocationRequest =
   vi.mocked(updateAccountLocationRequest);
+const mockedDiscoveryRequest =
+  vi.mocked(discoveryRequest);
+
+function pet(
+  id: number,
+  name: string,
+  distanceKm: number,
+): DiscoveryPet {
+  return {
+    id,
+    ownerId: id + 100,
+    speciesId: 3,
+    raceId: 7,
+    ownerName: `Owner ${name}`,
+    name,
+    breed: 'Labrador Retriever',
+    ageYears: 4,
+    sex: 1,
+    images: [`pets/${name.toLowerCase()}.jpg`],
+    photo: {
+      src: `/storage/pets/${name.toLowerCase()}.jpg`,
+      alt: `${name} pet photo`,
+      placeholder: name,
+    },
+    photoCount: 1,
+    about: `${name} persisted biography.`,
+    distanceKm,
+    isNew: id === 42,
+  };
+}
+
+const firstPage = {
+  pets: [
+    pet(42, 'Milo', 0.8),
+    pet(43, 'Luna', 1.4),
+    pet(44, 'Bella', 2.2),
+  ],
+  meta: {
+    current_page: 1,
+    last_page: 1,
+    per_page: 24,
+    total: 3,
+  },
+};
 
 beforeEach(() => {
-  mockedUseAuth.mockReturnValue(authenticatedAuthState());
+  mockedUseAuth.mockReturnValue(
+    authenticatedAuthState(),
+  );
 
   tokenStorage.set('test-token');
 
   mockedAccountLocationsRequest.mockReset();
   mockedCreateAccountLocationRequest.mockReset();
   mockedUpdateAccountLocationRequest.mockReset();
+  mockedDiscoveryRequest.mockReset();
 
-  mockedAccountLocationsRequest.mockResolvedValue([]);
+  mockedAccountLocationsRequest.mockResolvedValue([
+    {
+      id: 5,
+      user_id: 10,
+      latitude: 31.6295,
+      longitude: -7.9811,
+    },
+  ]);
+
   mockedCreateAccountLocationRequest.mockResolvedValue({
-    id: 1,
+    id: 6,
     user_id: 10,
     latitude: 31.6295,
     longitude: -7.9811,
   });
+
   mockedUpdateAccountLocationRequest.mockResolvedValue({
-    id: 2,
+    id: 5,
     user_id: 10,
     latitude: 30.4278,
     longitude: -9.5981,
   });
+
+  mockedDiscoveryRequest.mockResolvedValue(
+    firstPage,
+  );
 });
 
 afterEach(() => {
   tokenStorage.clear();
 });
+
 function renderDiscovery() {
-  return render(<MemoryRouter initialEntries={['/discover']}><App /></MemoryRouter>);
+  return render(
+    <MemoryRouter initialEntries={['/discover']}>
+      <App />
+    </MemoryRouter>,
+  );
 }
 
 describe('Discovery page', () => {
-  it('renders the Discovery route and the search controls', () => {
+  it('renders persisted Discovery records without fixture metadata', async () => {
     renderDiscovery();
-    expect(screen.getByRole('heading', { level: 1, name: 'Discover Amazing Pets' })).toBeVisible();
-    expect(screen.getByRole('searchbox', { name: 'Search pets, people, or locations' })).toBeVisible();
-    expect(screen.getByRole('heading', { name: 'More Amazing Pets Nearby' })).toBeVisible();
+
+    expect(
+      await screen.findByRole('heading', {
+        level: 2,
+        name: 'Milo',
+      }),
+    ).toBeVisible();
+
+    expect(
+      screen.getByText('Closest nearby'),
+    ).toBeVisible();
+
+    expect(
+      screen.getByText(
+        'Milo persisted biography.',
+      ),
+    ).toBeVisible();
+
+    expect(
+      screen.getByText('Shared by Owner Milo'),
+    ).toBeVisible();
+
+    expect(
+      screen.getByText('0.8 km away'),
+    ).toBeVisible();
+
+    expect(
+      screen.getByText('3 pets near'),
+    ).toBeVisible();
+
+    const list = within(
+      screen.getByRole('list', {
+        name: 'Nearby pets',
+      }),
+    );
+
+    expect(
+      list.getAllByRole('listitem'),
+    ).toHaveLength(2);
+
+    expect(
+      list.getByRole('article', {
+        name: 'Luna',
+      }),
+    ).toBeVisible();
+
+    expect(
+      list.getByRole('article', {
+        name: 'Bella',
+      }),
+    ).toBeVisible();
+
+    expect(
+      screen.queryByText('127'),
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByRole('img', {
+        name: 'Verified pet',
+      }),
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.queryByText('Lives with'),
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Showing 3 Pets',
+      }),
+    ).toBeVisible();
+
+    expect(
+      mockedDiscoveryRequest,
+    ).toHaveBeenCalledWith({
+      token: 'test-token',
+      radiusKm: 5,
+      page: 1,
+      perPage: 24,
+    });
   });
 
-  it('renders the authenticated user identity in the header', () => {
+  it('preserves authenticated identity and navigation without fixture badges', async () => {
     renderDiscovery();
+
+    await screen.findByRole('heading', {
+      level: 2,
+      name: 'Milo',
+    });
 
     const account = screen.getByRole('button', {
       name: 'Hamza account — unavailable in this preview',
     });
 
-    expect(account).toBeVisible();
     expect(account).toHaveTextContent('Hamza');
-    expect(
-      within(account).getByRole('img'),
-    ).toHaveAccessibleName(/Hamza avatar/);
+
+    const nav = within(
+      screen.getByRole('navigation', {
+        name: 'PetMingle navigation',
+      }),
+    );
 
     expect(
-      screen.queryByText('Sarah'),
+      nav.getByRole('link', {
+        name: /Discover/,
+      }),
+    ).toHaveAttribute(
+      'aria-current',
+      'page',
+    );
+
+    expect(
+      nav.getByRole('button', {
+        name: /^Matches/,
+      }),
+    ).toBeDisabled();
+
+    expect(
+      nav.queryByLabelText(/matches$/i),
+    ).not.toBeInTheDocument();
+
+    expect(
+      nav.queryByLabelText(/unread messages/i),
     ).not.toBeInTheDocument();
   });
 
-  it('shows an explicit missing-location state and creates coordinates from user input', async () => {
-    const user = userEvent.setup();
+  it('renders a stable empty state when the API returns no nearby pets', async () => {
+    mockedDiscoveryRequest.mockResolvedValueOnce({
+      pets: [],
+      meta: {
+        current_page: 1,
+        last_page: 1,
+        per_page: 24,
+        total: 0,
+      },
+    });
 
     renderDiscovery();
 
-    const locationButton = await screen.findByRole(
-      'button',
-      {
-        name: 'Location not set',
-      },
+    expect(
+      await screen.findByText(
+        'No nearby pets yet',
+      ),
+    ).toBeVisible();
+
+    expect(
+      screen.getByText(
+        'No persisted pet profiles were found within 5 km.',
+      ),
+    ).toBeVisible();
+
+    expect(
+      screen.queryByRole('list', {
+        name: 'Nearby pets',
+      }),
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Showing 0 Pets',
+      }),
+    ).toBeVisible();
+  });
+
+  it('renders a safe network failure and retries Discovery', async () => {
+    const user = userEvent.setup();
+
+    mockedDiscoveryRequest
+      .mockRejectedValueOnce(
+        new TypeError(
+          'Failed to fetch private endpoint',
+        ),
+      )
+      .mockResolvedValueOnce(firstPage);
+
+    renderDiscovery();
+
+    expect(
+      await screen.findByRole('alert'),
+    ).toHaveTextContent(
+      'Unable to reach PetMingle. Check your connection and try again.',
     );
 
-    await user.click(locationButton);
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Try again',
+      }),
+    );
+
+    expect(
+      await screen.findByRole('heading', {
+        level: 2,
+        name: 'Milo',
+      }),
+    ).toBeVisible();
+
+    expect(
+      mockedDiscoveryRequest,
+    ).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not call Discovery until an account location exists', async () => {
+    mockedAccountLocationsRequest.mockResolvedValueOnce(
+      [],
+    );
+
+    renderDiscovery();
+
+    expect(
+      await screen.findByText(
+        'Set your location',
+      ),
+    ).toBeVisible();
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Location not set',
+      }),
+    ).toBeVisible();
+
+    expect(
+      mockedDiscoveryRequest,
+    ).not.toHaveBeenCalled();
+  });
+
+  it('loads Discovery after the user explicitly creates a location', async () => {
+    const user = userEvent.setup();
+
+    mockedAccountLocationsRequest.mockResolvedValueOnce(
+      [],
+    );
+
+    renderDiscovery();
+
+    await user.click(
+      await screen.findByRole('button', {
+        name: 'Location not set',
+      }),
+    );
 
     const editor = screen.getByRole('form', {
       name: 'Account location',
@@ -130,6 +410,13 @@ describe('Discovery page', () => {
     );
 
     expect(
+      await screen.findByRole('heading', {
+        level: 2,
+        name: 'Milo',
+      }),
+    ).toBeVisible();
+
+    expect(
       mockedCreateAccountLocationRequest,
     ).toHaveBeenCalledWith({
       token: 'test-token',
@@ -141,177 +428,119 @@ describe('Discovery page', () => {
     });
 
     expect(
-      await screen.findByRole('button', {
-        name: '31.629500, -7.981100',
-      }),
-    ).toBeVisible();
+      mockedDiscoveryRequest,
+    ).toHaveBeenCalledTimes(1);
   });
 
-  it('updates the current persisted account location instead of creating another one', async () => {
+  it('appends paginated pets without duplicating the closest result', async () => {
     const user = userEvent.setup();
 
-    mockedAccountLocationsRequest.mockResolvedValueOnce([
-      {
-        id: 2,
-        user_id: 10,
-        latitude: 31.6295,
-        longitude: -7.9811,
-      },
-    ]);
+    mockedDiscoveryRequest
+      .mockResolvedValueOnce({
+        pets: [
+          pet(42, 'Milo', 0.8),
+          pet(43, 'Luna', 1.4),
+        ],
+        meta: {
+          current_page: 1,
+          last_page: 2,
+          per_page: 2,
+          total: 3,
+        },
+      })
+      .mockResolvedValueOnce({
+        pets: [
+          pet(44, 'Bella', 2.2),
+        ],
+        meta: {
+          current_page: 2,
+          last_page: 2,
+          per_page: 2,
+          total: 3,
+        },
+      });
 
     renderDiscovery();
 
-    await user.click(
-      await screen.findByRole('button', {
-        name: '31.629500, -7.981100',
-      }),
-    );
-
-    const editor = screen.getByRole('form', {
-      name: 'Account location',
+    await screen.findByRole('heading', {
+      level: 2,
+      name: 'Milo',
     });
 
-    await user.clear(
-      within(editor).getByLabelText('Latitude'),
-    );
-    await user.type(
-      within(editor).getByLabelText('Latitude'),
-      '30.4278',
-    );
-
-    await user.clear(
-      within(editor).getByLabelText('Longitude'),
-    );
-    await user.type(
-      within(editor).getByLabelText('Longitude'),
-      '-9.5981',
-    );
-
     await user.click(
-      within(editor).getByRole('button', {
-        name: 'Save coordinates',
-      }),
-    );
-
-    expect(
-      mockedUpdateAccountLocationRequest,
-    ).toHaveBeenCalledWith({
-      token: 'test-token',
-      userId: 10,
-      locationId: 2,
-      coordinates: {
-        latitude: 30.4278,
-        longitude: -9.5981,
-      },
-    });
-
-    expect(
-      mockedCreateAccountLocationRequest,
-    ).not.toHaveBeenCalled();
-  });
-
-  it('shows a safe location load failure and retries it', async () => {
-    const user = userEvent.setup();
-
-    mockedAccountLocationsRequest
-      .mockRejectedValueOnce(
-        new TypeError('Failed to fetch private location endpoint'),
-      )
-      .mockResolvedValueOnce([]);
-
-    renderDiscovery();
-
-    expect(
-      await screen.findByRole('button', {
-        name: 'Retry location',
-      }),
-    ).toBeVisible();
-
-    expect(
       screen.getByRole('button', {
-        name: 'Location unavailable',
+        name: 'Load more pets',
+      }),
+    );
+
+    const list = within(
+      screen.getByRole('list', {
+        name: 'Nearby pets',
+      }),
+    );
+
+    expect(
+      await list.findByRole('article', {
+        name: 'Bella',
+      }),
+    ).toBeVisible();
+
+    expect(
+      list.getAllByRole('listitem'),
+    ).toHaveLength(2);
+
+    expect(
+      screen.getAllByRole('heading', {
+        name: 'Milo',
+      }),
+    ).toHaveLength(1);
+
+    expect(
+      mockedDiscoveryRequest,
+    ).toHaveBeenLastCalledWith({
+      token: 'test-token',
+      radiusKm: 5,
+      page: 2,
+      perPage: 24,
+    });
+
+    expect(
+      screen.queryByRole('button', {
+        name: 'Load more pets',
+      }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('keeps unsupported filters visibly deferred instead of changing API results locally', async () => {
+    renderDiscovery();
+
+    await screen.findByRole('heading', {
+      level: 2,
+      name: 'Milo',
+    });
+
+    expect(
+      screen.getByText(
+        'Advanced filters are not connected to persisted Discovery data yet.',
+      ),
+    ).toBeVisible();
+
+    expect(
+      screen.getByRole('combobox', {
+        name: 'Distance',
       }),
     ).toBeDisabled();
 
-    await user.click(
-      screen.getByRole('button', {
-        name: 'Retry location',
+    const species = within(
+      screen.getByRole('group', {
+        name: 'Species',
       }),
     );
 
     expect(
-      await screen.findByRole('button', {
-        name: 'Location not set',
+      species.getByRole('radio', {
+        name: 'All',
       }),
-    ).toBeVisible();
-
-    expect(
-      mockedAccountLocationsRequest,
-    ).toHaveBeenCalledTimes(2);
-  });
-
-  it('renders navigation with Discover active and links to implemented screens', () => {
-    renderDiscovery();
-    const nav = within(screen.getByRole('navigation', { name: 'PetMingle navigation' }));
-    expect(nav.getByRole('link', { name: /Discover/ })).toHaveAttribute('aria-current', 'page');
-    expect(nav.getByRole('button', { name: /^Matches/ })).toBeDisabled();
-    for (const [name, href] of [['Messages', '/messages'], ['Profile', '/profile'], ['PetMingle Plus', '/profile#petmingle-plus']]) {
-      expect(nav.getByRole('link', { name: new RegExp(name) })).toHaveAttribute('href', href);
-    }
-  });
-
-  it('renders the featured pet and companion from fixtures', () => {
-    renderDiscovery();
-    const card = within(screen.getByRole('article', { name: featuredDiscoveryPet.name }));
-    expect(card.getByText(featuredDiscoveryPet.description)).toBeVisible();
-    expect(card.getByText(featuredDiscoveryPet.companion.name, { selector: 'strong' })).toBeVisible();
-    expect(card.getByText(`1 / ${featuredDiscoveryPet.photoCount}`)).toBeVisible();
-    for (const trait of featuredDiscoveryPet.traits) expect(card.getByText(trait.label)).toBeVisible();
-    expect(card.getByRole('button', { name: /Say Hello/ })).toBeDisabled();
-  });
-
-  it('renders all six nearby pet cards with distance and trait metadata', () => {
-    renderDiscovery();
-    const list = within(screen.getByRole('list', { name: 'Nearby pets' }));
-    expect(list.getAllByRole('listitem')).toHaveLength(nearbyPets.length);
-    for (const pet of nearbyPets) {
-      const card = within(list.getByRole('article', { name: pet.name }));
-      expect(card.getByText(pet.breed)).toBeVisible();
-      expect(card.getByText(`${pet.distanceMiles.toFixed(1)} miles away`)).toBeVisible();
-      for (const trait of pet.traits) expect(card.getByText(trait.label)).toBeVisible();
-    }
-  });
-
-  it('renders visible filters with the reference defaults', () => {
-    renderDiscovery();
-    const filters = within(screen.getByRole('complementary', { name: 'Filter Pets' }));
-    expect(filters.getByRole('combobox', { name: 'Distance' })).toHaveValue('10');
-    for (const group of filterGroups) {
-      const choices = within(filters.getByRole('group', { name: group.label }));
-      for (const option of group.options) expect(choices.getByRole('radio', { name: option })).toBeInTheDocument();
-      expect(choices.getByRole('radio', { name: 'All' })).toBeChecked();
-    }
-    expect(filters.getByRole('button', { name: `Show ${discoveryContext.petCount} Pets` })).toBeVisible();
-  });
-
-  it('selects and resets filters locally without changing the fixture results', async () => {
-    const user = userEvent.setup();
-    renderDiscovery();
-    const species = within(screen.getByRole('group', { name: 'Species' }));
-    await user.click(species.getByRole('radio', { name: 'Cats' }));
-    expect(species.getByRole('radio', { name: 'Cats' })).toBeChecked();
-    expect(species.getByRole('radio', { name: 'All' })).not.toBeChecked();
-    expect(within(screen.getByRole('list', { name: 'Nearby pets' })).getAllByRole('listitem')).toHaveLength(nearbyPets.length);
-    await user.click(screen.getByRole('button', { name: 'Clear All' }));
-    expect(species.getByRole('radio', { name: 'All' })).toBeChecked();
-  });
-
-  it('opens Discovery from Landing and returns Home through the logo', async () => {
-    const user = userEvent.setup();
-    render(<MemoryRouter initialEntries={['/']}><App /></MemoryRouter>);
-    await user.click(screen.getByRole('link', { name: 'Explore Pets' }));
-    expect(screen.getByRole('heading', { level: 1, name: 'Discover Amazing Pets' })).toBeVisible();
-    await user.click(screen.getByRole('link', { name: 'PetMingle home' }));
-    expect(screen.getByRole('heading', { level: 1, name: 'Find their people' })).toBeVisible();
+    ).toBeDisabled();
   });
 });

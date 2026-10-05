@@ -149,7 +149,7 @@ class NearbyDiscoverySecurityTest extends TestCase
         ])
             ->assertOk()
             ->assertJsonPath(
-                'data.0.pet_name',
+                'data.0.pet.name',
                 'Visible nearby pet'
             );
     }
@@ -223,18 +223,18 @@ class NearbyDiscoverySecurityTest extends TestCase
 
         $response
             ->assertJsonCount(1, 'data')
-            ->assertJsonPath('data.0.pet_name', 'Visible');
+            ->assertJsonPath('data.0.pet.name', 'Visible');
 
         $response->assertJsonMissing([
-            'pet_name' => 'Blocked outgoing',
+            'name' => 'Blocked outgoing',
         ]);
 
         $response->assertJsonMissing([
-            'pet_name' => 'Blocked incoming',
+            'name' => 'Blocked incoming',
         ]);
 
         $response->assertJsonMissing([
-            'pet_name' => 'Requester',
+            'name' => 'Requester',
         ]);
 
         $this->assertNotSame(

@@ -14,6 +14,16 @@ class Near extends FormRequest
                 'integer',
                 'between:1,100',
             ],
+            'page' => [
+                'sometimes',
+                'integer',
+                'min:1',
+            ],
+            'per_page' => [
+                'sometimes',
+                'integer',
+                'between:1,50',
+            ],
 
             // Discovery origin and requester identity are server-owned.
             'user_id' => ['prohibited'],
@@ -35,6 +45,18 @@ class Near extends FormRequest
             ),
             'radius_km.between' => __(
                 'The discovery radius must be between 1 and 100 kilometers.'
+            ),
+            'page.integer' => __(
+                'The discovery page must be a whole number.'
+            ),
+            'page.min' => __(
+                'The discovery page must be at least 1.'
+            ),
+            'per_page.integer' => __(
+                'The discovery page size must be a whole number.'
+            ),
+            'per_page.between' => __(
+                'The discovery page size must be between 1 and 50.'
             ),
             'user_id.prohibited' => __(
                 'Requester identity is derived from authentication.'
