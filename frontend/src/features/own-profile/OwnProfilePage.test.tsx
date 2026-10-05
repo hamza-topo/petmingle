@@ -562,17 +562,18 @@ describe('Own pet profile', () => {
       URL.revokeObjectURL,
     ).toHaveBeenCalledTimes(1);
 
-    expect(
+    const savedImages =
       await screen.findAllByRole('img', {
         name: 'Milo saved photo 1',
-      }),
-    ).toSatisfy(images =>
-      images.some(
+      });
+
+    expect(
+      savedImages.some(
         image =>
           image.getAttribute('src')
           === '/storage/pets/replaced.png',
       ),
-    );
+    ).toBe(true);
   });
 
   it('keeps saved media intact when replacement fails', async () => {
