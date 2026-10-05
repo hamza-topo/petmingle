@@ -7,6 +7,7 @@ import {
 } from 'vitest';
 
 import { apiRequest } from '../../api/client';
+import { mediaUrl } from '../../api/config';
 import { relationshipsRequest } from './matches.api';
 
 vi.mock('../../api/client', () => ({
@@ -85,7 +86,7 @@ describe('Matches API adapter', () => {
           ageYears: 4,
           sex: 1,
           photo: {
-            src: '/storage/pets/milo.jpg',
+            src: mediaUrl('pets/milo.jpg'),
             alt: 'Milo pet photo',
             placeholder: 'Milo',
           },

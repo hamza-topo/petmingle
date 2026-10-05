@@ -13,7 +13,6 @@ import {
   replacePetImageRequest,
 } from './profile.api';
 import type { CurrentPetProfile } from './profile.types';
-import { ownPet } from './profile.fixtures';
 import { photoSchema } from '../profile-creation/profile.schema';
 import {
   PetProfileGallery,
@@ -201,6 +200,8 @@ export function OwnProfilePage() {
     );
   }
 
+  const profileId = profile.id;
+
   async function handleProfileSaved() {
     setEditing(false);
     setReloadKey(current => current + 1);
@@ -285,7 +286,7 @@ export function OwnProfilePage() {
 
     try {
       await replacePetImageRequest({
-        petId: profile.id,
+        petId: profileId,
         token,
         image: pendingPhoto,
       });
@@ -326,7 +327,7 @@ export function OwnProfilePage() {
 
     try {
       await removePetImageRequest({
-        petId: profile.id,
+        petId: profileId,
         token,
       });
 
