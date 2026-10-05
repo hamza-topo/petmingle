@@ -7,13 +7,15 @@ use App\Http\Requests\Api\Like\Store;
 use App\Http\Resources\Api\LikeResource;
 use App\Http\Responses\ApiResponse;
 use App\Repositories\LikeRepository;
+use App\Services\InteractionPolicy;
 use Illuminate\Http\Request;
 use Illuminate\Validation\ValidationException;
 
 class LikeController extends Controller
 {
     public function __construct(
-        protected LikeRepository $likeRepository
+        protected LikeRepository $likeRepository,
+        protected InteractionPolicy $interactionPolicy
     ) {}
 
     public function index()
@@ -40,9 +42,26 @@ class LikeController extends Controller
 
     public function store(Store $request)
     {
+        $targetPetId = (int) $request->validated(
+            'to_pet_id'
+        );
+
+        if (
+            !$this->interactionPolicy->canLikePet(
+                (int) $request->user()->id,
+                $targetPetId
+            )
+        ) {
+            throw ValidationException::withMessages([
+                'to_pet_id' => [
+                    __('This pet is not available for interaction.'),
+                ],
+            ]);
+        }
+
         $like = $this->likeRepository->process(
             $this->sourcePetId($request),
-            (int) $request->validated('to_pet_id')
+            $targetPetId
         );
 
         return ApiResponse::success(
