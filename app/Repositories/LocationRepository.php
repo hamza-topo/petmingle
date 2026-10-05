@@ -5,6 +5,7 @@ namespace App\Repositories;
 // use App\Enums\Pet as EnumsPet;
 
 use App\Enums\Location as EnumsLocation;
+use App\Models\Block;
 use App\Models\Location;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -71,22 +72,69 @@ class LocationRepository
         return Location::paginate(EnumsLocation::PAGINATE);
     }
 
-    public function near(array $coordinates = []) : Collection
+    public function currentForUser(int $userId): ?Location
     {
-        //TODO:index fields, cache the result and add observers
-        return Location::selectRaw('DISTINCT user_id')
-            ->selectRaw(
-                '( 6371 * acos( cos( radians(?) ) * cos( radians( latitude ) ) * cos( radians( longitude ) - radians(?) ) + sin( radians(?) ) * sin( radians( latitude ) ) ) ) AS distance',
-                [$coordinates['latitude'], $coordinates['longitude'], $coordinates['latitude']]
-            )
-            ->where('user_id', '!=', $coordinates['user_id'])
-            ->having('distance', '<=', $coordinates['perimeter'] ?? EnumsLocation::PERIMETRE)
-            ->orderBy('distance')
-            ->with('user', function ($query) {
-                return $query->with('pet', function ($pet) {
-                    return $pet->with('race');
-                });
+        return Location::where('user_id', $userId)
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->orderByDesc('id')
+            ->first();
+    }
+
+    public function nearbyForUser(
+        int $requesterUserId,
+        float $latitude,
+        float $longitude,
+        int $radiusKm = EnumsLocation::PERIMETRE
+    ): Collection {
+        $blockedUserIds = Block::query()
+            ->where(function ($query) use ($requesterUserId) {
+                $query->where('from', $requesterUserId)
+                    ->orWhere('to', $requesterUserId);
             })
+            ->get(['from', 'to'])
+            ->flatMap(
+                fn (Block $block) => [
+                    (int) $block->from,
+                    (int) $block->to,
+                ]
+            )
+            ->reject(
+                fn (int $userId) =>
+                    $userId === $requesterUserId
+            )
+            ->unique()
+            ->values()
+            ->all();
+
+        $latestUsableLocationIds = Location::query()
+            ->selectRaw('MAX(id)')
+            ->whereNotNull('latitude')
+            ->whereNotNull('longitude')
+            ->groupBy('user_id');
+
+        return Location::query()
+            ->select('locations.*')
+            ->selectRaw(
+                '(6371 * acos(LEAST(1, GREATEST(-1, cos(radians(?)) * cos(radians(latitude)) * cos(radians(longitude) - radians(?)) + sin(radians(?)) * sin(radians(latitude)))))) AS distance',
+                [$latitude, $longitude, $latitude]
+            )
+            ->whereIn('locations.id', $latestUsableLocationIds)
+            ->where('locations.user_id', '!=', $requesterUserId)
+            ->when(
+                $blockedUserIds !== [],
+                fn ($query) =>
+                    $query->whereNotIn(
+                        'locations.user_id',
+                        $blockedUserIds
+                    )
+            )
+            ->whereHas('user.pet.race')
+            ->havingRaw('distance <= ?', [$radiusKm])
+            ->orderBy('distance')
+            ->with([
+                'user.pet.race',
+            ])
             ->get();
     }
 

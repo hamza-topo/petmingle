@@ -16,14 +16,22 @@ class Near extends ResourceCollection
     public function toArray($request)
     {
         return $this->collection->map(function ($location) {
+            $pet = $location->user->pet;
+
+            $sex = match ($pet->sexe) {
+                Pet::FEMALE => __('Female'),
+                Pet::MALE => __('Male'),
+                default => null,
+            };
+
             return [
                 'user_name' => $location->user->name,
-                'pet_name' => $location->user->pet->name,
-                'pet_sexe' => $location->user->pet->sexe == Pet::FEMALE ? __('Female') : __('Male'),
-                'race' => $location->user->pet->race,
-                'images' => $location->user->pet->images,
+                'pet_name' => $pet->name,
+                'pet_sexe' => $sex,
+                'race' => $pet->race,
+                'images' => $pet->images ?? [],
                 'distance' => round($location->distance, 2) . ' km',
-                'is_new'=> isNew($location->user->pet->created_at),
+                'is_new' => isNew($pet->created_at),
             ];
         });
     }
