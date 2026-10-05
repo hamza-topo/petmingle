@@ -13,19 +13,6 @@ export function ProfileEdit({
   label: string;
   onClick?: () => void;
 }) {
-  const statistics = [
-    {
-      id: 'matches',
-      label: 'Matches',
-      value: pet.statistics.matches,
-    },
-    {
-      id: 'likes-sent',
-      label: 'Likes sent',
-      value: pet.statistics.likesSent,
-    },
-  ];
-
   return (
     <button
       type="button"
@@ -52,6 +39,19 @@ export function PetProfileSummary({
   onEdit?: () => void;
   locationLabel: string;
 }) {
+  const statistics = [
+    {
+      id: 'matches',
+      label: 'Matches',
+      value: pet.statistics.matches,
+    },
+    {
+      id: 'likes-sent',
+      label: 'Likes sent',
+      value: pet.statistics.likesSent,
+    },
+  ];
+
   return (
     <section
       className="own-summary"
