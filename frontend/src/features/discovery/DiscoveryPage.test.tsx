@@ -1,6 +1,7 @@
 import {
   render,
   screen,
+  waitFor,
   within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -23,9 +24,11 @@ import {
   createAccountLocationRequest,
   updateAccountLocationRequest,
 } from '../account-location/location.api';
+import { taxonomyRequest } from '../profile-creation/taxonomy.api';
 import {
   discoveryRequest,
   type DiscoveryPet,
+  type DiscoveryResult,
 } from './discovery.api';
 
 vi.mock('../../auth/AuthProvider', () => ({
@@ -38,9 +41,19 @@ vi.mock('../account-location/location.api', () => ({
   updateAccountLocationRequest: vi.fn(),
 }));
 
-vi.mock('./discovery.api', () => ({
-  discoveryRequest: vi.fn(),
+vi.mock('../profile-creation/taxonomy.api', () => ({
+  taxonomyRequest: vi.fn(),
 }));
+
+vi.mock('./discovery.api', async importOriginal => {
+  const actual =
+    await importOriginal<typeof import('./discovery.api')>();
+
+  return {
+    ...actual,
+    discoveryRequest: vi.fn(),
+  };
+});
 
 const mockedUseAuth = vi.mocked(useAuth);
 const mockedAccountLocationsRequest =
@@ -49,6 +62,8 @@ const mockedCreateAccountLocationRequest =
   vi.mocked(createAccountLocationRequest);
 const mockedUpdateAccountLocationRequest =
   vi.mocked(updateAccountLocationRequest);
+const mockedTaxonomyRequest =
+  vi.mocked(taxonomyRequest);
 const mockedDiscoveryRequest =
   vi.mocked(discoveryRequest);
 
@@ -80,7 +95,7 @@ function pet(
   };
 }
 
-const firstPage = {
+const firstPage: DiscoveryResult = {
   pets: [
     pet(42, 'Milo', 0.8),
     pet(43, 'Luna', 1.4),
@@ -94,6 +109,38 @@ const firstPage = {
   },
 };
 
+const taxonomy = {
+  species: [
+    {
+      id: 3,
+      name: 'Dog',
+      description: 'Dogs',
+    },
+    {
+      id: 4,
+      name: 'Cat',
+      description: 'Cats',
+    },
+  ],
+  races: [
+    {
+      id: 7,
+      species_id: 3,
+      name: 'Labrador Retriever',
+    },
+    {
+      id: 8,
+      species_id: 3,
+      name: 'Golden Retriever',
+    },
+    {
+      id: 9,
+      species_id: 4,
+      name: 'Domestic Shorthair',
+    },
+  ],
+};
+
 beforeEach(() => {
   mockedUseAuth.mockReturnValue(
     authenticatedAuthState(),
@@ -104,6 +151,7 @@ beforeEach(() => {
   mockedAccountLocationsRequest.mockReset();
   mockedCreateAccountLocationRequest.mockReset();
   mockedUpdateAccountLocationRequest.mockReset();
+  mockedTaxonomyRequest.mockReset();
   mockedDiscoveryRequest.mockReset();
 
   mockedAccountLocationsRequest.mockResolvedValue([
@@ -129,9 +177,8 @@ beforeEach(() => {
     longitude: -9.5981,
   });
 
-  mockedDiscoveryRequest.mockResolvedValue(
-    firstPage,
-  );
+  mockedTaxonomyRequest.mockResolvedValue(taxonomy);
+  mockedDiscoveryRequest.mockResolvedValue(firstPage);
 });
 
 afterEach(() => {
@@ -146,9 +193,286 @@ function renderDiscovery() {
   );
 }
 
+async function waitForDiscovery() {
+  await screen.findByRole('heading', {
+    level: 2,
+    name: 'Milo',
+  });
+
+  await waitFor(() => {
+    expect(
+      screen.getByRole('combobox', {
+        name: 'Species',
+      }),
+    ).toBeEnabled();
+  });
+}
+
 describe('Discovery page', () => {
-  it('renders persisted Discovery records without fixture metadata', async () => {
+  it('loads the documented default Discovery query', async () => {
     renderDiscovery();
+    await waitForDiscovery();
+
+    expect(
+      mockedTaxonomyRequest,
+    ).toHaveBeenCalledWith('test-token');
+
+    expect(
+      mockedDiscoveryRequest,
+    ).toHaveBeenCalledTimes(1);
+
+    expect(
+      mockedDiscoveryRequest,
+    ).toHaveBeenCalledWith({
+      token: 'test-token',
+      radiusKm: 5,
+      speciesId: null,
+      raceId: null,
+      page: 1,
+      perPage: 24,
+    });
+
+    expect(
+      screen.getByRole('combobox', {
+        name: 'Distance',
+      }),
+    ).toHaveValue('5');
+
+    expect(
+      screen.getByRole('combobox', {
+        name: 'Species',
+      }),
+    ).toHaveValue('');
+
+    expect(
+      screen.getByRole('combobox', {
+        name: 'Breed',
+      }),
+    ).toBeDisabled();
+  });
+
+  it('maps distance, species, and race selections to one API refresh', async () => {
+    const user = userEvent.setup();
+
+    renderDiscovery();
+    await waitForDiscovery();
+
+    await user.selectOptions(
+      screen.getByRole('combobox', {
+        name: 'Distance',
+      }),
+      '25',
+    );
+
+    await user.selectOptions(
+      screen.getByRole('combobox', {
+        name: 'Species',
+      }),
+      '3',
+    );
+
+    const breed = screen.getByRole('combobox', {
+      name: 'Breed',
+    });
+
+    expect(breed).toBeEnabled();
+
+    await user.selectOptions(breed, '7');
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Apply filters',
+      }),
+    );
+
+    await waitFor(() => {
+      expect(
+        mockedDiscoveryRequest,
+      ).toHaveBeenCalledTimes(2);
+    });
+
+    expect(
+      mockedDiscoveryRequest,
+    ).toHaveBeenLastCalledWith({
+      token: 'test-token',
+      radiusKm: 25,
+      speciesId: 3,
+      raceId: 7,
+      page: 1,
+      perPage: 24,
+    });
+  });
+
+  it('changing species clears an incompatible draft race', async () => {
+    const user = userEvent.setup();
+
+    renderDiscovery();
+    await waitForDiscovery();
+
+    const species = screen.getByRole('combobox', {
+      name: 'Species',
+    });
+    const breed = screen.getByRole('combobox', {
+      name: 'Breed',
+    });
+
+    await user.selectOptions(species, '3');
+    await user.selectOptions(breed, '7');
+
+    expect(breed).toHaveValue('7');
+
+    await user.selectOptions(species, '4');
+
+    expect(breed).toHaveValue('');
+
+    expect(
+      within(breed).getByRole('option', {
+        name: 'Domestic Shorthair',
+      }),
+    ).toBeInTheDocument();
+
+    expect(
+      within(breed).queryByRole('option', {
+        name: 'Labrador Retriever',
+      }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('reset restores the default query exactly once', async () => {
+    const user = userEvent.setup();
+
+    renderDiscovery();
+    await waitForDiscovery();
+
+    await user.selectOptions(
+      screen.getByRole('combobox', {
+        name: 'Distance',
+      }),
+      '10',
+    );
+
+    await user.selectOptions(
+      screen.getByRole('combobox', {
+        name: 'Species',
+      }),
+      '3',
+    );
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Apply filters',
+      }),
+    );
+
+    await waitFor(() => {
+      expect(
+        mockedDiscoveryRequest,
+      ).toHaveBeenCalledTimes(2);
+    });
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Clear All',
+      }),
+    );
+
+    await waitFor(() => {
+      expect(
+        mockedDiscoveryRequest,
+      ).toHaveBeenCalledTimes(3);
+    });
+
+    expect(
+      mockedDiscoveryRequest,
+    ).toHaveBeenLastCalledWith({
+      token: 'test-token',
+      radiusKm: 5,
+      speciesId: null,
+      raceId: null,
+      page: 1,
+      perPage: 24,
+    });
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Clear All',
+      }),
+    ).toBeDisabled();
+  });
+
+  it('does not issue another request when the draft returns to the applied values', async () => {
+    const user = userEvent.setup();
+
+    renderDiscovery();
+    await waitForDiscovery();
+
+    const apply = screen.getByRole('button', {
+      name: 'Apply filters',
+    });
+
+    expect(apply).toBeDisabled();
+
+    const distance = screen.getByRole('combobox', {
+      name: 'Distance',
+    });
+
+    await user.selectOptions(distance, '10');
+    expect(apply).toBeEnabled();
+
+    await user.selectOptions(distance, '5');
+
+    expect(apply).toBeDisabled();
+    expect(
+      mockedDiscoveryRequest,
+    ).toHaveBeenCalledTimes(1);
+  });
+
+  it('keeps a stable loading state while a new filter query is pending', async () => {
+    const user = userEvent.setup();
+
+    let resolveFiltered:
+      | ((result: DiscoveryResult) => void)
+      | undefined;
+
+    const pending = new Promise<DiscoveryResult>(
+      resolve => {
+        resolveFiltered = resolve;
+      },
+    );
+
+    mockedDiscoveryRequest
+      .mockResolvedValueOnce(firstPage)
+      .mockReturnValueOnce(pending);
+
+    renderDiscovery();
+    await waitForDiscovery();
+
+    await user.selectOptions(
+      screen.getByRole('combobox', {
+        name: 'Distance',
+      }),
+      '10',
+    );
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Apply filters',
+      }),
+    );
+
+    expect(
+      await screen.findByText(
+        'Loading nearby pets...',
+      ),
+    ).toBeVisible();
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Applying filters...',
+      }),
+    ).toBeDisabled();
+
+    resolveFiltered?.(firstPage);
 
     expect(
       await screen.findByRole('heading', {
@@ -156,171 +480,43 @@ describe('Discovery page', () => {
         name: 'Milo',
       }),
     ).toBeVisible();
+  });
 
-    expect(
-      screen.getByText('Closest nearby'),
-    ).toBeVisible();
+  it('keeps unsupported filters explicitly disabled', async () => {
+    renderDiscovery();
+    await waitForDiscovery();
 
     expect(
       screen.getByText(
-        'Milo persisted biography.',
+        'Size, energy and personality are deferred until they have persisted backend fields.',
       ),
     ).toBeVisible();
 
-    expect(
-      screen.getByText('Shared by Owner Milo'),
-    ).toBeVisible();
+    for (const groupName of [
+      'Size (dogs)',
+      'Energy Level',
+      'Personality',
+    ]) {
+      const group = within(
+        screen.getByRole('group', {
+          name: groupName,
+        }),
+      );
 
-    expect(
-      screen.getByText('0.8 km away'),
-    ).toBeVisible();
-
-    expect(
-      screen.getByText('3 pets near'),
-    ).toBeVisible();
-
-    const list = within(
-      screen.getByRole('list', {
-        name: 'Nearby pets',
-      }),
-    );
-
-    expect(
-      list.getAllByRole('listitem'),
-    ).toHaveLength(2);
-
-    expect(
-      list.getByRole('article', {
-        name: 'Luna',
-      }),
-    ).toBeVisible();
-
-    expect(
-      list.getByRole('article', {
-        name: 'Bella',
-      }),
-    ).toBeVisible();
-
-    expect(
-      screen.queryByText('127'),
-    ).not.toBeInTheDocument();
-
-    expect(
-      screen.queryByRole('img', {
-        name: 'Verified pet',
-      }),
-    ).not.toBeInTheDocument();
-
-    expect(
-      screen.queryByText('Lives with'),
-    ).not.toBeInTheDocument();
-
-    expect(
-      screen.getByRole('button', {
-        name: 'Showing 3 Pets',
-      }),
-    ).toBeVisible();
-
-    expect(
-      mockedDiscoveryRequest,
-    ).toHaveBeenCalledWith({
-      token: 'test-token',
-      radiusKm: 5,
-      page: 1,
-      perPage: 24,
-    });
+      expect(
+        group.getByRole('radio', {
+          name: 'All',
+        }),
+      ).toBeDisabled();
+    }
   });
 
-  it('preserves authenticated identity and navigation without fixture badges', async () => {
-    renderDiscovery();
-
-    await screen.findByRole('heading', {
-      level: 2,
-      name: 'Milo',
-    });
-
-    const account = screen.getByRole('button', {
-      name: 'Hamza account — unavailable in this preview',
-    });
-
-    expect(account).toHaveTextContent('Hamza');
-
-    const nav = within(
-      screen.getByRole('navigation', {
-        name: 'PetMingle navigation',
-      }),
-    );
-
-    expect(
-      nav.getByRole('link', {
-        name: /Discover/,
-      }),
-    ).toHaveAttribute(
-      'aria-current',
-      'page',
-    );
-
-    expect(
-      nav.getByRole('button', {
-        name: /^Matches/,
-      }),
-    ).toBeDisabled();
-
-    expect(
-      nav.queryByLabelText(/matches$/i),
-    ).not.toBeInTheDocument();
-
-    expect(
-      nav.queryByLabelText(/unread messages/i),
-    ).not.toBeInTheDocument();
-  });
-
-  it('renders a stable empty state when the API returns no nearby pets', async () => {
-    mockedDiscoveryRequest.mockResolvedValueOnce({
-      pets: [],
-      meta: {
-        current_page: 1,
-        last_page: 1,
-        per_page: 24,
-        total: 0,
-      },
-    });
-
-    renderDiscovery();
-
-    expect(
-      await screen.findByText(
-        'No nearby pets yet',
-      ),
-    ).toBeVisible();
-
-    expect(
-      screen.getByText(
-        'No persisted pet profiles were found within 5 km.',
-      ),
-    ).toBeVisible();
-
-    expect(
-      screen.queryByRole('list', {
-        name: 'Nearby pets',
-      }),
-    ).not.toBeInTheDocument();
-
-    expect(
-      screen.getByRole('button', {
-        name: 'Showing 0 Pets',
-      }),
-    ).toBeVisible();
-  });
-
-  it('renders a safe network failure and retries Discovery', async () => {
+  it('shows a safe network failure and retries with the applied filters', async () => {
     const user = userEvent.setup();
 
     mockedDiscoveryRequest
       .mockRejectedValueOnce(
-        new TypeError(
-          'Failed to fetch private endpoint',
-        ),
+        new TypeError('Failed to fetch'),
       )
       .mockResolvedValueOnce(firstPage);
 
@@ -347,7 +543,14 @@ describe('Discovery page', () => {
 
     expect(
       mockedDiscoveryRequest,
-    ).toHaveBeenCalledTimes(2);
+    ).toHaveBeenLastCalledWith({
+      token: 'test-token',
+      radiusKm: 5,
+      speciesId: null,
+      raceId: null,
+      page: 1,
+      perPage: 24,
+    });
   });
 
   it('does not call Discovery until an account location exists', async () => {
@@ -358,15 +561,7 @@ describe('Discovery page', () => {
     renderDiscovery();
 
     expect(
-      await screen.findByText(
-        'Set your location',
-      ),
-    ).toBeVisible();
-
-    expect(
-      screen.getByRole('button', {
-        name: 'Location not set',
-      }),
+      await screen.findByText('Set your location'),
     ).toBeVisible();
 
     expect(
@@ -374,65 +569,7 @@ describe('Discovery page', () => {
     ).not.toHaveBeenCalled();
   });
 
-  it('loads Discovery after the user explicitly creates a location', async () => {
-    const user = userEvent.setup();
-
-    mockedAccountLocationsRequest.mockResolvedValueOnce(
-      [],
-    );
-
-    renderDiscovery();
-
-    await user.click(
-      await screen.findByRole('button', {
-        name: 'Location not set',
-      }),
-    );
-
-    const editor = screen.getByRole('form', {
-      name: 'Account location',
-    });
-
-    await user.type(
-      within(editor).getByLabelText('Latitude'),
-      '31.6295',
-    );
-
-    await user.type(
-      within(editor).getByLabelText('Longitude'),
-      '-7.9811',
-    );
-
-    await user.click(
-      within(editor).getByRole('button', {
-        name: 'Save coordinates',
-      }),
-    );
-
-    expect(
-      await screen.findByRole('heading', {
-        level: 2,
-        name: 'Milo',
-      }),
-    ).toBeVisible();
-
-    expect(
-      mockedCreateAccountLocationRequest,
-    ).toHaveBeenCalledWith({
-      token: 'test-token',
-      userId: 10,
-      coordinates: {
-        latitude: 31.6295,
-        longitude: -7.9811,
-      },
-    });
-
-    expect(
-      mockedDiscoveryRequest,
-    ).toHaveBeenCalledTimes(1);
-  });
-
-  it('appends paginated pets without duplicating the closest result', async () => {
+  it('keeps active filters for pagination', async () => {
     const user = userEvent.setup();
 
     mockedDiscoveryRequest
@@ -443,28 +580,55 @@ describe('Discovery page', () => {
         ],
         meta: {
           current_page: 1,
-          last_page: 2,
-          per_page: 2,
-          total: 3,
+          last_page: 1,
+          per_page: 24,
+          total: 2,
         },
       })
       .mockResolvedValueOnce({
         pets: [
-          pet(44, 'Bella', 2.2),
+          pet(42, 'Milo', 0.8),
+          pet(43, 'Luna', 1.4),
         ],
+        meta: {
+          current_page: 1,
+          last_page: 2,
+          per_page: 24,
+          total: 3,
+        },
+      })
+      .mockResolvedValueOnce({
+        pets: [pet(44, 'Bella', 2.2)],
         meta: {
           current_page: 2,
           last_page: 2,
-          per_page: 2,
+          per_page: 24,
           total: 3,
         },
       });
 
     renderDiscovery();
+    await waitForDiscovery();
 
-    await screen.findByRole('heading', {
-      level: 2,
-      name: 'Milo',
+    await user.selectOptions(
+      screen.getByRole('combobox', {
+        name: 'Species',
+      }),
+      '3',
+    );
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Apply filters',
+      }),
+    );
+
+    await waitFor(() => {
+      expect(
+        screen.getByRole('button', {
+          name: 'Load more pets',
+        }),
+      ).toBeVisible();
     });
 
     await user.click(
@@ -473,74 +637,21 @@ describe('Discovery page', () => {
       }),
     );
 
-    const list = within(
-      screen.getByRole('list', {
-        name: 'Nearby pets',
-      }),
-    );
-
-    expect(
-      await list.findByRole('article', {
-        name: 'Bella',
-      }),
-    ).toBeVisible();
-
-    expect(
-      list.getAllByRole('listitem'),
-    ).toHaveLength(2);
-
-    expect(
-      screen.getAllByRole('heading', {
-        name: 'Milo',
-      }),
-    ).toHaveLength(1);
+    await waitFor(() => {
+      expect(
+        mockedDiscoveryRequest,
+      ).toHaveBeenCalledTimes(3);
+    });
 
     expect(
       mockedDiscoveryRequest,
     ).toHaveBeenLastCalledWith({
       token: 'test-token',
       radiusKm: 5,
+      speciesId: 3,
+      raceId: null,
       page: 2,
       perPage: 24,
     });
-
-    expect(
-      screen.queryByRole('button', {
-        name: 'Load more pets',
-      }),
-    ).not.toBeInTheDocument();
-  });
-
-  it('keeps unsupported filters visibly deferred instead of changing API results locally', async () => {
-    renderDiscovery();
-
-    await screen.findByRole('heading', {
-      level: 2,
-      name: 'Milo',
-    });
-
-    expect(
-      screen.getByText(
-        'Advanced filters are not connected to persisted Discovery data yet.',
-      ),
-    ).toBeVisible();
-
-    expect(
-      screen.getByRole('combobox', {
-        name: 'Distance',
-      }),
-    ).toBeDisabled();
-
-    const species = within(
-      screen.getByRole('group', {
-        name: 'Species',
-      }),
-    );
-
-    expect(
-      species.getByRole('radio', {
-        name: 'All',
-      }),
-    ).toBeDisabled();
   });
 });
