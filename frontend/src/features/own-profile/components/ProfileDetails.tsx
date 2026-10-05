@@ -43,9 +43,11 @@ export function ProfileAbout({
 export function ProfileDetails({
   pet,
   onEdit,
+  locationLabel,
 }: {
   pet: CurrentPetProfile;
   onEdit?: () => void;
+  locationLabel: string;
 }) {
   const details = profileDetails.map(column =>
     column.map(detail => {
@@ -60,6 +62,13 @@ export function ProfileDetails({
         return {
           ...detail,
           value: pet.breed,
+        };
+      }
+
+      if (detail.label === 'Location') {
+        return {
+          ...detail,
+          value: locationLabel,
         };
       }
 
