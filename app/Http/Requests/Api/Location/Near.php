@@ -3,6 +3,7 @@
 namespace App\Http\Requests\Api\Location;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class Near extends FormRequest
 {
@@ -24,6 +25,25 @@ class Near extends FormRequest
                 'integer',
                 'between:1,50',
             ],
+            'species_id' => [
+                'sometimes',
+                'integer',
+                'exists:species,id',
+            ],
+            'race_id' => [
+                'sometimes',
+                'integer',
+                Rule::exists('races', 'id')->where(
+                    function ($query) {
+                        if ($this->filled('species_id')) {
+                            $query->where(
+                                'species_id',
+                                (int) $this->input('species_id')
+                            );
+                        }
+                    }
+                ),
+            ],
 
             // Discovery origin and requester identity are server-owned.
             'user_id' => ['prohibited'],
@@ -31,8 +51,8 @@ class Near extends FormRequest
             'longitude' => ['prohibited'],
             'perimetre' => ['prohibited'],
 
-            // Legacy filtering is intentionally gated until its
-            // contract is normalized in the Discovery filter issue.
+            // Legacy nested filters stay prohibited. Supported filters
+            // are explicit top-level request fields.
             'filters' => ['prohibited'],
         ];
     }
@@ -58,6 +78,12 @@ class Near extends FormRequest
             'per_page.between' => __(
                 'The discovery page size must be between 1 and 50.'
             ),
+            'species_id.exists' => __(
+                'The selected species does not exist.'
+            ),
+            'race_id.exists' => __(
+                'The selected race does not belong to the selected species.'
+            ),
             'user_id.prohibited' => __(
                 'Requester identity is derived from authentication.'
             ),
@@ -71,7 +97,7 @@ class Near extends FormRequest
                 'Use radius_km for the discovery radius.'
             ),
             'filters.prohibited' => __(
-                'Discovery filters are not supported by this endpoint yet.'
+                'Use the supported top-level Discovery filter fields.'
             ),
         ];
     }

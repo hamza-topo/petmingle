@@ -17,10 +17,14 @@ Supported fields:
 | Field | Required | Rule | Default |
 | --- | --- | --- | --- |
 | `radius_km` | no | integer 1–100 | 5 |
+| `species_id` | no | existing active Species ID | all species |
+| `race_id` | no | existing active Race ID; when `species_id` is supplied, the race must belong to that species | all races |
 | `page` | no | integer >= 1 | 1 |
 | `per_page` | no | integer 1–50 | 24 |
 
 Requester identity and origin coordinates are server-owned and are never accepted from the client.
+
+The supported taxonomy filters are explicit top-level fields. Legacy nested `filters` payloads remain prohibited.
 
 ## Success envelope
 
@@ -101,7 +105,15 @@ Image paths are storage paths, not browser URLs. The frontend must use the exist
 
 `distance_km` is numeric and rounded to two decimal places. It is not a formatted string and contains no unit suffix.
 
-## Explicitly unsupported fields
+## Supported filtering semantics
+
+- `radius_km` limits candidates by server-calculated distance.
+- `species_id` limits candidates to pets persisted with that Species ID.
+- `race_id` limits candidates to pets persisted with that Race ID.
+- When both taxonomy IDs are supplied, validation rejects a race that does not belong to the supplied species.
+- Filters are applied before pagination, so `meta.total` describes the filtered result set.
+
+## Explicitly unsupported fields and filters
 
 The response does **not** fabricate:
 
@@ -114,7 +126,7 @@ The response does **not** fabricate:
 - profile view/favorite statistics
 - featured ranking
 
-A React view may hide UI that requires these fields or defer it to a later product contract. It must not infer them from names or fixture data.
+Size, energy and personality filters are not part of this API contract because those values do not have approved persistence semantics.
 
 ## Pagination
 
