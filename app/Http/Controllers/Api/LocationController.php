@@ -177,16 +177,30 @@ class LocationController extends Controller
 
         $validated = $request->validated();
 
-        $resources = $this->locationRepository->nearbyForUser(
+        $radiusKm = (int) ($validated['radius_km'] ?? 5);
+        $perPage = (int) ($validated['per_page'] ?? 24);
+        $page = (int) ($validated['page'] ?? 1);
+
+        $paginator = $this->locationRepository->nearbyForUser(
             requesterUserId: $user->id,
             latitude: (float) $origin->latitude,
             longitude: (float) $origin->longitude,
-            radiusKm: (int) ($validated['radius_km'] ?? 5),
+            radiusKm: $radiusKm,
+            perPage: $perPage,
+            page: $page,
         );
 
-        return ApiResponse::success(
-            (new LocationNear($resources))->resolve(),
-            __('List of locations near you.')
+        $paginator->appends([
+            'radius_km' => $radiusKm,
+            'per_page' => $perPage,
+        ]);
+
+        return ApiResponse::paginated(
+            $paginator,
+            (new LocationNear(
+                $paginator->getCollection()
+            ))->resolve(),
+            __('Nearby pets.')
         );
     }
 }
