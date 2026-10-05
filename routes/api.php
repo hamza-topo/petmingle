@@ -60,6 +60,7 @@ Route::prefix('v.0')->middleware('auth:sanctum')->group(function () {
     });
 
     Route::put('/pets/restore/{id}', [PetController::class, 'restore']);
+    Route::get('/pets/{id}/statistics', [PetController::class, 'statistics']);
     Route::resources(['pets' => PetController::class]);
 
     Route::put('/races/restore/{id}', [RaceController::class, 'restore']);

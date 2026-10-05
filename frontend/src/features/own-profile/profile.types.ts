@@ -17,6 +17,16 @@ export type RaceApiRecord = {
   name: string;
 };
 
+export type PetProfileStatisticsApiRecord = {
+  matches: number;
+  likes_sent: number;
+};
+
+export type PetProfileStatistics = {
+  matches: number;
+  likesSent: number;
+};
+
 export type ApiEnvelope<T> = {
   success: true;
   message: string;
@@ -33,4 +43,5 @@ export type CurrentPetProfile = {
   breed: string;
   biography: string;
   images: string[];
+  statistics: PetProfileStatistics;
 };
