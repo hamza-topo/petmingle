@@ -167,6 +167,36 @@ class PetUploadSecurityTest extends TestCase
         );
     }
 
+    public function test_browser_multipart_method_spoof_replaces_image(): void
+    {
+        Storage::fake('public');
+
+        $user = User::factory()->create();
+        $pet = $this->pet($user, ['pets/old.jpg']);
+
+        Storage::disk('public')->put('pets/old.jpg', 'old');
+
+        Sanctum::actingAs($user);
+
+        $response = $this
+            ->withHeader('Accept', 'application/json')
+            ->post("/api/v.0/pets/{$pet->id}", [
+                '_method' => 'PUT',
+                'image' => UploadedFile::fake()->image('replacement.png'),
+            ])
+            ->assertOk();
+
+        $newPath = $response->json('data.images.0');
+
+        $this->assertMatchesRegularExpression(
+            '/^pets\\/[0-9a-f-]{36}\\.png$/',
+            $newPath
+        );
+
+        Storage::disk('public')->assertExists($newPath);
+        Storage::disk('public')->assertMissing('pets/old.jpg');
+    }
+
     public function test_invalid_replacement_keeps_existing_image(): void
     {
         Storage::fake('public');
