@@ -87,9 +87,10 @@ export function PetProfileGallery({
   return (
     <div
       className="own-media-manager"
+      role="group"
       aria-label="Pet photo gallery"
     >
-      <div className="own-gallery" role="group">
+      <div className="own-gallery">
         {photos.map((photo, index) => (
           <button
             key={photo.id}
