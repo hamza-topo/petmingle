@@ -61,7 +61,9 @@ class LocationRepository
 
     public function forUser(int $userId): Collection
     {
-        return Location::where('user_id', $userId)->get();
+        return Location::where('user_id', $userId)
+            ->orderByDesc('id')
+            ->get();
     }
 
     public function paginate(): LengthAwarePaginator
