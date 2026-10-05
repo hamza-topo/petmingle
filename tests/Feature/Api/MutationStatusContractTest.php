@@ -172,7 +172,7 @@ class MutationStatusContractTest extends TestCase
             );
     }
 
-    public function test_like_creation_returns_201(): void
+    public function test_like_processing_returns_standard_200_envelope(): void
     {
         [$user, $pet] = $this->createUserWithPet('Nala');
         [, $targetPet] = $this->createUserWithPet('Milo');
@@ -180,10 +180,9 @@ class MutationStatusContractTest extends TestCase
         Sanctum::actingAs($user);
 
         $this->postJson('/api/v.0/likes', [
-            'from' => $pet->id,
-            'to' => $targetPet->id,
+            'to_pet_id' => $targetPet->id,
         ])
-            ->assertCreated()
+            ->assertOk()
             ->assertJsonPath('success', true)
             ->assertJsonPath(
                 'data.from_pet_id',
@@ -195,7 +194,7 @@ class MutationStatusContractTest extends TestCase
             );
     }
 
-    public function test_dislike_creation_returns_201(): void
+    public function test_dislike_processing_returns_standard_200_envelope(): void
     {
         [$user, $pet] = $this->createUserWithPet('Nala');
         [, $targetPet] = $this->createUserWithPet('Milo');
@@ -203,10 +202,9 @@ class MutationStatusContractTest extends TestCase
         Sanctum::actingAs($user);
 
         $this->postJson('/api/v.0/dislikes', [
-            'from' => $pet->id,
-            'to' => $targetPet->id,
+            'to_pet_id' => $targetPet->id,
         ])
-            ->assertCreated()
+            ->assertOk()
             ->assertJsonPath('success', true)
             ->assertJsonPath(
                 'data.from_pet_id',
