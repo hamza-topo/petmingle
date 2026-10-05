@@ -13,7 +13,7 @@ Each row has one primary classification from the requested taxonomy. “Backend 
 | S01 | authorization/security problem | **Resolved — Cycle 9A** (original: gate: registration) | AuthController::signUp passes all input to AuthRepository/User::create; User permits `is_admin`, provider fields. A public registrant can supply privileged attributes, provided the upload path succeeds. | Server-side allowlist; privileged/provider fields must be assigned only by trusted flows. Frontend omission is insufficient. |
 | S02 | authorization/security problem | gate: uploads | ImageTrait uses original client filename on public disk, ignoring generated name; collisions can overwrite another account's media. SignUp has no active avatar validation; scalar pet uploads bypass `images.*`. | Enforce actual file validation, unique controlled storage paths and ownership. Do not exploit bypass to make frontend uploads “work.” |
 | S03 | authorization/security problem | **Resolved — Cycle 9A** (original: gate: message mutation) | MessageController::update authorizes the existing sender, then mass-assigns all input including sender/receiver/conversation/is_seen. Store correctly uses validated input and server sender. | Restrict content edits to allowed validated fields; enforce participant integrity/read semantics separately. |
-| S04 | authorization/security problem | gate: contact actions | IsAllowed checks one reverse Like, not reciprocal matching; neither message creation nor likes enforce blocks. BlockObserver deletes conversations but not messages and leaves reverse likes possible. Discovery also includes blocked users. | Define and consistently enforce match/contact/block policy on reads and writes. A blocked conversation can otherwise be recreated. |
+| S04 | authorization/security problem | **Resolved — Issue #123** (original: gate: contact actions) | Contact policy now treats an active block in either direction as reciprocal for enforcement. Like and match creation reject blocked pairs; message reads/creates require an active reciprocal match and no block; blocked message edits/restores are denied. Block creation archives conversations/messages and removes likes/matches in both directions. Discovery already excludes blocked accounts. | Keep enforcement server-side. A future unblock flow must not implicitly restore archived relationship/contact state. |
 | S05 | authorization/security problem | **Resolved — Cycle 9A** (original: gate: taxonomy writes) | SpeciesController/RaceController allow any authenticated account to mutate/delete/restore global options; no policy/admin middleware. | Restrict catalog mutations; frontend integration needs reads only. |
 | S06 | authorization/security problem | **Resolved — Cycle 9A** (original: gate: network broadcasting) | MessageEvent exposes public Message on public `new-message`; MatchEvent uses public `new-match`. Default broadcaster is null; real exposure depends on deployment. | Participant-authorized channels and safe event payloads before enabling a network broadcaster. No realtime client should be added now. |
 | S07 | authorization/security problem | gate: nearby scope | Near accepts arbitrary `user_id` as exclusion identity and unvalidated `perimeter`; filter route has no validation. This changes who is excluded and search range. SQL distance values are parameter-bound; no SQL-injection claim is made. | Assign authenticated account server-side, validate range/coordinates and define discovery visibility policy. |
@@ -119,3 +119,19 @@ Only **I01** and **A01** are newly resolved. Original audit descriptions are ret
 - Root `.env.example` documents the origin allowlist; `frontend/.env.example` reserves `VITE_API_BASE_URL=http://localhost:8000/api/v.0`. It is public configuration, never token storage. No client consumes it yet. SPA-cookie/stateful Sanctum flow is not selected, and no stateful-domain/session settings change.
 
 The first auth-only React API call is locally unblocked at the backend/transport layer. A future implementation must choose token storage/lifecycle (A05 remains open), configure the deployed origins/API URL, and add auth/error/no-pet state deliberately. Signup upload limitations, remaining security gaps S02/S04/S07, rich pet/profile data, Discovery, Messaging and all other unmarked gaps remain unchanged. No schema migration, fixture replacement, fetch/axios call or frontend dependency was introduced.
+
+
+## Issue #123 block/contact enforcement — 2026-10-05
+
+S04 is resolved by a single server-side interaction policy and explicit transition rules in [BLOCK_CONTACT_POLICY.md](BLOCK_CONTACT_POLICY.md).
+
+- Blocks are symmetric for enforcement even though the stored block has a directional creator/target.
+- Likes cannot be created across an active block.
+- Match creation is gated by reciprocal active likes and the absence of a block.
+- Message thread reads and message creation require an active reciprocal match and the absence of a block.
+- A blocked sender cannot edit or restore an old message.
+- Creating a block archives active conversations/messages and removes likes/matches in both directions.
+- Discovery keeps its existing bidirectional block exclusion.
+- No unblock endpoint is introduced. Removing a block in a future authorized flow will not automatically restore old likes, matches, conversations or messages.
+
+Issue #124 remains responsible for normalizing Messaging conversation/thread response contracts; #123 only establishes the contact authorization boundary.
