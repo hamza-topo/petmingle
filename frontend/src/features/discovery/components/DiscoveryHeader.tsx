@@ -1,6 +1,5 @@
 import {
   ChevronDown,
-  MapPin,
   Search,
 } from 'lucide-react';
 
@@ -9,7 +8,7 @@ import { useAuth } from '../../../auth/AuthProvider';
 import { Avatar } from '../../../components/Avatar';
 import { NotificationButton } from '../../../components/NotificationButton';
 import { PetMingleLogo } from '../../../components/PetMingleLogo';
-import { discoveryContext } from '../discovery.fixtures';
+import { AccountLocationControl } from '../../account-location/AccountLocationControl';
 
 export function DiscoveryHeader() {
   const { user } = useAuth();
@@ -19,16 +18,7 @@ export function DiscoveryHeader() {
     <header className="discovery-header">
       <PetMingleLogo />
 
-      <button
-        className="discovery-location"
-        type="button"
-        disabled
-        title="Location selection is unavailable in this preview"
-      >
-        <MapPin size={22} aria-hidden="true" />
-        {discoveryContext.location}
-        <ChevronDown size={18} aria-hidden="true" />
-      </button>
+      <AccountLocationControl />
 
       <label className="discovery-search">
         <Search size={23} aria-hidden="true" />
