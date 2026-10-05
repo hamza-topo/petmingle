@@ -58,7 +58,8 @@ HTTP 200:
         "about": "Friendly and curious."
       },
       "distance_km": 1.24,
-      "is_new": true
+      "is_new": true,
+      "interaction": null
     }
   ],
   "meta": {
@@ -100,10 +101,21 @@ The API exposes only persisted or deterministically derived fields needed for su
 - persisted biography/about text
 - numeric distance in kilometers
 - creation-recency flag `is_new`
+- authenticated pet relationship state: `null`, `liked`, or `disliked`
 
 Image paths are storage paths, not browser URLs. The frontend must use the existing media URL adapter.
 
 `distance_km` is numeric and rounded to two decimal places. It is not a formatted string and contains no unit suffix.
+
+## Interaction state
+
+`interaction` reflects the active persisted relationship from the authenticated pet to each target pet.
+
+- `null`: no active like/dislike
+- `liked`: active like
+- `disliked`: active dislike
+
+The field uses Pet-ID semantics and is intended to restore Discovery controls after refresh. Mutation details are defined in `PET_INTERACTION_CONTRACT.md`.
 
 ## Supported filtering semantics
 
