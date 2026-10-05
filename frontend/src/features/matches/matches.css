@@ -1,0 +1,211 @@
+@layer components {
+  .matches-page {
+    min-height: 100vh;
+    background: var(--color-canvas);
+  }
+
+  .matches-header {
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-surface);
+  }
+
+  .matches-header-actions {
+    justify-content: flex-end;
+  }
+
+  .matches-account {
+    min-height: 44px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 6px 12px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    color: var(--color-ink);
+  }
+
+  .matches-account .avatar {
+    width: 32px;
+    height: 32px;
+  }
+
+  .matches-sign-out {
+    min-height: 44px;
+  }
+
+  .matches-layout {
+    width: min(1440px, 92%);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 240px minmax(0, 1fr);
+    gap: 36px;
+    padding: 38px 0 72px;
+  }
+
+  .matches-content {
+    min-width: 0;
+  }
+
+  .matches-intro {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 28px;
+    padding: 0 0 28px;
+  }
+
+  .matches-eyebrow {
+    margin-bottom: 8px;
+    color: var(--color-brand-pink);
+    font-size: 13px;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .matches-intro h1 {
+    font-size: clamp(42px, 5vw, 68px);
+    line-height: 0.98;
+    letter-spacing: -2.5px;
+  }
+
+  .matches-intro h1 + p {
+    max-width: 620px;
+    margin-top: 14px;
+    color: var(--color-text-secondary);
+  }
+
+  .matches-summary {
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 4px 12px;
+    min-width: 150px;
+    padding: 16px 18px;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+  }
+
+  .matches-summary strong {
+    color: var(--color-brand-blue);
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  .matches-summary span {
+    color: var(--color-text-secondary);
+    font-size: 13px;
+  }
+
+  .relationship-section {
+    margin-top: 34px;
+  }
+
+  .relationship-section-heading {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    margin-bottom: 16px;
+  }
+
+  .relationship-section-heading h2 {
+    font-size: 28px;
+  }
+
+  .relationship-section-heading p {
+    margin-top: 4px;
+    color: var(--color-text-secondary);
+    font-size: 14px;
+  }
+
+  .relationship-section-heading > strong {
+    display: grid;
+    place-items: center;
+    min-width: 38px;
+    height: 38px;
+    border-radius: var(--radius-pill);
+    background: var(--color-surface);
+    color: var(--color-brand-blue);
+    border: 1px solid var(--color-border);
+  }
+
+  .relationship-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+
+  .relationship-card {
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-card);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+  }
+
+  .relationship-card-photo {
+    height: 220px;
+  }
+
+  .relationship-card-body {
+    padding: 18px;
+  }
+
+  .relationship-card-heading {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+  }
+
+  .relationship-card-heading h3 {
+    font-size: 24px;
+  }
+
+  .relationship-card-heading p,
+  .relationship-about,
+  .relationship-id-note {
+    color: var(--color-text-secondary);
+    font-size: 13px;
+  }
+
+  .relationship-status {
+    flex: 0 0 auto;
+    padding: 6px 10px;
+    border-radius: var(--radius-pill);
+    background: var(--color-brand-blue);
+    color: var(--color-surface);
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .relationship-status--past {
+    background: var(--color-border);
+    color: var(--color-text-secondary);
+  }
+
+  .relationship-about {
+    margin-top: 14px;
+  }
+
+  .relationship-id-note {
+    margin-top: 14px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  @media (max-width: 1360px) {
+    .matches-layout {
+      width: 94%;
+      grid-template-columns: 220px minmax(0, 1fr);
+      gap: 24px;
+    }
+
+    .relationship-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+}
