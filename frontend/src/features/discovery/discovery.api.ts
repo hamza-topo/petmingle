@@ -2,6 +2,11 @@ import type { ReferenceAsset } from '../../assets/landingAssets';
 import { apiRequest } from '../../api/client';
 import { mediaUrl } from '../../api/config';
 
+export type PetInteractionState =
+  | 'liked'
+  | 'disliked'
+  | null;
+
 export type DiscoveryPet = {
   id: number;
   ownerId: number;
@@ -18,6 +23,7 @@ export type DiscoveryPet = {
   about: string | null;
   distanceKm: number;
   isNew: boolean;
+  interaction: PetInteractionState;
 };
 
 type DiscoveryApiItem = {
@@ -42,6 +48,7 @@ type DiscoveryApiItem = {
   };
   distance_km: number;
   is_new: boolean;
+  interaction: PetInteractionState;
 };
 
 export type DiscoveryPageMeta = {
@@ -151,6 +158,7 @@ export function mapDiscoveryItem(
     about: item.pet.about?.trim() || null,
     distanceKm: item.distance_km,
     isNew: item.is_new,
+    interaction: item.interaction,
   };
 }
 
