@@ -1,20 +1,69 @@
 import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest';
 import { App } from '../../app/App';
 import { discoveryContext, featuredDiscoveryPet, filterGroups, nearbyPets } from './discovery.fixtures';
 import { useAuth } from '../../auth/AuthProvider';
 import { authenticatedAuthState } from '../../test/authFixtures';
+import { tokenStorage } from '../../auth/tokenStorage';
+import {
+  accountLocationsRequest,
+  createAccountLocationRequest,
+  updateAccountLocationRequest,
+} from '../account-location/location.api';
 
 vi.mock('../../auth/AuthProvider', () => ({
   useAuth: vi.fn(),
 }));
 
+vi.mock('../account-location/location.api', () => ({
+  accountLocationsRequest: vi.fn(),
+  createAccountLocationRequest: vi.fn(),
+  updateAccountLocationRequest: vi.fn(),
+}));
+
 const mockedUseAuth = vi.mocked(useAuth);
+const mockedAccountLocationsRequest =
+  vi.mocked(accountLocationsRequest);
+const mockedCreateAccountLocationRequest =
+  vi.mocked(createAccountLocationRequest);
+const mockedUpdateAccountLocationRequest =
+  vi.mocked(updateAccountLocationRequest);
 
 beforeEach(() => {
   mockedUseAuth.mockReturnValue(authenticatedAuthState());
+
+  tokenStorage.set('test-token');
+
+  mockedAccountLocationsRequest.mockReset();
+  mockedCreateAccountLocationRequest.mockReset();
+  mockedUpdateAccountLocationRequest.mockReset();
+
+  mockedAccountLocationsRequest.mockResolvedValue([]);
+  mockedCreateAccountLocationRequest.mockResolvedValue({
+    id: 1,
+    user_id: 10,
+    latitude: 31.6295,
+    longitude: -7.9811,
+  });
+  mockedUpdateAccountLocationRequest.mockResolvedValue({
+    id: 2,
+    user_id: 10,
+    latitude: 30.4278,
+    longitude: -9.5981,
+  });
+});
+
+afterEach(() => {
+  tokenStorage.clear();
 });
 function renderDiscovery() {
   return render(<MemoryRouter initialEntries={['/discover']}><App /></MemoryRouter>);
@@ -44,6 +93,161 @@ describe('Discovery page', () => {
     expect(
       screen.queryByText('Sarah'),
     ).not.toBeInTheDocument();
+  });
+
+  it('shows an explicit missing-location state and creates coordinates from user input', async () => {
+    const user = userEvent.setup();
+
+    renderDiscovery();
+
+    const locationButton = await screen.findByRole(
+      'button',
+      {
+        name: 'Location not set',
+      },
+    );
+
+    await user.click(locationButton);
+
+    const editor = screen.getByRole('form', {
+      name: 'Account location',
+    });
+
+    await user.type(
+      within(editor).getByLabelText('Latitude'),
+      '31.6295',
+    );
+
+    await user.type(
+      within(editor).getByLabelText('Longitude'),
+      '-7.9811',
+    );
+
+    await user.click(
+      within(editor).getByRole('button', {
+        name: 'Save coordinates',
+      }),
+    );
+
+    expect(
+      mockedCreateAccountLocationRequest,
+    ).toHaveBeenCalledWith({
+      token: 'test-token',
+      userId: 10,
+      coordinates: {
+        latitude: 31.6295,
+        longitude: -7.9811,
+      },
+    });
+
+    expect(
+      await screen.findByRole('button', {
+        name: '31.629500, -7.981100',
+      }),
+    ).toBeVisible();
+  });
+
+  it('updates the current persisted account location instead of creating another one', async () => {
+    const user = userEvent.setup();
+
+    mockedAccountLocationsRequest.mockResolvedValueOnce([
+      {
+        id: 2,
+        user_id: 10,
+        latitude: 31.6295,
+        longitude: -7.9811,
+      },
+    ]);
+
+    renderDiscovery();
+
+    await user.click(
+      await screen.findByRole('button', {
+        name: '31.629500, -7.981100',
+      }),
+    );
+
+    const editor = screen.getByRole('form', {
+      name: 'Account location',
+    });
+
+    await user.clear(
+      within(editor).getByLabelText('Latitude'),
+    );
+    await user.type(
+      within(editor).getByLabelText('Latitude'),
+      '30.4278',
+    );
+
+    await user.clear(
+      within(editor).getByLabelText('Longitude'),
+    );
+    await user.type(
+      within(editor).getByLabelText('Longitude'),
+      '-9.5981',
+    );
+
+    await user.click(
+      within(editor).getByRole('button', {
+        name: 'Save coordinates',
+      }),
+    );
+
+    expect(
+      mockedUpdateAccountLocationRequest,
+    ).toHaveBeenCalledWith({
+      token: 'test-token',
+      userId: 10,
+      locationId: 2,
+      coordinates: {
+        latitude: 30.4278,
+        longitude: -9.5981,
+      },
+    });
+
+    expect(
+      mockedCreateAccountLocationRequest,
+    ).not.toHaveBeenCalled();
+  });
+
+  it('shows a safe location load failure and retries it', async () => {
+    const user = userEvent.setup();
+
+    mockedAccountLocationsRequest
+      .mockRejectedValueOnce(
+        new TypeError('Failed to fetch private location endpoint'),
+      )
+      .mockResolvedValueOnce([]);
+
+    renderDiscovery();
+
+    expect(
+      await screen.findByRole('button', {
+        name: 'Retry location',
+      }),
+    ).toBeVisible();
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Location unavailable',
+      }),
+    ).toBeDisabled();
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Retry location',
+      }),
+    );
+
+    expect(
+      await screen.findByRole('button', {
+        name: 'Location not set',
+      }),
+    ).toBeVisible();
+
+    expect(
+      mockedAccountLocationsRequest,
+    ).toHaveBeenCalledTimes(2);
   });
 
   it('renders navigation with Discover active and links to implemented screens', () => {
