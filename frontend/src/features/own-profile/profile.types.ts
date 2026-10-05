@@ -5,7 +5,7 @@ export type PetApiRecord = {
   race_id: number;
   name: string;
   age: number;
-  sexe: number;
+  sexe: number | null;
   color: string | null;
   images: string[];
   about: string | null;
@@ -32,4 +32,5 @@ export type CurrentPetProfile = {
   ageYears: number;
   breed: string;
   biography: string;
+  images: string[];
 };

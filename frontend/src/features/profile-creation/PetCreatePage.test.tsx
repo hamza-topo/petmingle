@@ -430,6 +430,7 @@ describe('Pet profile creation', () => {
           raceId: 20,
           name: 'Nala',
           age: 3,
+          photo: null,
         },
         'test-token',
       );
@@ -442,6 +443,44 @@ describe('Pet profile creation', () => {
         'Persisted profile destination',
       ),
     ).toBeInTheDocument();
+  });
+
+  it('persists a selected photo with the initial pet profile', async () => {
+    const user = userEvent.setup();
+
+    renderPersistenceForm();
+
+    await selectDogTaxonomy(user);
+
+    const photo = new File(
+      ['photo'],
+      'nala.png',
+      {
+        type: 'image/png',
+      },
+    );
+
+    await user.upload(
+      screen.getByLabelText('Pet photo'),
+      photo,
+    );
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Continue',
+      }),
+    );
+
+    await waitFor(() => {
+      expect(
+        mockedPetCreateRequest,
+      ).toHaveBeenCalledWith(
+        expect.objectContaining({
+          photo,
+        }),
+        'test-token',
+      );
+    });
   });
 
   it('maps Laravel validation errors to React form fields', async () => {

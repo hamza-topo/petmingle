@@ -1,14 +1,20 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import { ApiError } from '../../api/errors';
+import { mediaUrl } from '../../api/config';
 import { describeApiFailure } from '../../api/presentation';
 import { useAuth } from '../../auth/AuthProvider';
 import { tokenStorage } from '../../auth/tokenStorage';
 import { ApiState } from '../../components/ApiState';
 import { SiteHeader } from '../../components/SiteHeader';
-import { currentPetProfileRequest } from './profile.api';
+import {
+  currentPetProfileRequest,
+  removePetImageRequest,
+  replacePetImageRequest,
+} from './profile.api';
 import type { CurrentPetProfile } from './profile.types';
 import { ownPet } from './profile.fixtures';
+import { photoSchema } from '../profile-creation/profile.schema';
 import {
   PetProfileGallery,
   ProfilePhoto,
@@ -31,9 +37,16 @@ export function OwnProfilePage() {
   const [error, setError] = useState<unknown | null>(null);
   const [reloadKey, setReloadKey] = useState(0);
   const [editing, setEditing] = useState(false);
-
   const [activePhotoId, setActivePhotoId] =
-    useState(ownPet.gallery[0].id);
+    useState<string | null>(null);
+  const [pendingPhoto, setPendingPhoto] =
+    useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] =
+    useState<string | null>(null);
+  const [mediaError, setMediaError] =
+    useState<string | null>(null);
+  const [mediaBusy, setMediaBusy] = useState(false);
+  const mediaInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -89,6 +102,21 @@ export function OwnProfilePage() {
       cancelled = true;
     };
   }, [pet?.id, reloadKey, user?.id]);
+
+  useEffect(() => {
+    if (!pendingPhoto) {
+      setPreviewUrl(null);
+      return;
+    }
+
+    const url = URL.createObjectURL(pendingPhoto);
+
+    setPreviewUrl(url);
+
+    return () => {
+      URL.revokeObjectURL(url);
+    };
+  }, [pendingPhoto]);
 
   if (!pet) {
     return (
@@ -177,10 +205,134 @@ export function OwnProfilePage() {
     }
   }
 
+  const persistedPhotos = profile.images.map(
+    (path, index) => ({
+      id: `saved-${index}-${path}`,
+      src: mediaUrl(path),
+      alt: `${profile.name} saved photo ${index + 1}`,
+    }),
+  );
+
+  const previewPhoto = previewUrl
+    ? {
+        id: 'pending-preview',
+        src: previewUrl,
+        alt: `${profile.name} pending photo preview`,
+        isPreview: true,
+      }
+    : null;
+
+  const galleryPhotos = previewPhoto
+    ? [previewPhoto, ...persistedPhotos]
+    : persistedPhotos;
+
   const activePhoto =
-    ownPet.gallery.find(
+    galleryPhotos.find(
       photo => photo.id === activePhotoId,
-    ) ?? ownPet.gallery[0];
+    )
+    ?? previewPhoto
+    ?? persistedPhotos[0]
+    ?? null;
+
+  function chooseMedia() {
+    mediaInput.current?.click();
+  }
+
+  function selectMedia(file: File | undefined) {
+    if (!file) {
+      return;
+    }
+
+    const result = photoSchema.safeParse(file);
+
+    if (!result.success) {
+      setMediaError(
+        result.error.issues[0]?.message
+          ?? 'Choose a valid pet photo.',
+      );
+      setPendingPhoto(null);
+      return;
+    }
+
+    setMediaError(null);
+    setPendingPhoto(file);
+    setActivePhotoId('pending-preview');
+  }
+
+  async function saveMedia() {
+    if (!pendingPhoto || mediaBusy) {
+      return;
+    }
+
+    const token = tokenStorage.get();
+
+    if (!token) {
+      setMediaError(
+        'Your session is no longer valid. Sign in again to continue.',
+      );
+      return;
+    }
+
+    setMediaBusy(true);
+    setMediaError(null);
+
+    try {
+      await replacePetImageRequest({
+        petId: profile.id,
+        token,
+        image: pendingPhoto,
+      });
+
+      setPendingPhoto(null);
+      setActivePhotoId(null);
+      setReloadKey(current => current + 1);
+    } catch (caught) {
+      setPendingPhoto(null);
+      setActivePhotoId(null);
+      setMediaError(
+        describeApiFailure(caught).message,
+      );
+    } finally {
+      setMediaBusy(false);
+    }
+  }
+
+  async function removeMedia() {
+    if (
+      persistedPhotos.length === 0
+      || mediaBusy
+    ) {
+      return;
+    }
+
+    const token = tokenStorage.get();
+
+    if (!token) {
+      setMediaError(
+        'Your session is no longer valid. Sign in again to continue.',
+      );
+      return;
+    }
+
+    setMediaBusy(true);
+    setMediaError(null);
+
+    try {
+      await removePetImageRequest({
+        petId: profile.id,
+        token,
+      });
+
+      setActivePhotoId(null);
+      setReloadKey(current => current + 1);
+    } catch (caught) {
+      setMediaError(
+        describeApiFailure(caught).message,
+      );
+    } finally {
+      setMediaBusy(false);
+    }
+  }
 
   return (
     <div className="own-profile-page">
@@ -203,17 +355,43 @@ export function OwnProfilePage() {
             aria-label="Pet profile overview"
           >
             <div className="own-overview-top">
-              <ProfilePhoto photo={activePhoto} />
+              <ProfilePhoto
+                photo={activePhoto}
+                onChoose={chooseMedia}
+                busy={mediaBusy}
+              />
               <PetProfileSummary
                 pet={profile}
                 onEdit={() => setEditing(true)}
               />
             </div>
 
+            <input
+              ref={mediaInput}
+              type="file"
+              className="sr-only"
+              accept="image/jpeg,image/png"
+              aria-label="Pet media upload"
+              onChange={event => {
+                selectMedia(event.target.files?.[0]);
+                event.target.value = '';
+              }}
+            />
+
             <PetProfileGallery
-              photos={ownPet.gallery}
-              activeId={activePhotoId}
+              photos={galleryPhotos}
+              activeId={activePhoto?.id ?? null}
               onSelect={setActivePhotoId}
+              onChoose={chooseMedia}
+              onUpload={() => void saveMedia()}
+              onDiscardPreview={() => {
+                setPendingPhoto(null);
+                setActivePhotoId(null);
+                setMediaError(null);
+              }}
+              onRemove={() => void removeMedia()}
+              busy={mediaBusy}
+              error={mediaError}
             />
           </section>
 

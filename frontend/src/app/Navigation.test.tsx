@@ -91,6 +91,7 @@ it('connects all five screens and the Plus section using existing visible contro
     ageYears: 3,
     breed: 'Golden Retriever',
     biography: 'Friendly dog',
+    images: [],
   });
 
   render(
