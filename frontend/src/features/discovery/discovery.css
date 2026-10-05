@@ -30,8 +30,22 @@
     padding-inline: 20px;
     font-size: 14px;
   }
-  .discovery-location { white-space: nowrap; }
-  .discovery-location > :last-child { margin-left: auto; }
+  .discovery-location-shell { position: relative; min-width: 0; }
+  .discovery-location { width: 100%; white-space: nowrap; }
+  .discovery-location > span { overflow: hidden; text-overflow: ellipsis; }
+  .discovery-location > :last-child { margin-left: auto; flex-shrink: 0; }
+  .discovery-location-retry { position: absolute; left: 20px; bottom: -18px; color: var(--color-brand-blue); font-size: 11px; font-weight: 700; }
+  .discovery-location-editor { position: absolute; z-index: 30; top: calc(100% + 10px); left: 0; width: 310px; display: grid; gap: 12px; padding: 18px; border: 1px solid var(--color-border); border-radius: 16px; background: var(--color-surface); box-shadow: var(--shadow-card); }
+  .discovery-location-editor h2 { font-size: 19px; }
+  .discovery-location-editor > p { color: var(--color-text-secondary); font-size: 12px; line-height: 17px; }
+  .discovery-location-editor label { display: grid; gap: 6px; color: var(--color-brand-blue); font-size: 12px; font-weight: 700; }
+  .discovery-location-editor input { width: 100%; height: 40px; border: 1px solid var(--color-border); border-radius: 10px; padding-inline: 10px; color: var(--color-ink); }
+  .discovery-location-editor input:focus-visible { outline: 2px solid var(--color-brand-blue); outline-offset: 2px; }
+  .discovery-location-editor small[role="alert"], .discovery-location-error { color: var(--color-brand-pink); font-size: 11px; font-weight: 600; }
+  .discovery-location-actions { display: flex; gap: 8px; }
+  .discovery-location-actions button { min-height: 38px; padding-inline: 13px; border-radius: var(--radius-pill); font-size: 12px; font-weight: 700; }
+  .discovery-location-actions button[type="submit"] { background: var(--color-brand-blue); color: var(--color-surface); }
+  .discovery-location-actions button[type="button"] { border: 1px solid var(--color-border-action); color: var(--color-brand-blue); }
   .discovery-search { background: var(--color-canvas); }
   .discovery-search input { width: 100%; min-width: 0; outline-offset: 2px; }
   .discovery-search input::placeholder { color: var(--color-text-secondary); opacity: 1; }
