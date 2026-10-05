@@ -52,6 +52,7 @@ describe('petCreateRequest', () => {
           raceId: 20,
           name: '  Milo  ',
           age: 4,
+          photo: null,
         },
         'test-token',
       ),
@@ -86,5 +87,56 @@ describe('petCreateRequest', () => {
     expect(body.has('traits')).toBe(false);
     expect(body.has('energy')).toBe(false);
     expect(body.has('playdate')).toBe(false);
+  });
+
+  it('includes a validated pet photo in multipart creation', async () => {
+    const fetchMock = vi.fn().mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          success: true,
+          message: 'Pet has been created.',
+          data: {
+            ...createdPet,
+            images: ['pets/generated.png'],
+          },
+        }),
+        {
+          status: 201,
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        },
+      ),
+    );
+
+    vi.stubGlobal('fetch', fetchMock);
+
+    const photo = new File(
+      ['photo'],
+      'pet.png',
+      {
+        type: 'image/png',
+      },
+    );
+
+    await petCreateRequest(
+      {
+        speciesId: 10,
+        raceId: 20,
+        name: 'Milo',
+        age: 4,
+        photo,
+      },
+      'test-token',
+    );
+
+    const [, request] = fetchMock.mock.calls[0] as [
+      string,
+      RequestInit,
+    ];
+
+    const body = request.body as FormData;
+
+    expect(body.get('image')).toBe(photo);
   });
 });
