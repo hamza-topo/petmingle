@@ -54,6 +54,7 @@ it('connects all five screens and the Plus section using existing visible contro
     isAuthenticated: true,
     signIn: vi.fn(),
     signOut: vi.fn(),
+    refreshIdentity: vi.fn(),
   });
 
   mockedCurrentPetProfileRequest.mockResolvedValue({

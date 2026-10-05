@@ -17,6 +17,7 @@ export function authenticatedAuthState(): AuthContextValue {
     isAuthenticated: true,
     signIn: async () => {},
     signOut: async () => {},
+    refreshIdentity: async () => {},
   };
 }
 
@@ -33,5 +34,6 @@ export function authenticatedWithoutPetAuthState(): AuthContextValue {
     isAuthenticated: true,
     signIn: async () => {},
     signOut: async () => {},
+    refreshIdentity: async () => {},
   };
 }

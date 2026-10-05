@@ -19,6 +19,7 @@ import {
   Zap,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
+import { useNavigate } from 'react-router';
 
 import { ApiError } from '../../api/errors';
 import { describeApiFailure } from '../../api/presentation';
@@ -30,6 +31,7 @@ import { SiteHeader } from '../../components/SiteHeader';
 import { FormField } from './components/FormField';
 import { PhotoUploader } from './components/PhotoUploader';
 import { ProfileProgress } from './components/ProfileProgress';
+import { petCreateRequest } from './pet-create.api';
 import {
   initialProfile,
   profileSchema,
@@ -58,15 +60,24 @@ type SelectField =
 
 type SelectOption = [string, string];
 
-type PetCreatePageProps = {
-  onLocalSubmit?: (values: PetProfileValues) => void;
+const serverFieldMap: Record<
+  string,
+  keyof PetProfileValues
+> = {
+  species_id: 'speciesId',
+  race_id: 'raceId',
+  name: 'name',
+  age: 'age',
 };
 
-export function PetCreatePage({
-  onLocalSubmit,
-}: PetCreatePageProps) {
-  const { user } = useAuth();
-  const [submitted, setSubmitted] = useState(false);
+export function PetCreatePage() {
+  const { user, refreshIdentity } = useAuth();
+  const navigate = useNavigate();
+  const [submitting, setSubmitting] = useState(false);
+  const [creationCompleted, setCreationCompleted] =
+    useState(false);
+  const [submitError, setSubmitError] =
+    useState<string | null>(null);
 
   const [taxonomy, setTaxonomy] = useState<Taxonomy>({
     species: [],
@@ -87,6 +98,8 @@ export function PetCreatePage({
     control,
     handleSubmit,
     setValue,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<PetProfileValues>({
     resolver: zodResolver(profileSchema),
@@ -192,6 +205,107 @@ export function PetCreatePage({
       race.name,
     ]);
 
+  function mapServerValidation(
+    caught: ApiError,
+  ): boolean {
+    const validationErrors =
+      caught.status === 422
+        ? caught.payload?.errors
+        : undefined;
+
+    if (!validationErrors) {
+      return false;
+    }
+
+    let mapped = false;
+
+    for (const [serverField, messages] of Object.entries(
+      validationErrors,
+    )) {
+      const field = serverFieldMap[serverField];
+
+      if (!field || !messages[0]) {
+        continue;
+      }
+
+      setError(field, {
+        type: 'server',
+        message: messages[0],
+      });
+
+      mapped = true;
+    }
+
+    return mapped;
+  }
+
+  async function submitPet(
+    values: PetProfileValues,
+  ): Promise<void> {
+    if (submitting || creationCompleted) {
+      return;
+    }
+
+    setSubmitError(null);
+    clearErrors([
+      'name',
+      'speciesId',
+      'raceId',
+      'age',
+      'photo',
+    ]);
+
+    const token = tokenStorage.get();
+
+    if (!token) {
+      setSubmitError(
+        'Your session is no longer valid. Sign in again to continue.',
+      );
+      return;
+    }
+
+    setSubmitting(true);
+
+    try {
+      await petCreateRequest(
+        {
+          speciesId: Number(values.speciesId),
+          raceId: Number(values.raceId),
+          name: values.name,
+          age: Number(values.age),
+        },
+        token,
+      );
+    } catch (caught) {
+      if (
+        caught instanceof ApiError
+        && mapServerValidation(caught)
+      ) {
+        setSubmitting(false);
+        return;
+      }
+
+      setSubmitError(
+        describeApiFailure(caught).message,
+      );
+      setSubmitting(false);
+      return;
+    }
+
+    setCreationCompleted(true);
+
+    try {
+      await refreshIdentity();
+      navigate('/profile', { replace: true });
+    } catch {
+      setSubmitError(
+        'Your pet profile was created, but PetMingle could not refresh your session. Refresh the page before trying again.',
+      );
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
   const select = (
     field: SelectField,
     label: string,
@@ -273,10 +387,9 @@ export function PetCreatePage({
         <form
           aria-label="Create pet profile"
           noValidate
-          onChange={() => setSubmitted(false)}
+          onChange={() => setSubmitError(null)}
           onSubmit={handleSubmit(values => {
-            onLocalSubmit?.(values);
-            setSubmitted(true);
+            void submitPet(values);
           })}
         >
           <section
@@ -300,7 +413,7 @@ export function PetCreatePage({
                   value={field.value}
                   onChange={file => {
                     field.onChange(file);
-                    setSubmitted(false);
+                    setSubmitError(null);
                   }}
                   error={errors.photo?.message}
                 />
@@ -554,9 +667,13 @@ export function PetCreatePage({
                   taxonomyLoading
                   || !!taxonomyFailure
                   || taxonomy.species.length === 0
+                  || submitting
+                  || creationCompleted
                 }
               >
-                Continue
+                {submitting
+                  ? 'Creating profile...'
+                  : 'Continue'}
 
                 <ArrowRight
                   size={27}
@@ -573,13 +690,12 @@ export function PetCreatePage({
               </button>
             </div>
 
-            {submitted && (
-              <p
-                className="pet-submit-status"
-                role="status"
-              >
-                Pet details are valid.
-              </p>
+            {submitError && (
+              <ApiState
+                kind="error"
+                compact
+                message={submitError}
+              />
             )}
           </section>
         </form>
