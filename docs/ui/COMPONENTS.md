@@ -5,7 +5,7 @@ Updated through Cycle 7. The screen inventory records the original mockups; the 
 ## Repository findings and safest location
 
 - `composer.json` declares Laravel `^13.0`. `routes/api.php` groups the existing REST routes under `v.0`, including authenticated Sanctum routes. The supplied API base is `/api/v.0`; it remains untouched.
-- Root `package.json` / `package-lock.json` belong to the existing Laravel Mix pipeline and include Vue 2, Bootstrap 5, Sass, and other legacy tooling. `webpack.mix.js` emits `resources/js/app.js` and `resources/sass/app.scss` to `public/js` and `public/css`.
+- Update after #91: root npm scripts forward to the React Vite app in `frontend/`. The unused Mix/Vue pipeline and its compiled output have been removed; Blade and AdminLTE continue loading their published static assets. Earlier instructions below describe the original frontend isolation phase.
 - `resources/views` contains public, authentication, admin, and email Blade views. `routes/web.php` already owns `/`, `/search`, authentication, and content paths. Existing compiled assets and third-party assets live in `public/`.
 - Recommended location: **repository-root `frontend/`**, an independent React/TypeScript Vite application with its own package manifest, lockfile, config, styles, assets, tests, and `dist/`. This isolates build output and CSS reset from the existing Laravel site.
 - Do not replace root npm scripts, reuse legacy global CSS, introduce an npm workspace conversion, write React bundles to Laravel `public/`, edit Blade layouts, or alter any Laravel routes/controllers/configuration in this phase.

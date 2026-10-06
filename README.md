@@ -30,18 +30,18 @@ If you have any questions, suggestions, or need assistance, please reach out to 
 
 ## 🚧 API Details
 
-- **Built with:** Laravel 8
-- **Requires:** PHP 8
+- **Built with:** Laravel 13
+- **Requires:** PHP 8.4
 - **Note:** Additional features will be added as the API evolves.
 
 ## 🐳 Docker Development
 
-This project includes a local Docker stack for Laravel 8:
+This project includes a local Docker stack for Laravel 13:
 
 - `nginx` serves the app on `http://localhost:8000`
-- `app` runs PHP 8.2 FPM with Composer
+- `app` runs PHP 8.4 FPM with Composer
 - `mysql` runs MySQL 8
-- `node` runs Laravel Mix asset watching when enabled
+- `node` runs the React Vite development server on `http://localhost:5174` when the `frontend` profile is enabled
 - `mailpit` captures local emails on `http://localhost:8025`
 
 ### First run
@@ -53,7 +53,7 @@ docker compose exec -u www-data app php artisan key:generate
 docker compose exec -u www-data app php artisan migrate --seed
 ```
 
-Open the application at `http://localhost:8000`.
+Open Laravel at `http://localhost:8000`. For React, copy `frontend/.env.example` to `frontend/.env.local`, then run `docker compose --profile frontend up -d node` and open `http://localhost:5174`. The browser-facing API URL and exact CORS origins must match; see [frontend setup](frontend/README.md).
 
 ### Useful commands
 
@@ -61,8 +61,8 @@ Open the application at `http://localhost:8000`.
 docker compose exec -u www-data app php artisan test
 docker compose exec -u www-data app php artisan migrate:fresh --seed
 docker compose exec -u www-data app composer install
-docker compose run --rm node npm run dev
-docker compose --profile assets up node
+docker compose run --rm node npm run typecheck
+docker compose --profile frontend up node
 ```
 
 ### PHP quality gates
@@ -92,7 +92,7 @@ See [PHP quality gates](docs/testing/PHP_QUALITY_GATES.md) for the static-analys
 
 ## 📱 Consumption Platforms
 
-This API is designed to be consumed by a mobile app and a front-end framework (framework to be decided).
+This API is designed to be consumed by a mobile app and a React/TypeScript frontend in `frontend/`.
 
 ## 🌟 Contributing and Future Plans
 

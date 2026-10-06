@@ -62,7 +62,6 @@ use Illuminate\Support\Str;
 use Illuminate\Translation\TranslationServiceProvider;
 use Illuminate\Validation\ValidationServiceProvider;
 use Illuminate\View\ViewServiceProvider;
-use WaleedAhmad\Pinterest\ServiceProviders\PinterestServiceProvider;
 
 return [
 
@@ -243,7 +242,6 @@ return [
          * Package Service Providers...
          */
 
-        PinterestServiceProvider::class,
         /*
          * Application Service Providers...
          */

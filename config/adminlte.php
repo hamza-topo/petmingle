@@ -285,9 +285,8 @@ return [
     |
     */
 
-    'enabled_laravel_mix' => false,
-    'laravel_mix_css_path' => 'css/app.css',
-    'laravel_mix_js_path' => 'js/app.js',
+    // Admin pages load the published AdminLTE assets directly.
+    'laravel_asset_bundling' => false,
 
     /*
     |--------------------------------------------------------------------------
