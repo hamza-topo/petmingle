@@ -72,6 +72,9 @@ export function MessagingPage() {
     ReturnType<typeof setTimeout> | null
   >(null);
   const outboundTypingState = useRef(false);
+  const realtimeMessageIds = useRef(
+    new Set<string>(),
+  );
 
   const active =
     items.find(item => item.id === activeId)
@@ -296,6 +299,34 @@ export function MessagingPage() {
 
       if (!incoming || !user) {
         return;
+      }
+
+      if (
+        realtimeMessageIds.current.has(
+          incoming.message.id,
+        )
+      ) {
+        return;
+      }
+
+      realtimeMessageIds.current.add(
+        incoming.message.id,
+      );
+
+      if (
+        realtimeMessageIds.current.size > 500
+      ) {
+        const oldest =
+          realtimeMessageIds.current
+            .values()
+            .next()
+            .value;
+
+        if (oldest) {
+          realtimeMessageIds.current.delete(
+            oldest,
+          );
+        }
       }
 
       const conversation =
