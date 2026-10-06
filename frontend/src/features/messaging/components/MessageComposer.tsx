@@ -1,4 +1,7 @@
-import { useState } from 'react';
+import {
+  type FormEvent,
+  useState,
+} from 'react';
 import {
   Image,
   SendHorizontal,
@@ -18,7 +21,7 @@ export function MessageComposer({
   const [pending, setPending] = useState(false);
 
   async function submit(
-    event: React.FormEvent<HTMLFormElement>,
+    event: FormEvent<HTMLFormElement>,
   ) {
     event.preventDefault();
 
