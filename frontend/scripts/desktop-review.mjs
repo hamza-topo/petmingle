@@ -76,9 +76,10 @@ try {
       await context.close();
     }
   }
+  for (const width of [1448, 1280, 1120]) {
   for (const state of ['empty', 'error', 'loading']) {
     for (const screen of screens.filter(s => ['discovery', 'messaging'].includes(s.name))) {
-      const context = await browser.newContext({ viewport: { width: 1120, height: 1000 } });
+      const context = await browser.newContext({ viewport: { width, height: 1000 } });
       await context.addInitScript(() => localStorage.setItem('petmingle.auth.token', 'visual-test-token'));
       const page = await context.newPage();
       await page.route('**/api/v.0/**', async route => {
@@ -93,14 +94,16 @@ try {
       });
       await page.goto(base + screen.path);
       await page.locator('main').waitFor();
-      if (state === 'loading') await page.locator('main').getByRole('status').filter({ hasText: /Loading/ }).first().waitFor();
+      if (state === 'loading') await page.locator('main').getByRole('status').filter({ hasText: screen.name === 'discovery' ? 'Loading nearby pets' : 'Loading conversations' }).first().waitFor();
       else if (state === 'error') await page.getByRole('alert').first().waitFor();
       else await page.getByRole('status').filter({ hasText: /No / }).first().waitFor();
       const scroll = await page.evaluate(() => document.documentElement.scrollWidth);
-      await page.screenshot({ path: output + '/' + screen.name + '-1120-' + state + '.png', fullPage: true });
-      results.push({ screen: screen.name, width: 1120, state, scroll, viewport: 1120 });
+      const shot = await page.screenshot({ path: output + '/' + screen.name + '-' + width + '-' + state + '.png', fullPage: true });
+      if (width === 1120) thumbnails.push({ name: screen.name + ' / ' + width + ' / ' + state, image: shot.toString('base64') });
+      results.push({ screen: screen.name, width, state, scroll, viewport: width });
       await context.close();
     }
+  }
   }
   await writeFile(output + '/results.json', JSON.stringify(results, null, 2));
   // A compact contact sheet can be inspected from CI logs as well as artifacts.
