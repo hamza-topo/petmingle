@@ -61,7 +61,8 @@ export function SignInPage() {
   }
 
   return (
-    <div className="sign-in-page">\n      <a className="skip-link" href="#sign-in-main">Skip to content</a>
+    <div className="sign-in-page">
+      <a className="skip-link" href="#sign-in-main">Skip to content</a>
       <header className="sign-in-header">
         <PetMingleLogo />
       </header>
@@ -102,7 +103,8 @@ export function SignInPage() {
               {errors.email && (
                 <p
                   id="sign-in-email-error"
-                  className="sign-in-field-error"\n                  role="alert"
+                  className="sign-in-field-error"
+                  role="alert"
                 >
                   {errors.email.message}
                 </p>
