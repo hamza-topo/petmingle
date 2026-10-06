@@ -397,7 +397,15 @@ describe('Messaging persisted reads', () => {
       content: 'Only once',
     });
 
-    await screen.findByText('Only once');
+    const timeline = within(
+      screen.getByRole('list', {
+        name: 'Messages in active conversation',
+      }),
+    );
+
+    expect(
+      await timeline.findByText('Only once'),
+    ).toBeVisible();
   });
 
   it('preserves the draft after a validation failure', async () => {
