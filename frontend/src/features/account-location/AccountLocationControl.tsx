@@ -13,12 +13,17 @@ export function AccountLocationControl() {
   const editorId = useId();
   const trigger = useRef<HTMLButtonElement>(null);
   const [open, setOpen] = useState(false);
+  const wasOpen = useRef(false);
+  useEffect(() => {
+    if (!open && wasOpen.current) trigger.current?.focus();
+    wasOpen.current = open;
+  }, [open]);
   return <div className="discovery-location-shell">
     <button className="discovery-location" ref={trigger} type="button" onClick={() => setOpen(true)} disabled={location.status !== 'ready'} aria-expanded={open} aria-haspopup="dialog" aria-controls={open ? editorId : undefined}>
       <MapPin size={22} aria-hidden="true" /><span>{accountLocationLabel(location)}</span><ChevronDown size={18} aria-hidden="true" />
     </button>
     {location.status === 'error' && <button type="button" className="discovery-location-retry" onClick={() => void location.reload()}>Retry location</button>}
-    {open && <LocationPicker id={editorId} initial={location.currentLocation} save={location.saveCoordinates} close={() => { setOpen(false); trigger.current?.focus(); }} />}
+    {open && <LocationPicker id={editorId} initial={location.currentLocation} save={location.saveCoordinates} close={() => setOpen(false)} />}
   </div>;
 }
 
