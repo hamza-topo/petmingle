@@ -45,7 +45,7 @@ describe('Landing page', () => {
       const card = within(list.getByRole('article', { name: pet.name }));
       expect(card.getByText(pet.breed)).toBeVisible();
       expect(card.getByRole('img')).toHaveAccessibleName(/placeholder; reference asset unavailable/);
-      expect(card.getByRole('button', { name: `Save ${pet.name}` })).toBeDisabled();
+      expect(card.queryByRole('button', { name: `Save ${pet.name}` })).not.toBeInTheDocument();
     }
   });
 

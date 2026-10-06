@@ -47,11 +47,15 @@ vi.mock('../profile-creation/taxonomy.api', () => ({
   taxonomyRequest: vi.fn(),
 }));
 
-vi.mock('../account-location/location.api', () => ({
+vi.mock('../account-location/location.api', async importOriginal => {
+  const actual = await importOriginal<typeof import('../account-location/location.api')>();
+  return {
+    ...actual,
   accountLocationsRequest: vi.fn(),
   createAccountLocationRequest: vi.fn(),
   updateAccountLocationRequest: vi.fn(),
-}));
+  };
+});
 
 const mockedUseAuth = vi.mocked(useAuth);
 const mockedCurrentPetProfileRequest =
