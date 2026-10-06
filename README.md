@@ -64,6 +64,24 @@ docker compose run --rm node npm run dev
 docker compose --profile assets up node
 ```
 
+### PHP quality gates
+
+Before opening or updating a backend pull request, run:
+
+```bash
+docker compose exec -u www-data app composer quality
+```
+
+The combined check runs Laravel Pint in verification mode and Larastan/PHPStan at level 5 against `app/`.
+
+To apply formatting locally:
+
+```bash
+docker compose exec -u www-data app composer format
+```
+
+See [PHP quality gates](docs/testing/PHP_QUALITY_GATES.md) for the static-analysis baseline policy and individual commands.
+
 ### Notes
 
 - Composer dependencies live in a Docker named volume, so the host does not need PHP installed.
