@@ -120,7 +120,7 @@ class CriticalRelationshipFlowTest extends TestCase
         $this->getJson('/api/v.0/matches')
             ->assertOk()
             ->assertJsonPath('success', true)
-            ->assertJsonPath('meta.total', 1)
+            ->assertJsonCount(1, 'data')
             ->assertJsonPath(
                 'data.0.from_pet_id',
                 $firstPet->id
