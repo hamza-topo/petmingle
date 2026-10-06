@@ -10,10 +10,12 @@ import {
 
 export function MessageComposer({
   onSend,
+  onTypingChange,
   disabled = false,
   error = null,
 }: {
   onSend: (content: string) => Promise<void>;
+  onTypingChange?: (isWriting: boolean) => void;
   disabled?: boolean;
   error?: string | null;
 }) {
@@ -32,6 +34,7 @@ export function MessageComposer({
     }
 
     setPending(true);
+    onTypingChange?.(false);
 
     try {
       await onSend(content);
@@ -81,8 +84,16 @@ export function MessageComposer({
           value={draft}
           maxLength={1000}
           disabled={controlsDisabled}
-          onChange={event =>
-            setDraft(event.target.value)
+          onChange={event => {
+            const value = event.target.value;
+
+            setDraft(value);
+            onTypingChange?.(
+              value.trim().length > 0,
+            );
+          }}
+          onBlur={() =>
+            onTypingChange?.(false)
           }
         />
 

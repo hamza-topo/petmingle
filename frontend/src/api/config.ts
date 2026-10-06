@@ -40,3 +40,12 @@ export function mediaUrl(path: string): string {
 
   return `/storage/${normalizedPath}`;
 }
+
+
+export function apiOrigin(): string {
+  if (!API_BASE_URL) {
+    throw new Error('VITE_API_BASE_URL is not configured.');
+  }
+
+  return new URL(API_BASE_URL).origin;
+}

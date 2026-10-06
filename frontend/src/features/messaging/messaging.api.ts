@@ -408,6 +408,49 @@ export async function markConversationSeenRequest({
   };
 }
 
+export async function typingRequest({
+  token,
+  receiverUserId,
+  isWriting,
+}: {
+  token: string;
+  receiverUserId: number;
+  isWriting: boolean;
+}): Promise<void> {
+  if (!isPositiveInteger(receiverUserId)) {
+    throw new Error(
+      'Typing request requires a valid receiver User ID.',
+    );
+  }
+
+  const response = await apiRequest<
+    ApiEnvelope<{
+      receiver_user_id: number;
+      is_writing: boolean;
+    }>
+  >(
+    '/messages/typing',
+    {
+      method: 'POST',
+      token,
+      body: JSON.stringify({
+        receiver_id: receiverUserId,
+        is_writing: isWriting,
+      }),
+    },
+  );
+
+  if (
+    response.data.receiver_user_id
+      !== receiverUserId
+    || response.data.is_writing !== isWriting
+  ) {
+    throw new Error(
+      'Typing response does not preserve receiver state.',
+    );
+  }
+}
+
 export async function messageSendRequest({
   token,
   conversationId,

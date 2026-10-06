@@ -50,6 +50,7 @@
   .chat-thread-header { display: flex; align-items: center; gap: 17px; margin-inline: 7px; min-height: 100px; padding-bottom: 20px; border-bottom: 1px solid var(--color-border); }
   .chat-thread-header > div:not(.chat-call-actions) { min-width: 0; }
   .chat-thread-header h2 { font-size: 25px; line-height: 32px; letter-spacing: -.6px; }
+  .chat-typing-state { margin: 3px 0 0; font-size: 12px; line-height: 16px; color: var(--color-text-secondary); }
   .chat-thread-header p { font-size: 14px; color: var(--color-text-secondary); margin-top: 4px; }
   .chat-call-actions { display: flex; align-items: center; justify-content: space-between; gap: 26px; margin-left: auto; color: var(--color-text-secondary); }
   .chat-day { display: flex; align-items: center; gap: 21px; margin: 30px 7px 22px; color: var(--color-text-secondary); font-size: 16px; }

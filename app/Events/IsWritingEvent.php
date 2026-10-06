@@ -6,34 +6,37 @@ use App\Enums\PusherEvent;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use Illuminate\Contracts\Broadcasting\ShouldRescue;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class IsWritingEvent implements ShouldBroadcastNow
+class IsWritingEvent implements ShouldBroadcastNow, ShouldRescue
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    /**
-     * Create a new event instance.
-     *
-     * @return void
-     */
-    public function __construct(private int $receiverId, public bool $isWriting = false)
+    public function __construct(
+        public int $senderUserId,
+        private int $receiverUserId,
+        public bool $isWriting = false
+    ) {}
+
+    public function broadcastOn(): PrivateChannel
     {
-        //
+        return new PrivateChannel(
+            'App.Models.User.' . $this->receiverUserId
+        );
     }
 
-     /**
-     * Get the channels the event should broadcast on.
-     *
-     * @return \Illuminate\Broadcasting\Channel|array
-     */
-    public function broadcastOn()
+    public function broadcastWith(): array
     {
-        return new PrivateChannel('App.Models.User.' . $this->receiverId);
+        return [
+            'sender_user_id' => $this->senderUserId,
+            'receiver_user_id' => $this->receiverUserId,
+            'is_writing' => $this->isWriting,
+        ];
     }
 
-    public function broadcastAs()
+    public function broadcastAs(): string
     {
         return PusherEvent::IS_WRITING_TO;
     }

@@ -14,6 +14,7 @@ import {
   messageSendRequest,
   otherParticipantUserId,
   threadRequest,
+  typingRequest,
 } from './messaging.api';
 
 vi.mock('../../api/client', () => ({
@@ -297,6 +298,42 @@ describe('messaging api', () => {
       markedCount: 3,
       unreadCount: 0,
     });
+  });
+
+  it('publishes typing without trusting sender identity', async () => {
+    mockedApiRequest.mockResolvedValue({
+      success: true,
+      message: 'Typing state accepted.',
+      data: {
+        receiver_user_id: 20,
+        is_writing: true,
+      },
+    });
+
+    await typingRequest({
+      token: 'token',
+      receiverUserId: 20,
+      isWriting: true,
+    });
+
+    expect(mockedApiRequest).toHaveBeenCalledWith(
+      '/messages/typing',
+      {
+        method: 'POST',
+        token: 'token',
+        body: JSON.stringify({
+          receiver_id: 20,
+          is_writing: true,
+        }),
+      },
+    );
+
+    expect(
+      JSON.parse(
+        mockedApiRequest.mock.calls[0][1]
+          ?.body as string,
+      ),
+    ).not.toHaveProperty('sender_id');
   });
 
   it('sends only receiver identity and content, then maps the persisted message', async () => {
