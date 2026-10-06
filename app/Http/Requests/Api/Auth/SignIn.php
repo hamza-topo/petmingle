@@ -6,7 +6,6 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class SignIn extends FormRequest
 {
-
     /**
      * Get the validation rules that apply to the request.
      *
@@ -16,7 +15,7 @@ class SignIn extends FormRequest
     {
         return [
             'email' => 'required|email',
-            'password' => 'required|string'
+            'password' => 'required|string',
         ];
     }
 

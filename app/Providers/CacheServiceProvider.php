@@ -2,8 +2,8 @@
 
 namespace App\Providers;
 
-use Illuminate\Support\ServiceProvider;
 use App\Services\CacheService;
+use Illuminate\Support\ServiceProvider;
 
 class CacheServiceProvider extends ServiceProvider
 {
@@ -14,9 +14,9 @@ class CacheServiceProvider extends ServiceProvider
      */
     public function register()
     {
-       
+
         $this->app->singleton(CacheService::class, function ($app) {
-            return new CacheService();
+            return new CacheService;
         });
     }
 }

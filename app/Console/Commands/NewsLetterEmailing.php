@@ -5,7 +5,6 @@ namespace App\Console\Commands;
 use App\Jobs\ProcessNewsLetters;
 use Illuminate\Console\Command;
 
-
 class NewsLetterEmailing extends Command
 {
     /**
@@ -37,14 +36,14 @@ class NewsLetterEmailing extends Command
      *
      * @return int
      */
- 
     public function handle()
     {
         // Dispatch the job to process newsletters and send emails
         ProcessNewsLetters::dispatch();
 
-        // display message about job execution process 
+        // display message about job execution process
         $this->info('Job dispatched successfully.');
+
         return 0;
     }
 }

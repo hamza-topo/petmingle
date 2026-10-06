@@ -13,7 +13,7 @@ class ExceptionHandlingTest extends TestCase
     public function test_unauthenticated_api_request_returns_consistent_json_response(): void
     {
         Route::middleware('auth:sanctum')
-            ->get('/api/test/authentication-error', fn() => response()->json(['ok' => true]));
+            ->get('/api/test/authentication-error', fn () => response()->json(['ok' => true]));
 
         $this->getJson('/api/test/authentication-error')
             ->assertUnauthorized()
@@ -26,7 +26,7 @@ class ExceptionHandlingTest extends TestCase
     public function test_authorization_exception_returns_consistent_json_response(): void
     {
         Route::get('/api/test/authorization-error', function () {
-            throw new AuthorizationException();
+            throw new AuthorizationException;
         });
 
         $this->getJson('/api/test/authorization-error')

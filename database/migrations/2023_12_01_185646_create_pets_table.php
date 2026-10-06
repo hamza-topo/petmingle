@@ -17,11 +17,11 @@ class CreatePetsTable extends Migration
         Schema::create('pets', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id');
-            $table->integer('species_id');//TODO:make it foreign key
-            $table->integer('race_id');//TODO:make it foreign key
+            $table->integer('species_id'); // TODO:make it foreign key
+            $table->integer('race_id'); // TODO:make it foreign key
             $table->string('name', 25);
             $table->tinyInteger('age')->index();
-            $table->tinyInteger('sexe')->index()->comment( Pet::FEMALE .':female;'.Pet::MALE.': male');
+            $table->tinyInteger('sexe')->index()->comment(Pet::FEMALE.':female;'.Pet::MALE.': male');
             $table->string('color', 15);
             $table->json('images');
             $table->text('about');

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -21,8 +22,8 @@ class Online extends Model
     /**
      * Returns all the guest users.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public function scopeGuests($query)
     {
@@ -32,8 +33,8 @@ class Online extends Model
     /**
      * Returns all the registered users.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public function scopeRegistered($query)
     {
@@ -43,14 +44,14 @@ class Online extends Model
     /**
      * Updates the session of the current user.
      *
-     * @param  \Illuminate\Database\Eloquent\Builder  $query
-     * @return \Illuminate\Database\Eloquent\Builder
+     * @param  Builder  $query
+     * @return Builder
      */
     public function scopeUpdateCurrent($query)
     {
-        return $query->where('id', Session::getId())->update(array(
-            'user_id' => Auth::check() ? auth()->user()->id : null
-        ));
+        return $query->where('id', Session::getId())->update([
+            'user_id' => Auth::check() ? auth()->user()->id : null,
+        ]);
     }
 
     /**

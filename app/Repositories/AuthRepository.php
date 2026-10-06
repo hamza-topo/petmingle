@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\User;
 use App\Reducers\Socialite;
+use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 
@@ -18,8 +19,8 @@ class AuthRepository
     {
         return User::withTrashed()->findOrFail($id);
     }
-   
-    //TODO::we no longer need this 
+
+    // TODO::we no longer need this
     /**
      * Undocumented function
      *
@@ -37,9 +38,9 @@ class AuthRepository
 
         return User::firstOrCreate(
             [
-                'email' =>  $reducer->user()->email,
-                'provider_id' =>  $reducer->user()->provider_id,
-                'provider_name' =>  $reducer->user()->provider_name,
+                'email' => $reducer->user()->email,
+                'provider_id' => $reducer->user()->provider_id,
+                'provider_name' => $reducer->user()->provider_name,
                 'password' => bcrypt(Str::random(16)),
             ],
             (array) $reducer->user()
@@ -61,17 +62,18 @@ class AuthRepository
         $user = User::findOrFail($userId);
         $user->update(['avatar' => '']);
         $user->refresh();
+
         return $user;
     }
 
     public function signUp(array $user): User
     {
-        if (!isset($user['password']) || !is_string($user['password']) || $user['password'] === '') {
+        if (! isset($user['password']) || ! is_string($user['password']) || $user['password'] === '') {
             throw new \InvalidArgumentException('Password is required for sign up.');
         }
 
         // Public registration cannot assign roles, provider identities or internal state.
-        $user = \Illuminate\Support\Arr::only($user, ['name', 'email', 'password', 'avatar']);
+        $user = Arr::only($user, ['name', 'email', 'password', 'avatar']);
         $user['is_admin'] = false;
         $user['password'] = $this->hash($user['password']);
 

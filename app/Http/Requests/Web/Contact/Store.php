@@ -8,7 +8,9 @@ class Store extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
+     *
      * @author Youssef Tamri <yousseftam100@gmail.com>
+     *
      * @return array
      */
     public function rules()

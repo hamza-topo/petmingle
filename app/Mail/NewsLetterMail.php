@@ -13,8 +13,7 @@ class NewsLetterMail extends Mailable
 
     public function __construct(
         public NewsLetter $newsLetter
-    ) {
-    }
+    ) {}
 
     public function build(): self
     {

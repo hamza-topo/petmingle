@@ -2,14 +2,11 @@
 
 namespace App\Repositories;
 
+use App\Enums\App as EnumsLike;
 use App\Enums\Pages;
 use App\Models\Blog;
-use App\Models\Like;
-use App\Enums\App as EnumsLike;
-use Illuminate\Support\Collection;
-
-use function PHPUnit\Framework\isTrue;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 
 class BlogRepository
 {
@@ -30,8 +27,7 @@ class BlogRepository
     /**
      * getById
      *
-     * @param  mixed $likeId
-     * @return Blog
+     * @param  mixed  $likeId
      */
     public function getById(int $likeId): ?Blog
     {
@@ -74,11 +70,11 @@ class BlogRepository
         $slugs = collect(Pages::cases())->pluck('value')->map(function ($slug) {
             return strtolower(slugify($slug));
         })->toArray();
-        
+
         $query = Blog::orderBy('id', 'DESC')
             ->where('active', true)
             ->whereNull('publish_it_at');
-        
+
         if ($exlude) {
             $query->whereNotIn("slug->$locale", $slugs);
         }
@@ -88,8 +84,6 @@ class BlogRepository
 
     /**
      * get Scheduled blogs
-     *
-     * @return Collection
      */
     public function getScheduled(): Collection
     {
@@ -109,15 +103,15 @@ class BlogRepository
     {
         return Blog::whereIn('id', $ids)->update([
             'active' => true,
-            'publish_it_at' => null
+            'publish_it_at' => null,
         ]);
     }
 
-    //TODO::create another enum class for blog
+    // TODO::create another enum class for blog
     public function take(?int $limit = EnumsLike::PAGINATE): Collection
     {
         return Blog::orderBy('created_at')->limit($limit)->get()->filter(function ($row) {
-            return !empty($row->slug['en']) && $row->slug['en'] != 'about';
+            return ! empty($row->slug['en']) && $row->slug['en'] != 'about';
         });
     }
 }

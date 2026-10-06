@@ -14,11 +14,12 @@ use Illuminate\Pagination\LengthAwarePaginator;
  * Pet Repository Class
  *
  * @author Topo <hamzaaitsidisaid.11@gmail.com>
+ *
  * @return mixed
  */
 class LocationRepository
 {
-    //TODO::make this as enum
+    // TODO::make this as enum
 
     public function create(array $location): Location
     {
@@ -36,9 +37,6 @@ class LocationRepository
 
     /**
      * getById
-     *
-     * @param  string $locationId
-     * @return Location
      */
     public function getById(string $locationId): Location
     {
@@ -104,8 +102,7 @@ class LocationRepository
                 ]
             )
             ->reject(
-                fn (int $userId) =>
-                    $userId === $requesterUserId
+                fn (int $userId) => $userId === $requesterUserId
             )
             ->unique()
             ->values()
@@ -127,36 +124,31 @@ class LocationRepository
             ->where('locations.user_id', '!=', $requesterUserId)
             ->when(
                 $blockedUserIds !== [],
-                fn ($query) =>
-                    $query->whereNotIn(
-                        'locations.user_id',
-                        $blockedUserIds
-                    )
+                fn ($query) => $query->whereNotIn(
+                    'locations.user_id',
+                    $blockedUserIds
+                )
             )
             ->whereHas('user.pet.race')
             ->when(
                 $speciesId !== null,
-                fn ($query) =>
-                    $query->whereHas(
-                        'user.pet',
-                        fn ($pet) =>
-                            $pet->where(
-                                'species_id',
-                                $speciesId
-                            )
+                fn ($query) => $query->whereHas(
+                    'user.pet',
+                    fn ($pet) => $pet->where(
+                        'species_id',
+                        $speciesId
                     )
+                )
             )
             ->when(
                 $raceId !== null,
-                fn ($query) =>
-                    $query->whereHas(
-                        'user.pet',
-                        fn ($pet) =>
-                            $pet->where(
-                                'race_id',
-                                $raceId
-                            )
+                fn ($query) => $query->whereHas(
+                    'user.pet',
+                    fn ($pet) => $pet->where(
+                        'race_id',
+                        $raceId
                     )
+                )
             )
             ->havingRaw('distance <= ?', [$radiusKm])
             ->orderBy('distance')

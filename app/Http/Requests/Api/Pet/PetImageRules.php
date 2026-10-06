@@ -15,7 +15,7 @@ final class PetImageRules
             'mimetypes:image/jpeg,image/png',
             'mimes:jpg,jpeg,png',
             'extensions:jpg,jpeg,png',
-            'max:' . self::MAX_KILOBYTES,
+            'max:'.self::MAX_KILOBYTES,
         ];
     }
 

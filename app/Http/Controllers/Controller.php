@@ -12,16 +12,11 @@ class Controller extends BaseController
 {
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
-    
     /**
      * Method to pluck given peroperty
-     *
-     * @param Collection $colletion
-     * @param string $key
-     * @return Collection
      */
     protected function plucker(Collection $colletion, string $key, string $value = ''): Collection
     {
-        return $colletion->pluck($key, 'id')->prepend('Please select an: '. $value, '');
+        return $colletion->pluck($key, 'id')->prepend('Please select an: '.$value, '');
     }
 }

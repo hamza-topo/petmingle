@@ -51,7 +51,7 @@ final class InteractionPolicy
         $targetUserId = (int) $targetUserId;
 
         return $actorUserId !== $targetUserId
-            && !$this->isBlockedBetween(
+            && ! $this->isBlockedBetween(
                 $actorUserId,
                 $targetUserId
             );
@@ -71,8 +71,8 @@ final class InteractionPolicy
             ->keyBy('id');
 
         if (
-            !$pets->has($firstPetId)
-            || !$pets->has($secondPetId)
+            ! $pets->has($firstPetId)
+            || ! $pets->has($secondPetId)
         ) {
             return false;
         }

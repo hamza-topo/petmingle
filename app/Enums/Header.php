@@ -7,7 +7,7 @@ class Header extends Enum
     /**
      * const default number of days
      */
-    const  MENUS = [
+    const MENUS = [
         'Home' => [
             'url' => '',
             'Text' => 'Home',

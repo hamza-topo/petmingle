@@ -2,15 +2,16 @@
 
 namespace App\View\Components\Web\Layout;
 
-use Illuminate\View\Component;
-use App\Enums\Header as EnumHeader;
 use App\Enums\Component as EnumComponent;
+use App\Enums\Header as EnumHeader;
 use App\Repositories\ComponentRepository;
-use App\Models\Component as ModelComponent;
+use Illuminate\Contracts\View\View;
+use Illuminate\View\Component;
 
 class Header extends Component
 {
     public $component;
+
     /**
      * Create a new component instance.
      *
@@ -24,12 +25,12 @@ class Header extends Component
     /**
      * Get the view / contents that represent the component.
      *
-     * @return \Illuminate\Contracts\View\View|\Closure|string
+     * @return View|\Closure|string
      */
     public function render()
     {
         $menus = array_filter(EnumHeader::MENUS, function ($menu) {
-            if (!empty($menu['show']) && $menu['show']) {
+            if (! empty($menu['show']) && $menu['show']) {
                 return $menu;
             }
         });

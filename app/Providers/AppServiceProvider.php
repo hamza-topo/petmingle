@@ -28,7 +28,7 @@ class AppServiceProvider extends ServiceProvider
 
     protected function helpers()
     {
-        foreach (glob(__DIR__ . '/../Helpers/*.php') as $filename) {
+        foreach (glob(__DIR__.'/../Helpers/*.php') as $filename) {
             require_once $filename;
         }
     }

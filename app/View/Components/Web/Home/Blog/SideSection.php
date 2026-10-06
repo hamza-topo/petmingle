@@ -2,9 +2,10 @@
 
 namespace App\View\Components\Web\Home\Blog;
 
-use Illuminate\View\Component;
-use Illuminate\Support\Collection;
 use App\Repositories\NewsLetterRepository;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Collection;
+use Illuminate\View\Component;
 
 class SideSection extends Component
 {
@@ -15,11 +16,10 @@ class SideSection extends Component
      */
     public function __construct(protected NewsLetterRepository $newsRepository, public Collection $blogs) {}
 
-
     /**
      * Get the view / contents that represent the component.
      *
-     * @return \Illuminate\Contracts\View\View|\Closure|string
+     * @return View|\Closure|string
      */
     public function render()
     {

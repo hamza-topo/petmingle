@@ -17,6 +17,7 @@ class Update extends FormRequest
             'content' => 'required|string|max:1000',
         ];
     }
+
     /**
      * Get the error messages for the defined validation rules.
      *

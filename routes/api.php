@@ -15,8 +15,6 @@ use App\Http\Controllers\Api\RaceController;
 use App\Http\Controllers\Api\SpeciesController;
 use Illuminate\Support\Facades\Route;
 
-
-
 /*
 |--------------------------------------------------------------------------
 | Auth Routes

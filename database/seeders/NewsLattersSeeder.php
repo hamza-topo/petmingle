@@ -2,18 +2,19 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Str;
-use Faker\Factory as Faker;
 use App\Enums\NewsLetter;
 use App\Models\Species;
+use Faker\Factory as Faker;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class NewsLattersSeeder extends Seeder
 {
     /**
      * Run the database seeds.
+     *
      * @author youssef tamri <yousseftam100@gmail.com>
+     *
      * @return void
      */
     public function run()
@@ -25,7 +26,7 @@ class NewsLattersSeeder extends Seeder
                 'type' => $faker->randomElement([
                     NewsLetter::MOBILE,
                     NewsLetter::EMAIL,
-                    NewsLetter::ALL
+                    NewsLetter::ALL,
                 ]),
                 'species_id' => $faker->optional()->randomElement(Species::pluck('id')->toArray()),
                 'title' => $faker->sentence,

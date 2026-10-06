@@ -1,20 +1,19 @@
 <?php
 
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ConfigController;
-use App\Http\Controllers\Web\MainController;
-use App\Http\Controllers\Admin\PetController;
-use App\Http\Controllers\Admin\SeoController;
+use App\Http\Controllers\Admin\AdoptionController;
 use App\Http\Controllers\Admin\BlogController;
+use App\Http\Controllers\Admin\ComponentController;
 use App\Http\Controllers\Admin\HomeController;
+use App\Http\Controllers\Admin\NewsLetterController;
+use App\Http\Controllers\Admin\PetController;
 use App\Http\Controllers\Admin\RaceController;
-use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\SeoController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SpeciesController;
-use App\Http\Controllers\Admin\AdoptionController;
-use App\Http\Controllers\Admin\ComponentController;
-use App\Http\Controllers\Admin\NewsLetterController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\ConfigController;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,7 +27,7 @@ use App\Http\Controllers\Admin\NewsLetterController;
 */
 
 Route::prefix('/admin')->middleware(['admin'])->name('admin.')->group(function () {
-    //toggle trashed 
+    // toggle trashed
 
     Route::get('/home', [HomeController::class, 'index']);
     Route::get('/settings', [SettingController::class, 'index']);

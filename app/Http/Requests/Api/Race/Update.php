@@ -14,7 +14,7 @@ class Update extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required|unique:races|max:50'
+            'name' => 'required|unique:races|max:50',
         ];
     }
 
@@ -31,5 +31,4 @@ class Update extends FormRequest
             'name.max' => \__('This Race Name is too much long.'),
         ];
     }
-
 }

@@ -18,6 +18,7 @@ class Store extends FormRequest
             'longitude' => 'required|numeric|between:-180,180',
         ];
     }
+
     /**
      * Get the error messages for the defined validation rules.
      *
@@ -35,5 +36,4 @@ class Store extends FormRequest
             'longitude.between' => __('The Longitude must be between -180 and 180 degrees.'),
         ];
     }
-
 }

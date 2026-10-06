@@ -113,7 +113,7 @@ class BlockedInteractionTest extends TestCase
             ]);
 
         $this->getJson(
-            '/api/v.0/messages?receiver_id=' . $receiver->id
+            '/api/v.0/messages?receiver_id='.$receiver->id
         )
             ->assertUnprocessable()
             ->assertJsonStructure([
@@ -228,14 +228,14 @@ class BlockedInteractionTest extends TestCase
 
         Sanctum::actingAs($sender);
 
-        $this->putJson('/api/v.0/messages/' . $message->id, [
+        $this->putJson('/api/v.0/messages/'.$message->id, [
             'content' => 'Edited after block',
         ])->assertForbidden();
 
         $message->delete();
 
         $this->putJson(
-            '/api/v.0/messages/restore/' . $message->id
+            '/api/v.0/messages/restore/'.$message->id
         )->assertForbidden();
 
         $this->assertSoftDeleted('messages', [
@@ -272,12 +272,12 @@ class BlockedInteractionTest extends TestCase
         );
 
         $species = Species::create([
-            'name' => 'Species-' . $user->id,
+            'name' => 'Species-'.$user->id,
         ]);
 
         $race = Race::create([
             'species_id' => $species->id,
-            'name' => 'Race-' . $user->id,
+            'name' => 'Race-'.$user->id,
         ]);
 
         $pet = Pet::withoutEvents(
@@ -285,7 +285,7 @@ class BlockedInteractionTest extends TestCase
                 'user_id' => $user->id,
                 'species_id' => $species->id,
                 'race_id' => $race->id,
-                'name' => $name . ' pet',
+                'name' => $name.' pet',
                 'age' => 3,
                 'sexe' => 1,
                 'color' => 'brown',

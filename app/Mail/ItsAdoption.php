@@ -34,12 +34,11 @@ class ItsAdoption extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->subject(
-            \__('🎉 You\'re Adoption! Dive into the Adventure with ' . $this->pet->name . '! 🚀')
+            \__('🎉 You\'re Adoption! Dive into the Adventure with '.$this->pet->name.'! 🚀')
         )
             ->view('emails.adoption')
             ->with('pet', $this->pet)
             ->with('owner', $this->owner)
-            ->with('newOwner', $this->newOwner)
-        ;
+            ->with('newOwner', $this->newOwner);
     }
 }

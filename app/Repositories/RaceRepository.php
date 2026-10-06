@@ -10,10 +10,8 @@ use App\Services\CacheService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-
 class RaceRepository
 {
-
     public function __construct(protected CacheService $cacheService) {}
 
     public function create(array $race): Race
@@ -53,14 +51,12 @@ class RaceRepository
         return Race::all();
     }
 
-
     public function getAllFromCache(?string $key = ''): Collection
     {
         return $this->cacheService->remember(EnumsRace::CACHEKEY, CacheDuration::SHORT->value, function () {
             return Race::whereHas('species')->get();
         });
     }
-
 
     public function clearCache(): bool
     {
@@ -70,7 +66,6 @@ class RaceRepository
     /**
      * Pagination method
      *
-     * @param int|null $paginate
      * @return void
      */
     public function paginate(?int $paginate = App::PAGINATE): LengthAwarePaginator

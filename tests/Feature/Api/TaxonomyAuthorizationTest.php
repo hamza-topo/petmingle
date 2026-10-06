@@ -19,7 +19,7 @@ class TaxonomyAuthorizationTest extends TestCase
         foreach (['species', 'races'] as $resource) {
             foreach (['POST', 'PUT', 'PATCH', 'DELETE', 'restore'] as $action) {
                 foreach ([false, true] as $admin) {
-                    yield "$resource $action " . ($admin ? 'admin' : 'member') => [$resource, $action, $admin];
+                    yield "$resource $action ".($admin ? 'admin' : 'member') => [$resource, $action, $admin];
                 }
             }
         }
@@ -35,19 +35,20 @@ class TaxonomyAuthorizationTest extends TestCase
             $model->delete();
         }
         Sanctum::actingAs($user);
-        $url = '/api/v.0/' . $resource;
+        $url = '/api/v.0/'.$resource;
         if ($action === 'restore') {
-            $url .= '/restore/' . $model->id;
+            $url .= '/restore/'.$model->id;
         } elseif ($action !== 'POST') {
-            $url .= '/' . $model->id;
+            $url .= '/'.$model->id;
         }
         $payload = ['name' => 'Changed taxonomy', 'species_id' => $species->id];
         $response = $this->json($action === 'restore' ? 'PUT' : $action, $url, $payload);
 
-        if (!$admin) {
+        if (! $admin) {
             $response->assertForbidden();
             $this->assertDatabaseMissing($resource, ['name' => 'Changed taxonomy']);
             $this->assertSame($action === 'restore', $model->fresh()->trashed());
+
             return;
         }
 
@@ -68,8 +69,8 @@ class TaxonomyAuthorizationTest extends TestCase
         $race = Race::create(['species_id' => $species->id, 'name' => 'Golden Retriever']);
         Sanctum::actingAs($user);
 
-        foreach (['species', 'species/' . $species->id, 'races', 'races/' . $race->id] as $path) {
-            $this->getJson('/api/v.0/' . $path)->assertOk();
+        foreach (['species', 'species/'.$species->id, 'races', 'races/'.$race->id] as $path) {
+            $this->getJson('/api/v.0/'.$path)->assertOk();
         }
     }
 }

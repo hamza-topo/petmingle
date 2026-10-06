@@ -15,6 +15,7 @@ use LogicException;
 class MatchService
 {
     protected MatchTable $fromMatch;
+
     protected MatchTable $toMatch;
 
     public function __construct(
@@ -31,7 +32,7 @@ class MatchService
         $toPetId = (int) $like['to'];
 
         if (
-            !$this->interactionPolicy->canMatchPets(
+            ! $this->interactionPolicy->canMatchPets(
                 $fromPetId,
                 $toPetId
             )
@@ -49,11 +50,11 @@ class MatchService
         DB::transaction(function () use ($like, $likeSeconde) {
             $this->fromMatch = $this->matchRepository->create($like);
 
-            Log::info('created from :' . json_encode($this->fromMatch));
+            Log::info('created from :'.json_encode($this->fromMatch));
 
             $this->toMatch = $this->matchRepository->create($likeSeconde);
 
-            Log::info('created to :' . json_encode($this->toMatch));
+            Log::info('created to :'.json_encode($this->toMatch));
         });
 
         Log::info('end of creating the match');
@@ -72,13 +73,13 @@ class MatchService
     {
         Log::info('start processing the mail');
         try {
-            Log::info('Mail: the fromMatch: ' . json_encode($this->fromMatch));
+            Log::info('Mail: the fromMatch: '.json_encode($this->fromMatch));
             Mail::to($this->fromMatch->fromPet?->owner?->email)
                 ->queue(new ItsAMatch($this->fromMatch->toPet, $this->fromMatch->fromPet));
             Mail::to($this->fromMatch->toPet?->owner?->email)
                 ->queue(new ItsAMatch($this->fromMatch->fromPet, $this->fromMatch->toPet));
         } catch (\Exception $e) {
-            Log::error('Ko : ' . $e->getMessage());
+            Log::error('Ko : '.$e->getMessage());
         }
         Log::info('end processing the mail');
     }

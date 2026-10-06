@@ -2,14 +2,16 @@
 
 namespace App\View\Components\Web\Home;
 
-use Illuminate\View\Component;
-use App\Repositories\ComponentRepository;
-use App\Models\Component as ModelComponent;
 use App\Enums\Component as EnumComponent;
+use App\Models\Component as ModelComponent;
+use App\Repositories\ComponentRepository;
+use Illuminate\Contracts\View\View;
+use Illuminate\View\Component;
 
 class Hero extends Component
 {
     public ModelComponent $component;
+
     /**
      * Create a new component instance.
      *
@@ -23,7 +25,7 @@ class Hero extends Component
     /**
      * Get the view / contents that represent the component.
      *
-     * @return \Illuminate\Contracts\View\View|\Closure|string
+     * @return View|\Closure|string
      */
     public function render()
     {

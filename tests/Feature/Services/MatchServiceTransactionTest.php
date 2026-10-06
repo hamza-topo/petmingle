@@ -59,8 +59,6 @@ class MatchServiceTransactionTest extends TestCase
             'about' => 'Second test pet',
         ]);
 
-
-
         Like::withoutEvents(function () use (
             $firstPet,
             $secondPet
@@ -96,8 +94,8 @@ class MatchServiceTransactionTest extends TestCase
 
         $service = new MatchService(
             $matchRepository,
-            new PetRepository(),
-            new InteractionPolicy()
+            new PetRepository,
+            new InteractionPolicy
         );
 
         try {
@@ -156,8 +154,6 @@ class MatchServiceTransactionTest extends TestCase
             'about' => 'Second test pet',
         ]);
 
-
-
         Like::withoutEvents(function () use (
             $firstPet,
             $secondPet
@@ -174,9 +170,9 @@ class MatchServiceTransactionTest extends TestCase
         });
 
         $service = new MatchService(
-            new MatchRepository(),
-            new PetRepository(),
-            new InteractionPolicy()
+            new MatchRepository,
+            new PetRepository,
+            new InteractionPolicy
         );
 
         $service->create([

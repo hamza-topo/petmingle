@@ -17,7 +17,7 @@ class MutationStatusContractTest extends TestCase
     public function test_species_creation_returns_201(): void
     {
         $admin = User::withoutEvents(
-            fn() => User::factory()->create([
+            fn () => User::factory()->create([
                 'is_admin' => true,
             ])
         );
@@ -42,7 +42,7 @@ class MutationStatusContractTest extends TestCase
     public function test_species_update_returns_200(): void
     {
         $admin = User::withoutEvents(
-            fn() => User::factory()->create([
+            fn () => User::factory()->create([
                 'is_admin' => true,
             ])
         );
@@ -54,7 +54,7 @@ class MutationStatusContractTest extends TestCase
         Sanctum::actingAs($admin);
 
         $this->putJson(
-            '/api/v.0/species/' . $species->id,
+            '/api/v.0/species/'.$species->id,
             [
                 'name' => 'Canine',
             ]
@@ -70,7 +70,7 @@ class MutationStatusContractTest extends TestCase
     public function test_location_creation_returns_201(): void
     {
         $user = User::withoutEvents(
-            fn() => User::factory()->create()
+            fn () => User::factory()->create()
         );
 
         Sanctum::actingAs($user);
@@ -94,11 +94,11 @@ class MutationStatusContractTest extends TestCase
     public function test_block_creation_returns_201(): void
     {
         $user = User::withoutEvents(
-            fn() => User::factory()->create()
+            fn () => User::factory()->create()
         );
 
         $target = User::withoutEvents(
-            fn() => User::factory()->create()
+            fn () => User::factory()->create()
         );
 
         Sanctum::actingAs($user);
@@ -123,7 +123,7 @@ class MutationStatusContractTest extends TestCase
     public function test_species_delete_returns_standard_200_envelope(): void
     {
         $admin = User::withoutEvents(
-            fn() => User::factory()->create([
+            fn () => User::factory()->create([
                 'is_admin' => true,
             ])
         );
@@ -135,7 +135,7 @@ class MutationStatusContractTest extends TestCase
         Sanctum::actingAs($admin);
 
         $this->deleteJson(
-            '/api/v.0/species/' . $species->id
+            '/api/v.0/species/'.$species->id
         )
             ->assertOk()
             ->assertJsonPath('success', true)
@@ -148,7 +148,7 @@ class MutationStatusContractTest extends TestCase
     public function test_species_restore_returns_standard_200_envelope(): void
     {
         $admin = User::withoutEvents(
-            fn() => User::factory()->create([
+            fn () => User::factory()->create([
                 'is_admin' => true,
             ])
         );
@@ -162,7 +162,7 @@ class MutationStatusContractTest extends TestCase
         Sanctum::actingAs($admin);
 
         $this->putJson(
-            '/api/v.0/species/restore/' . $species->id
+            '/api/v.0/species/restore/'.$species->id
         )
             ->assertOk()
             ->assertJsonPath('success', true)
@@ -219,21 +219,21 @@ class MutationStatusContractTest extends TestCase
     private function createUserWithPet(string $name): array
     {
         $user = User::withoutEvents(
-            fn() => User::factory()->create()
+            fn () => User::factory()->create()
         );
 
         $species = Species::create([
-            'name' => 'Species-' . $user->id,
+            'name' => 'Species-'.$user->id,
             'description' => 'Test species',
         ]);
 
         $race = Race::create([
             'species_id' => $species->id,
-            'name' => 'Race-' . $user->id,
+            'name' => 'Race-'.$user->id,
         ]);
 
         $pet = Pet::withoutEvents(
-            fn() => Pet::create([
+            fn () => Pet::create([
                 'user_id' => $user->id,
                 'species_id' => $species->id,
                 'race_id' => $race->id,

@@ -297,12 +297,12 @@ class NearbyDiscoverySecurityTest extends TestCase
         );
 
         $species = Species::create([
-            'name' => 'Species-' . $user->id,
+            'name' => 'Species-'.$user->id,
         ]);
 
         $race = Race::create([
             'species_id' => $species->id,
-            'name' => 'Race-' . $user->id,
+            'name' => 'Race-'.$user->id,
         ]);
 
         $pet = Pet::withoutEvents(

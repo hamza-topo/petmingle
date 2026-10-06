@@ -18,7 +18,7 @@ class SignUp extends FormRequest
             // 'avatar.*' => 'image|size:1024',
             'name' => 'required|string',
             'email' => 'required|email|unique:users',
-            'password' => 'required|string|min:6|max:50|confirmed'
+            'password' => 'required|string|min:6|max:50|confirmed',
         ];
     }
 
@@ -43,5 +43,4 @@ class SignUp extends FormRequest
             'password.max' => \__('The password is invalid.'),
         ];
     }
-
 }

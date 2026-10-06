@@ -4,7 +4,6 @@ namespace App\Mail;
 
 use App\Models\User;
 use Illuminate\Bus\Queueable;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 
@@ -17,9 +16,7 @@ class GoodBye extends Mailable
      *
      * @return void
      */
-    public function __construct(protected User $user)
-    {
-    }
+    public function __construct(protected User $user) {}
 
     /**
      * Build the message.
@@ -29,7 +26,7 @@ class GoodBye extends Mailable
     public function build()
     {
         return $this->subject(
-            config('app.name') . ':' . \__('🥺 GoodBye ') . $this->user->name ?? ''
+            config('app.name').':'.\__('🥺 GoodBye ').$this->user->name ?? ''
         )->with('user', $this->user)->view('emails.good-bye');
     }
 }

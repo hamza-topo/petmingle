@@ -47,7 +47,7 @@ class LikeController extends Controller
         );
 
         if (
-            !$this->interactionPolicy->canLikePet(
+            ! $this->interactionPolicy->canLikePet(
                 (int) $request->user()->id,
                 $targetPetId
             )

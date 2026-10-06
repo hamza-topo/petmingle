@@ -2,7 +2,6 @@
 
 namespace App\Http\Requests\Web\User;
 
-use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class Update extends FormRequest
@@ -11,7 +10,7 @@ class Update extends FormRequest
     {
         return [
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,' . $this->route('user'),
+            'email' => 'required|email|unique:users,email,'.$this->route('user'),
             'password' => 'nullable|string|min:8|confirmed',
             'is_admin' => 'required|boolean',
         ];
@@ -19,8 +18,6 @@ class Update extends FormRequest
 
     /**
      * Get custom messages for validator errors.
-     *
-     * @return array
      */
     public function messages(): array
     {

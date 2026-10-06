@@ -70,16 +70,15 @@ class ConversationRepository
                 'latestMessage',
             ])
             ->withCount([
-                'messages as unread_count' =>
-                    fn ($query) => $query
-                        ->where(
-                            'receiver_id',
-                            $userId
-                        )
-                        ->where(
-                            'is_seen',
-                            false
-                        ),
+                'messages as unread_count' => fn ($query) => $query
+                    ->where(
+                        'receiver_id',
+                        $userId
+                    )
+                    ->where(
+                        'is_seen',
+                        false
+                    ),
             ])
             ->withMax(
                 'messages',

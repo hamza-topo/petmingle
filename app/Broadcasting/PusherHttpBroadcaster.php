@@ -4,9 +4,9 @@ namespace App\Broadcasting;
 
 use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
-use Illuminate\Broadcasting\BroadcastException;
 use Illuminate\Broadcasting\Broadcasters\Broadcaster;
 use Illuminate\Broadcasting\Broadcasters\UsePusherChannelConventions;
+use Illuminate\Broadcasting\BroadcastException;
 use JsonException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -39,17 +39,17 @@ final class PusherHttpBroadcaster extends Broadcaster
         if (
             $channelName === ''
             || $socketId === ''
-            || !preg_match('/^\d+\.\d+$/', $socketId)
-            || !str_starts_with(
+            || ! preg_match('/^\d+\.\d+$/', $socketId)
+            || ! str_starts_with(
                 $channelName,
                 'private-'
             )
-            || !$this->retrieveUser(
+            || ! $this->retrieveUser(
                 $request,
                 $normalizedChannel
             )
         ) {
-            throw new AccessDeniedHttpException();
+            throw new AccessDeniedHttpException;
         }
 
         return $this->verifyUserCanAccessChannel(
@@ -69,12 +69,12 @@ final class PusherHttpBroadcaster extends Broadcaster
 
         $signature = hash_hmac(
             'sha256',
-            $socketId . ':' . $channelName,
+            $socketId.':'.$channelName,
             $this->secret
         );
 
         return [
-            'auth' => $this->key . ':' . $signature,
+            'auth' => $this->key.':'.$signature,
         ];
     }
 
@@ -113,8 +113,8 @@ final class PusherHttpBroadcaster extends Broadcaster
             );
         }
 
-        $path = '/apps/' . rawurlencode($this->appId)
-            . '/events';
+        $path = '/apps/'.rawurlencode($this->appId)
+            .'/events';
 
         $query = [
             'auth_key' => $this->key,
@@ -126,9 +126,9 @@ final class PusherHttpBroadcaster extends Broadcaster
         ksort($query);
 
         $signatureBase = "POST\n"
-            . $path
-            . "\n"
-            . http_build_query(
+            .$path
+            ."\n"
+            .http_build_query(
                 $query,
                 '',
                 '&',
@@ -144,7 +144,7 @@ final class PusherHttpBroadcaster extends Broadcaster
         try {
             $response = $this->client->request(
                 'POST',
-                $this->apiBaseUrl() . $path,
+                $this->apiBaseUrl().$path,
                 [
                     'query' => $query,
                     'headers' => [
@@ -189,8 +189,8 @@ final class PusherHttpBroadcaster extends Broadcaster
             && trim($configuredHost) !== ''
                 ? trim($configuredHost)
                 : 'api-'
-                    . ($this->options['cluster'] ?? 'mt1')
-                    . '.pusher.com';
+                    .($this->options['cluster'] ?? 'mt1')
+                    .'.pusher.com';
 
         $defaultPort = $scheme === 'https' ? 443 : 80;
 
@@ -204,11 +204,11 @@ final class PusherHttpBroadcaster extends Broadcaster
 
         $portSuffix = $port === $defaultPort
             ? ''
-            : ':' . $port;
+            : ':'.$port;
 
         return $scheme
-            . '://'
-            . $host
-            . $portSuffix;
+            .'://'
+            .$host
+            .$portSuffix;
     }
 }

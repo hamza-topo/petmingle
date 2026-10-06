@@ -10,6 +10,7 @@ class ConfigController extends Controller
     {
         // Set the session variable based on the request
         session(['show_trashed' => $request->get('trashed') == 1]);
+
         return redirect()->back();
     }
 }

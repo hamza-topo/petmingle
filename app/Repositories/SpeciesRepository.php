@@ -12,9 +12,8 @@ use Illuminate\Support\Collection;
 
 class SpeciesRepository
 {
-    public function __construct(protected CacheService $cacheService)
-    {
-    }
+    public function __construct(protected CacheService $cacheService) {}
+
     public function create(array $species): Species
     {
         return Species::create($species);
@@ -25,13 +24,14 @@ class SpeciesRepository
         $species = $this->getById($speciesId);
         $species->update($newModel);
         $species->refresh();
+
         return $species;
     }
 
     /**
      * getById
      *
-     * @param  mixed $speciesId
+     * @param  mixed  $speciesId
      * @return Collection
      */
     public function getById(int $speciesId): Species
@@ -57,10 +57,9 @@ class SpeciesRepository
     /**
      * Paginate the species resource
      *
-     * @param int|null $paginate
      * @return void
      */
-    public function paginate(?int $paginate = EnumsSpecies::PAGINATE ): LengthAwarePaginator
+    public function paginate(?int $paginate = EnumsSpecies::PAGINATE): LengthAwarePaginator
     {
         return TrashedFactory::apply(Species::query())->paginate($paginate);
     }

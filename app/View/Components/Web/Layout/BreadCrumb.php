@@ -2,6 +2,7 @@
 
 namespace App\View\Components\Web\Layout;
 
+use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
 class BreadCrumb extends Component
@@ -19,7 +20,7 @@ class BreadCrumb extends Component
     /**
      * Get the view / contents that represent the component.
      *
-     * @return \Illuminate\Contracts\View\View|\Closure|string
+     * @return View|\Closure|string
      */
     public function render()
     {

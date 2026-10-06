@@ -17,7 +17,7 @@ class MessagePolicy
         return (
             $message->sender_id === $user->id
             || $message->receiver_id === $user->id
-        ) && !$this->interactionPolicy->isBlockedBetween(
+        ) && ! $this->interactionPolicy->isBlockedBetween(
             $user->id,
             $this->otherParticipantId($user, $message)
         );
@@ -26,7 +26,7 @@ class MessagePolicy
     public function update(User $user, Message $message): bool
     {
         return $message->sender_id === $user->id
-            && !$this->interactionPolicy->isBlockedBetween(
+            && ! $this->interactionPolicy->isBlockedBetween(
                 $user->id,
                 (int) $message->receiver_id
             );
@@ -40,7 +40,7 @@ class MessagePolicy
     public function restore(User $user, Message $message): bool
     {
         return $message->sender_id === $user->id
-            && !$this->interactionPolicy->isBlockedBetween(
+            && ! $this->interactionPolicy->isBlockedBetween(
                 $user->id,
                 (int) $message->receiver_id
             );

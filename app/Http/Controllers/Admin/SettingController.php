@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Traits\ImageTrait;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
 use App\Http\Controllers\Controller;
 use App\Repositories\UserRepository;
+use App\Traits\ImageTrait;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Log;
 
 class SettingController extends Controller
 {
@@ -20,7 +21,7 @@ class SettingController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -30,7 +31,7 @@ class SettingController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -40,8 +41,7 @@ class SettingController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
@@ -52,7 +52,7 @@ class SettingController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -63,7 +63,7 @@ class SettingController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit($id)
     {
@@ -73,15 +73,14 @@ class SettingController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request)
     {
         try {
             $request = $request->all();
-            if (!empty($request['avatar'])) {
-                $request['avatar'] =  $this->uploadAll([$request['avatar']]);
+            if (! empty($request['avatar'])) {
+                $request['avatar'] = $this->uploadAll([$request['avatar']]);
             }
 
             $this->userRepository->update(auth()->user()->id, $request);
@@ -89,6 +88,7 @@ class SettingController extends Controller
             return redirect(route('admin.profile.index'));
         } catch (\Exception $e) {
             Log::error('Error while updating my profiel', [$e->getMessage()]);
+
             return redirect()->back();
         }
     }
@@ -97,7 +97,7 @@ class SettingController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Species\Store;
 use App\Http\Requests\Api\Species\Update;
-use App\Repositories\SpeciesRepository;
 use App\Http\Resources\Api\SpeciesResource;
 use App\Http\Responses\ApiResponse;
+use App\Repositories\SpeciesRepository;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class SpeciesController extends Controller
 {
@@ -15,10 +17,11 @@ class SpeciesController extends Controller
     {
         $this->middleware('admin')->only(['store', 'update', 'destroy', 'restore']);
     }
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -47,11 +50,11 @@ class SpeciesController extends Controller
             __('Species has been created.')
         );
     }
+
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(int $id)
     {
@@ -66,9 +69,9 @@ class SpeciesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Update $request, $id)
     {
@@ -86,10 +89,8 @@ class SpeciesController extends Controller
     /**
      * Destroy the specified resource in storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
-
     public function destroy(int $id)
     {
         return ApiResponse::success(
@@ -101,8 +102,7 @@ class SpeciesController extends Controller
     /**
      * Restore the specified resource in storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function restore(int $id)
     {

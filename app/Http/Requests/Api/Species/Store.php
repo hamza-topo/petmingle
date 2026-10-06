@@ -15,7 +15,7 @@ class Store extends FormRequest
     {
         return [
             'name' => 'required|unique:species|max:50',
-        ];;
+        ];
     }
 
     /**

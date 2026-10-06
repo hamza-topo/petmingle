@@ -42,6 +42,7 @@ class NewsLetterRepository
     {
         return NewsLetter::all();
     }
+
     /**
      * Take News to display
      *
@@ -57,7 +58,6 @@ class NewsLetterRepository
     {
         return NewsLetter::paginate($page);
     }
-
 
     public function getByActivity(bool $isActive = true): Collection
     {

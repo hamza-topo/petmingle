@@ -2,10 +2,10 @@
 
 use App\Enums\App;
 use App\Enums\Pet;
-use Illuminate\Support\Str;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
 
-if (!function_exists('isNew')) {
+if (! function_exists('isNew')) {
 
     function isNew($createdAt): bool
     {
@@ -13,7 +13,7 @@ if (!function_exists('isNew')) {
     }
 }
 
-if (!function_exists('displayHumanDate')) {
+if (! function_exists('displayHumanDate')) {
 
     function displayHumanDate(string $date): string
     {
@@ -21,14 +21,14 @@ if (!function_exists('displayHumanDate')) {
     }
 }
 
-if (!function_exists('readTimesStamps')) {
+if (! function_exists('readTimesStamps')) {
     function readTimesStamps(Carbon $at)
     {
         return $at->format('Y-m-d');
     }
 }
 
-if (!function_exists('sexIcon')) {
+if (! function_exists('sexIcon')) {
 
     function sexIcon(int $sex): string
     {
@@ -36,7 +36,7 @@ if (!function_exists('sexIcon')) {
     }
 }
 
-if (!function_exists('fakeImages')) {
+if (! function_exists('fakeImages')) {
     function fakeImages(array $images, int $position = 0): string
     {
         if (empty($images)) {
@@ -45,11 +45,12 @@ if (!function_exists('fakeImages')) {
 
         // $result = file_get_contents($images[0]);
         return '';
+
         return json_decode($result)->message ?? '';
     }
 }
 
-if (!function_exists('lastActivity')) {
+if (! function_exists('lastActivity')) {
     function lastActivity(int $time = 0)
     {
         $last = $time != 0 ? Carbon::createFromTimestamp($time) : Carbon::now();
@@ -58,19 +59,19 @@ if (!function_exists('lastActivity')) {
     }
 }
 
-if (!function_exists('slugify')) {
+if (! function_exists('slugify')) {
     function slugify(string $word): string
     {
         return Str::slug($word);
     }
 }
 
-if (!function_exists('generateTextPreview')) {
+if (! function_exists('generateTextPreview')) {
     /**
      * Generates a preview of the provided text.
      *
-     * @param string $text The text to be truncated.
-     * @param int $length The maximum length of the preview.
+     * @param  string  $text  The text to be truncated.
+     * @param  int  $length  The maximum length of the preview.
      * @return string The truncated preview of the text.
      */
     function generateTextPreview($text, $length = 250)
@@ -89,6 +90,6 @@ if (!function_exists('generateTextPreview')) {
             $preview = substr($preview, 0, $lastSpace);
         }
 
-        return $preview . '...'; // Append ellipsis
+        return $preview.'...'; // Append ellipsis
     }
 }

@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Dislike extends Model
 {
     use HasFactory, SoftDeletes;
-    
+
     protected $fillable = ['from', 'to'];
 
     public function from()

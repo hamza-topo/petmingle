@@ -61,13 +61,13 @@ class MessageController extends Controller
         $data['sender_id'] = $request->user()->id;
 
         if (empty($data['conversation_id'])) {
-            $reducer = new Conversation();
+            $reducer = new Conversation;
 
             $conversation = $this->conversationRepository->create(
                 $reducer->reduce($data)
             );
 
-            if (!empty($conversation)) {
+            if (! empty($conversation)) {
                 $data['conversation_id'] = $conversation->id;
             }
         }

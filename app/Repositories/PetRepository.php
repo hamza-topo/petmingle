@@ -11,11 +11,12 @@ use Illuminate\Pagination\LengthAwarePaginator;
  * Pet Repository Class
  *
  * @author Topo <hamzaaitsidisaid.11@gmail.com>
+ *
  * @return mixed
  */
 class PetRepository
 {
-    //TODO::make this as enum
+    // TODO::make this as enum
 
     public function create(array $pet): Pet
     {
@@ -34,8 +35,7 @@ class PetRepository
     /**
      * getById
      *
-     * @param  mixed $petId
-     * @return Pet
+     * @param  mixed  $petId
      */
     public function getById(int $petId): Pet
     {
@@ -70,7 +70,6 @@ class PetRepository
     /**
      * Method to paginate pets
      *
-     * @param int $page
      * @return void
      */
     public function paginate(?int $page = EnumsPet::PAGINATE): LengthAwarePaginator

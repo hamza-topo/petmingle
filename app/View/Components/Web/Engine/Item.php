@@ -3,6 +3,7 @@
 namespace App\View\Components\Web\Engine;
 
 use App\Models\Pet;
+use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
 class Item extends Component
@@ -20,7 +21,7 @@ class Item extends Component
     /**
      * Get the view / contents that represent the component.
      *
-     * @return \Illuminate\Contracts\View\View|\Closure|string
+     * @return View|\Closure|string
      */
     public function render()
     {

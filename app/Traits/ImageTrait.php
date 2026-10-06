@@ -2,9 +2,9 @@
 
 namespace App\Traits;
 
-use Illuminate\Support\Str;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 trait ImageTrait
 {
@@ -25,14 +25,14 @@ trait ImageTrait
 
     public function setName(string $name = '')
     {
-        $this->name = !empty($name) ? $name : Str::random(25);
+        $this->name = ! empty($name) ? $name : Str::random(25);
 
         return $this;
     }
 
     public function upload(string $folder = self::DIRECTORY, string $disk = self::DISK, ?string $filename = null): mixed
     {
-        $filePath = 'uploads/' . $this->file->getClientOriginalName();
+        $filePath = 'uploads/'.$this->file->getClientOriginalName();
 
         if (Storage::disk($disk)->put(
             $filePath,
@@ -46,10 +46,12 @@ trait ImageTrait
 
     public function uploadAll(array $uploadedFiles = [])
     {
-        if (!empty($uploadedFiles))
+        if (! empty($uploadedFiles)) {
             return array_map(function ($uploadedFile) {
                 $this->setFile($uploadedFile);
+
                 return $this->upload($uploadedFile, self::DISK, self::DIRECTORY);
             }, $uploadedFiles);
+        }
     }
 }

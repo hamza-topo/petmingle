@@ -14,8 +14,7 @@ class Near extends ResourceCollection
 
         $targetPetIds = $this->collection
             ->map(
-                fn ($location) =>
-                    $location->user?->pet?->id
+                fn ($location) => $location->user?->pet?->id
             )
             ->filter()
             ->map(fn ($petId) => (int) $petId)
@@ -47,8 +46,7 @@ class Near extends ResourceCollection
 
                 $images = array_values(array_filter(
                     $pet->images ?? [],
-                    fn ($image) =>
-                        is_string($image)
+                    fn ($image) => is_string($image)
                         && trim($image) !== ''
                 ));
 

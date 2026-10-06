@@ -7,12 +7,10 @@ use App\Models\Message;
 
 class MessageService
 {
-    
     /**
      * notify
      *
-     * @param  mixed $message
-     * @return void
+     * @param  mixed  $message
      */
     public function notify(Message $message): void
     {

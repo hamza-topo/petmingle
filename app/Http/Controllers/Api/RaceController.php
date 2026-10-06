@@ -5,21 +5,24 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Race\Store;
 use App\Http\Requests\Api\Race\Update;
-use App\Repositories\RaceRepository;
+use App\Http\Requests\RaceRequest;
 use App\Http\Resources\Api\RaceResource;
 use App\Http\Responses\ApiResponse;
+use App\Repositories\RaceRepository;
+use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class RaceController extends Controller
 {
-
     public function __construct(protected RaceRepository $raceRepository)
     {
         $this->middleware('admin')->only(['store', 'update', 'destroy', 'restore']);
     }
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -34,7 +37,7 @@ class RaceController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \App\Http\Requests\RaceRequest  $request
+     * @param  RaceRequest  $request
      * @return Illuminate\Http\Response
      */
     public function store(Store $request)
@@ -52,8 +55,7 @@ class RaceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(int $id)
     {
@@ -68,9 +70,9 @@ class RaceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Update $request, $id)
     {
@@ -88,8 +90,7 @@ class RaceController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy(int $id)
     {
@@ -102,8 +103,7 @@ class RaceController extends Controller
     /**
      * Restore the specified resource in storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function restore(int $id)
     {

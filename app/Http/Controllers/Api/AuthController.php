@@ -5,16 +5,17 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Auth\SignIn;
 use App\Http\Requests\Api\Auth\SignUp;
+use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use App\Repositories\AuthRepository;
 use App\Traits\ImageTrait;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Validation\ValidationException;
+use GuzzleHttp\Exception\ClientException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
 use Laravel\Socialite\Facades\Socialite;
 use Symfony\Component\HttpFoundation\Response;
-use GuzzleHttp\Exception\ClientException;
-use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
@@ -38,7 +39,7 @@ class AuthController extends Controller
         return response()->json([
             'success' => true,
             'message' => \__('User created successfully'),
-            'data' => $user
+            'data' => $user,
         ], Response::HTTP_OK);
     }
 
@@ -51,14 +52,14 @@ class AuthController extends Controller
     {
         $credentials = $request->only(['email', 'password']);
 
-        if (!Auth::attempt($credentials)) {
+        if (! Auth::attempt($credentials)) {
             return response()->json([
                 'success' => false,
                 'message' => __('Login credentials are invalid.'),
             ], Response::HTTP_UNAUTHORIZED);
         }
 
-        /** @var \App\Models\User $user */
+        /** @var User $user */
         $user = Auth::user();
 
         $token = $user->createToken('api')->plainTextToken;
@@ -106,7 +107,7 @@ class AuthController extends Controller
     /**
      * Redirect the user to the Provider authentication page.
      *
-     * @param string $provider given provider
+     * @param  string  $provider  given provider
      * @return JsonResponse
      */
     public function redirectToProvider(string $provider)
@@ -119,7 +120,6 @@ class AuthController extends Controller
     /**
      * Obtain the user information from Provider.
      *
-     * @param $provider
      * @return JsonResponse
      */
     public function handleProviderCallback($provider)
@@ -200,12 +200,11 @@ class AuthController extends Controller
     }
 
     /**
-     * @param $provider
      * @return JsonResponse
      */
     protected function validateProvider($provider)
     {
-        if (!in_array($provider, ['facebook', 'github', 'google'], true)) {
+        if (! in_array($provider, ['facebook', 'github', 'google'], true)) {
             throw ValidationException::withMessages([
                 'provider' => [
                     'Please login using facebook, github or google.',

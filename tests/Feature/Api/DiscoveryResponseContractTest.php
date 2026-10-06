@@ -241,17 +241,17 @@ class DiscoveryResponseContractTest extends TestCase
     ): array {
         $user = User::withoutEvents(
             fn () => User::factory()->create([
-                'name' => 'Owner of ' . $petName,
+                'name' => 'Owner of '.$petName,
             ])
         );
 
         $species = Species::create([
-            'name' => 'Species-' . $user->id,
+            'name' => 'Species-'.$user->id,
         ]);
 
         $race = Race::create([
             'species_id' => $species->id,
-            'name' => 'Race-' . $user->id,
+            'name' => 'Race-'.$user->id,
         ]);
 
         $pet = Pet::withoutEvents(

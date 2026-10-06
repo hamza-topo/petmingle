@@ -24,8 +24,8 @@ class AuthenticatedIdentityTest extends TestCase
         // Each request must authenticate afresh, as a separate PHP HTTP request would.
         $this->app['auth']->forgetGuards();
 
-        return $this->getJson('/api/v.0/me' . $query, $token === null ? [] : [
-            'Authorization' => 'Bearer ' . $token,
+        return $this->getJson('/api/v.0/me'.$query, $token === null ? [] : [
+            'Authorization' => 'Bearer '.$token,
         ]);
     }
 
@@ -76,7 +76,7 @@ class AuthenticatedIdentityTest extends TestCase
     {
         $user = $this->user();
         $token = $user->createToken('identity-test');
-        $this->identity($token->accessToken->id . '|incorrect-secret')->assertUnauthorized();
+        $this->identity($token->accessToken->id.'|incorrect-secret')->assertUnauthorized();
     }
 
     public function test_revoked_token_is_rejected(): void
@@ -92,7 +92,7 @@ class AuthenticatedIdentityTest extends TestCase
         $second = $this->user();
         foreach ([[$first, $second], [$second, $first]] as [$actor, $other]) {
             $this->identity($actor->createToken('identity-test')->plainTextToken,
-                '?id=' . $other->id . '&user_id=' . $other->id . '&include=tokens,pet.owner')
+                '?id='.$other->id.'&user_id='.$other->id.'&include=tokens,pet.owner')
                 ->assertOk()->assertJsonPath('data.user.id', $actor->id)
                 ->assertJsonPath('data.user.email', $actor->email)
                 ->assertJsonMissingPath('data.user.tokens')->assertDontSee($other->email);
@@ -106,7 +106,7 @@ class AuthenticatedIdentityTest extends TestCase
         $other = $user->createToken('other-device');
         $this->identity($active->plainTextToken)->assertOk();
         $this->app['auth']->forgetGuards();
-        $this->postJson('/api/v.0/sign-out', [], ['Authorization' => 'Bearer ' . $active->plainTextToken])->assertOk();
+        $this->postJson('/api/v.0/sign-out', [], ['Authorization' => 'Bearer '.$active->plainTextToken])->assertOk();
 
         $this->assertDatabaseMissing('personal_access_tokens', ['id' => $active->accessToken->id]);
         $this->assertDatabaseHas('personal_access_tokens', ['id' => $other->accessToken->id]);

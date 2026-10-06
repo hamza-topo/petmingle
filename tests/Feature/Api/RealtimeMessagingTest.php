@@ -59,10 +59,8 @@ class RealtimeMessagingTest extends TestCase
                 IsWritingEvent $event
             ) use ($sender, $receiver) {
                 return $event->broadcastWith() === [
-                    'sender_user_id' =>
-                        $sender->id,
-                    'receiver_user_id' =>
-                        $receiver->id,
+                    'sender_user_id' => $sender->id,
+                    'receiver_user_id' => $receiver->id,
                     'is_writing' => true,
                 ];
             }
@@ -191,16 +189,14 @@ class RealtimeMessagingTest extends TestCase
 
         $species = Species::withoutEvents(
             fn () => Species::create([
-                'name' =>
-                    'Species-' . $user->id,
+                'name' => 'Species-'.$user->id,
             ])
         );
 
         $race = Race::withoutEvents(
             fn () => Race::create([
                 'species_id' => $species->id,
-                'name' =>
-                    'Race-' . $user->id,
+                'name' => 'Race-'.$user->id,
             ])
         );
 
@@ -209,7 +205,7 @@ class RealtimeMessagingTest extends TestCase
                 'user_id' => $user->id,
                 'species_id' => $species->id,
                 'race_id' => $race->id,
-                'name' => $name . ' pet',
+                'name' => $name.' pet',
                 'age' => 3,
                 'sexe' => 1,
                 'color' => 'brown',

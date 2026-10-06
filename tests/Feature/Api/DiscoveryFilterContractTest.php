@@ -155,7 +155,7 @@ class DiscoveryFilterContractTest extends TestCase
     ): array {
         $user = User::withoutEvents(
             fn () => User::factory()->create([
-                'name' => 'Owner of ' . $petName,
+                'name' => 'Owner of '.$petName,
             ])
         );
 

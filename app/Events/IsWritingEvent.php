@@ -23,7 +23,7 @@ class IsWritingEvent implements ShouldBroadcastNow, ShouldRescue
     public function broadcastOn(): PrivateChannel
     {
         return new PrivateChannel(
-            'App.Models.User.' . $this->receiverUserId
+            'App.Models.User.'.$this->receiverUserId
         );
     }
 

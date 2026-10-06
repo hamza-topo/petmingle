@@ -2,18 +2,18 @@
 
 namespace Tests\Feature\Api;
 
-use App\Models\Conversation;
-use App\Models\Message;
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Laravel\Sanctum\Sanctum;
-use Tests\TestCase;
 use App\Events\MessageEvent;
-use Illuminate\Support\Facades\Event;
+use App\Models\Conversation;
 use App\Models\MatchTable;
+use App\Models\Message;
 use App\Models\Pet;
 use App\Models\Race;
 use App\Models\Species;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Event;
+use Laravel\Sanctum\Sanctum;
+use Tests\TestCase;
 
 class MessageAuthorizationTest extends TestCase
 {
@@ -286,7 +286,6 @@ class MessageAuthorizationTest extends TestCase
         ]);
     }
 
-
     public function test_sender_can_edit_content_but_cannot_reassign_message_or_mark_it_read(): void
     {
         $sender = User::factory()->create();
@@ -301,14 +300,14 @@ class MessageAuthorizationTest extends TestCase
         Sanctum::actingAs($sender);
 
         foreach (['PUT', 'PATCH'] as $method) {
-            $this->json($method, '/api/v.0/messages/' . $message->id, [
-                'content' => 'Edited with ' . $method, 'sender_id' => $outsider->id,
+            $this->json($method, '/api/v.0/messages/'.$message->id, [
+                'content' => 'Edited with '.$method, 'sender_id' => $outsider->id,
                 'receiver_id' => $outsider->id, 'conversation_id' => $otherConversation->id,
                 'is_seen' => true, 'first_user_id' => $outsider->id, 'seconde_user_id' => $outsider->id,
             ])->assertOk();
 
             $message->refresh();
-            $this->assertSame('Edited with ' . $method, $message->content);
+            $this->assertSame('Edited with '.$method, $message->content);
             $this->assertSame($sender->id, $message->sender_id);
             $this->assertSame($receiver->id, $message->receiver_id);
             $this->assertSame($conversation->id, $message->conversation_id);

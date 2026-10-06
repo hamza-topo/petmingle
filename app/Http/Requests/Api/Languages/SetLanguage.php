@@ -15,9 +15,10 @@ class SetLanguage extends FormRequest
     public function rules()
     {
         return [
-            'lang' => 'required|in:' . \implode(',', App::LOCALES),
+            'lang' => 'required|in:'.\implode(',', App::LOCALES),
         ];
     }
+
     /**
      * Get the error messages for the defined validation rules.
      *
@@ -30,5 +31,4 @@ class SetLanguage extends FormRequest
             'lang.in' => \__('The Value of Language is invalid!'),
         ];
     }
-
 }

@@ -68,9 +68,16 @@ jobs:
         run: |
           cp .env.example .env
           php artisan key:generate
+          mkdir -p storage/framework/cache/phpstan
 
       - name: Validate Composer configuration
         run: composer validate --strict
+
+      - name: Check PHP formatting
+        run: composer format:test
+
+      - name: Run static analysis
+        run: composer analyse
 
       - name: Run database migrations
         run: php artisan migrate --force

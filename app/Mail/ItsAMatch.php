@@ -30,11 +30,10 @@ class ItsAMatch extends Mailable implements ShouldQueue
     public function build()
     {
         return $this->subject(
-            \__('🎉 You\'re Matched! Dive into the Adventure with '. $this->pet->name .'! 🚀')
+            \__('🎉 You\'re Matched! Dive into the Adventure with '.$this->pet->name.'! 🚀')
         )
             ->view('emails.match')
             ->with('pet', $this->pet)
-            ->with('fromPet', $this->fromPet)
-            ;
+            ->with('fromPet', $this->fromPet);
     }
 }

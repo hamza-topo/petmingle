@@ -6,8 +6,6 @@ use App\Services\Contracts\Base;
 
 class NewsLetterService implements Base
 {
-
-
     public function process(): bool
     {
         return true;
@@ -15,7 +13,7 @@ class NewsLetterService implements Base
 
     public function send(): bool
     {
-        
+
         return true;
     }
 
