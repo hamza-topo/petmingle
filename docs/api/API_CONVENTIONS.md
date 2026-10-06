@@ -11,19 +11,6 @@ Successful API responses that return application data use:
   "success": true,
   "message": "Human-readable message.",
   "data": {}
-}a# PetMingle API conventions
-
-This document defines the HTTP and JSON conventions used by the current PetMingle API.
-
-## Success envelope
-
-Successful API responses that return application data use:
-
-```json
-{
-  "success": true,
-  "message": "Human-readable message.",
-  "data": {}
 }
 ```
 
@@ -139,14 +126,6 @@ Accept: application/json
 
 `GET /me` is the authoritative source for the authenticated User and current nullable Pet identity.
 
-## Known domain-specific contracts
+## Domain contracts
 
-Some domains have dedicated follow-up work and should not be considered fully normalized by this document:
-
-- Discovery proximity/filter responses
-- Pet creation/media contract
-- Messaging conversations and threads
-- Unread/read messaging state
-- Realtime messaging
-
-Their contracts will be finalized by their corresponding implementation tickets.
+Current Discovery, media, relationships and Messaging contracts are indexed in [the API guide](README.md). Consult these contracts for endpoint-specific behavior and authentication/send response exceptions.

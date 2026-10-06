@@ -11,7 +11,8 @@ Welcome to the Pet Matching API development workspace. This space serves as a ce
 
 Explore the following collections to gain insights into the capabilities of our Pet Matching API:
 
-- [API Documentation Collection](#): This collection provides detailed requests and examples for creating, reading, updating, and deleting pet matches via the API.
+- [API guide and Postman collection](docs/api/README.md): authentication, core requests, response contracts and matching/messaging walkthrough.
+- [Architecture and decision records](docs/architecture/README.md): authentication, boundaries, events, transactions and versioning.
 
 Feel free to add `#reference` collections for your specific services to enhance the documentation.
 
