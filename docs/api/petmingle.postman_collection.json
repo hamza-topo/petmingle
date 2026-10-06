@@ -1,0 +1,474 @@
+{
+  "info": {
+    "name": "PetMingle — core API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "Maintained core integration requests. Use a disposable local database for mutations. IDs must come from your database. See docs/api/README.md for prerequisites and response contracts."
+  },
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{token}}",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api/v.0"
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "email",
+      "value": ""
+    },
+    {
+      "key": "password",
+      "value": ""
+    },
+    {
+      "key": "pet_id",
+      "value": ""
+    },
+    {
+      "key": "species_id",
+      "value": ""
+    },
+    {
+      "key": "race_id",
+      "value": ""
+    },
+    {
+      "key": "target_pet_id",
+      "value": ""
+    },
+    {
+      "key": "receiver_user_id",
+      "value": ""
+    },
+    {
+      "key": "conversation_id",
+      "value": ""
+    },
+    {
+      "key": "message_id",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "Authentication",
+      "item": [
+        {
+          "name": "Sign in",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/sign-in",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"{{email}}\",\n  \"password\": \"{{password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Current identity",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/me"
+          }
+        },
+        {
+          "name": "Sign out (revokes current token)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/sign-out"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Profiles and taxonomy",
+      "item": [
+        {
+          "name": "Species",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/species"
+          }
+        },
+        {
+          "name": "Races",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/races"
+          }
+        },
+        {
+          "name": "Pet",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/pets/{{pet_id}}"
+          }
+        },
+        {
+          "name": "Create pet without media",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/pets",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"species_id\": \"{{species_id}}\",\n  \"race_id\": \"{{race_id}}\",\n  \"name\": \"Milo\",\n  \"age\": 4\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "HTTP 201. Use IDs from taxonomy; race must belong to species. For image upload use multipart image, see PET_CREATION_CONTRACT.md."
+          }
+        },
+        {
+          "name": "Pet statistics",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/pets/{{pet_id}}/statistics"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Location and Discovery",
+      "item": [
+        {
+          "name": "Own locations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/locations"
+          }
+        },
+        {
+          "name": "Save location",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/locations",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"latitude\": 31.6295,\n  \"longitude\": -7.9811\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Example coordinates; replace with an explicitly chosen location."
+          }
+        },
+        {
+          "name": "Nearby pets",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/locations/nears",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"radius_km\": 5,\n  \"page\": 1,\n  \"per_page\": 24\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Requires current pet and usable stored account coordinates. Origin and account identity are server-owned."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Relationships",
+      "item": [
+        {
+          "name": "Like pet",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/likes",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"to_pet_id\": \"{{target_pet_id}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Dislike pet",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/dislikes",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"to_pet_id\": \"{{target_pet_id}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Active matches",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/matches"
+          }
+        },
+        {
+          "name": "Historical mismatches",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/mismatches"
+          }
+        },
+        {
+          "name": "Blocks",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/blocks"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Messaging",
+      "item": [
+        {
+          "name": "Conversations",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/conversations?page=1&per_page=20"
+          }
+        },
+        {
+          "name": "Thread",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/messages?receiver_id={{receiver_user_id}}&page=1&per_page=30"
+          }
+        },
+        {
+          "name": "Send message",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/messages",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"receiver_id\": \"{{receiver_user_id}}\",\n  \"content\": \"Hello\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "description": "Requires reciprocal active match and no block. Sender and conversation are derived server-side. HTTP 200 currently returns raw persisted message under data; reads use MessageResource."
+          }
+        },
+        {
+          "name": "Mark received messages seen",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/conversations/{{conversation_id}}/seen"
+          }
+        },
+        {
+          "name": "Typing",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}/messages/typing",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"receiver_id\": \"{{receiver_user_id}}\",\n  \"is_writing\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    }
+  ]
+}
