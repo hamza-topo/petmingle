@@ -113,4 +113,20 @@ jobs:
       - name: Run frontend tests
         run: npm test -- --maxWorkers=1
       - name: Build frontend
+        env:
+          VITE_API_BASE_URL: http://127.0.0.1:4173/api/v.0
+          VITE_MEDIA_BASE_URL: http://127.0.0.1:4173
         run: npm run build
+      - name: Install desktop browser tooling
+        run: |
+          npm install --no-save --package-lock=false playwright@1.56.1
+          npx playwright install --with-deps chromium
+      - name: Review desktop layouts
+        run: node scripts/desktop-review.mjs
+      - name: Upload desktop review evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: desktop-review
+          path: frontend/desktop-review
+          retention-days: 14
