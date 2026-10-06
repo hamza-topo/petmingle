@@ -1,12 +1,12 @@
 @layer components {
   .own-profile-page { max-width: 1338px; width: calc(100% - 64px); min-height: 100vh; margin-inline: auto; }
-  .own-profile-page .site-header { height: 76px; padding: 0 56px 0 68px; gap: 82px; grid-template-columns: 218px minmax(0,1fr) 340px; background: var(--color-surface); }
+  .own-profile-page .site-header { height: 76px; padding-inline: 30px; display: flex; justify-content: space-between; gap: 20px; background: var(--color-surface); }
   .own-profile-page .brand-wordmark { font-size: 31px; }
   .own-profile-page .brand-artwork-placeholder { width: 62px; height: 66px; }
-  .own-profile-page .primary-nav { font-size: 14px; gap: var(--space-6); }
+  .own-profile-page .primary-nav { font-size: 14px; gap: 16px; }
   .own-profile-page .primary-nav a[data-reference-active=true] { position: relative; }
   .own-profile-page .primary-nav a[data-reference-active=true]::after { content: ''; position: absolute; left: 0; right: 0; bottom: 4px; height: 2px; background: var(--color-brand-pink); }
-  .own-profile-page .header-actions { gap: 17px; }
+  .own-profile-page .header-actions { gap: 10px; }
   .own-messages-link { height: 42px; display: flex; align-items: center; justify-content: center; gap: 10px; border: 1px solid var(--color-border-action); border-radius: var(--radius-pill); padding: 0 18px; font-size: 14px; color: var(--color-text-blue); }
   .own-pet-menu { display: flex; align-items: center; gap: 11px; color: var(--color-text-blue); font-size: 14px; white-space: nowrap; }
   .own-pet-menu .identity-avatar { width: 49px; height: 49px; border-radius: 50%; font-size: 9px; }
@@ -21,9 +21,9 @@
   .own-main-photo > button { position: absolute; right: 15px; bottom: 13px; width: 42px; height: 42px; display: grid; place-items: center; background: var(--color-surface); border-radius: 13px; color: var(--color-text-secondary); }
   .own-summary { padding-top: 7px; min-width: 0; }
   .own-name { display: flex; align-items: center; gap: 14px; }
-  .own-name h1 { font-size: 50px; line-height: 56px; letter-spacing: -1.4px; }
+  .own-name h1 { font-size: 50px; line-height: 56px; letter-spacing: -1.4px; min-width: 0; overflow-wrap: anywhere; }
   .own-edit { width: 34px; height: 34px; border-radius: 50%; background: var(--color-canvas); color: var(--color-text-blue); display: inline-grid; place-items: center; flex-shrink: 0; }
-  .own-summary > p { color: var(--color-text-secondary); font-size: 16px; line-height: 24px; white-space: nowrap; }
+  .own-summary > p { color: var(--color-text-secondary); font-size: 16px; line-height: 24px; overflow-wrap: anywhere; }
   .own-summary > p > span { margin-inline: 7px; }
   .own-location { display: flex; align-items: center; gap: var(--space-3); margin-top: 8px; }
   .own-location > svg { width: 21px; height: 21px; margin-top: 0; }
@@ -84,7 +84,7 @@
   .own-details dl + dl > div { grid-template-columns: 167px minmax(0,1fr); }
   .own-details dt { display: flex; gap: 18px; align-items: center; white-space: nowrap; }
   .own-details dt svg { flex-shrink: 0; color: var(--color-text-pink); }
-  .own-details dd { margin: 0; white-space: nowrap; }
+  .own-details dd { margin: 0; overflow-wrap: anywhere; }
   .own-plus { border-radius: var(--radius-panel); background: var(--color-surface-pink); padding: 26px 32px 23px; min-width: 0; }
   .own-plus h2 { display: flex; align-items: center; gap: 13px; font-size: 44px; line-height: 58px; color: var(--color-text-blue); letter-spacing: -1.6px; white-space: nowrap; }
   .own-plus h2 > svg { color: var(--color-text-pink); flex-shrink: 0; }

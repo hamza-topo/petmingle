@@ -40,7 +40,7 @@
   .conversation-row .chat-pet-avatar { width: 60px; height: 68px; font-size: 8px; }
   .conversation-row .chat-pet-avatar + .chat-pet-avatar { width: 49px; height: 57px; margin-left: -23px; }
   .conversation-summary { min-width: 0; display: flex; flex-direction: column; gap: 4px; }
-  .conversation-summary strong { font-family: var(--font-display); font-size: 17px; padding-right: 48px; line-height: 23px; white-space: nowrap; letter-spacing: -.6px; }
+  .conversation-summary strong { font-family: var(--font-display); font-size: 17px; padding-right: 48px; line-height: 23px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -.6px; }
   .conversation-summary > span { font-size: 14px; color: var(--color-text-secondary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .conversation-activity { position: absolute; right: 14px; top: 19px; color: var(--color-text-secondary); font-size: 13px; display: flex; flex-direction: column; align-items: end; gap: 6px; }
   .conversation-row[aria-current=true] .conversation-summary > span { padding-right: 22px; }
@@ -49,10 +49,10 @@
   .chat-thread { display: flex; flex-direction: column; padding: 20px 12px 24px; }
   .chat-thread-header { display: flex; align-items: center; gap: 17px; margin-inline: 7px; min-height: 100px; padding-bottom: 20px; border-bottom: 1px solid var(--color-border); }
   .chat-thread-header > div:not(.chat-call-actions) { min-width: 0; }
-  .chat-thread-header h2 { font-size: 25px; line-height: 32px; letter-spacing: -.6px; }
+  .chat-thread-header h2 { font-size: 25px; line-height: 32px; letter-spacing: -.6px; overflow-wrap: anywhere; }
   .chat-typing-state { margin: 3px 0 0; font-size: 12px; line-height: 16px; color: var(--color-text-secondary); }
   .chat-thread-header p { font-size: 14px; color: var(--color-text-secondary); margin-top: 4px; }
-  .chat-call-actions { display: flex; align-items: center; justify-content: space-between; gap: 26px; margin-left: auto; color: var(--color-text-secondary); }
+  .chat-call-actions { flex-shrink: 0; display: flex; align-items: center; justify-content: space-between; gap: 26px; margin-left: auto; color: var(--color-text-secondary); }
   .chat-day { display: flex; align-items: center; gap: 21px; margin: 30px 7px 22px; color: var(--color-text-secondary); font-size: 16px; }
   .chat-day::before, .chat-day::after { content: ''; height: 1px; background: var(--color-border); flex: 1; }
   .chat-timeline { flex: 1; min-height: 0; overflow-y: auto; list-style: none; margin: 0; padding: 0 2px 12px 7px; scrollbar-width: thin; }
@@ -79,10 +79,10 @@
   .match-pet { border: 1px solid var(--color-border); border-radius: 13px; overflow: hidden; box-shadow: var(--shadow-card); min-width: 0; }
   .match-pet > .reference-placeholder, .match-pet > img { width: 100%; height: 180px; object-fit: cover; }
   .match-pet > div:last-child { padding: 8px 11px 13px; min-height: 90px; }
-  .match-pet h3 { display: flex; gap: 7px; align-items: center; font-size: 20px; line-height: 25px; }
+  .match-pet h3 { overflow-wrap: anywhere; font-size: 20px; line-height: 25px; }
   .chat-sex { font-family: var(--font-sans); font-size: 21px; font-weight: 400; color: var(--color-text-pink); }
   .chat-sex--male { color: var(--color-text-blue); }
-  .match-pet p { font-size: 13px; letter-spacing: -.5px; line-height: 20px; color: var(--color-text-secondary); }
+  .match-pet p { overflow-wrap: anywhere; font-size: 13px; letter-spacing: -.5px; line-height: 20px; color: var(--color-text-secondary); }
   .match-section-title { display: flex; align-items: center; gap: 9px; margin-bottom: 12px; }
   .match-details h3 { font-size: 19px; line-height: 25px; letter-spacing: -.5px; }
   .match-section-title button { margin-left: auto; color: var(--color-text-blue); font-size: 14px; white-space: nowrap; }

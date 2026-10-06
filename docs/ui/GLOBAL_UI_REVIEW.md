@@ -1,5 +1,7 @@
 # Global PetMingle desktop UI review — Cycle 7
 
+> Historical prototype review. For the current API-integrated desktop matrix and corrections, see [DESKTOP_REGRESSION_REVIEW.md](DESKTOP_REGRESSION_REVIEW.md). The runtime, fixture and verification statements below describe Cycle 7 only.
+
 Scope: consolidation of the five implemented desktop references only. No new screen, dependency, Laravel change, API integration, mobile layout or commit. This report supersedes earlier review statements that navigation was unavailable or certain fixtures/styles were screen-owned.
 
 ## Audit and visual decisions
