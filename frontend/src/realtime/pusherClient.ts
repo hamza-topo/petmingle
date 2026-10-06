@@ -154,7 +154,10 @@ export class PrivateRealtimeClient {
       | RealtimeSettings
       | null = settingsFromEnvironment(),
     private dependencies: RealtimeDependencies = {
-      createSocket: url => new WebSocket(url),
+      createSocket: url =>
+        new WebSocket(
+          url,
+        ) as unknown as SocketLike,
       fetchFn: fetch.bind(globalThis),
       setTimer: (callback, delay) =>
         setTimeout(callback, delay),
