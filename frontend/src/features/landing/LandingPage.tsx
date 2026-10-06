@@ -1,26 +1,23 @@
-import { SiteHeader } from '../../components/SiteHeader';
-import { BenefitStrip } from './components/BenefitStrip';
-import { FeaturedPets } from './components/FeaturedPets';
+import { PetMingleLogo } from '../../components/PetMingleLogo';
+import { LandingHeader } from './components/LandingHeader';
 import { HowItWorks } from './components/HowItWorks';
-import { JoinCommunityBanner } from './components/JoinCommunityBanner';
 import { LandingHero } from './components/LandingHero';
+import { NearbyStory } from './components/NearbyStory';
 
 export function LandingPage() {
   return (
     <div className="landing-page">
       <a className="skip-link" href="#main-content">Skip to content</a>
-      <SiteHeader />
+      <LandingHeader />
       <main tabIndex={-1} id="main-content">
         <LandingHero />
-        <div className="landing-content">
-          <BenefitStrip />
-          <div className="content-inset">
-            <HowItWorks />
-            <FeaturedPets />
-          </div>
-          <JoinCommunityBanner />
-        </div>
+        <NearbyStory />
+        <HowItWorks />
       </main>
+      <footer className="landing-footer">
+        <PetMingleLogo />
+        <p>For pets. For their people. For everyday connections.</p>
+      </footer>
     </div>
   );
 }

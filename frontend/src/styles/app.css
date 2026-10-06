@@ -1,5 +1,6 @@
 @import "tailwindcss";
 @import "./tokens.css";
+@import "./brand.css";
 @import "./shared.css";
 @import "../features/landing/landing.css";
 @import "../features/own-profile/profile.css";
@@ -16,7 +17,7 @@
 
   body {
     margin: 0;
-    min-width: 1120px;
+    min-width: 320px;
     background: var(--color-canvas);
     color: var(--color-ink);
     font-family: var(--font-sans);
@@ -376,3 +377,4 @@
     background: var(--color-text-blue);
   }
 }
+

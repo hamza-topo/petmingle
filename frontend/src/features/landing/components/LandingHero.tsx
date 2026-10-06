@@ -1,20 +1,23 @@
-import { landingAssets } from '../../../assets/landingAssets';
+import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router';
-import { ReferenceImage } from '../../../components/ReferenceImage';
-import { GetStartedButton } from './GetStartedButton';
+import heroPhoto from '../../../assets/brand/meeting.webp';
+import { CrossingPaths } from './CrossingPaths';
 
 export function LandingHero() {
   return (
     <section className="landing-hero" aria-labelledby="hero-heading">
-      <ReferenceImage asset={landingAssets.hero} className="hero-artwork" />
       <div className="hero-copy">
-        <h1 id="hero-heading">Find their <span className="text-brand-pink">people</span></h1>
-        <p>A friendly place for pets and<br />the people who love them.</p>
-        <div className="hero-actions">
-          <GetStartedButton />
-          <Link to="/discover" className="action action--secondary">Explore Pets</Link>
-        </div>
+        <p className="landing-eyebrow">01 / Everyday encounters</p>
+        <h1 id="hero-heading">Their paths{' '}<br />cross.{' '}<br />Yours do too.</h1>
+        <p className="hero-description">New walking companions.<br />Neighbours who become friends.</p>
+        <Link to="/discover" className="landing-primary">Find a connection <ArrowRight size={23} aria-hidden="true" /></Link>
+        <p className="hero-footnote">For pets and their people.</p>
       </div>
+      <figure className="hero-figure">
+        <img className="hero-photo" src={heroPhoto} width={1536} height={1024} fetchPriority="high" alt="Two dogs and their people meeting on a sunny park path" />
+        <figcaption>A walk can change everything.</figcaption>
+      </figure>
+      <CrossingPaths />
     </section>
   );
 }

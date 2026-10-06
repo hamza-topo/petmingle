@@ -1,25 +1,24 @@
-import clsx from 'clsx';
-import { SectionHeading } from '../../../components/SectionHeading';
-import { processSteps } from '../landing.fixtures';
+import { Link } from 'react-router';
+
+const steps = [
+  { title: 'Create a profile', description: 'Photos, personality, and the things your pet loves.' },
+  { title: 'Discover nearby pets', description: 'Find new companions around your neighbourhood.' },
+  { title: 'Connect and say hello', description: 'When the interest is mutual, start a conversation.' },
+];
 
 export function HowItWorks() {
   return (
     <section id="how-it-works" aria-labelledby="how-heading" className="how-it-works">
-      <SectionHeading id="how-heading" description="Four simple steps to a happier, more connected pet community.">
-        How It Works
-      </SectionHeading>
+      <div className="landing-section-heading">
+        <h2 id="how-heading">How It Works</h2>
+        <Link to="/pet/create" className="landing-text-link">Create your pet’s profile →</Link>
+      </div>
       <ol className="process-steps">
-        {processSteps.map(({ title, description, icon: Icon, tone }, index) => (
-          <li key={title} className={clsx('process-step', `tone-${tone}`)}>
-            <div className="step-marker">
-              <span className="step-number" aria-hidden="true">{index + 1}</span>
-              <span className="step-icon"><Icon size={29} strokeWidth={2.4} aria-hidden="true" /></span>
-              {index < processSteps.length - 1 && <span className="step-connector" aria-hidden="true">→</span>}
-            </div>
-            <div className="step-copy">
-              <h3>{title}</h3>
-              <p>{description}</p>
-            </div>
+        {steps.map(({ title, description }, index) => (
+          <li key={title}>
+            <span className="step-number" aria-hidden="true">0{index + 1}</span>
+            <h3>{title}</h3>
+            <p>{description}</p>
           </li>
         ))}
       </ol>
