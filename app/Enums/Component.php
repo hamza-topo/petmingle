@@ -35,21 +35,4 @@ enum Component: string
             default => null, // Fallback for invalid values
         };
     }
-
-    public static function match(string $key): ?Component
-    {
-        return match ($key) {
-            Component::ABOUT => 'c-about',
-            Component::BLOG => 'c-blog',
-            Component::BRAND => 'c-brand',
-            Component::HERO => 'c-hero',
-            Component::PACKAGE => 'c-package',
-            Component::PLAN => 'c-plan',
-            Component::PRICING => 'c-pricing',
-            Component::PROMOTION => 'c-promotion',
-            Component::SPECIAL => 'c-special',
-            Component::TESTIMONIAL => 'c-testimonial',
-            default => null, // Fallback for invalid values
-        };
-    }
 }
