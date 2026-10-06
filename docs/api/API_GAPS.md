@@ -67,7 +67,7 @@ Each row has one primary classification from the requested taxonomy. “Backend 
 | M02 | backend response normalization | **Resolved — Issue #124** (original: gate: thread) | `GET /messages` validates receiver/pagination, returns both message directions, preserves pagination metadata, selects newest pages first and orders each page chronologically. | Preserve the documented ordering/pagination contract when integrating the frontend. |
 | M03 | backend response normalization | **Resolved — Issue #124** (original: gate: bubbles) | Thread rows now expose stable message/conversation IDs, explicit sender/receiver User IDs, content, boolean seen state and ISO timestamps. Conversation summaries carry participant Pet media separately. | Relative labels and media URL mapping stay at the frontend boundary. |
 | M04 | data-model ambiguity | gate: conversation consistency | Conversation lookup matches either orientation but lacks unique pair/atomic creation; message participants can disagree with conversation participants (see S03). Soft-delete recreation is possible. | Agree uniqueness/history semantics and enforce participant integrity/blocking. |
-| M05 | missing endpoint | gate if unread/read UI enabled | is_seen column exists, but no authorized receiver read-marking endpoint or unread summary. Sender-only update is not a read-receipt API. | Define read scope and count response; keep local fixture receipts distinct from actual delivery/read claims. |
+| M05 | missing endpoint | **Resolved — Issue #127** (original: gate if unread/read UI enabled) | `PUT /conversations/{conversation}/seen` is receiver-authorized, conversation-scoped and updates only unread messages received by the authenticated User. Conversation summaries already expose persisted receiver-scoped unread counts. | Keep unread truth server-owned; clients must not clear badges until the mutation succeeds. |
 | M06 | frontend adapter only | adapter after M01–M03 | ChatMessage senderId is human identity; bubble direction compares currentOwnerId. UI activity labels are anchored to April 2024 fixtures. | Map authoritative sender IDs, actual timestamps and current clock; never infer direction from pet avatar/name. |
 | M07 | deferred feature | later | Shared interests, playdate details/actions have no backend representation. | Keep out of initial Messaging integration; no fake persisted scheduling. |
 | F01 | deferred feature | later | Plus prices, billing periods and benefits are local fixtures; no subscription/payment flow found. | Keep presentational; no checkout, billing library or fake subscription success. |
@@ -149,3 +149,15 @@ M01–M03 are resolved by [MESSAGING_CONTRACT.md](MESSAGING_CONTRACT.md).
 - Issue #123 block/match authorization remains mandatory for thread reads.
 - M05 remains open: no receiver-authorized mutation marks messages as seen.
 - M04 remains open: pair uniqueness/atomic conversation creation is not redesigned here.
+
+
+## Issue #127 Messaging unread/seen state — 2026-10-06
+
+M05 is resolved with a persisted receiver-authorized read transition.
+
+- `GET /conversations` remains the authoritative unread-count source.
+- `PUT /conversations/{conversation}/seen` has no client-supplied sender/receiver identity.
+- Only unread messages received by the authenticated User in that conversation are updated.
+- Other conversations and outgoing messages are unaffected.
+- The endpoint remains subject to Issue #123 active-contact/block rules.
+- React clears a badge only after a successful server mutation and reloads counts from the backend after refresh.
