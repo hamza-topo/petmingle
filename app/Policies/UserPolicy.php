@@ -18,6 +18,6 @@ class UserPolicy
 
     public function enable(User $actor, User $target): bool
     {
-        return (bool)$actor->is_admin;
+        return (bool) $actor->is_admin;
     }
 }

@@ -1,4 +1,5 @@
-<?php 
+<?php
+
 namespace App\Repositories;
 
 use App\Models\Filter;
@@ -8,7 +9,7 @@ class FilterRepository
 {
     public function create(array $filter): Filter
     {
-            return Filter::create($filter);
+        return Filter::create($filter);
     }
 
     public function update(int $filterId, array $newModel): Filter
@@ -23,8 +24,7 @@ class FilterRepository
     /**
      * getById
      *
-     * @param  mixed $filterId
-     * @return Filter
+     * @param  mixed  $filterId
      */
     public function getById(int $filterId): ?Filter
     {

@@ -40,7 +40,7 @@ class PetContractTest extends TestCase
 
         $pet = $this->createPet($user);
 
-        $this->getJson('/api/v.0/pets/' . $pet->id)
+        $this->getJson('/api/v.0/pets/'.$pet->id)
             ->assertOk()
             ->assertJsonPath('success', true)
             ->assertJsonPath('message', 'Pet has been found.')

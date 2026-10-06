@@ -2,13 +2,15 @@
 
 namespace Tests\Unit\Repositories;
 
-use App\Enums\App;
 use App\Enums\CacheDuration;
-use App\Enums\Pages as EnumsSeo;
 use App\Enums\Pages;
+use App\Enums\Pages as EnumsSeo;
 use App\Models\Seo;
 use App\Repositories\SeoRepository;
+use App\Services\CacheService;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Tests\TestCase;
 
 class SeoRepositoryTest extends TestCase
@@ -16,16 +18,17 @@ class SeoRepositoryTest extends TestCase
     use RefreshDatabase;
 
     protected $repository;
+
     protected $cacheService;
 
     protected function setUp(): void
     {
         parent::setUp();
-        $this->cacheService = $this->createMock(\App\Services\CacheService::class);
+        $this->cacheService = $this->createMock(CacheService::class);
         $this->repository = new SeoRepository($this->cacheService);
     }
 
-    public function testCreate()
+    public function test_create()
     {
         $seo = Seo::factory()->make()->toArray();
         $createdSeo = $this->repository->create($seo);
@@ -35,7 +38,7 @@ class SeoRepositoryTest extends TestCase
         $this->assertEquals($seo['title']['fr'], $dbSeo->title['fr']);
     }
 
-    public function testDelete()
+    public function test_delete()
     {
         $seo = Seo::factory()->create();
         $isDeleted = $this->repository->delete($seo->id);
@@ -43,7 +46,7 @@ class SeoRepositoryTest extends TestCase
         $this->assertSoftDeleted('seos', ['id' => $seo->id]);
     }
 
-    public function testRestore()
+    public function test_restore()
     {
         $seo = Seo::factory()->create();
         $seo->delete();
@@ -54,7 +57,7 @@ class SeoRepositoryTest extends TestCase
         $this->assertDatabaseHas('seos', ['id' => $seo->id]);
     }
 
-    public function testGetById()
+    public function test_get_by_id()
     {
         $seo = Seo::factory()->create();
 
@@ -64,17 +67,17 @@ class SeoRepositoryTest extends TestCase
         $this->assertEquals($seo->id, $foundSeo->id);
     }
 
-    public function testAll()
+    public function test_all()
     {
         Seo::factory(1)->create();
 
         $seos = $this->repository->all();
 
-        $this->assertInstanceOf(\Illuminate\Database\Eloquent\Collection::class, $seos);
+        $this->assertInstanceOf(Collection::class, $seos);
         $this->assertCount(1, $seos);
     }
 
-    public function testGetAvvaillable()
+    public function test_get_avvaillable()
     {
         $pages = array_map(function ($page) {
             return $page->value;
@@ -88,7 +91,7 @@ class SeoRepositoryTest extends TestCase
         $this->assertCount(count($pages) - 1, $availablePages);
     }
 
-    public function testGetAllFromCache()
+    public function test_get_all_from_cache()
     {
         $page = Pages::CONTACT->value;
         $seo = Seo::factory()->create(['key' => $page]);
@@ -103,13 +106,13 @@ class SeoRepositoryTest extends TestCase
         $this->assertEquals($seo, $cachedSeo);
     }
 
-    public function testPaginate()
+    public function test_paginate()
     {
         Seo::factory(1)->create();
 
         $seos = $this->repository->paginate();
 
-        $this->assertInstanceOf(\Illuminate\Pagination\LengthAwarePaginator::class, $seos);
+        $this->assertInstanceOf(LengthAwarePaginator::class, $seos);
         $this->assertCount(1, $seos);
     }
 }

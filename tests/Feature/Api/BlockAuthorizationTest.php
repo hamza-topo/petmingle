@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Api;
 
+use App\Models\Block;
 use App\Models\User;
 use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Laravel\Sanctum\Sanctum;
@@ -68,11 +69,11 @@ class BlockAuthorizationTest extends TestCase
         $actor = User::withoutEvents(fn () => User::factory()->create());
         $other = User::withoutEvents(fn () => User::factory()->create());
         $target = User::withoutEvents(fn () => User::factory()->create());
-        $ownBlock = \App\Models\Block::withoutEvents(fn () => \App\Models\Block::create(['from' => $actor->id, 'to' => $target->id]));
-        \App\Models\Block::withoutEvents(fn () => \App\Models\Block::create(['from' => $other->id, 'to' => $target->id]));
+        $ownBlock = Block::withoutEvents(fn () => Block::create(['from' => $actor->id, 'to' => $target->id]));
+        Block::withoutEvents(fn () => Block::create(['from' => $other->id, 'to' => $target->id]));
         Sanctum::actingAs($actor);
 
-        $this->getJson('/api/v.0/blocks?from=' . $other->id . '&user_id=' . $other->id)
+        $this->getJson('/api/v.0/blocks?from='.$other->id.'&user_id='.$other->id)
             ->assertOk()->assertJsonCount(1, 'data')->assertJsonPath('data.0.id', $ownBlock->id);
     }
 

@@ -7,17 +7,17 @@ use App\Http\Requests\Api\Species\Store;
 use App\Http\Requests\Api\Species\Update;
 use App\Repositories\SpeciesRepository;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
 class SpeciesController extends Controller
 {
-    public function __construct(protected SpeciesRepository $speciesRepository)
-    {
-    }
+    public function __construct(protected SpeciesRepository $speciesRepository) {}
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -25,7 +25,7 @@ class SpeciesController extends Controller
         return view(
             'admin.species.index',
             [
-                'species' => $this->speciesRepository->paginate(request()->get('paginate'))
+                'species' => $this->speciesRepository->paginate(request()->get('paginate')),
             ]
         );
     }
@@ -33,7 +33,7 @@ class SpeciesController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -43,8 +43,8 @@ class SpeciesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return Response
      */
     public function store(Store $request)
     {
@@ -54,7 +54,7 @@ class SpeciesController extends Controller
 
             return redirect(route('admin.species.index'))->with('success');
         } catch (\Exception $e) {
-            Log::error('error while creating new species: ' . $e->getMessage());
+            Log::error('error while creating new species: '.$e->getMessage());
 
             return redirect()->back();
         }
@@ -64,7 +64,7 @@ class SpeciesController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -77,7 +77,7 @@ class SpeciesController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit($id)
     {
@@ -89,9 +89,8 @@ class SpeciesController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -100,7 +99,8 @@ class SpeciesController extends Controller
 
             return redirect(route('admin.species.index'));
         } catch (\Exception $e) {
-            Log::error('error while updating the species: ' . $e->getMessage());
+            Log::error('error while updating the species: '.$e->getMessage());
+
             return redirect()->back();
         }
     }
@@ -109,7 +109,7 @@ class SpeciesController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {
@@ -118,15 +118,15 @@ class SpeciesController extends Controller
 
             return redirect(route('admin.species.index'))->with('success');
         } catch (\Exception $e) {
-            Log::erro('error occured while deleting this species: ' . $e->getMessage());
+            Log::erro('error occured while deleting this species: '.$e->getMessage());
         }
     }
 
-       /**
+    /**
      * Restore the specified resource to storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function restore($id)
     {
@@ -135,7 +135,7 @@ class SpeciesController extends Controller
 
             return redirect(route('admin.species.index'))->with('success');
         } catch (\Exception $e) {
-            Log::erro('error occured while restoring this species: ' . $e->getMessage());
+            Log::erro('error occured while restoring this species: '.$e->getMessage());
         }
     }
 }

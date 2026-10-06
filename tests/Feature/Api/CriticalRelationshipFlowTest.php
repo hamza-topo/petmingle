@@ -150,18 +150,15 @@ class CriticalRelationshipFlowTest extends TestCase
 
         $species = Species::withoutEvents(
             fn () => Species::create([
-                'name' =>
-                    'Species-' . $user->id,
-                'description' =>
-                    'Critical flow species',
+                'name' => 'Species-'.$user->id,
+                'description' => 'Critical flow species',
             ])
         );
 
         $race = Race::withoutEvents(
             fn () => Race::create([
                 'species_id' => $species->id,
-                'name' =>
-                    'Race-' . $user->id,
+                'name' => 'Race-'.$user->id,
             ])
         );
 
@@ -175,8 +172,7 @@ class CriticalRelationshipFlowTest extends TestCase
                 'sexe' => 1,
                 'color' => 'brown',
                 'images' => [],
-                'about' =>
-                    'Critical flow pet',
+                'about' => 'Critical flow pet',
             ])
         );
 

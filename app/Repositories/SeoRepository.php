@@ -17,28 +17,19 @@ class SeoRepository
 {
     /**
      * SeoRepository constructor
-     *
-     * @param CacheService $cacheService
      */
     public function __construct(protected CacheService $cacheService) {}
 
     /**
      * Store New Seo Entity
-     *
-     * @param array $seo
-     * @return Seo
      */
     public function create(array $seo): Seo
-    {   
+    {
         return Seo::create($seo);
     }
 
     /**
      * Update Seo Entity
-     *
-     * @param integer $seoId
-     * @param array $newSeo
-     * @return Seo
      */
     public function update(int $seoId, array $newSeo): Seo
     {
@@ -51,9 +42,6 @@ class SeoRepository
 
     /**
      * getById Method
-     *
-     * @param integer $seoId
-     * @return Seo
      */
     public function getById(int $seoId): ?Seo
     {
@@ -62,9 +50,6 @@ class SeoRepository
 
     /**
      * Delete Seo Entity
-     *
-     * @param integer $seoId
-     * @return boolean
      */
     public function delete(int $seoId): bool
     {
@@ -73,9 +58,6 @@ class SeoRepository
 
     /**
      * Restore Trashed Seo Entity
-     *
-     * @param integer $seoId
-     * @return boolean
      */
     public function restore(int $seoId): bool
     {
@@ -100,9 +82,6 @@ class SeoRepository
     /**
      * Get Seo that not created yet
      * Its based on @see App\Enums\Pages::CASES()
-     *
-     * @param array $keys
-     * @return mixed
      */
     public function notCreatedYet(array $keys): mixed
     {
@@ -112,8 +91,6 @@ class SeoRepository
     /**
      * Get Seo that Are available similare
      * Its based on @see App\Enums\Pages::CASES()
-     *
-     * @return array
      */
     public function getAvvaillable(): array
     {
@@ -130,8 +107,6 @@ class SeoRepository
      * getAllFromCache method
      *
      * @author Topo <hamzaaitsidisaid.11@gmail.com>
-     * @param ?string $page
-     * @return Seo
      */
     public function getAllFromCache(?string $page = ''): Seo
     {
@@ -142,9 +117,6 @@ class SeoRepository
 
     /**
      * Pagination method
-     *
-     * @param int|null $paginate
-     * @return LengthAwarePaginator
      */
     public function paginate(?int $paginate = App::PAGINATE): LengthAwarePaginator
     {

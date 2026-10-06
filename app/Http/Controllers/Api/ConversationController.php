@@ -3,10 +3,10 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Models\Conversation;
 use App\Http\Requests\Api\Conversation\Index;
 use App\Http\Resources\Api\Message\ConversationResource;
 use App\Http\Responses\ApiResponse;
+use App\Models\Conversation;
 use App\Repositories\ConversationRepository;
 use App\Repositories\MessageRepository;
 use App\Services\InteractionPolicy;
@@ -44,7 +44,7 @@ class ConversationController extends Controller
                 : $firstUserId;
 
         if (
-            !$this->interactionPolicy->canContactUsers(
+            ! $this->interactionPolicy->canContactUsers(
                 $userId,
                 $otherUserId
             )

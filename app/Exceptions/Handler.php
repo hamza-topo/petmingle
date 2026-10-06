@@ -2,10 +2,10 @@
 
 namespace App\Exceptions;
 
-use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
@@ -49,34 +49,28 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
-        if (!$request->is('api/*')) {
+        if (! $request->is('api/*')) {
             return parent::render($request, $e);
         }
 
         return match (true) {
-            $e instanceof AuthenticationException =>
-            $this->apiError('Unauthenticated.', 401),
+            $e instanceof AuthenticationException => $this->apiError('Unauthenticated.', 401),
 
             $e instanceof AuthorizationException,
-            $e instanceof AccessDeniedHttpException =>
-            $this->apiError('Forbidden.', 403),
+            $e instanceof AccessDeniedHttpException => $this->apiError('Forbidden.', 403),
 
-            $e instanceof ValidationException =>
-            response()->json([
+            $e instanceof ValidationException => response()->json([
                 'success' => false,
                 'message' => 'Validation failed.',
                 'errors' => $e->errors(),
             ], $e->status),
 
             $e instanceof ModelNotFoundException,
-            $e instanceof NotFoundHttpException =>
-            $this->apiError('Resource not found.', 404),
+            $e instanceof NotFoundHttpException => $this->apiError('Resource not found.', 404),
 
-            $e instanceof HttpExceptionInterface =>
-            $this->renderApiHttpException($e),
+            $e instanceof HttpExceptionInterface => $this->renderApiHttpException($e),
 
-            default =>
-            $this->apiError('Internal server error.', 500),
+            default => $this->apiError('Internal server error.', 500),
         };
     }
 

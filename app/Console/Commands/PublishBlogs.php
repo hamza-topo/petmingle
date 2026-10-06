@@ -3,8 +3,8 @@
 namespace App\Console\Commands;
 
 use App\Repositories\BlogRepository;
-use Illuminate\Console\Command;
 use Carbon\Carbon;
+use Illuminate\Console\Command;
 
 class PublishBlogs extends Command
 {
@@ -44,11 +44,12 @@ class PublishBlogs extends Command
             // Clone the $now instance before modifying it
             $nowPlusTen = (clone $now)->addMinutes(10);
             $drafts = $this->blogRepository->getScheduledFor([$now->format('Y-m-d H:i:s'), $nowPlusTen->format('Y-m-d H:i:s')]);
+
             return $this->blogRepository->publishBulk($drafts->map(function ($row) {
                 return $row->id;
             })->toArray());
         } catch (\Exception $e) {
-            //throw $th;
+            // throw $th;
         }
     }
 }

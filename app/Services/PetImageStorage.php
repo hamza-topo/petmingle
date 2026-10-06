@@ -23,7 +23,7 @@ final class PetImageStorage
             ),
         };
 
-        $filename = Str::uuid()->toString() . '.' . $extension;
+        $filename = Str::uuid()->toString().'.'.$extension;
 
         $path = $file->storePubliclyAs(
             self::DIRECTORY,
@@ -54,7 +54,7 @@ final class PetImageStorage
 
     private function isManagedPath(string $path): bool
     {
-        return str_starts_with($path, self::DIRECTORY . '/')
+        return str_starts_with($path, self::DIRECTORY.'/')
             || str_starts_with($path, 'uploads/');
     }
 }

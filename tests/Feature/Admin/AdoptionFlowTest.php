@@ -102,18 +102,15 @@ class AdoptionFlowTest extends TestCase
     ): Pet {
         $species = Species::withoutEvents(
             fn () => Species::create([
-                'name' =>
-                    'Dog-' . $owner->id,
-                'description' =>
-                    'Critical adoption species',
+                'name' => 'Dog-'.$owner->id,
+                'description' => 'Critical adoption species',
             ])
         );
 
         $race = Race::withoutEvents(
             fn () => Race::create([
                 'species_id' => $species->id,
-                'name' =>
-                    'Mixed-' . $owner->id,
+                'name' => 'Mixed-'.$owner->id,
             ])
         );
 
@@ -127,8 +124,7 @@ class AdoptionFlowTest extends TestCase
                 'sexe' => 1,
                 'color' => 'brown',
                 'images' => [],
-                'about' =>
-                    'Adoption flow pet',
+                'about' => 'Adoption flow pet',
             ])
         );
     }

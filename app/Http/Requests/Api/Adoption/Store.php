@@ -4,7 +4,6 @@ namespace App\Http\Requests\Api\Adoption;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-
 class Store extends FormRequest
 {
     /**
@@ -27,7 +26,7 @@ class Store extends FormRequest
         return [
             'from' => ['required', 'integer'],
             'to' => 'required|integer',
-            'pet_id' => 'required|integer', //TODO::verify if the given pet belongs to to user_id
+            'pet_id' => 'required|integer', // TODO::verify if the given pet belongs to to user_id
         ];
     }
 

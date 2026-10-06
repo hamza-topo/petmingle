@@ -6,7 +6,6 @@ use Illuminate\Support\Facades\App;
 
 class LangService
 {
-
     public function set(string $locale)
     {
         App::setLocale($locale);

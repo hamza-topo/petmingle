@@ -7,10 +7,7 @@ use InvalidArgumentException;
 
 class Socialite
 {
-
-
     protected static ?\stdClass $user = null;
-
 
     public function __construct(array $data, string $provider)
     {
@@ -28,18 +25,18 @@ class Socialite
 
     protected function github($data): void
     {
-        self::$user = new \stdClass();
+        self::$user = new \stdClass;
         self::$user->provider_id = $data['id'] ?? '';
         self::$user->provider_name = Provider::GITHUB;
         self::$user->name = $data['name'] ?? '';
         self::$user->avatar = $data['avatar_url'] ?? '';
         self::$user->email = $data['email'] ?? '';
-        //TODO::define the other fields
+        // TODO::define the other fields
     }
 
-    protected function google($data): void 
+    protected function google($data): void
     {
-        self::$user = new \stdClass();
+        self::$user = new \stdClass;
         self::$user->provider_id = $data['id'] ?? '';
         self::$user->provider_name = Provider::GOOGLE;
         self::$user->name = $data['name'] ?? '';

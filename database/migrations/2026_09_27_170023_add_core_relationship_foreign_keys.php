@@ -199,7 +199,7 @@ return new class extends Migration
                 ->count();
 
             if ($orphans > 0) {
-                throw new \RuntimeException(
+                throw new RuntimeException(
                     "Cannot add foreign key {$childTable}.{$column}: {$orphans} orphaned row(s) found."
                 );
             }

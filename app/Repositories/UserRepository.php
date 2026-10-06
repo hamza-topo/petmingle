@@ -5,11 +5,11 @@ namespace App\Repositories;
 use App\Enums\CacheDuration;
 use App\Enums\User as EnumsUser;
 use App\Factories\TrashedFactory;
-use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Services\CacheService;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Facades\Hash;
 
 /**
  * User Repository
@@ -17,6 +17,7 @@ use Illuminate\Pagination\LengthAwarePaginator;
 class UserRepository
 {
     public function __construct(protected CacheService $cacheService) {}
+
     public function create(array $user): User
     {
         $user['password'] = Hash::make($user['password']);
@@ -26,13 +27,14 @@ class UserRepository
 
     public function update(int $id, array $userData): User
     {
-        if (isset($userData['password']) && !empty($userData['password'])) {
+        if (isset($userData['password']) && ! empty($userData['password'])) {
             $userData['password'] = Hash::make($userData['password']);
         } else {
             unset($userData['password']);
         }
         $user = $this->getById($id);
         $user->update($userData);
+
         return $user;
     }
 
@@ -45,7 +47,6 @@ class UserRepository
     {
         return User::findOrFail($id);
     }
-
 
     public function restore(int $modelId): bool
     {
@@ -61,7 +62,6 @@ class UserRepository
     /**
      * Method to paginate users
      *
-     * @param int $page
      * @return void
      */
     public function paginate(?int $page = EnumsUser::PAGINATE): LengthAwarePaginator
@@ -73,6 +73,7 @@ class UserRepository
      * getAllFromCache method
      *
      * @author Topo <hamzaaitsidisaid.11@gmail.com>
+     *
      * @return mixed
      */
     public function getAllFromCache(?string $key = ''): Collection
@@ -84,11 +85,9 @@ class UserRepository
 
     /**
      * clearCache method
-     * 
+     *
      * @author Topo <hamzaaitsidisaid.11@gmail.com>
-     * @return bool
      */
-
     public function clearCache(): bool
     {
         return $this->cacheService->clear(EnumsUser::CACHEKEY);

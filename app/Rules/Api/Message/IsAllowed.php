@@ -13,7 +13,7 @@ class IsAllowed implements Rule
 
         if (
             $senderId === null
-            || !is_numeric($value)
+            || ! is_numeric($value)
         ) {
             return false;
         }

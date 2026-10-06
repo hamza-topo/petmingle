@@ -21,7 +21,7 @@ class Blog extends Model
         'title' => 'array',
         'slug' => 'array',
         'content' => 'array',
-        'media' => 'array'
+        'media' => 'array',
     ];
 
     /**

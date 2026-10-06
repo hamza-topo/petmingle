@@ -5,9 +5,10 @@ namespace Tests\Unit\Repositories;
 use App\Enums\NewsLetter as EnumsNewsLetter;
 use App\Models\NewsLetter;
 use App\Repositories\NewsLetterRepository;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Collection;
 use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Support\Collection;
 use Tests\TestCase;
 
 class NewsLetterRepositoryTest extends TestCase
@@ -19,10 +20,10 @@ class NewsLetterRepositoryTest extends TestCase
     protected function setUp(): void
     {
         parent::setUp();
-        $this->repository = new NewsLetterRepository();
+        $this->repository = new NewsLetterRepository;
     }
 
-    public function testCreate()
+    public function test_create()
     {
         $newsLetter = NewsLetter::factory()->make()->toArray();
         $createdNewsLetter = $this->repository->create($newsLetter);
@@ -31,7 +32,7 @@ class NewsLetterRepositoryTest extends TestCase
         $this->assertDatabaseHas('news_letters', $newsLetter);
     }
 
-    public function testUpdate()
+    public function test_update()
     {
         $newsLetter = NewsLetter::factory()->create();
         $newNewsLetterData = ['title' => 'Updated Title'];
@@ -43,17 +44,17 @@ class NewsLetterRepositoryTest extends TestCase
         $this->assertDatabaseHas('news_letters', ['id' => $newsLetter->id, 'title' => 'Updated Title']);
     }
 
-    public function testDelete()
+    public function test_delete()
     {
         $newsLetter = NewsLetter::factory()->create();
         $isDeleted = $this->repository->delete($newsLetter->id);
         $this->assertTrue($isDeleted);
-        $this->expectException(\Illuminate\Database\Eloquent\ModelNotFoundException::class);
+        $this->expectException(ModelNotFoundException::class);
         $this->repository->getById($newsLetter->id);
         $this->repository->getById($newsLetter->id);
     }
 
-    public function testRestore()
+    public function test_restore()
     {
         $newsLetter = NewsLetter::factory()->create();
         $newsLetter->delete();
@@ -64,7 +65,7 @@ class NewsLetterRepositoryTest extends TestCase
         $this->assertDatabaseHas('news_letters', ['id' => $newsLetter->id]);
     }
 
-    public function testGetById()
+    public function test_get_by_id()
     {
         $newsLetter = NewsLetter::factory()->create();
 
@@ -74,7 +75,7 @@ class NewsLetterRepositoryTest extends TestCase
         $this->assertEquals($newsLetter->id, $foundNewsLetter->id);
     }
 
-    public function testAll()
+    public function test_all()
     {
         NewsLetter::factory(3)->create();
 
@@ -84,7 +85,7 @@ class NewsLetterRepositoryTest extends TestCase
         $this->assertCount(3, $newsLetters);
     }
 
-    public function testTake()
+    public function test_take()
     {
         NewsLetter::factory(5)->create();
 
@@ -94,7 +95,7 @@ class NewsLetterRepositoryTest extends TestCase
         $this->assertCount(EnumsNewsLetter::TAKE, $newsLetters);
     }
 
-    public function testPaginate()
+    public function test_paginate()
     {
         NewsLetter::factory(50)->create();
 
@@ -104,7 +105,7 @@ class NewsLetterRepositoryTest extends TestCase
         $this->assertCount(EnumsNewsLetter::PAGINATE, $newsLetters);
     }
 
-    public function testGetByActivity()
+    public function test_get_by_activity()
     {
         NewsLetter::factory(1)->create(['active' => true]);
         NewsLetter::factory(1)->create(['active' => false]);

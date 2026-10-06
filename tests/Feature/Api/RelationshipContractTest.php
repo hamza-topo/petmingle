@@ -300,12 +300,12 @@ class RelationshipContractTest extends TestCase
         );
 
         $species = Species::create([
-            'name' => 'Dog-' . $user->id,
+            'name' => 'Dog-'.$user->id,
         ]);
 
         $race = Race::create([
             'species_id' => $species->id,
-            'name' => 'Mixed-' . $user->id,
+            'name' => 'Mixed-'.$user->id,
         ]);
 
         $pet = Pet::withoutEvents(

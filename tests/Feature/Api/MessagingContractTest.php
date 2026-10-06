@@ -198,8 +198,8 @@ class MessagingContractTest extends TestCase
 
         $response = $this->getJson(
             '/api/v.0/messages?receiver_id='
-            . $otherUser->id
-            . '&per_page=2&page=1'
+            .$otherUser->id
+            .'&per_page=2&page=1'
         )
             ->assertOk()
             ->assertJsonPath('success', true)
@@ -245,8 +245,8 @@ class MessagingContractTest extends TestCase
 
         $this->getJson(
             '/api/v.0/messages?receiver_id='
-            . $otherUser->id
-            . '&per_page=2&page=2'
+            .$otherUser->id
+            .'&per_page=2&page=2'
         )
             ->assertOk()
             ->assertJsonCount(1, 'data')
@@ -280,10 +280,10 @@ class MessagingContractTest extends TestCase
 
         $this->getJson(
             '/api/v.0/messages?receiver_id='
-            . $otherUser->id
-            . '&sender_id='
-            . $otherUser->id
-            . '&per_page=100'
+            .$otherUser->id
+            .'&sender_id='
+            .$otherUser->id
+            .'&per_page=100'
         )
             ->assertUnprocessable()
             ->assertJsonStructure([
@@ -364,8 +364,8 @@ class MessagingContractTest extends TestCase
 
         $this->putJson(
             '/api/v.0/conversations/'
-            . $conversation->id
-            . '/seen'
+            .$conversation->id
+            .'/seen'
         )
             ->assertOk()
             ->assertJsonPath('success', true)
@@ -457,8 +457,8 @@ class MessagingContractTest extends TestCase
 
         $this->putJson(
             '/api/v.0/conversations/'
-            . $conversation->id
-            . '/seen'
+            .$conversation->id
+            .'/seen'
         )->assertForbidden();
 
         $this->assertDatabaseHas('messages', [
@@ -495,8 +495,8 @@ class MessagingContractTest extends TestCase
 
         $this->putJson(
             '/api/v.0/conversations/'
-            . $conversation->id
-            . '/seen'
+            .$conversation->id
+            .'/seen'
         )->assertForbidden();
 
         $this->assertDatabaseHas('messages', [
@@ -556,12 +556,12 @@ class MessagingContractTest extends TestCase
         );
 
         $species = Species::create([
-            'name' => 'Species-' . $user->id,
+            'name' => 'Species-'.$user->id,
         ]);
 
         $race = Race::create([
             'species_id' => $species->id,
-            'name' => 'Race-' . $user->id,
+            'name' => 'Race-'.$user->id,
         ]);
 
         $pet = Pet::withoutEvents(
@@ -574,7 +574,7 @@ class MessagingContractTest extends TestCase
                 'sexe' => 1,
                 'color' => 'brown',
                 'images' => [
-                    'pets/' . strtolower($petName) . '.jpg',
+                    'pets/'.strtolower($petName).'.jpg',
                 ],
                 'about' => 'Test pet',
             ])

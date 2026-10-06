@@ -137,7 +137,7 @@ class LocationContractTest extends TestCase
         Sanctum::actingAs($user);
 
         $this->getJson(
-            '/api/v.0/locations/' . $location->id
+            '/api/v.0/locations/'.$location->id
         )
             ->assertOk()
             ->assertJsonPath('success', true)

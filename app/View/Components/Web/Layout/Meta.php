@@ -2,9 +2,10 @@
 
 namespace App\View\Components\Web\Layout;
 
-use stdClass;
 use App\Models\Seo;
+use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
+use stdClass;
 
 class Meta extends Component
 {
@@ -13,14 +14,12 @@ class Meta extends Component
      *
      * @return void
      */
-    public function __construct(public stdClass|Seo|null $seo)
-    {
-    }
+    public function __construct(public stdClass|Seo|null $seo) {}
 
     /**
      * Get the view / contents that represent the component.
      *
-     * @return \Illuminate\Contracts\View\View|\Closure|string
+     * @return View|\Closure|string
      */
     public function render()
     {

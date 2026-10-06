@@ -11,36 +11,29 @@ use App\Repositories\UserRepository;
 use App\Traits\ImageTrait;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
 
 class PetController extends Controller
 {
-
     /**
      * Image Trait
      */
     use ImageTrait;
+
     /**
      * constructor
-     *
-     * @param PetRepository $petRepository
-     * @param UserRepository $userRepository
-     * @param SpeciesRepository $speciesRepository
-     * @param RaceRepository $raceRepository
      */
     public function __construct(
         protected PetRepository $petRepository,
         protected UserRepository $userRepository,
         protected SpeciesRepository $speciesRepository,
         protected RaceRepository $raceRepository,
-    ) {
-    }
+    ) {}
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -50,7 +43,7 @@ class PetController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -67,17 +60,17 @@ class PetController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param  Request  $request
+     * @return Response
      */
     public function store(Store $request)
     {
         try {
             $pet = $request->all();
-            if(!empty($request->file('images'))){
+            if (! empty($request->file('images'))) {
                 $pet['images'] = $this->setFile($request->file('images'))
-                ->setName()
-                ->upload();
+                    ->setName()
+                    ->upload();
             }
             $pet = $this->petRepository->create($pet);
 
@@ -87,7 +80,7 @@ class PetController extends Controller
             Log::error('error while saving the pet:', [$e->getMessage()]);
 
             return redirect()->route('admin.pets.create')
-            ->withErrors(['error' => $e->getMessage()])->withInput();
+                ->withErrors(['error' => $e->getMessage()])->withInput();
 
         }
     }
@@ -96,11 +89,12 @@ class PetController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
         $pet = $this->petRepository->getById($id);
+
         return view(
             'admin.pets.show',
             [
@@ -116,11 +110,12 @@ class PetController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit($id)
     {
         $pet = $this->petRepository->getById($id);
+
         return view(
             'admin.pets.edit',
             [
@@ -135,20 +130,19 @@ class PetController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
         try {
             $pet = $request->all();
-            if(!empty($request->file('images'))){
+            if (! empty($request->file('images'))) {
                 $pet['images'] = $this->setFile($request->file('images'))
-                ->setName()
-                ->upload();
+                    ->setName()
+                    ->upload();
             }
-           
+
             $pet = $this->petRepository->update($id, $pet);
 
             return redirect()->route('admin.pets.index')->with('success', Response::HTTP_ACCEPTED);
@@ -157,7 +151,7 @@ class PetController extends Controller
             Log::error('error while saving the pet:', [$e->getMessage()]);
 
             return redirect()->route('admin.pets.edit', $id)
-            ->withErrors(['error' => $e->getMessage()])->withInput();
+                ->withErrors(['error' => $e->getMessage()])->withInput();
 
         }
     }
@@ -166,7 +160,7 @@ class PetController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {
@@ -176,5 +170,4 @@ class PetController extends Controller
             ->route('admin.pets.index')
             ->with('success', Response::HTTP_ACCEPTED);
     }
-
 }

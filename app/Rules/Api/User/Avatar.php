@@ -6,7 +6,7 @@ use Illuminate\Contracts\Validation\Rule;
 
 class Avatar implements Rule
 {
-     /**
+    /**
      * Create a new rule instance.
      *
      * @return void

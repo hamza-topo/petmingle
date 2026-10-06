@@ -2,13 +2,15 @@
 
 namespace App\View\Components\Web\Layout;
 
-use Illuminate\View\Component;
-use App\Repositories\ComponentRepository;
 use App\Enums\Component as EnumComponent;
+use App\Repositories\ComponentRepository;
+use Illuminate\Contracts\View\View;
+use Illuminate\View\Component;
 
 class Footer extends Component
 {
     public $component;
+
     /**
      * Create a new component instance.
      *
@@ -19,11 +21,10 @@ class Footer extends Component
         $this->component = $this->componentRepository->getByName(EnumComponent::HEADER->value);
     }
 
-
     /**
      * Get the view / contents that represent the component.
      *
-     * @return \Illuminate\Contracts\View\View|\Closure|string
+     * @return View|\Closure|string
      */
     public function render()
     {

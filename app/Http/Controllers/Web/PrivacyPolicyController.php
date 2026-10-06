@@ -3,10 +3,9 @@
 namespace App\Http\Controllers\Web;
 
 use App\Enums\Pages;
-use Illuminate\Http\Request;
-use App\Repositories\SeoRepository;
 use App\Http\Controllers\Controller;
 use App\Repositories\BlogRepository;
+use App\Repositories\SeoRepository;
 
 class PrivacyPolicyController extends Controller
 {
@@ -14,6 +13,7 @@ class PrivacyPolicyController extends Controller
         protected SeoRepository $seoRepository,
         protected BlogRepository $blogRepositoryRepository,
     ) {}
+
     public function __invoke()
     {
         $slug = __('privacy-policy');

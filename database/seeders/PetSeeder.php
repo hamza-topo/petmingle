@@ -3,12 +3,9 @@
 namespace Database\Seeders;
 
 use App\Enums\Pet;
+use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
-use Faker\Factory as Faker;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
-
 
 class PetSeeder extends Seeder
 {
@@ -17,12 +14,12 @@ class PetSeeder extends Seeder
      *
      * @return void
      */
-
     public $petNames = [
-        'Bella', 'Max', 'Charlie', 'Luna', 'Cooper', 'Rocky', 
-        'Daisy', 'Buddy', 'Milo', 'Lucy', 'Bailey', 'Lola', 
-        'Sophie', 'Toby', 'Nala', 'Oscar', 'Shadow', 'Simba'
+        'Bella', 'Max', 'Charlie', 'Luna', 'Cooper', 'Rocky',
+        'Daisy', 'Buddy', 'Milo', 'Lucy', 'Bailey', 'Lola',
+        'Sophie', 'Toby', 'Nala', 'Oscar', 'Shadow', 'Simba',
     ];
+
     public function run()
     {
         $pets = $this->pets();
@@ -41,22 +38,22 @@ class PetSeeder extends Seeder
                 'age' => rand(1, 50),
                 'sexe' => rand(Pet::FEMALE, Pet::MALE),
                 'color' => $this->color(),
-                'images' =>json_encode($this->generateImages()),
-                'about' =>  Faker::create()->paragraph(rand(1, 3)),
+                'images' => json_encode($this->generateImages()),
+                'about' => Faker::create()->paragraph(rand(1, 3)),
             ];
         }
+
         return $pets;
     }
-    
+
     /**
      * methode to generate random color
-     *
-     * @return string
      */
-    private  function color(): string
+    private function color(): string
     {
-        return '#' . str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
+        return '#'.str_pad(dechex(mt_rand(0, 0xFFFFFF)), 6, '0', STR_PAD_LEFT);
     }
+
     private function generateImages(): array
     {
         $imageList = [
@@ -64,7 +61,7 @@ class PetSeeder extends Seeder
             'pets-2.jpeg',
             'pets-3.jpeg',
         ];
+
         return $imageList;
     }
-   
 }

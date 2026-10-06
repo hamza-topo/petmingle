@@ -4,13 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Enums\App;
 use App\Enums\Component;
+use App\Http\Controllers\Controller;
 use App\Models\Component as ModelComponent;
+use App\Repositories\ComponentRepository;
+use App\Services\ComponentService;
 use App\Traits\ImageTrait;
 use Illuminate\Http\Request;
-use App\Services\ComponentService;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
-use App\Repositories\ComponentRepository;
 
 class ComponentController extends Controller
 {
@@ -22,10 +23,11 @@ class ComponentController extends Controller
         protected ComponentRepository $componentRepository,
         protected ComponentService $componentService
     ) {}
+
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -38,7 +40,7 @@ class ComponentController extends Controller
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function create()
     {
@@ -47,23 +49,22 @@ class ComponentController extends Controller
             ->where('id', null)->toArray());
         $langs = App::LOCALES;
 
-
         return view('admin.components.create', \compact('avacomponents', 'langs'));
     }
 
     /**
      * Store a newly created resource in storage.
      * TODO::add Validation rule
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     *
+     * @return Response
      */
     public function store(Request $request)
     {
         $component = $this->componentRepository->getByName($request->name);
         try {
             $request = $request->all();
-            if (!empty($request['media'])) {
-                $request['media'] =  $this->uploadAll([$request['media']])[0];
+            if (! empty($request['media'])) {
+                $request['media'] = $this->uploadAll([$request['media']])[0];
             }
             if (empty($component->id)) {
                 $this->componentRepository->create($request);
@@ -83,7 +84,7 @@ class ComponentController extends Controller
      * Display the specified resource.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show($id)
     {
@@ -93,12 +94,11 @@ class ComponentController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  string  $componentName
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function edit(string $componentName)
     {
-        if (!\in_array(
+        if (! \in_array(
             $componentName,
             collect(Component::cases())->pluck('value')->toArray()
         )) {
@@ -107,15 +107,14 @@ class ComponentController extends Controller
         $component = $this->componentRepository->getByName($componentName) ?? new ModelComponent;
         $langs = App::LOCALES;
 
-        return view('admin.components.elements.' . \strtolower($componentName), compact('component', 'componentName', 'langs'));
+        return view('admin.components.elements.'.\strtolower($componentName), compact('component', 'componentName', 'langs'));
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Request $request, $id)
     {
@@ -126,7 +125,7 @@ class ComponentController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {

@@ -15,7 +15,7 @@ class Store extends FormRequest
     {
         return [
             'name' => 'required|unique:races|max:50',
-        ];;
+        ];
     }
 
     /**
@@ -31,5 +31,4 @@ class Store extends FormRequest
             'name.max' => \__('This Race Name is too much long.'),
         ];
     }
-
 }

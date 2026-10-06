@@ -6,10 +6,8 @@ use App\Models\MatchTable;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
 
-
 class MatchRepository
 {
-
     public function create(array $match): MatchTable
     {
         return MatchTable::create($match);
@@ -27,8 +25,7 @@ class MatchRepository
     /**
      * getById
      *
-     * @param  mixed $matchId
-     * @return MatchTable
+     * @param  mixed  $matchId
      */
     public function getById(int $matchId): ?MatchTable
     {
@@ -56,19 +53,19 @@ class MatchRepository
         return MatchTable::all();
     }
 
-    //TODO:paginate the result
+    // TODO:paginate the result
     public function matches(int $petId): Collection
     {
         return MatchTable::where('from', $petId)->with('toPet')->get();
     }
 
-    //TODO:paginate the result
+    // TODO:paginate the result
     public function mismatches(int $petId): Collection
     {
         return MatchTable::onlyTrashed()->where('from', $petId)->get();
     }
 
-    public function paginate():LengthAwarePaginator
+    public function paginate(): LengthAwarePaginator
     {
         return MatchTable::paginate();
     }

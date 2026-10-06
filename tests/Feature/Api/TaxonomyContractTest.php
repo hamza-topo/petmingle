@@ -19,7 +19,7 @@ class TaxonomyContractTest extends TestCase
 
         Sanctum::actingAs(
             User::withoutEvents(
-                fn() => User::factory()->create([
+                fn () => User::factory()->create([
                     'is_admin' => false,
                 ])
             )
@@ -55,7 +55,7 @@ class TaxonomyContractTest extends TestCase
             'description' => 'Cats',
         ]);
 
-        $this->getJson('/api/v.0/species/' . $species->id)
+        $this->getJson('/api/v.0/species/'.$species->id)
             ->assertOk()
             ->assertJsonPath('success', true)
             ->assertJsonPath('data.id', $species->id)
@@ -98,7 +98,7 @@ class TaxonomyContractTest extends TestCase
             'name' => 'Labrador Retriever',
         ]);
 
-        $this->getJson('/api/v.0/races/' . $race->id)
+        $this->getJson('/api/v.0/races/'.$race->id)
             ->assertOk()
             ->assertJsonPath('success', true)
             ->assertJsonPath('data.id', $race->id)
@@ -112,7 +112,7 @@ class TaxonomyContractTest extends TestCase
     {
         foreach (['species', 'races'] as $resource) {
             $this->getJson(
-                '/api/v.0/' . $resource . '/999999'
+                '/api/v.0/'.$resource.'/999999'
             )
                 ->assertNotFound()
                 ->assertExactJson([

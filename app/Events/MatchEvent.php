@@ -3,11 +3,12 @@
 namespace App\Events;
 
 use App\Models\MatchTable;
-use Illuminate\Broadcasting\PrivateChannel;
+use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
-use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
 use Illuminate\Contracts\Broadcasting\ShouldRescue;
+use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
@@ -15,20 +16,17 @@ class MatchEvent implements ShouldBroadcastNow, ShouldDispatchAfterCommit, Shoul
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct(public MatchTable $fromMatch, public MatchTable $toMatch)
-    {
-    }
+    public function __construct(public MatchTable $fromMatch, public MatchTable $toMatch) {}
 
     /**
      * Get the channels the event should broadcast on.
      *
-     * @return \Illuminate\Broadcasting\Channel|array
+     * @return Channel|array
      */
     public function broadcastOn()
     {
@@ -39,7 +37,7 @@ class MatchEvent implements ShouldBroadcastNow, ShouldDispatchAfterCommit, Shoul
         ]);
 
         return array_map(
-            fn ($id) => new PrivateChannel('App.Models.User.' . $id),
+            fn ($id) => new PrivateChannel('App.Models.User.'.$id),
             array_values(array_unique($owners))
         );
     }
@@ -54,7 +52,8 @@ class MatchEvent implements ShouldBroadcastNow, ShouldDispatchAfterCommit, Shoul
         ];
     }
 
-    public function broadcastAs() {
+    public function broadcastAs()
+    {
         return 'new.match';
     }
 }

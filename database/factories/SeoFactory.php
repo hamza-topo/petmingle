@@ -26,7 +26,7 @@ class SeoFactory extends Factory
         return [
             'key' => Pages::ABOUT,
             'meta' => ['description' => ['fr' => 'meta', 'en' => 'meta', 'es' => 'meta']],
-            'title' => ['fr' => 'titre', 'en' => 'title', 'es' => 'título']
+            'title' => ['fr' => 'titre', 'en' => 'title', 'es' => 'título'],
         ];
     }
 }

@@ -15,7 +15,7 @@ class Update extends FormRequest
     {
         return [
             'name' => 'required|max:50',
-        ];;
+        ];
     }
 
     /**
@@ -30,5 +30,4 @@ class Update extends FormRequest
             'name.max' => \__('This Species Name is too much long.'),
         ];
     }
-
 }

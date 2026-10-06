@@ -16,7 +16,7 @@ class AddIsVerifiedToUsersTable extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->boolean('is_verified')->default(0)->comment(
-                User::ACCOUNT_NOT_VERIFIED . ':no;' . User::ACCOUNT_VERIFIED . '1:yes'
+                User::ACCOUNT_NOT_VERIFIED.':no;'.User::ACCOUNT_VERIFIED.'1:yes'
             )->after('id');
         });
     }

@@ -10,6 +10,5 @@ class Filter extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $fillable = [ 'name', 'description', 'is_free' ];
-
+    protected $fillable = ['name', 'description', 'is_free'];
 }

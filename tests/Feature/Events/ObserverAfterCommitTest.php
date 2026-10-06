@@ -15,8 +15,8 @@ use App\Models\Pet;
 use App\Models\Race;
 use App\Models\Species;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Database\DatabaseTransactionsManager;
+use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
@@ -30,7 +30,7 @@ class ObserverAfterCommitTest extends TestCase
     {
         parent::setUp();
 
-        $transactionsManager = new DatabaseTransactionsManager();
+        $transactionsManager = new DatabaseTransactionsManager;
 
         $this->app->instance(
             'db.transactions',
@@ -58,18 +58,13 @@ class ObserverAfterCommitTest extends TestCase
 
         Mail::fake();
 
-
         $firstUser = $this->createUserWithoutEvents();
-
 
         $secondUser = $this->createUserWithoutEvents();
 
-
         $firstPet = $this->createPet($firstUser);
 
-
         $secondPet = $this->createPet($secondUser);
-
 
         // Existing reciprocal like.
         // We do not want this setup row to trigger the observer being tested.
@@ -79,7 +74,6 @@ class ObserverAfterCommitTest extends TestCase
                 'to' => $firstPet->id,
             ]);
         });
-
 
         DB::beginTransaction();
 

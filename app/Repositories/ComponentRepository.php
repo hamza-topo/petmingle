@@ -8,7 +8,6 @@ use Illuminate\Support\Collection;
 
 class ComponentRepository
 {
-
     public function create(array $component): Component
     {
         return Component::create($component);
@@ -26,8 +25,7 @@ class ComponentRepository
     /**
      * getById
      *
-     * @param  mixed $adoptionId
-     * @return Component
+     * @param  mixed  $adoptionId
      */
     public function getById(int $adoptionId): ?Component
     {
@@ -55,13 +53,13 @@ class ComponentRepository
         return Component::all();
     }
 
-    //TODO:paginate the result
+    // TODO:paginate the result
     public function matches(int $petId): Collection
     {
         return Component::where('from', $petId)->with('toPet')->get();
     }
 
-    //TODO:paginate the result
+    // TODO:paginate the result
     public function mismatches(int $petId): Collection
     {
         return Component::onlyTrashed()->where('from', $petId)->get();

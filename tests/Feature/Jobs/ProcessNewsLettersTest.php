@@ -17,16 +17,17 @@ use Tests\TestCase;
 class ProcessNewsLettersTest extends TestCase
 {
     use DatabaseTruncation;
+
     public function test_email_newsletter_is_sent_only_to_matching_species_owners(): void
     {
         Mail::fake();
 
         $dogOwner = User::withoutEvents(
-            fn() => User::factory()->create()
+            fn () => User::factory()->create()
         );
 
         $catOwner = User::withoutEvents(
-            fn() => User::factory()->create()
+            fn () => User::factory()->create()
         );
 
         $dogSpecies = Species::create([
@@ -61,21 +62,19 @@ class ProcessNewsLettersTest extends TestCase
         ]);
 
         $this->app->call([
-            new ProcessNewsLetters(),
+            new ProcessNewsLetters,
             'handle',
         ]);
 
         Mail::assertQueued(
             NewsLetterMail::class,
-            fn(NewsLetterMail $mail) =>
-            $mail->newsLetter->is($newsLetter)
+            fn (NewsLetterMail $mail) => $mail->newsLetter->is($newsLetter)
                 && $mail->hasTo($dogOwner->email)
         );
 
         Mail::assertNotQueued(
             NewsLetterMail::class,
-            fn(NewsLetterMail $mail) =>
-            $mail->hasTo($catOwner->email)
+            fn (NewsLetterMail $mail) => $mail->hasTo($catOwner->email)
         );
     }
 
@@ -107,7 +106,7 @@ class ProcessNewsLettersTest extends TestCase
         ]);
 
         $this->app->call([
-            new ProcessNewsLetters(),
+            new ProcessNewsLetters,
             'handle',
         ]);
 

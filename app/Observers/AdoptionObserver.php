@@ -11,11 +11,9 @@ class AdoptionObserver implements ShouldHandleEventsAfterCommit
     public function __construct(
         protected AdoptionService $adoptionService
     ) {}
+
     /**
      * Handle the Adoption "created" event.
-     *
-     * @param  \App\Models\Adoption  $adoption
-     * @return void
      */
     public function created(Adoption $adoption): void
     {
@@ -28,7 +26,6 @@ class AdoptionObserver implements ShouldHandleEventsAfterCommit
     /**
      * Handle the Adoption "updated" event.
      *
-     * @param  \App\Models\Adoption  $adoption
      * @return void
      */
     public function updated(Adoption $adoption)
@@ -39,7 +36,6 @@ class AdoptionObserver implements ShouldHandleEventsAfterCommit
     /**
      * Handle the Adoption "deleted" event.
      *
-     * @param  \App\Models\Adoption  $adoption
      * @return void
      */
     public function deleted(Adoption $adoption)
@@ -50,7 +46,6 @@ class AdoptionObserver implements ShouldHandleEventsAfterCommit
     /**
      * Handle the Adoption "restored" event.
      *
-     * @param  \App\Models\Adoption  $adoption
      * @return void
      */
     public function restored(Adoption $adoption)
@@ -61,7 +56,6 @@ class AdoptionObserver implements ShouldHandleEventsAfterCommit
     /**
      * Handle the Adoption "force deleted" event.
      *
-     * @param  \App\Models\Adoption  $adoption
      * @return void
      */
     public function forceDeleted(Adoption $adoption)

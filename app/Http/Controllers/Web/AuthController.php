@@ -6,13 +6,13 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Auth\SignIn;
 use App\Http\Requests\Api\Auth\SignUp;
 use App\Repositories\AuthRepository;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 
 class AuthController extends Controller
 {
     public function __construct(protected AuthRepository $authRepository) {}
+
     public function login()
     {
         return view('auth.login');
@@ -48,8 +48,8 @@ class AuthController extends Controller
     {
         try {
             $this->authRepository->signUp($request->all());
-            
-            //TODO::need email validation
+
+            // TODO::need email validation
             return redirect(route('user.register'));
         } catch (\Exception $e) {
             Log::error('error while creating new user account', [$e->getMessage()]);

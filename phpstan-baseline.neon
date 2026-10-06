@@ -398,17 +398,17 @@ parameters:
 
 		-
 			message: '''
-				#^PHPDoc tag @param has invalid value \(Request 
+				#^PHPDoc tag @param has invalid value \(Request
 				\| request The `Request ` parameter in the `store` function represents an
 				\| HTTP request that contains all the data submitted by the user\. In this context, it is used to
-				\| retrieve all input data from the request to create a new SEO page using the `seoRepository`\.\)\: Unexpected token "The", expected variable at offset 199 on line 6$#
+				\| retrieve all input data from the request to create a new SEO page using the `seoRepository`\.\)\: Unexpected token "The", expected variable at offset 197 on line 6$#
 			'''
 			identifier: phpDoc.parseError
 			count: 1
 			path: app/Http/Controllers/Admin/SeoController.php
 
 		-
-			message: '#^PHPDoc tag @property\-read has invalid value \(SeoRepository\)\: Unexpected token "\\n     \*", expected variable at offset 39 on line 2$#'
+			message: '#^PHPDoc tag @property\-read has invalid value \(SeoRepository\)\: Unexpected token "\\n     ", expected variable at offset 39 on line 2$#'
 			identifier: phpDoc.parseError
 			count: 1
 			path: app/Http/Controllers/Admin/SeoController.php

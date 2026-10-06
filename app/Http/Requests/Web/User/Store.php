@@ -23,8 +23,6 @@ class Store extends FormRequest
 
     /**
      * Get the custom messages for validator errors.
-     *
-     * @return array
      */
     public function messages(): array
     {
@@ -40,7 +38,7 @@ class Store extends FormRequest
             'password.required' => __('The Field Password is required.'),
             'password.string' => __('The Field Password must be a valid string.'),
             'password.min' => __('The Field Password must be at least 8 characters long.'),
-          
+
             'is_admin.required' => __('You must select an admin status.'),
             'is_admin.boolean' => __('Invalid value for Admin status.'),
         ];

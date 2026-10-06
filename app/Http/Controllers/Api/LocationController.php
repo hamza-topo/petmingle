@@ -6,9 +6,11 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Location\Near;
 use App\Http\Requests\Api\Location\Store;
 use App\Http\Resources\Api\Location\Near as LocationNear;
-use App\Repositories\LocationRepository;
 use App\Http\Resources\Api\LocationResource;
 use App\Http\Responses\ApiResponse;
+use App\Repositories\LocationRepository;
+use Illuminate\Http\Response;
+use Illuminate\Validation\ValidationException;
 
 class LocationController extends Controller
 {
@@ -17,7 +19,7 @@ class LocationController extends Controller
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function index()
     {
@@ -34,7 +36,7 @@ class LocationController extends Controller
     /**
      * Display nearby Discovery results.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function near(Near $request)
     {
@@ -44,7 +46,7 @@ class LocationController extends Controller
     /**
      * Legacy route using the same normalized Discovery contract.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function filter(Near $request)
     {
@@ -54,7 +56,7 @@ class LocationController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Store $request)
     {
@@ -73,7 +75,7 @@ class LocationController extends Controller
     /**
      * Display the specified resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function show(string $id)
     {
@@ -90,7 +92,7 @@ class LocationController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function update(Store $request, $id)
     {
@@ -112,7 +114,7 @@ class LocationController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function destroy($id)
     {
@@ -130,7 +132,7 @@ class LocationController extends Controller
     /**
      * Restore the specified resource from storage.
      *
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function restore($id)
     {
@@ -148,8 +150,8 @@ class LocationController extends Controller
     {
         $user = $request->user();
 
-        if (!$user->pet) {
-            throw \Illuminate\Validation\ValidationException::withMessages([
+        if (! $user->pet) {
+            throw ValidationException::withMessages([
                 'pet' => [
                     __('Create a pet profile before using Discovery.'),
                 ],
@@ -160,8 +162,8 @@ class LocationController extends Controller
             $user->id
         );
 
-        if (!$origin) {
-            throw \Illuminate\Validation\ValidationException::withMessages([
+        if (! $origin) {
+            throw ValidationException::withMessages([
                 'location' => [
                     __('Set a valid account location before using Discovery.'),
                 ],

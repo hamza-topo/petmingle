@@ -2,7 +2,8 @@
 
 namespace App\Http\Resources\Api\Message;
 
-use Carbon\Carbon;
+use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
 class Chat extends ResourceCollection
@@ -10,8 +11,8 @@ class Chat extends ResourceCollection
     /**
      * Transform the resource into an array.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
+     * @param  Request  $request
+     * @return array|Arrayable|\JsonSerializable
      */
     public function toArray($request)
     {
@@ -29,8 +30,8 @@ class Chat extends ResourceCollection
                 'pet_receiver_id' => $message->receiver->pet->id,
                 'pet_sender_name' => $message->sender->pet->name,
                 'pet_receiver_name' => $message->receiver->pet->name,
-                'pet_sender_profile_pic' => asset('storage/' .  $message->sender->pet->images[0]  ?? ''),
-                'pet_receiver_profile_pic' => asset('storage/' .  $message->receiver->pet->images[0]  ?? '') ?? '',
+                'pet_sender_profile_pic' => asset('storage/'.$message->sender->pet->images[0] ?? ''),
+                'pet_receiver_profile_pic' => asset('storage/'.$message->receiver->pet->images[0] ?? '') ?? '',
                 'message_created_at' => displayHumanDate($message->created_at),
             ];
         });

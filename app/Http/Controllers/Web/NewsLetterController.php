@@ -2,18 +2,17 @@
 
 namespace App\Http\Controllers\Web;
 
-use Exception;
+use App\Http\Controllers\Controller;
 use App\Models\MailList;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
-use App\Http\Controllers\Controller;
 
 class NewsLetterController extends Controller
 {
     /**
      * Add new mail to mail list
      *
-     * @param Request $request
      * @return void
      */
     public function subscribe(Request $request)
@@ -28,6 +27,7 @@ class NewsLetterController extends Controller
             return redirect()->back();
         } catch (Exception $e) {
             Log::error($e->getMessage());
+
             return abort(500);
         }
     }

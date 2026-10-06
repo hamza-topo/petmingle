@@ -21,8 +21,7 @@ class PusherHttpBroadcasterTest extends TestCase
 
         $broadcaster->channel(
             'App.Models.User.{id}',
-            fn (User $user, $id) =>
-                (int) $user->id === (int) $id
+            fn (User $user, $id) => (int) $user->id === (int) $id
         );
 
         $request = Request::create(
@@ -30,8 +29,7 @@ class PusherHttpBroadcasterTest extends TestCase
             'POST',
             [
                 'socket_id' => '123.456',
-                'channel_name' =>
-                    'private-App.Models.User.101',
+                'channel_name' => 'private-App.Models.User.101',
             ]
         );
 
@@ -50,7 +48,7 @@ class PusherHttpBroadcasterTest extends TestCase
         );
 
         $this->assertSame(
-            'test-key:' . $expected,
+            'test-key:'.$expected,
             $response['auth']
         );
     }
@@ -61,8 +59,7 @@ class PusherHttpBroadcasterTest extends TestCase
 
         $broadcaster->channel(
             'App.Models.User.{id}',
-            fn (User $user, $id) =>
-                (int) $user->id === (int) $id
+            fn (User $user, $id) => (int) $user->id === (int) $id
         );
 
         $request = Request::create(
@@ -70,8 +67,7 @@ class PusherHttpBroadcasterTest extends TestCase
             'POST',
             [
                 'socket_id' => '123.456',
-                'channel_name' =>
-                    'private-App.Models.User.102',
+                'channel_name' => 'private-App.Models.User.102',
             ]
         );
 
@@ -195,7 +191,7 @@ class PusherHttpBroadcasterTest extends TestCase
         return new PusherHttpBroadcaster(
             new Client([
                 'handler' => HandlerStack::create(
-                    new MockHandler()
+                    new MockHandler
                 ),
             ]),
             'test-key',

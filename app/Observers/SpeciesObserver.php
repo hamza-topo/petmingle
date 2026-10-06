@@ -9,8 +9,6 @@ use Illuminate\Contracts\Events\ShouldHandleEventsAfterCommit;
 
 class SpeciesObserver implements ShouldHandleEventsAfterCommit
 {
-
-
     public function __construct(
         protected CacheService $cacheService
     ) {}

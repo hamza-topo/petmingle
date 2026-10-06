@@ -8,7 +8,6 @@ use Illuminate\Support\Collection;
 
 class AdoptionRepository
 {
-
     public function create(array $adoption): Adoption
     {
         return Adoption::create($adoption);
@@ -26,8 +25,7 @@ class AdoptionRepository
     /**
      * getById
      *
-     * @param  mixed $adoptionId
-     * @return Adoption
+     * @param  mixed  $adoptionId
      */
     public function getById(int $adoptionId): Adoption
     {
@@ -55,13 +53,13 @@ class AdoptionRepository
         return Adoption::all();
     }
 
-    //TODO:paginate the result
+    // TODO:paginate the result
     public function matches(int $petId): Collection
     {
         return Adoption::where('from', $petId)->with('toPet')->get();
     }
 
-    //TODO:paginate the result
+    // TODO:paginate the result
     public function mismatches(int $petId): Collection
     {
         return Adoption::onlyTrashed()->where('from', $petId)->get();

@@ -1,8 +1,15 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\Web\AboutController;
 use App\Http\Controllers\Web\AuthController as WebAuthController;
-use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\Web\BlogController;
+use App\Http\Controllers\Web\ContactController;
+use App\Http\Controllers\Web\EngineController;
+use App\Http\Controllers\Web\FaqController;
+use App\Http\Controllers\Web\NewsLetterController;
+use App\Http\Controllers\Web\PrivacyPolicyController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,8 +23,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-
-
 Route::get('login/{provider}', [AuthController::class, 'redirectToProvider']);
 Route::get('{provider}/callback', [AuthController::class, 'handleProviderCallback']);
 Route::get('user/login/', [WebAuthController::class, 'login'])->name('user.login');
@@ -25,21 +30,20 @@ Route::get('user/register/', [WebAuthController::class, 'register'])->name('user
 Route::post('user/login/', [WebAuthController::class, 'signIn'])->name('user.login.signIn');
 Route::post('user/register/', [WebAuthController::class, 'signUp'])->name('user.register.signUp');
 
-
 // Route::get('/', function () {
 //     return view('welcome');
 // });
 
 Route::group([], function ($router) {
-    $router->get('/about', App\Http\Controllers\Web\AboutController::class)->name('about');
-    $router->get('/contact', [App\Http\Controllers\Web\ContactController::class, 'index'])->name('contact');
-    $router->post('/contact', [App\Http\Controllers\Web\ContactController::class, 'store'])->name('contact.store');
-    $router->get('/blogs', [App\Http\Controllers\Web\BlogController::class, 'index'])->name('blogs');
-    $router->get('/blogs/{slug}', [App\Http\Controllers\Web\BlogController::class, 'read'])->name('blogs.read');
-    $router->get('/faq', App\Http\Controllers\Web\FaqController::class)->name('faq');
-    $router->get('/privacy-policy', App\Http\Controllers\Web\PrivacyPolicyController::class)->name('privacy-policy');
-    $router->get('/search', [App\Http\Controllers\Web\EngineController::class, 'index'])->name('engine');
-    $router->get('/search/{slug}/{id}', [App\Http\Controllers\Web\EngineController::class, 'show'])->name('engine.detail');
-    $router->get('/', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-    $router->post('', [App\Http\Controllers\Web\NewsLetterController::class, 'subscribe'])->name('news-letter.subscribe');
+    $router->get('/about', AboutController::class)->name('about');
+    $router->get('/contact', [ContactController::class, 'index'])->name('contact');
+    $router->post('/contact', [ContactController::class, 'store'])->name('contact.store');
+    $router->get('/blogs', [BlogController::class, 'index'])->name('blogs');
+    $router->get('/blogs/{slug}', [BlogController::class, 'read'])->name('blogs.read');
+    $router->get('/faq', FaqController::class)->name('faq');
+    $router->get('/privacy-policy', PrivacyPolicyController::class)->name('privacy-policy');
+    $router->get('/search', [EngineController::class, 'index'])->name('engine');
+    $router->get('/search/{slug}/{id}', [EngineController::class, 'show'])->name('engine.detail');
+    $router->get('/', [HomeController::class, 'index'])->name('home');
+    $router->post('', [NewsLetterController::class, 'subscribe'])->name('news-letter.subscribe');
 });

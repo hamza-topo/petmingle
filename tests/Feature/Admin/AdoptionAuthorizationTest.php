@@ -3,13 +3,13 @@
 namespace Tests\Feature\Admin;
 
 use App\Http\Middleware\IsAdmin;
-use App\Models\User;
-use Illuminate\Foundation\Testing\RefreshDatabase;
-use Tests\TestCase;
 use App\Models\Adoption;
 use App\Models\Pet;
 use App\Models\Race;
 use App\Models\Species;
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Tests\TestCase;
 
 class AdoptionAuthorizationTest extends TestCase
 {

@@ -3,9 +3,9 @@
 namespace App\Http\Controllers\Web;
 
 use App\Enums\Pages;
-use App\Repositories\SeoRepository;
 use App\Http\Controllers\Controller;
 use App\Repositories\BlogRepository;
+use App\Repositories\SeoRepository;
 
 class AboutController extends Controller
 {
@@ -13,6 +13,7 @@ class AboutController extends Controller
         protected SeoRepository $seoRepository,
         protected BlogRepository $blogRepositoryRepository,
     ) {}
+
     public function __invoke()
     {
         $slug = __('about');

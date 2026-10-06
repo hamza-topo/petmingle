@@ -17,7 +17,7 @@ class CreateNewsLettersTable extends Migration
         Schema::create('news_letters', function (Blueprint $table) {
             $table->id();
             $table->tinyInteger('type')->comment(
-                NewsLetter::MOBILE . ':push,' . NewsLetter::EMAIL . ':email,' . NewsLetter::ALL . ':bouth'
+                NewsLetter::MOBILE.':push,'.NewsLetter::EMAIL.':email,'.NewsLetter::ALL.':bouth'
             );
             $table->integer('species_id')->nullable()->comment('NULL:all species included');
             $table->string('title');

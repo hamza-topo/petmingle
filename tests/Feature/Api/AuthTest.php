@@ -59,7 +59,7 @@ class AuthTest extends TestCase
         $token = $user->createToken('api')->plainTextToken;
 
         $this
-            ->withHeader('Authorization', 'Bearer ' .$token)
+            ->withHeader('Authorization', 'Bearer '.$token)
             ->getJson('/api/v.0/pets')
             ->assertSuccessful();
     }
@@ -71,7 +71,7 @@ class AuthTest extends TestCase
         $token = $user->createToken('api')->plainTextToken;
 
         $response = $this
-            ->withHeader('Authorization', 'Bearer ' .$token)
+            ->withHeader('Authorization', 'Bearer '.$token)
             ->postJson('/api/v.0/sign-out');
 
         $response->assertOk();
@@ -115,6 +115,7 @@ class AuthTest extends TestCase
             Hash::check('password123', $user->password)
         );
     }
+
     public function test_public_signup_ignores_privileged_and_internal_attributes(): void
     {
         Storage::fake('public');
@@ -149,5 +150,4 @@ class AuthTest extends TestCase
         $this->assertNull($user->provider_id);
         $this->assertNull($user->provider_name);
     }
-
 }

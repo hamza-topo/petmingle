@@ -2,9 +2,8 @@
 
 namespace App\Observers;
 
-use App\Models\Blog;
 use App\Events\AutoSiteMapEvent;
-use Illuminate\Support\Facades\Artisan;
+use App\Models\Blog;
 
 class BlogObserver
 {
@@ -12,10 +11,10 @@ class BlogObserver
     {
         // dispatch(new AutoSiteMapEvent());
     }
+
     /**
      * Handle the Blog "created" event.
      *
-     * @param  \App\Models\Blog  $blog
      * @return void
      */
     public function created(Blog $blog)
@@ -26,7 +25,6 @@ class BlogObserver
     /**
      * Handle the Blog "updated" event.
      *
-     * @param  \App\Models\Blog  $blog
      * @return void
      */
     public function updated(Blog $blog)
@@ -37,7 +35,6 @@ class BlogObserver
     /**
      * Handle the Blog "deleted" event.
      *
-     * @param  \App\Models\Blog  $blog
      * @return void
      */
     public function deleted(Blog $blog)
@@ -48,7 +45,6 @@ class BlogObserver
     /**
      * Handle the Blog "restored" event.
      *
-     * @param  \App\Models\Blog  $blog
      * @return void
      */
     public function restored(Blog $blog)
@@ -59,7 +55,6 @@ class BlogObserver
     /**
      * Handle the Blog "force deleted" event.
      *
-     * @param  \App\Models\Blog  $blog
      * @return void
      */
     public function forceDeleted(Blog $blog)

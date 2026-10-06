@@ -2,9 +2,10 @@
 
 namespace App\View\Components\Web\Home\Blog;
 
-use Illuminate\View\Component;
-use Illuminate\Support\Collection;
 use App\Repositories\NewsLetterRepository;
+use Illuminate\Contracts\View\View;
+use Illuminate\Support\Collection;
+use Illuminate\View\Component;
 
 class SideItem extends Component
 {
@@ -18,7 +19,7 @@ class SideItem extends Component
     /**
      * Get the view / contents that represent the component.
      *
-     * @return \Illuminate\Contracts\View\View|\Closure|string
+     * @return View|\Closure|string
      */
     public function render()
     {

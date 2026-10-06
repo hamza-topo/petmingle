@@ -110,9 +110,8 @@ class PrivateBroadcastTest extends TestCase
 
         $payload = [
             'socket_id' => '123.456',
-            'channel_name' =>
-                'private-App.Models.User.'
-                . $user->id,
+            'channel_name' => 'private-App.Models.User.'
+                .$user->id,
         ];
 
         $this
@@ -122,7 +121,7 @@ class PrivateBroadcastTest extends TestCase
 
         $payload['channel_name'] =
             'private-App.Models.User.'
-            . ($user->id + 1);
+            .($user->id + 1);
 
         $this
             ->withToken($token)
