@@ -10,6 +10,7 @@ import { apiRequest } from '../../api/client';
 import {
   conversationsRequest,
   mapConversation,
+  markConversationSeenRequest,
   messageSendRequest,
   otherParticipantUserId,
   threadRequest,
@@ -264,6 +265,38 @@ describe('messaging api', () => {
         receipt: 'read',
       },
     ]);
+  });
+
+  it('marks a conversation seen without client-supplied receiver identity', async () => {
+    mockedApiRequest.mockResolvedValue({
+      success: true,
+      message: 'Conversation marked as seen.',
+      data: {
+        conversation_id: 7,
+        marked_count: 3,
+        unread_count: 0,
+      },
+    });
+
+    const result =
+      await markConversationSeenRequest({
+        token: 'token',
+        conversationId: 7,
+      });
+
+    expect(mockedApiRequest).toHaveBeenCalledWith(
+      '/conversations/7/seen',
+      {
+        method: 'PUT',
+        token: 'token',
+      },
+    );
+
+    expect(result).toEqual({
+      conversationId: 7,
+      markedCount: 3,
+      unreadCount: 0,
+    });
   });
 
   it('sends only receiver identity and content, then maps the persisted message', async () => {
