@@ -28,6 +28,7 @@ class BladeAssetLoadingTest extends TestCase
             ->assertDontSee('/js/app.js', false)
             ->assertDontSee('/css/app.css', false);
     }
+
     public function test_authentication_page_uses_published_adminlte_assets(): void
     {
         $this->get('/user/login')->assertOk()
