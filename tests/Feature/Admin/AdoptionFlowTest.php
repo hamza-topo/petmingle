@@ -54,6 +54,13 @@ class AdoptionFlowTest extends TestCase
         $this->actingAs($admin);
 
         $this->post('/admin/adoptions', [
+            'from' => $newOwner->id,
+            'pet_id' => $pet->id,
+            'to' => $owner->id,
+        ])->assertSessionHasErrors('pet_id');
+        $this->assertDatabaseCount('adoptions', 0);
+
+        $this->post('/admin/adoptions', [
             'from' => $owner->id,
             'pet_id' => $pet->id,
             'to' => $newOwner->id,

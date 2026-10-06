@@ -74,7 +74,10 @@ jobs:
         run: composer validate --strict
 
       - name: Check PHP formatting
-        run: composer format:test
+        run: |
+          composer format
+          git diff --no-ext-diff
+          composer format:test
 
       - name: Run static analysis
         run: composer analyse
