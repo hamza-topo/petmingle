@@ -57,23 +57,58 @@ class MessageRepository
 
     public function restore(int $messageId): bool
     {
-        return $this->getByIdWithTrashed($messageId)->restore();
+        return $this
+            ->getByIdWithTrashed($messageId)
+            ->restore();
     }
 
-    public function getByIdWithTrashed(int $messageId): Message
-    {
-        return Message::withTrashed()->findOrFail($messageId);
+    public function getByIdWithTrashed(
+        int $messageId
+    ): Message {
+        return Message::withTrashed()
+            ->findOrFail($messageId);
     }
 
-    public function messages(
-        int $senderId,
-        int $receiverId
+    public function messagesBetween(
+        int $firstUserId,
+        int $secondUserId,
+        int $perPage = 30,
+        int $page = 1
     ): LengthAwarePaginator {
-        return Message::where([
-            'sender_id' => $senderId,
-            'receiver_id' => $receiverId,
-        ])
-            ->with(['receiver.pet', 'sender.pet'])
-            ->paginate();
+        $paginator = Message::query()
+            ->where(function ($query) use (
+                $firstUserId,
+                $secondUserId
+            ) {
+                $query
+                    ->where([
+                        'sender_id' => $firstUserId,
+                        'receiver_id' => $secondUserId,
+                    ])
+                    ->orWhere([
+                        'sender_id' => $secondUserId,
+                        'receiver_id' => $firstUserId,
+                    ]);
+            })
+            ->orderByDesc('created_at')
+            ->orderByDesc('id')
+            ->paginate(
+                $perPage,
+                ['*'],
+                'page',
+                $page
+            );
+
+        $paginator->setCollection(
+            $paginator
+                ->getCollection()
+                ->sortBy([
+                    ['created_at', 'asc'],
+                    ['id', 'asc'],
+                ])
+                ->values()
+        );
+
+        return $paginator;
     }
 }
