@@ -307,47 +307,6 @@ parameters:
 			path: app/Http/Controllers/Admin/RaceController.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\Admin\\SeoController\:\:create\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
-			identifier: return.type
-			count: 1
-			path: app/Http/Controllers/Admin/SeoController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Admin\\SeoController\:\:edit\(\) with return type void returns Illuminate\\View\\View but should not return anything\.$#'
-			identifier: return.void
-			count: 1
-			path: app/Http/Controllers/Admin/SeoController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Admin\\SeoController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
-			identifier: return.type
-			count: 1
-			path: app/Http/Controllers/Admin/SeoController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Admin\\SeoController\:\:store\(\) with return type void returns Illuminate\\Http\\RedirectResponse but should not return anything\.$#'
-			identifier: return.void
-			count: 1
-			path: app/Http/Controllers/Admin/SeoController.php
-
-		-
-			message: '''
-				#^PHPDoc tag @param has invalid value \(Request
-				\| request The `Request ` parameter in the `store` function represents an
-				\| HTTP request that contains all the data submitted by the user\. In this context, it is used to
-				\| retrieve all input data from the request to create a new SEO page using the `seoRepository`\.\)\: Unexpected token "The", expected variable at offset 197 on line 6$#
-			'''
-			identifier: phpDoc.parseError
-			count: 1
-			path: app/Http/Controllers/Admin/SeoController.php
-
-		-
-			message: '#^PHPDoc tag @property\-read has invalid value \(SeoRepository\)\: Unexpected token "\\n     ", expected variable at offset 39 on line 2$#'
-			identifier: phpDoc.parseError
-			count: 1
-			path: app/Http/Controllers/Admin/SeoController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\Admin\\SettingController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
 			identifier: return.type
 			count: 1
@@ -1522,18 +1481,6 @@ parameters:
 			identifier: larastan.relationExistence
 			count: 3
 			path: app/Repositories/RaceRepository.php
-
-		-
-			message: '#^Method App\\Repositories\\SeoRepository\:\:delete\(\) should return bool but returns int\.$#'
-			identifier: return.type
-			count: 1
-			path: app/Repositories/SeoRepository.php
-
-		-
-			message: '#^PHPDoc tag @return with type void is incompatible with native type Illuminate\\Support\\Collection\.$#'
-			identifier: return.phpDocType
-			count: 1
-			path: app/Repositories/SeoRepository.php
 
 		-
 			message: '#^Method App\\Repositories\\SpeciesRepository\:\:delete\(\) should return bool but returns int\.$#'

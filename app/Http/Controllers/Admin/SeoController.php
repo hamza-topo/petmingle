@@ -5,24 +5,17 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\App;
 use App\Enums\Pages;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Seo\Store;
+use App\Http\Requests\Admin\Seo\Update;
 use App\Repositories\SeoRepository;
-use Illuminate\Http\Request;
-use Illuminate\Http\Response;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Contracts\View\View;
+use Illuminate\Http\RedirectResponse;
 
 class SeoController extends Controller
 {
-    /**
-     * @property-read SeoRepository
-     */
     public function __construct(protected SeoRepository $seoRepository) {}
 
-    /**
-     * Display a listing of the resource.
-     *
-     * @return Response
-     */
-    public function index()
+    public function index(): View
     {
         $pages = Pages::cases();
         $seos = $this->seoRepository->all();
@@ -30,12 +23,7 @@ class SeoController extends Controller
         return view('admin.seo.index', compact('pages', 'seos'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return Response
-     */
-    public function create()
+    public function create(): View
     {
         $pages = $this->seoRepository->getAvvaillable();
         $langs = App::LOCALES;
@@ -43,49 +31,32 @@ class SeoController extends Controller
         return view('admin.seo.create', compact('pages', 'langs'));
     }
 
-    /**
-     *    The function `store` attempts to create a new SEO record using data from the request, logging an
-     * | error if any exception occurs.
-     *
-     * @param Request
-     * | request The `Request ` parameter in the `store` function represents an
-     * | HTTP request that contains all the data submitted by the user. In this context, it is used to
-     * | retrieve all input data from the request to create a new SEO page using the `seoRepository`.
-     * @return void
-     */
-    public function store(Request $request)
+    public function store(Store $request): RedirectResponse
     {
-        try {
-            $this->seoRepository->create($request->all());
+        $this->seoRepository->create($request->validated());
 
-            return redirect(route('admin.seo.index'));
-        } catch (\Exception $e) {
-            Log::error('error Updating seo page: '.$e->getMessage());
-        }
+        return redirect()->route('admin.seo.index');
     }
 
-    /**
-     * Display Edit seo view
-     *
-     * @return void
-     */
-    public function edit(int $pageId)
+    public function edit(int $pageId): View
     {
         $page = $this->seoRepository->getById($pageId);
-        $pages = $this->seoRepository->getAvvaillable();
         $langs = App::LOCALES;
 
-        return view('admin.seo.edit', compact('page', 'langs', 'pages'));
+        return view('admin.seo.edit', compact('page', 'langs'));
     }
 
-    public function update(Request $request, int $id)
+    public function update(Update $request, int $id): RedirectResponse
     {
-        try {
-            $this->seoRepository->update($id, $request->all());
+        $this->seoRepository->update($id, $request->validated());
 
-            return redirect(route('admin.seo.index'));
-        } catch (\Exception $e) {
-            Log::error('error Updating: '.$e->getMessage());
-        }
+        return redirect()->route('admin.seo.index');
+    }
+
+    public function destroy(int $id): RedirectResponse
+    {
+        $this->seoRepository->delete($id);
+
+        return redirect()->route('admin.seo.index');
     }
 }

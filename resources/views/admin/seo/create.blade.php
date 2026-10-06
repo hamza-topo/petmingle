@@ -17,18 +17,24 @@
                             <div class="mb-3">
                                 @foreach ($langs as $key => $lang)
                                     <label class="form-label">Title : {{ $key }}</label>
-                                    <input type="text" class="form-control" name="title.{{ $lang }}"
+                                    <input type="text" class="form-control" name="title[{{ $lang }}]"
                                         value="{{ old('title.' . $lang) }}">
+                                    @error('title.' . $lang)
+                                        <div class="form-text text-danger">{{ $message }}</div>
+                                    @enderror
                                 @endforeach
-                                @error('name')
+                                @error('title')
                                     <div class="form-text text-danger">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="mb-3">
                                 @foreach ($langs as $key => $lang)
-                                <label class="form-label">Meta : {{ $lang }}</label>
-                                <input class="form-control" name="meta[description][{{ $lang }}]" type="text"
-                                    value="{{ old('meta.description.'. $lang ) }}">    
+                                    <label class="form-label">Meta : {{ $lang }}</label>
+                                    <input class="form-control" name="meta[description][{{ $lang }}]" type="text"
+                                        value="{{ old('meta.description.' . $lang) }}">
+                                    @error('meta.description.' . $lang)
+                                        <div class="form-text text-danger">{{ $message }}</div>
+                                    @enderror
                                 @endforeach
                                 @error('meta')
                                     <div class="form-text text-danger">{{ $message }}</div>
@@ -40,9 +46,12 @@
                                 <label class="form-label">La page</label>
                                 <select class="form-control" name="key">
                                     @foreach ($pages as $page)
-                                        <option value="{{$page}}">{{ $page }}</option>
+                                        <option value="{{ $page }}" {{ old('key') === $page ? 'selected' : '' }}>{{ $page }}</option>
                                     @endforeach
                                 </select>
+                                @error('key')
+                                    <div class="form-text text-danger">{{ $message }}</div>
+                                @enderror
                             </div>
                         </div>
                         <div class="col-12">
