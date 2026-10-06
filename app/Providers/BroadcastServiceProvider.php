@@ -4,7 +4,6 @@ namespace App\Providers;
 
 use App\Broadcasting\PusherHttpBroadcaster;
 use GuzzleHttp\Client;
-use Illuminate\Broadcasting\BroadcastManager;
 use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\ServiceProvider;
 
@@ -13,7 +12,7 @@ class BroadcastServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->app
-            ->make(BroadcastManager::class)
+            ->make('broadcast.manager')
             ->extend(
                 'petmingle-pusher',
                 function ($app, array $config) {
