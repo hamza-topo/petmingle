@@ -87,6 +87,7 @@ Route::prefix('v.0')->middleware('auth:sanctum')->group(function () {
     Route::get('/conversations', [ConversationController::class, 'index']);
     Route::put('/conversations/{conversation}/seen', [ConversationController::class, 'markSeen']);
 
+    Route::post('/messages/typing', [MessageController::class, 'typing']);
     Route::put('/messages/restore/{id}', [MessageController::class, 'restore']);
     Route::resources(['messages' => MessageController::class]);
 
