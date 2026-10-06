@@ -66,7 +66,7 @@ try {
         viewport: innerWidth, scroll: document.documentElement.scrollWidth,
         outside: [...document.querySelectorAll('header, main, main button, main h1, main h2')].filter(el => {
           const rect = el.getBoundingClientRect();
-          return rect.width > 0 && (rect.right > innerWidth + 1 || rect.left < -1);
+          return rect.width > 0 && (el.scrollWidth > el.clientWidth + 1 || rect.right > innerWidth + 1 || rect.left < -1);
         }).map(el => ({ tag: el.tagName, class: el.className, text: el.textContent?.trim().slice(0,60) })).slice(0,15),
       }));
       const filename = screen.name + '-' + width + '.png';
@@ -93,7 +93,7 @@ try {
       });
       await page.goto(base + screen.path);
       await page.locator('main').waitFor();
-      if (state === 'loading') await page.getByRole('status').filter({ hasText: /Loading/ }).first().waitFor();
+      if (state === 'loading') await page.locator('main').getByRole('status').filter({ hasText: /Loading/ }).first().waitFor();
       else if (state === 'error') await page.getByRole('alert').first().waitFor();
       else await page.getByRole('status').filter({ hasText: /No / }).first().waitFor();
       const scroll = await page.evaluate(() => document.documentElement.scrollWidth);

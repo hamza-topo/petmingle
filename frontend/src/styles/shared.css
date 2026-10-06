@@ -162,3 +162,13 @@
     font-weight: 700;
   }
 }
+
+@layer components {
+  /* Persisted identity names share the header with navigation and sign-out. */
+  .header-actions { min-width: 0; }
+  .own-pet-menu { min-width: 0; max-width: 180px; }
+  .own-pet-menu > span { min-width: 0; overflow: hidden; text-overflow: ellipsis; }
+  .own-pet-menu > svg { flex-shrink: 0; }
+  .pet-create-page .primary-nav { gap: 16px; }
+  .pet-create-page .header-actions { gap: 10px; }
+}

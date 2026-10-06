@@ -1,6 +1,6 @@
 @layer components {
   .pet-create-page { max-width: 1312px; width: calc(100% - 64px); margin: auto; min-height: 100vh; }
-  .pet-create-page .site-header { height: 76px; background: var(--color-surface); padding: 0 42px 0 76px; grid-template-columns: 250px minmax(0,1fr) 320px; gap: 86px; }
+  .pet-create-page .site-header { height: 76px; background: var(--color-surface); padding-inline: 28px; display: flex; justify-content: space-between; gap: 20px; }
   .pet-create-layout { display: grid; grid-template-columns: 338px minmax(0,1fr); gap: 18px; padding: 15px 25px 0 26px; align-items: start; }
   .pet-progress { margin-top: 3px; padding: 25px 28px 0; border-radius: var(--radius-panel); background: var(--color-canvas); overflow: hidden; }
   .pet-progress-eyebrow { text-transform: uppercase; color: var(--color-text-secondary); font-size: 14px; letter-spacing: .3px; }
