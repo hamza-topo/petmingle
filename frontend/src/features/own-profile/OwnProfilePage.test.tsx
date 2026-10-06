@@ -765,11 +765,9 @@ describe('Own pet profile', () => {
       }),
     );
 
-    expect(
-      screen.getByRole('radio', {
-        name: '3 Months',
-      }),
-    ).toBeChecked();
+    expect(screen.getByRole('radio', { name: '3 Months' })).toBeDisabled();
+    expect(screen.getByRole('radio', { name: '3 Months' })).not.toBeChecked();
+    expect(screen.getByText(/These proposed features and prices may change/)).toBeVisible();
 
     expect(screen.getByRole('radio', { name: '12 Months' })).toBeChecked();
 
