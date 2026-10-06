@@ -5,6 +5,9 @@ namespace App\Http\Resources\Api;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
+/**
+ * @property-read string|null $label
+ */
 class LocationResource extends JsonResource
 {
     public function toArray(Request $request): array
