@@ -1,4 +1,4 @@
-.location-picker { color: #243443; background: #faf9f6; border: 0; border-radius: 28px; padding: 28px; width: min(580px, calc(100vw - 40px)); max-height: calc(100dvh - 40px); overflow-y: auto; box-sizing: border-box; box-shadow: 0 24px 90px #24344340; }
+.location-picker { margin: auto; color: #243443; background: #faf9f6; border: 0; border-radius: 28px; padding: 28px; width: min(580px, calc(100vw - 40px)); max-height: calc(100dvh - 40px); overflow-y: auto; box-sizing: border-box; box-shadow: 0 24px 90px #24344340; }
 .location-picker::backdrop { background: #172b3b70; backdrop-filter: blur(5px); }
 .location-picker-heading { display: flex; align-items: start; justify-content: space-between; gap: 16px; }
 .location-picker-eyebrow { font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: .15em; }

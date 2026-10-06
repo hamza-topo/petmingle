@@ -164,7 +164,9 @@ try {
     });
     await page.screenshot({ path: output + '/location-picker-' + width + '.png', fullPage: false });
     const before = nearbyRequests;
+    const refreshed = page.waitForResponse(response => response.url().includes('/locations/nears'));
     await page.getByRole('button', { name: 'Confirm this area' }).click();
+    await refreshed;
     await modal.waitFor({ state: 'hidden' });
     await page.getByRole('button', { name: 'Casablanca, Morocco' }).waitFor();
     if (writes !== 1 || saved.label !== 'Casablanca, Morocco' || saved.longitude === -7.5898) throw new Error('Map movement or persistence failed');
