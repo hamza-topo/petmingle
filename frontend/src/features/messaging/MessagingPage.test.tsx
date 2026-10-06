@@ -21,6 +21,7 @@ import { tokenStorage } from '../../auth/tokenStorage';
 import { authenticatedAuthState } from '../../test/authFixtures';
 import {
   conversationsRequest,
+  markConversationSeenRequest,
   messageSendRequest,
   threadRequest,
 } from './messaging.api';
@@ -42,6 +43,7 @@ vi.mock('./messaging.api', async importOriginal => {
   return {
     ...actual,
     conversationsRequest: vi.fn(),
+    markConversationSeenRequest: vi.fn(),
     messageSendRequest: vi.fn(),
     threadRequest: vi.fn(),
   };
@@ -52,6 +54,8 @@ const mockedConversationsRequest =
   vi.mocked(conversationsRequest);
 const mockedThreadRequest =
   vi.mocked(threadRequest);
+const mockedMarkConversationSeenRequest =
+  vi.mocked(markConversationSeenRequest);
 const mockedMessageSendRequest =
   vi.mocked(messageSendRequest);
 
@@ -113,7 +117,7 @@ const persistedConversations: Conversation[] = [
     currentOwnerId: '10',
     preview: 'Latest with Luna',
     activityLabel: '8:00 AM',
-    unreadCount: 0,
+    unreadCount: 2,
     messages: [],
     interests: [],
   },
@@ -177,6 +181,15 @@ beforeEach(() => {
       receiverUserId === 20
         ? miloMessages
         : lunaMessages,
+  );
+
+  mockedMarkConversationSeenRequest.mockImplementation(
+    async ({ conversationId }) => ({
+      conversationId,
+      markedCount:
+        conversationId === 101 ? 1 : 2,
+      unreadCount: 0,
+    }),
   );
 
   mockedMessageSendRequest.mockResolvedValue(
@@ -251,6 +264,142 @@ describe('Messaging persisted reads', () => {
     expect(mockedThreadRequest).toHaveBeenLastCalledWith({
       token: 'test-token',
       receiverUserId: 30,
+    });
+  });
+
+  it('clears only the opened conversation badge after the server confirms seen state', async () => {
+    const user = userEvent.setup();
+
+    renderMessages();
+
+    await screen.findByText('Hello from Milo');
+
+    const firstButton = screen.getByRole('button', {
+      name: 'Nala & Milo',
+    });
+    const secondButton = screen.getByRole('button', {
+      name: 'Nala & Luna',
+    });
+
+    await waitFor(() =>
+      expect(
+        within(firstButton).queryByLabelText(
+          '1 unread message',
+        ),
+      ).not.toBeInTheDocument(),
+    );
+
+    expect(
+      within(secondButton).getByLabelText(
+        '2 unread message',
+      ),
+    ).toBeVisible();
+
+    expect(
+      mockedMarkConversationSeenRequest,
+    ).toHaveBeenCalledWith({
+      token: 'test-token',
+      conversationId: 101,
+    });
+
+    await user.click(secondButton);
+
+    await screen.findByText('Hello from Luna');
+
+    await waitFor(() =>
+      expect(
+        within(secondButton).queryByLabelText(
+          '2 unread message',
+        ),
+      ).not.toBeInTheDocument(),
+    );
+
+    expect(
+      mockedMarkConversationSeenRequest,
+    ).toHaveBeenCalledWith({
+      token: 'test-token',
+      conversationId: 102,
+    });
+  });
+
+  it('keeps the unread badge when persisting seen state fails', async () => {
+    mockedMarkConversationSeenRequest.mockRejectedValue(
+      new ApiError(
+        'Seen update failed.',
+        500,
+      ),
+    );
+
+    renderMessages();
+
+    expect(
+      await screen.findByText('Hello from Milo'),
+    ).toBeVisible();
+
+    const firstButton = screen.getByRole('button', {
+      name: 'Nala & Milo',
+    });
+
+    expect(
+      within(firstButton).getByLabelText(
+        '1 unread message',
+      ),
+    ).toBeVisible();
+
+    expect(
+      await screen.findByRole('alert'),
+    ).toHaveTextContent(
+      'PetMingle is temporarily unavailable. Please try again.',
+    );
+  });
+
+  it('uses refreshed backend unread state instead of replaying local badge state', async () => {
+    const firstRender = renderMessages();
+
+    await screen.findByText('Hello from Milo');
+
+    await waitFor(() =>
+      expect(
+        mockedMarkConversationSeenRequest,
+      ).toHaveBeenCalledWith({
+        token: 'test-token',
+        conversationId: 101,
+      }),
+    );
+
+    firstRender.unmount();
+
+    mockedMarkConversationSeenRequest.mockClear();
+    mockedConversationsRequest.mockResolvedValue(
+      persistedConversations.map(item =>
+        item.id === '101'
+          ? {
+              ...item,
+              unreadCount: 0,
+            }
+          : item,
+      ),
+    );
+
+    renderMessages();
+
+    await screen.findByText('Hello from Milo');
+
+    const firstButton = screen.getByRole('button', {
+      name: 'Nala & Milo',
+    });
+
+    expect(
+      within(firstButton).queryByLabelText(
+        '1 unread message',
+      ),
+    ).not.toBeInTheDocument();
+
+    expect(
+      mockedMarkConversationSeenRequest,
+    ).not.toHaveBeenCalledWith({
+      token: 'test-token',
+      conversationId: 101,
     });
   });
 
