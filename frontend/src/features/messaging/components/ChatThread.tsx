@@ -92,7 +92,7 @@ function MessageBubble({
             {messageTime(message.timestamp)}
           </time>
 
-          {message.receipt === 'read' && (
+          {outgoing && message.receipt === 'read' && (
             <CheckCheck
               size={20}
               aria-label="Message read"
@@ -109,11 +109,13 @@ export function ChatThread({
   loading,
   onSend,
   sendError,
+  seenError,
 }: {
   conversation: Conversation;
   loading: boolean;
   onSend: (content: string) => Promise<void>;
   sendError: string | null;
+  seenError: string | null;
 }) {
   const timeline =
     useRef<HTMLOListElement>(null);
@@ -214,6 +216,15 @@ export function ChatThread({
       ) : (
         <p className="chat-empty" role="status">
           No messages in this conversation yet.
+        </p>
+      )}
+
+      {seenError && (
+        <p
+          className="message-send-error"
+          role="alert"
+        >
+          {seenError}
         </p>
       )}
 
