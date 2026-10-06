@@ -7,8 +7,13 @@ import {
 
 import { ApiError } from '../../api/errors';
 import { describeApiFailure } from '../../api/presentation';
+import { useAuth } from '../../auth/AuthProvider';
 import { tokenStorage } from '../../auth/tokenStorage';
 import { ApiState } from '../../components/ApiState';
+import {
+  createPrivateRealtimeClient,
+  type PrivateRealtimeEvent,
+} from '../../realtime/pusherClient';
 import { ChatThread } from './components/ChatThread';
 import { ConversationList } from './components/ConversationList';
 import { MatchDetailsPanel } from './components/MatchDetailsPanel';
@@ -20,7 +25,13 @@ import {
   messageTime,
   otherParticipantUserId,
   threadRequest,
+  typingRequest,
 } from './messaging.api';
+import {
+  isRealtimeMatchEvent,
+  realtimeMessageFrom,
+  realtimeTypingFrom,
+} from './messaging.realtime';
 import type { Conversation } from './messaging.types';
 
 type LoadStatus =
@@ -29,6 +40,8 @@ type LoadStatus =
   | 'error';
 
 export function MessagingPage() {
+  const { user } = useAuth();
+
   const [status, setStatus] =
     useState<LoadStatus>('loading');
   const [items, setItems] =
@@ -46,38 +59,85 @@ export function MessagingPage() {
     useState<string | null>(null);
   const [seenError, setSeenError] =
     useState<string | null>(null);
+  const [typingByUser, setTypingByUser] =
+    useState<Record<string, boolean>>({});
 
   const threadRequestId = useRef(0);
+  const activeIdRef = useRef<string | null>(null);
+  const itemsRef = useRef<Conversation[]>([]);
+  const typingExpiryTimers = useRef(
+    new Map<string, ReturnType<typeof setTimeout>>(),
+  );
+  const outboundTypingTimer = useRef<
+    ReturnType<typeof setTimeout> | null
+  >(null);
+  const outboundTypingState = useRef(false);
 
   const active =
     items.find(item => item.id === activeId)
     ?? null;
 
+  useEffect(() => {
+    itemsRef.current = items;
+  }, [items]);
+
+  useEffect(() => {
+    activeIdRef.current = activeId;
+  }, [activeId]);
+
   const loadConversations = useCallback(
-    async () => {
+    async (
+      showLoading = true,
+    ): Promise<Conversation[]> => {
       const token = tokenStorage.get();
 
       if (!token) {
-        setItems([]);
-        setActiveId(null);
-        setLoadError(
-          new ApiError(
-            'Authentication token is missing.',
-            401,
-          ),
-        );
-        setStatus('error');
-        return;
+        if (showLoading) {
+          setItems([]);
+          setActiveId(null);
+          setLoadError(
+            new ApiError(
+              'Authentication token is missing.',
+              401,
+            ),
+          );
+          setStatus('error');
+        }
+
+        return [];
       }
 
-      setStatus('loading');
-      setLoadError(null);
+      if (showLoading) {
+        setStatus('loading');
+        setLoadError(null);
+      }
 
       try {
         const conversations =
           await conversationsRequest(token);
 
-        setItems(conversations);
+        setItems(current =>
+          conversations.map(serverItem => {
+            if (showLoading) {
+              return serverItem;
+            }
+
+            const existing = current.find(
+              item => item.id === serverItem.id,
+            );
+
+            return existing
+              ? {
+                  ...serverItem,
+                  messages:
+                    existing.messages.length > 0
+                      ? existing.messages
+                      : serverItem.messages,
+                }
+              : serverItem;
+          }),
+        );
+
         setActiveId(current => {
           if (
             current
@@ -90,12 +150,75 @@ export function MessagingPage() {
 
           return conversations[0]?.id ?? null;
         });
-        setStatus('ready');
+
+        if (showLoading) {
+          setStatus('ready');
+        }
+
+        return conversations;
       } catch (caught) {
-        setItems([]);
-        setActiveId(null);
-        setLoadError(caught);
-        setStatus('error');
+        if (showLoading) {
+          setItems([]);
+          setActiveId(null);
+          setLoadError(caught);
+          setStatus('error');
+        }
+
+        return [];
+      }
+    },
+    [],
+  );
+
+  const persistSeen = useCallback(
+    async (
+      conversationId: string,
+      exposeFailure: boolean,
+    ) => {
+      const token = tokenStorage.get();
+
+      if (!token) {
+        return;
+      }
+
+      try {
+        const seen =
+          await markConversationSeenRequest({
+            token,
+            conversationId:
+              Number(conversationId),
+          });
+
+        setItems(current =>
+          current.map(item =>
+            item.id === conversationId
+              ? {
+                  ...item,
+                  unreadCount:
+                    seen.unreadCount,
+                  messages:
+                    item.messages.map(
+                      message =>
+                        message.senderId
+                          !== item.currentOwnerId
+                          ? {
+                              ...message,
+                              receipt: 'read',
+                            }
+                          : message,
+                    ),
+                }
+              : item,
+          ),
+        );
+      } catch (caught) {
+        if (exposeFailure) {
+          setSeenError(
+            describeApiFailure(
+              caught,
+            ).message,
+          );
+        }
       }
     },
     [],
@@ -148,59 +271,10 @@ export function MessagingPage() {
         setThreadStatus('ready');
 
         if (conversation.unreadCount > 0) {
-          try {
-            const seen =
-              await markConversationSeenRequest({
-                token,
-                conversationId:
-                  Number(conversation.id),
-              });
-
-            if (
-              requestId !== threadRequestId.current
-            ) {
-              return;
-            }
-
-            setItems(current =>
-              current.map(item => {
-                if (
-                  item.id
-                  !== conversation.id
-                ) {
-                  return item;
-                }
-
-                return {
-                  ...item,
-                  unreadCount:
-                    seen.unreadCount,
-                  messages:
-                    item.messages.map(
-                      message =>
-                        message.senderId
-                          !== item.currentOwnerId
-                          ? {
-                              ...message,
-                              receipt: 'read',
-                            }
-                          : message,
-                    ),
-                };
-              }),
-            );
-          } catch (caught) {
-            if (
-              requestId
-              === threadRequestId.current
-            ) {
-              setSeenError(
-                describeApiFailure(
-                  caught,
-                ).message,
-              );
-            }
-          }
+          await persistSeen(
+            conversation.id,
+            true,
+          );
         }
       } catch (caught) {
         if (
@@ -213,7 +287,180 @@ export function MessagingPage() {
         setThreadStatus('error');
       }
     },
-    [],
+    [persistSeen],
+  );
+
+  const handleRealtimeMessage = useCallback(
+    async (data: unknown) => {
+      const incoming = realtimeMessageFrom(data);
+
+      if (!incoming || !user) {
+        return;
+      }
+
+      const conversation =
+        itemsRef.current.find(
+          item =>
+            item.id
+            === incoming.conversationId,
+        );
+
+      if (!conversation) {
+        await loadConversations(false);
+        return;
+      }
+
+      const alreadyPresent =
+        conversation.messages.some(
+          message =>
+            message.id
+            === incoming.message.id,
+        );
+
+      if (alreadyPresent) {
+        return;
+      }
+
+      const isIncoming =
+        incoming.receiverUserId
+        === String(user.id);
+      const isActive =
+        activeIdRef.current
+        === incoming.conversationId;
+
+      setItems(current =>
+        current.map(item => {
+          if (
+            item.id
+            !== incoming.conversationId
+          ) {
+            return item;
+          }
+
+          if (
+            item.messages.some(
+              message =>
+                message.id
+                === incoming.message.id,
+            )
+          ) {
+            return item;
+          }
+
+          return {
+            ...item,
+            preview: incoming.message.content,
+            activityLabel: messageTime(
+              incoming.message.timestamp,
+            ),
+            unreadCount:
+              isIncoming && !isActive
+                ? item.unreadCount + 1
+                : item.unreadCount,
+            messages: [
+              ...item.messages,
+              incoming.message,
+            ],
+          };
+        }),
+      );
+
+      if (isIncoming && isActive) {
+        await persistSeen(
+          incoming.conversationId,
+          false,
+        );
+      }
+    },
+    [
+      loadConversations,
+      persistSeen,
+      user,
+    ],
+  );
+
+  const handleRealtimeTyping = useCallback(
+    (data: unknown) => {
+      const typing = realtimeTypingFrom(data);
+
+      if (
+        !typing
+        || !user
+        || typing.receiverUserId
+          !== String(user.id)
+      ) {
+        return;
+      }
+
+      const previousTimer =
+        typingExpiryTimers.current.get(
+          typing.senderUserId,
+        );
+
+      if (previousTimer) {
+        clearTimeout(previousTimer);
+        typingExpiryTimers.current.delete(
+          typing.senderUserId,
+        );
+      }
+
+      setTypingByUser(current => ({
+        ...current,
+        [typing.senderUserId]:
+          typing.isWriting,
+      }));
+
+      if (typing.isWriting) {
+        const timer = setTimeout(() => {
+          setTypingByUser(current => ({
+            ...current,
+            [typing.senderUserId]:
+              false,
+          }));
+          typingExpiryTimers.current.delete(
+            typing.senderUserId,
+          );
+        }, 3000);
+
+        typingExpiryTimers.current.set(
+          typing.senderUserId,
+          timer,
+        );
+      }
+    },
+    [user],
+  );
+
+  const handleRealtimeEvent = useCallback(
+    (event: PrivateRealtimeEvent) => {
+      if (event.name === 'new.message') {
+        void handleRealtimeMessage(
+          event.data,
+        );
+        return;
+      }
+
+      if (
+        event.name === 'new.match'
+        && isRealtimeMatchEvent(event.data)
+      ) {
+        void loadConversations(false);
+        return;
+      }
+
+      if (
+        event.name === 'is-writing-to'
+      ) {
+        handleRealtimeTyping(
+          event.data,
+        );
+      }
+    },
+    [
+      handleRealtimeMessage,
+      handleRealtimeTyping,
+      loadConversations,
+    ],
   );
 
   useEffect(() => {
@@ -231,7 +478,152 @@ export function MessagingPage() {
     void loadThread(active);
   }, [activeId, loadThread]);
 
+  useEffect(() => {
+    const token = tokenStorage.get();
+
+    if (!token || !user) {
+      return;
+    }
+
+    const client =
+      createPrivateRealtimeClient({
+        token,
+        userId: user.id,
+        callbacks: {
+          onEvent: handleRealtimeEvent,
+          onReconnect: () => {
+            void (async () => {
+              const refreshed =
+                await loadConversations(false);
+
+              const currentId =
+                activeIdRef.current;
+
+              if (!currentId) {
+                return;
+              }
+
+              const current =
+                refreshed.find(
+                  item =>
+                    item.id === currentId,
+                )
+                ?? itemsRef.current.find(
+                  item =>
+                    item.id === currentId,
+                );
+
+              if (current) {
+                await loadThread(current);
+              }
+            })();
+          },
+        },
+      });
+
+    client.connect();
+
+    return () => {
+      client.disconnect();
+    };
+  }, [
+    handleRealtimeEvent,
+    loadConversations,
+    loadThread,
+    user,
+  ]);
+
+  useEffect(
+    () => () => {
+      for (
+        const timer
+        of typingExpiryTimers.current.values()
+      ) {
+        clearTimeout(timer);
+      }
+
+      typingExpiryTimers.current.clear();
+
+      if (outboundTypingTimer.current) {
+        clearTimeout(
+          outboundTypingTimer.current,
+        );
+      }
+    },
+    [],
+  );
+
+  async function publishTyping(
+    isWriting: boolean,
+  ) {
+    if (!active) {
+      return;
+    }
+
+    const token = tokenStorage.get();
+
+    if (!token) {
+      return;
+    }
+
+    const receiverUserId =
+      otherParticipantUserId(active);
+
+    if (outboundTypingTimer.current) {
+      clearTimeout(
+        outboundTypingTimer.current,
+      );
+      outboundTypingTimer.current = null;
+    }
+
+    if (isWriting) {
+      if (!outboundTypingState.current) {
+        outboundTypingState.current = true;
+
+        void typingRequest({
+          token,
+          receiverUserId,
+          isWriting: true,
+        }).catch(() => {
+          // Typing is best-effort; HTTP messaging remains functional.
+        });
+      }
+
+      outboundTypingTimer.current =
+        setTimeout(() => {
+          outboundTypingTimer.current = null;
+
+          if (!outboundTypingState.current) {
+            return;
+          }
+
+          outboundTypingState.current = false;
+
+          void typingRequest({
+            token,
+            receiverUserId,
+            isWriting: false,
+          }).catch(() => {});
+        }, 1500);
+
+      return;
+    }
+
+    if (!outboundTypingState.current) {
+      return;
+    }
+
+    outboundTypingState.current = false;
+
+    void typingRequest({
+      token,
+      receiverUserId,
+      isWriting: false,
+    }).catch(() => {});
+  }
+
   function selectConversation(id: string) {
+    void publishTyping(false);
     setSendError(null);
     setSeenError(null);
     setActiveId(id);
@@ -274,7 +666,9 @@ export function MessagingPage() {
     try {
       const sent = await messageSendRequest({
         token,
-        conversationId: Number(conversationId),
+        conversationId: Number(
+          conversationId,
+        ),
         currentUserId,
         receiverUserId,
         content,
@@ -288,7 +682,8 @@ export function MessagingPage() {
 
           const alreadyPresent =
             item.messages.some(
-              message => message.id === sent.id,
+              message =>
+                message.id === sent.id,
             );
 
           return {
@@ -320,6 +715,12 @@ export function MessagingPage() {
     threadError !== null
       ? describeApiFailure(threadError)
       : null;
+
+  const otherUserId = active
+    ? String(
+        otherParticipantUserId(active),
+      )
+    : null;
 
   return (
     <div className="messaging-page">
@@ -359,7 +760,8 @@ export function MessagingPage() {
               message={failure.message}
               onRetry={
                 failure.retryable
-                  ? () => void loadConversations()
+                  ? () =>
+                      void loadConversations()
                   : undefined
               }
             />
@@ -386,6 +788,15 @@ export function MessagingPage() {
                   threadStatus === 'loading'
                 }
                 onSend={sendMessage}
+                onTypingChange={
+                  publishTyping
+                }
+                isOtherTyping={
+                  otherUserId !== null
+                  && typingByUser[
+                    otherUserId
+                  ] === true
+                }
                 sendError={sendError}
                 seenError={seenError}
               />
@@ -407,7 +818,10 @@ export function MessagingPage() {
                   message={threadFailure.message}
                   onRetry={
                     threadFailure.retryable
-                      ? () => void loadThread(active)
+                      ? () =>
+                          void loadThread(
+                            active,
+                          )
                       : undefined
                   }
                 />
