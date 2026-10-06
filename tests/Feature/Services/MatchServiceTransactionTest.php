@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Services;
 
+use App\Models\Like;
 use App\Models\MatchTable;
 use App\Models\Pet;
 use App\Models\Race;
@@ -9,6 +10,7 @@ use App\Models\Species;
 use App\Models\User;
 use App\Repositories\MatchRepository;
 use App\Repositories\PetRepository;
+use App\Services\InteractionPolicy;
 use App\Services\MatchService;
 use Illuminate\Foundation\Testing\DatabaseTruncation;
 use RuntimeException;
@@ -57,6 +59,23 @@ class MatchServiceTransactionTest extends TestCase
             'about' => 'Second test pet',
         ]);
 
+
+
+        Like::withoutEvents(function () use (
+            $firstPet,
+            $secondPet
+        ) {
+            Like::create([
+                'from' => $firstPet->id,
+                'to' => $secondPet->id,
+            ]);
+
+            Like::create([
+                'from' => $secondPet->id,
+                'to' => $firstPet->id,
+            ]);
+        });
+
         $matchRepository = new class extends MatchRepository
         {
             private int $createCalls = 0;
@@ -77,7 +96,8 @@ class MatchServiceTransactionTest extends TestCase
 
         $service = new MatchService(
             $matchRepository,
-            new PetRepository()
+            new PetRepository(),
+            new InteractionPolicy()
         );
 
         try {
@@ -136,9 +156,27 @@ class MatchServiceTransactionTest extends TestCase
             'about' => 'Second test pet',
         ]);
 
+
+
+        Like::withoutEvents(function () use (
+            $firstPet,
+            $secondPet
+        ) {
+            Like::create([
+                'from' => $firstPet->id,
+                'to' => $secondPet->id,
+            ]);
+
+            Like::create([
+                'from' => $secondPet->id,
+                'to' => $firstPet->id,
+            ]);
+        });
+
         $service = new MatchService(
             new MatchRepository(),
-            new PetRepository()
+            new PetRepository(),
+            new InteractionPolicy()
         );
 
         $service->create([
