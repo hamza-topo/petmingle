@@ -7,7 +7,6 @@ use GuzzleHttp\Exception\GuzzleException;
 use Illuminate\Broadcasting\BroadcastException;
 use Illuminate\Broadcasting\Broadcasters\Broadcaster;
 use Illuminate\Broadcasting\Broadcasters\UsePusherChannelConventions;
-use Illuminate\Http\Request;
 use JsonException;
 use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
@@ -23,7 +22,7 @@ final class PusherHttpBroadcaster extends Broadcaster
         private array $options = []
     ) {}
 
-    public function auth(Request $request): mixed
+    public function auth($request)
     {
         $channelName = (string) $request->input(
             'channel_name',
@@ -60,9 +59,9 @@ final class PusherHttpBroadcaster extends Broadcaster
     }
 
     public function validAuthenticationResponse(
-        Request $request,
-        mixed $result
-    ): array {
+        $request,
+        $result
+    ) {
         $socketId = (string) $request->input('socket_id');
         $channelName = (string) $request->input(
             'channel_name'
@@ -81,10 +80,11 @@ final class PusherHttpBroadcaster extends Broadcaster
 
     public function broadcast(
         array $channels,
-        string $event,
+        $event,
         array $payload = []
-    ): void {
+    ) {
         $channelNames = $this->formatChannels($channels);
+        $event = (string) $event;
 
         if ($channelNames === []) {
             return;
