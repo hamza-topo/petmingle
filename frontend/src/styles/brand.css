@@ -1,0 +1,23 @@
+@font-face {
+  font-family: "Inter";
+  src: url("../assets/brand/inter-latin.woff2") format("woff2");
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+}
+
+@layer components {
+  .brand { display: inline-flex; align-items: center; gap: 9px; color: var(--color-ink); }
+  .brand-mark { width: 52px; height: 39px; flex: none; }
+  .brand-wordmark { font-family: var(--font-display); font-size: 31px; line-height: 1; font-weight: 900; letter-spacing: -1.5px; color: var(--color-ink); }
+  .primary-nav { gap: 20px; }
+}
+
+@layer components {
+  /* Pastels are decorative; functional statuses keep contrasting foregrounds. */
+  .relationship-status { color: var(--color-ink); }
+  .match-safety li svg { background: var(--color-text-pink); }
+  .pet-field:has([aria-invalid=true]) { border-color: var(--color-text-pink); }
+  .filter-choice input:checked + span { border-color: var(--color-text-blue); }
+  .notification-dot { background: var(--color-text-pink); }
+}

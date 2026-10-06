@@ -119,15 +119,7 @@ it('connects all five screens and the Plus section using existing visible contro
     </MemoryRouter>,
   );
 
-  await user.click(
-    within(
-      screen.getByRole('region', {
-        name: 'Find their people',
-      }),
-    ).getByRole('link', {
-      name: /Get Started/,
-    }),
-  );
+  await user.click(screen.getByRole('link', { name: 'Create a profile' }));
 
   expect(
     screen.getByRole('form', {
@@ -219,8 +211,9 @@ it('connects all five screens and the Plus section using existing visible contro
 
   expect(
     screen.getByRole('heading', {
-      name: 'Find their people',
+      name: 'Their paths cross. Yours do too.',
       level: 1,
     }),
   ).toBeVisible();
 }, 15000);
+

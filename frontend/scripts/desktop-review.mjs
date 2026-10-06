@@ -47,8 +47,8 @@ try {
     await new Promise(resolve => setTimeout(resolve, 250));
   }
   browser = await chromium.launch({ headless: true });
-  for (const width of [1448, 1280, 1120]) {
-    for (const screen of screens) {
+  for (const width of [1448, 1280, 1120, 768, 390, 320]) {
+    for (const screen of screens.filter(s => width >= 1120 || s.name === 'landing')) {
       const context = await browser.newContext({ viewport: { width, height: 1000 }, reducedMotion: 'reduce' });
       await context.addInitScript(() => localStorage.setItem('petmingle.auth.token', 'visual-test-token'));
       const page = await context.newPage();
@@ -62,6 +62,12 @@ try {
       await page.goto(base + screen.path);
       await page.locator(screen.ready).first().waitFor({ state: screen.name === 'creation' ? 'attached' : 'visible' });
       await page.evaluate(() => document.fonts.ready);
+      if (screen.name === 'landing') {
+        await page.locator('.hero-photo').evaluate(img => img.decode());
+        const media = await page.locator('.hero-photo').evaluate(img => ({ width: img.naturalWidth, height: img.naturalHeight }));
+        if (media.width < 500 || media.height < 500) throw new Error('Landing hero did not load');
+        if (await page.getByText(/placeholder/i).count()) throw new Error('Landing contains a placeholder');
+      }
       const metrics = await page.evaluate(() => ({
         viewport: innerWidth, scroll: document.documentElement.scrollWidth,
         outside: [...document.querySelectorAll('header, main, main button, main h1, main h2')].filter(el => {
@@ -117,3 +123,4 @@ try {
   await browser?.close();
   server.kill('SIGTERM');
 }
+

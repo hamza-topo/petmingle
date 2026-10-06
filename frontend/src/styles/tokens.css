@@ -1,24 +1,23 @@
-/* Raster-derived candidates from docs/ui/DESIGN_SYSTEM.md, not new brand colors.
-   Tailwind's static theme also makes every token available as a CSS variable. */
+/* Direction 02: crossing paths. Decorative pastels use dark, readable foregrounds. */
 @theme static {
   --color-*: initial;
-  --color-ink: #080d50;
-  --color-text-secondary: #4d6294;
-  --color-text-blue: #0068c4;
-  --color-text-pink: #bd2056;
+  --color-ink: #243443;
+  --color-text-secondary: #53616e;
+  --color-text-blue: #245e79;
+  --color-text-pink: #953352;
   --color-text-teal: #00786c;
   --color-text-purple: #7132d5;
-  --color-brand-pink: #fc3d7c;
-  --color-brand-blue: #0088ff;
+  --color-brand-pink: #efb5c8;
+  --color-brand-blue: #c9e9f4;
   --color-surface: #fefefe;
-  --color-canvas: #edf8ff;
+  --color-canvas: #faf9f6;
   --color-surface-blue: #e3f4fe;
   --color-surface-pink: #fef3f8;
   --color-surface-pink-strong: #fce3ed;
   /* Sampled from the blue benefit icon disk in M1 (RGB 211, 235, 253). */
   --color-icon-blue: #d3ebfd;
-  --color-border: #d7e7f7;
-  --color-border-action: #8acbff;
+  --color-border: #dce1e3;
+  --color-border-action: #9ebecb;
   --color-bubble-incoming: #eff3f8;
   --color-bubble-outgoing: #d8efff;
   --color-trait-teal: #00ad9b;
@@ -29,9 +28,9 @@
   --color-success: #12c644;
   --color-success-bg: #bdf4c8;
 
-  /* Temporary local font stack: exact source font is not supplied. */
-  --font-sans: "Nunito", "Trebuchet MS", Arial, sans-serif;
-  --font-display: "Nunito", "Arial Rounded MT Bold", "Trebuchet MS", Arial, "DejaVu Sans Condensed", sans-serif;
+  /* Local fonts keep the interface independent of third-party font services. */
+  --font-sans: "Inter", "Segoe UI", Arial, sans-serif;
+  --font-display: "Inter", "Segoe UI", Arial, sans-serif;
   --text-hero: 68px;
   --text-hero--line-height: 78px;
   --text-section: 36px;
@@ -66,3 +65,4 @@
   /* Neutral asset slots reuse an existing documented color, not a new palette. */
   --asset-placeholder-background: var(--color-bubble-incoming);
 }
+
