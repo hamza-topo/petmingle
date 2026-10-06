@@ -15,6 +15,7 @@ import { MatchDetailsPanel } from './components/MatchDetailsPanel';
 import { MessagingHeader } from './components/MessagingHeader';
 import {
   conversationsRequest,
+  markConversationSeenRequest,
   messageSendRequest,
   messageTime,
   otherParticipantUserId,
@@ -42,6 +43,8 @@ export function MessagingPage() {
   const [threadError, setThreadError] =
     useState<unknown | null>(null);
   const [sendError, setSendError] =
+    useState<string | null>(null);
+  const [seenError, setSeenError] =
     useState<string | null>(null);
 
   const threadRequestId = useRef(0);
@@ -117,6 +120,7 @@ export function MessagingPage() {
 
       setThreadStatus('loading');
       setThreadError(null);
+      setSeenError(null);
 
       try {
         const messages = await threadRequest({
@@ -142,6 +146,62 @@ export function MessagingPage() {
           ),
         );
         setThreadStatus('ready');
+
+        if (conversation.unreadCount > 0) {
+          try {
+            const seen =
+              await markConversationSeenRequest({
+                token,
+                conversationId:
+                  Number(conversation.id),
+              });
+
+            if (
+              requestId !== threadRequestId.current
+            ) {
+              return;
+            }
+
+            setItems(current =>
+              current.map(item => {
+                if (
+                  item.id
+                  !== conversation.id
+                ) {
+                  return item;
+                }
+
+                return {
+                  ...item,
+                  unreadCount:
+                    seen.unreadCount,
+                  messages:
+                    item.messages.map(
+                      message =>
+                        message.senderId
+                          !== item.currentOwnerId
+                          ? {
+                              ...message,
+                              receipt: 'read',
+                            }
+                          : message,
+                    ),
+                };
+              }),
+            );
+          } catch (caught) {
+            if (
+              requestId
+              === threadRequestId.current
+            ) {
+              setSeenError(
+                describeApiFailure(
+                  caught,
+                ).message,
+              );
+            }
+          }
+        }
       } catch (caught) {
         if (
           requestId !== threadRequestId.current
@@ -173,6 +233,7 @@ export function MessagingPage() {
 
   function selectConversation(id: string) {
     setSendError(null);
+    setSeenError(null);
     setActiveId(id);
   }
 
@@ -326,6 +387,7 @@ export function MessagingPage() {
                 }
                 onSend={sendMessage}
                 sendError={sendError}
+                seenError={seenError}
               />
               <MatchDetailsPanel
                 conversation={active}
