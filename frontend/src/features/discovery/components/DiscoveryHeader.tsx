@@ -42,7 +42,6 @@ export function DiscoveryHeader() {
 
       <NotificationButton
         className="discovery-notifications"
-        dotClassName="notification-dot"
         size={26}
       />
 

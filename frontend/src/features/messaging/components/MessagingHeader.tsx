@@ -42,7 +42,6 @@ export function MessagingHeader() {
 
         <NotificationButton
           className="chat-round-control chat-notifications"
-          dotClassName="notification-dot"
           size={23}
         />
 

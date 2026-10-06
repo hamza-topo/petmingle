@@ -314,49 +314,49 @@ export function PetCreatePage() {
   ) => {
     const deferred = ['size', 'energy', 'playdate'].includes(field);
     return (
-    <FormField
-      id={field}
-      label={label}
-      icon={icon}
-      required={required && !deferred}
-      error={errors[field]?.message}
-    >
-      <select
+      <FormField
         id={field}
-        {...(deferred ? {} : register(field))}
-        defaultValue={deferred ? '' : undefined}
-        disabled={disabled || deferred}
-        aria-required={required && !deferred}
-        aria-invalid={!!errors[field]}
-        aria-describedby={
-          errors[field]
-            ? `${field}-error`
-            : undefined
-        }
+        label={label}
+        icon={icon}
+        required={required && !deferred}
+        error={errors[field]?.message}
       >
-        {(placeholder || deferred) && (
-          <option value="">
-            {deferred ? 'Not available yet' : placeholder}
-          </option>
-        )}
+        <select
+          id={field}
+          {...(deferred ? {} : register(field))}
+          defaultValue={deferred ? '' : undefined}
+          disabled={disabled || deferred}
+          aria-required={required && !deferred}
+          aria-invalid={!!errors[field]}
+          aria-describedby={
+            errors[field]
+              ? `${field}-error`
+              : undefined
+          }
+        >
+          {(placeholder || deferred) && (
+            <option value="">
+              {deferred ? 'Not available yet' : placeholder}
+            </option>
+          )}
 
-        {selectOptions.map(([value, text]) => (
-          <option
-            key={value}
-            value={value}
-          >
-            {text}
-          </option>
-        ))}
-      </select>
+          {selectOptions.map(([value, text]) => (
+            <option
+              key={value}
+              value={value}
+            >
+              {text}
+            </option>
+          ))}
+        </select>
 
-      <ChevronDown
-        className="pet-select-chevron"
-        size={20}
-        aria-hidden="true"
-      />
-    </FormField>
-  );
+        <ChevronDown
+          className="pet-select-chevron"
+          size={20}
+          aria-hidden="true"
+        />
+      </FormField>
+    );
   };
 
   return (

@@ -9,7 +9,7 @@ export function FeaturedPets() {
     <section id="featured-pets" aria-labelledby="featured-heading" className="featured-pets">
       <SectionHeading
         id="featured-heading"
-        description="Real pets. Real people. Happier days."
+        description="Example profiles. Explore nearby pets after signing in."
         action={
           <Link className="see-more" to="/discover">
             See more pets <ArrowRight size={20} aria-hidden="true" />
