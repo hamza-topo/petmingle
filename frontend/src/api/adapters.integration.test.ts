@@ -88,6 +88,19 @@ describe('Real API adapters with simulated HTTP responses', () => {
     await expect(relationshipsRequest({ token, currentPetId: 42 })).resolves.toEqual({ matches: [], mismatches: [] });
   });
 
+  it('loads owned coordinates and empty messaging collections', async () => {
+    fetchMock.mockImplementation(async (url: string) => {
+      if (url.endsWith('/locations')) return respond(envelope([
+        { id: 1, user_id: 10, latitude: 31.6, longitude: -7.9 },
+        { id: 2, user_id: 10, latitude: 32, longitude: -8 },
+      ]));
+      return respond({ ...envelope([]), meta });
+    });
+    await expect(accountLocationsRequest({ token, userId: 10 })).resolves.toMatchObject([{ id: 2 }, { id: 1 }]);
+    await expect(conversationsRequest(token)).resolves.toEqual([]);
+    await expect(threadRequest({ token, receiverUserId: 11 })).resolves.toEqual([]);
+  });
+
   it('maps persisted interaction, send and seen results with distinct Pet/User IDs', async () => {
     fetchMock
       .mockResolvedValueOnce(respond(envelope({ id: 1, from_pet_id: 42, to_pet_id: 55, interaction: 'liked' })))
@@ -120,7 +133,7 @@ describe('Real API adapters with simulated HTTP responses', () => {
   });
 
   it('rejects malformed collections instead of showing invented data', async () => {
-    fetchMock.mockResolvedValue(respond(envelope(null)));
+    fetchMock.mockImplementation(async () => respond(envelope(null)));
     await expect(discoveryRequest({ token })).rejects.toThrow();
     await expect(conversationsRequest(token)).rejects.toThrow();
     await expect(threadRequest({ token, receiverUserId: 11 })).rejects.toThrow();
