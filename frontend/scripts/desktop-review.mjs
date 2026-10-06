@@ -138,7 +138,7 @@ try {
     const tileFixture = '<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256"><rect width="256" height="256" fill="#edf0e5"/><path d="M0 25L256 70M45 0L90 256M0 180L256 140M190 0L150 256" fill="none" stroke="#fff" stroke-width="12"/><path d="M0 25L256 70M45 0L90 256M0 180L256 140M190 0L150 256" fill="none" stroke="#dddccf" stroke-width="2"/><rect x="110" y="80" width="45" height="40" rx="12" fill="#c9dfb7"/><text x="8" y="245" fill="#82927e" font-size="9">CI map fixture</text></svg>';
     await page.route('https://tile.openstreetmap.org/**', route => route.fulfill({ contentType: 'image/svg+xml', body: tileFixture }));
     await page.goto(base + '/discover');
-    await page.locator('.featured-discovery-pet').first().waitFor();
+    await page.locator('.featured-discovery-pet').first().waitFor({ state: 'attached' });
     await page.getByRole('button', { name: 'Marrakech, Morocco' }).click();
     const modal = page.getByRole('dialog');
     await modal.waitFor();
