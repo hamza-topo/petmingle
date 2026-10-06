@@ -284,7 +284,7 @@ describe('Own pet profile', () => {
     ).toBeVisible();
 
     expect(
-      details.getByText('31.629500, -7.981100'),
+      details.getByText('Selected area'),
     ).toBeVisible();
 
     expect(details.queryByText('62 lbs')).not.toBeInTheDocument();
@@ -924,3 +924,4 @@ describe('Own pet profile', () => {
     ).not.toBeInTheDocument();
   });
 });
+

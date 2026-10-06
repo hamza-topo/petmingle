@@ -24,7 +24,7 @@ function fixture(path, state) {
   if (path === '/species') return envelope([{ id: 3, name: 'Dog', description: 'Dogs' }]);
   if (path === '/races') return envelope([race]);
   if (path === '/races/9') return envelope(race);
-  if (path === '/locations') return envelope([{ id: 1, user_id: 10, latitude: 31.6295, longitude: -7.9811 }]);
+  if (path === '/locations') return envelope([{ id: 1, user_id: 10, latitude: 31.6295, longitude: -7.9811, label: 'Marrakech, Morocco' }]);
   if (path === '/pets/42/statistics') return envelope({ matches: 12, likes_sent: 28 });
   if (path === '/pets/42') return envelope(pet);
   if (path === '/pets/55') return envelope(otherPet);
@@ -110,6 +110,79 @@ try {
       await context.close();
     }
   }
+  }
+  for (const width of [1280, 768, 390, 320]) {
+    const context = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
+    await context.addInitScript(() => localStorage.setItem('petmingle.auth.token', 'visual-test-token'));
+    const page = await context.newPage();
+    const errors = [];
+    page.on('pageerror', error => errors.push(error.message));
+    let saved = { id: 1, user_id: 10, latitude: 31.6295, longitude: -7.9811, label: 'Marrakech, Morocco' };
+    let writes = 0;
+    let nearbyRequests = 0;
+    await page.route('**/api/v.0/**', async route => {
+      const request = route.request();
+      const path = new URL(request.url()).pathname.replace('/api/v.0', '');
+      if (path === '/locations/1' && request.method() === 'PUT') {
+        saved = { ...saved, ...request.postDataJSON() }; writes++;
+        return route.fulfill({ json: envelope(saved) });
+      }
+      if (path === '/locations') return route.fulfill({ json: envelope([saved]) });
+      if (path === '/locations/nears') nearbyRequests++;
+      return route.fulfill({ json: fixture(path, 'success') });
+    });
+    await page.route('https://photon.komoot.io/**', async route => {
+      if (route.request().headers().authorization) throw new Error('Account token leaked to geocoder');
+      return route.fulfill({ json: { features: [{ geometry: { coordinates: [-7.5898, 33.5731] }, properties: { city: 'Casablanca', country: 'Morocco' } }] } });
+    });
+    const tileFixture = '<svg xmlns="http://www.w3.org/2000/svg" width="256" height="256"><rect width="256" height="256" fill="#edf0e5"/><path d="M0 25L256 70M45 0L90 256M0 180L256 140M190 0L150 256" fill="none" stroke="#fff" stroke-width="12"/><path d="M0 25L256 70M45 0L90 256M0 180L256 140M190 0L150 256" fill="none" stroke="#dddccf" stroke-width="2"/><rect x="110" y="80" width="45" height="40" rx="12" fill="#c9dfb7"/><text x="8" y="245" fill="#82927e" font-size="9">CI map fixture</text></svg>';
+    await page.route('https://tile.openstreetmap.org/**', route => route.fulfill({ contentType: 'image/svg+xml', body: tileFixture }));
+    await page.goto(base + '/discover');
+    await page.locator('.featured-discovery-pet').first().waitFor({ state: 'attached' });
+    await page.getByRole('button', { name: 'Marrakech, Morocco' }).click();
+    const modal = page.getByRole('dialog');
+    await modal.waitFor();
+    await page.locator('.leaflet-container').waitFor();
+    if (!(await page.getByRole('textbox', { name: 'Search city or neighbourhood' }).evaluate(el => el === document.activeElement))) throw new Error('Picker initial focus missing');
+    await page.getByRole('button', { name: 'Confirm this area' }).focus();
+    await page.keyboard.press('Tab');
+    if (!(await page.getByRole('button', { name: 'Close location picker' }).evaluate(el => el === document.activeElement))) throw new Error('Native modal focus escaped');
+    await page.keyboard.press('Escape');
+    if (writes) throw new Error('Cancel persisted a location');
+    if (!(await page.getByRole('button', { name: 'Marrakech, Morocco' }).evaluate(el => el === document.activeElement))) throw new Error('Location focus did not return');
+    await page.getByRole('button', { name: 'Marrakech, Morocco' }).click();
+    await page.getByRole('textbox', { name: 'Search city or neighbourhood' }).fill('Casablanca');
+    await page.getByRole('button', { name: 'Search', exact: true }).click();
+    await page.getByRole('button', { name: 'Casablanca, Morocco' }).click();
+    await page.locator('.leaflet-container').focus();
+    await page.keyboard.press('ArrowRight');
+    await page.locator('.location-picker-selected strong').filter({ hasText: 'Selected area' }).waitFor();
+    await page.locator('.location-picker-selected strong').filter({ hasText: 'Casablanca, Morocco' }).waitFor();
+    const metrics = await modal.evaluate(el => {
+      const rect = el.getBoundingClientRect();
+      return { viewport: innerWidth, scroll: Math.ceil(rect.width), outside: [...el.querySelectorAll('input, button, h2')].filter(item => { const r = item.getBoundingClientRect(); return r.width > 0 && (r.left < -1 || r.right > innerWidth + 1); }).map(item => item.className) };
+    });
+    await page.screenshot({ path: output + '/location-picker-' + width + '.png', fullPage: false });
+    const before = nearbyRequests;
+    const refreshed = page.waitForResponse(response => response.url().includes('/locations/nears'));
+    await page.getByRole('button', { name: 'Confirm this area' }).click();
+    await refreshed;
+    await modal.waitFor({ state: 'hidden' });
+    await page.getByRole('button', { name: 'Casablanca, Morocco' }).waitFor();
+    if (writes !== 1 || saved.label !== 'Casablanca, Morocco' || saved.longitude === -7.5898) throw new Error('Map movement or persistence failed');
+    if (nearbyRequests <= before) throw new Error('Discovery did not refresh after location change');
+    await page.reload();
+    await page.getByRole('button', { name: 'Casablanca, Morocco' }).waitFor();
+    results.push({ screen: 'location-picker', width, state: 'search-map-confirm-reload', ...metrics, errors });
+    if (width === 1280) {
+      // Extra visual capture uses real tiles; functional assertions above use deterministic fixtures.
+      await page.unroute('https://tile.openstreetmap.org/**');
+      await page.getByRole('button', { name: 'Casablanca, Morocco' }).click();
+      await page.locator('.leaflet-container').waitFor();
+      await page.waitForTimeout(4000);
+      await page.screenshot({ path: output + '/location-picker-real-tiles.png', fullPage: false });
+    }
+    await context.close();
   }
   await writeFile(output + '/results.json', JSON.stringify(results, null, 2));
   // A compact contact sheet can be inspected from CI logs as well as artifacts.

@@ -26,3 +26,17 @@ test('rejects media paths and insecure enabled realtime', () => {
   assert.throws(() => validateBuildEnvironment({ ...valid, VITE_REALTIME_ENABLED: 'true', VITE_PUSHER_APP_KEY: 'public-key', VITE_PUSHER_WS_SCHEME: 'ws' }, 'production'));
   validateBuildEnvironment({ ...valid, VITE_REALTIME_ENABLED: 'true', VITE_PUSHER_APP_KEY: 'public-key', VITE_PUSHER_WS_SCHEME: 'wss' }, 'production');
 });
+
+
+test('accepts public geocoding and XYZ map variables, including blank Docker defaults', () => {
+  validateBuildEnvironment({ ...valid, VITE_GEOCODER_BASE_URL: '', VITE_MAP_TILE_URL: '', VITE_MAP_TILE_ATTRIBUTION: '' }, 'production');
+  validateBuildEnvironment({ ...valid, VITE_GEOCODER_BASE_URL: 'https://places.test/photon', VITE_MAP_TILE_URL: 'https://tiles.test/{z}/{x}/{y}.png', VITE_MAP_TILE_ATTRIBUTION: '&copy; Provider' }, 'production');
+});
+test('rejects insecure or credential-bearing map services and malformed tile templates', () => {
+  for (const url of ['http://places.test', 'https://user:password@places.test', 'https://places.test?secret=value', 'https://localhost']) {
+    assert.throws(() => validateBuildEnvironment({ ...valid, VITE_GEOCODER_BASE_URL: url }, 'production'));
+  }
+  for (const url of ['http://tiles.test/{z}/{x}/{y}.png', 'https://tiles.test/map.png', 'https://tiles.test/{z}/{x}/{y}.png?token=secret']) {
+    assert.throws(() => validateBuildEnvironment({ ...valid, VITE_MAP_TILE_URL: url }, 'production'));
+  }
+});

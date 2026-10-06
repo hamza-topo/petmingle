@@ -102,7 +102,7 @@ class LocationController extends Controller
 
         $updatedLocation = $this->locationRepository->update(
             (int) $id,
-            $request->validated()
+            $request->validated() + ['label' => null]
         );
 
         return ApiResponse::success(
