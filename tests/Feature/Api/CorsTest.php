@@ -2,11 +2,15 @@
 
 namespace Tests\Feature\Api;
 
+use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Attributes\DataProvider;
 use Tests\TestCase;
 
 class CorsTest extends TestCase
 {
+    use RefreshDatabase;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -53,6 +57,37 @@ class CorsTest extends TestCase
                 'Access-Control-Request-Headers' => 'authorization',
             ])->assertHeaderMissing('Access-Control-Allow-Origin');
         }
+    }
+
+    public function test_https_bearer_preflights_cover_api_and_private_channel_auth(): void
+    {
+        config(['cors.allowed_origins' => ['https://app.petmingle.test', 'https://admin.petmingle.test']]);
+        foreach (['/api/v.0/me' => 'GET', '/api/v.0/pets' => 'POST', '/broadcasting/auth' => 'POST'] as $path => $method) {
+            $this->options($path, [], [
+                'Origin' => 'https://app.petmingle.test',
+                'Access-Control-Request-Method' => $method,
+                'Access-Control-Request-Headers' => 'authorization,content-type,accept',
+            ])->assertNoContent()->assertHeader('Access-Control-Allow-Origin', 'https://app.petmingle.test')
+                ->assertHeaderMissing('Access-Control-Allow-Credentials');
+        }
+        foreach (['http://app.petmingle.test', 'https://app.petmingle.test.evil.test', 'https://untrusted.test'] as $origin) {
+            $this->options('/api/v.0/me', [], [
+                'Origin' => $origin, 'Access-Control-Request-Method' => 'GET',
+                'Access-Control-Request-Headers' => 'authorization',
+            ])->assertHeaderMissing('Access-Control-Allow-Origin');
+        }
+    }
+
+    public function test_bearer_identity_is_readable_from_the_configured_https_frontend(): void
+    {
+        config(['cors.allowed_origins' => ['https://app.petmingle.test']]);
+        $user = User::factory()->create();
+        $token = $user->createToken('production-browser')->plainTextToken;
+        $this->getJson('/api/v.0/me', [
+            'Origin' => 'https://app.petmingle.test', 'Authorization' => 'Bearer '.$token,
+        ])->assertOk()->assertJsonPath('data.user.id', $user->id)
+            ->assertHeader('Access-Control-Allow-Origin', 'https://app.petmingle.test')
+            ->assertHeaderMissing('Access-Control-Allow-Credentials');
     }
 
     public function test_explicit_production_origin_replaces_the_local_allowlist(): void

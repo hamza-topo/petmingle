@@ -1,5 +1,7 @@
 <?php
 
+use App\Support\FrontendOrigins;
+
 return [
 
     /*
@@ -21,11 +23,12 @@ return [
 
     // Local Vite (5173) and the existing Docker-published frontend (5174).
     // Other environments must explicitly configure their frontend origins.
-    'allowed_origins' => array_values(array_filter(array_map('trim', explode(',',
-        env('CORS_ALLOWED_ORIGINS', env('APP_ENV') === 'local'
+    'allowed_origins' => FrontendOrigins::parse(
+        (string) env('CORS_ALLOWED_ORIGINS', env('APP_ENV') === 'local'
             ? 'http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://127.0.0.1:5174'
-            : '')
-    )))),
+            : ''),
+        ! in_array(env('APP_ENV'), ['local', 'testing'], true)
+    ),
 
     'allowed_origins_patterns' => [],
 

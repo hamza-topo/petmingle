@@ -32,7 +32,7 @@ CI installs pinned Playwright 1.56.1 without changing package.json or the lockfi
 
 ```sh
 npm ci
-VITE_API_BASE_URL=http://127.0.0.1:4173/api/v.0 VITE_MEDIA_BASE_URL=http://127.0.0.1:4173 npm run build
+VITE_API_BASE_URL=http://127.0.0.1:4173/api/v.0 VITE_MEDIA_BASE_URL=http://127.0.0.1:4173 npm run build -- --mode desktop-review
 npm install --no-save --package-lock=false playwright@1.56.1
 npx playwright install --with-deps chromium
 node scripts/desktop-review.mjs

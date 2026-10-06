@@ -1,0 +1,8 @@
+node_modules
+dist
+desktop-review
+.env
+.env.*
+!.env.example
+!.env.production.example
+.git
