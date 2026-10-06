@@ -1,5 +1,4 @@
-import { PetTraitBadge } from '../../../components/PetTraitBadge';
-import { ownPet, profileDetails } from '../profile.fixtures';
+import { profileDetails } from '../profile.fixtures';
 import type { CurrentPetProfile } from '../profile.types';
 import { ProfileEdit } from './PetProfileSummary';
 
@@ -28,14 +27,7 @@ export function ProfileAbout({
 
       <p>{pet.biography}</p>
 
-      <div className="own-traits">
-        {ownPet.traits.map(trait => (
-          <PetTraitBadge
-            key={trait.label}
-            trait={trait}
-          />
-        ))}
-      </div>
+      <p>Personality traits are not available yet.</p>
     </section>
   );
 }
@@ -72,7 +64,7 @@ export function ProfileDetails({
         };
       }
 
-      return detail;
+      return { ...detail, value: 'Not provided' };
     }),
   );
 

@@ -20,7 +20,7 @@ export const profileDetails = [
 export const plusFeatures = [
   { title: 'Advanced Filters', text: 'Find the perfect playmates by size, energy level, breed, and more.', icon: Search },
   { title: 'Boost Profile Visibility', text: 'Get your pet seen by more local matches.', icon: Eye },
-  { title: 'See Who Liked Your Pet', text: 'Find out who’s interested in meeting Nala.', icon: Heart },
+  { title: 'See Who Liked Your Pet', text: 'Find out who’s interested in meeting your pet.', icon: Heart },
   { title: 'Unlimited Rewinds', text: 'Missed a great match? Go back anytime.', icon: History },
 ];
 export const plusPlans: PlusPlan[] = [

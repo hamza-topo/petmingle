@@ -39,9 +39,9 @@ export function SiteHeader({
         <button
           type="button"
           className="search-button"
-          aria-label="Search — unavailable in this preview"
+          aria-label="Search — not available yet"
           disabled
-          title="Search is not available in this preview"
+          title="Search is not available yet"
         >
           <Search size={22} aria-hidden="true" />
         </button>

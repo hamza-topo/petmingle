@@ -694,7 +694,7 @@ describe('Discovery page', () => {
 
     expect(
       screen.getByText(
-        'Size, energy and personality are deferred until they have persisted backend fields.',
+        'Size, energy and personality filters are not available yet.',
       ),
     ).toBeVisible();
 

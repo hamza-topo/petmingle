@@ -30,13 +30,13 @@ export function DiscoveryHeader() {
           aria-label="Search pets, people, or locations"
           disabled
           placeholder="Search pets, people, or locations..."
-          aria-describedby="search-preview-note"
+          aria-describedby="search-unavailable-note"
         />
         <span
-          id="search-preview-note"
+          id="search-unavailable-note"
           className="sr-only"
         >
-          Search is unavailable.
+          Search is not available yet.
         </span>
       </label>
 
@@ -50,7 +50,7 @@ export function DiscoveryHeader() {
         className="discovery-account"
         type="button"
         disabled
-        aria-label={`${accountName} account — unavailable in this preview`}
+        aria-label={`${accountName} account — unavailable`}
       >
         <Avatar
           name={accountName}

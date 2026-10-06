@@ -107,11 +107,6 @@ export function PetCreatePage() {
     defaultValues: initialProfile,
   });
 
-  const name = useWatch({
-    control,
-    name: 'name',
-  });
-
   const speciesId = useWatch({
     control,
     name: 'speciesId',
@@ -316,19 +311,22 @@ export function PetCreatePage() {
     required = false,
     placeholder?: string,
     disabled = false,
-  ) => (
+  ) => {
+    const deferred = ['size', 'energy', 'playdate'].includes(field);
+    return (
     <FormField
       id={field}
       label={label}
       icon={icon}
-      required={required}
+      required={required && !deferred}
       error={errors[field]?.message}
     >
       <select
         id={field}
-        {...register(field)}
-        disabled={disabled}
-        aria-required={required}
+        {...(deferred ? {} : register(field))}
+        defaultValue={deferred ? '' : undefined}
+        disabled={disabled || deferred}
+        aria-required={required && !deferred}
         aria-invalid={!!errors[field]}
         aria-describedby={
           errors[field]
@@ -336,9 +334,9 @@ export function PetCreatePage() {
             : undefined
         }
       >
-        {placeholder && (
+        {(placeholder || deferred) && (
           <option value="">
-            {placeholder}
+            {deferred ? 'Not available yet' : placeholder}
           </option>
         )}
 
@@ -359,6 +357,7 @@ export function PetCreatePage() {
       />
     </FormField>
   );
+  };
 
   return (
     <div className="pet-create-page">
@@ -586,8 +585,7 @@ export function PetCreatePage() {
             </h2>
 
             <p>
-              Choose a few words that best describe
-              your pet.
+              Personality traits are not available yet.
             </p>
 
             <div className="pet-trait-choices">
@@ -606,7 +604,9 @@ export function PetCreatePage() {
                     <input
                       type="checkbox"
                       value={trait}
-                      {...register('traits')}
+                      disabled
+                      checked={false}
+                      readOnly
                     />
 
                     <span>
@@ -633,8 +633,7 @@ export function PetCreatePage() {
               </h2>
 
               <p>
-                Help us find the best matches for{' '}
-                {name.trim() || 'your pet'}.
+                Playdate preferences are not available yet.
               </p>
             </div>
 
@@ -686,7 +685,7 @@ export function PetCreatePage() {
               <button
                 type="button"
                 disabled
-                title="Saving is not available in this local preview"
+                title="Draft saving is not available yet"
               >
                 Save and finish later
               </button>

@@ -207,7 +207,7 @@ export function MatchesPage() {
           <div className="matches-intro">
             <div>
               <p className="matches-eyebrow">
-                Persisted relationships
+                Your connections
               </p>
               <h1 id="matches-title">
                 Your Matches
@@ -263,7 +263,7 @@ export function MatchesPage() {
               <ApiState
                 kind="empty"
                 title="No matches yet"
-                message="When two pets like each other, the persisted match will appear here."
+                message="When two pets like each other, their match will appear here."
               />
             )}
 
