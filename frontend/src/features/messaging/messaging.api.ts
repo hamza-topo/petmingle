@@ -56,6 +56,18 @@ type ApiEnvelope<T> = {
   data: T;
 };
 
+export type MarkConversationSeenResult = {
+  conversationId: number;
+  markedCount: number;
+  unreadCount: number;
+};
+
+type MarkConversationSeenApiItem = {
+  conversation_id: number;
+  marked_count: number;
+  unread_count: number;
+};
+
 type ParticipantApiItem = {
   user_id: number;
   name: string | null;
@@ -353,6 +365,50 @@ export async function threadRequest({
   );
 
   return response.data.map(mapMessage);
+}
+
+export async function markConversationSeenRequest({
+  token,
+  conversationId,
+}: {
+  token: string;
+  conversationId: number;
+}): Promise<MarkConversationSeenResult> {
+  if (!isPositiveInteger(conversationId)) {
+    throw new Error(
+      'Conversation seen request requires a valid conversation ID.',
+    );
+  }
+
+  const response = await apiRequest<
+    ApiEnvelope<MarkConversationSeenApiItem>
+  >(
+    `/conversations/${conversationId}/seen`,
+    {
+      method: 'PUT',
+      token,
+    },
+  );
+
+  const item = response.data;
+
+  if (
+    item.conversation_id !== conversationId
+    || !Number.isInteger(item.marked_count)
+    || item.marked_count < 0
+    || !Number.isInteger(item.unread_count)
+    || item.unread_count < 0
+  ) {
+    throw new Error(
+      'Conversation seen response is invalid.',
+    );
+  }
+
+  return {
+    conversationId: item.conversation_id,
+    markedCount: item.marked_count,
+    unreadCount: item.unread_count,
+  };
 }
 
 export async function messageSendRequest({
