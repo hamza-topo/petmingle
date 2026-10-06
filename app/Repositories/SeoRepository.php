@@ -116,7 +116,7 @@ class SeoRepository
      */
     public function getAvvaillable(): array
     {
-        $pages = array_map(function () use ($page) {
+        $pages = array_map(function ($page) {
             return $page->value;
         }, EnumsSeo::cases());
 
