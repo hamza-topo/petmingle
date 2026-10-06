@@ -6,7 +6,15 @@ React/TypeScript/Vite desktop app integrated with Laravel's Sanctum Bearer API. 
 
 Use the existing project containers for Laravel and the frontend. Copy frontend/.env.example to the frontend's local environment file and use the browser-facing API URL, normally http://localhost:8000/api/v.0. Docker service names are not browser URLs. The development frontend uses port 5174 on the host (5173 in the container); local standalone Vite uses port 5173. Keep the matching exact origins in backend CORS_ALLOWED_ORIGINS.
 
-With Node 24 inside a container and frontend as its working directory:
+Start the frontend from the repository root using Node 24 in Docker:
+
+```sh
+docker run --rm -it -p 127.0.0.1:5174:5173 \\
+  -v "$PWD/frontend:/app" -v petmingle-frontend-node-modules:/app/node_modules \\
+  -w /app node:24-alpine sh -c 'npm ci && npm run dev -- --host 0.0.0.0'
+```
+
+For checks, use Node 24 inside a container with frontend as its working directory:
 
 ```sh
 npm ci
