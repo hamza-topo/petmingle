@@ -18,10 +18,7 @@ import {
   otherParticipantUserId,
   threadRequest,
 } from './messaging.api';
-import type {
-  ChatMessage,
-  Conversation,
-} from './messaging.types';
+import type { Conversation } from './messaging.types';
 
 type LoadStatus =
   | 'loading'
