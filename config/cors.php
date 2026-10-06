@@ -27,7 +27,7 @@ return [
         (string) env('CORS_ALLOWED_ORIGINS', env('APP_ENV') === 'local'
             ? 'http://localhost:5173,http://127.0.0.1:5173,http://localhost:5174,http://127.0.0.1:5174'
             : ''),
-        ! in_array(env('APP_ENV'), ['local', 'testing'], true)
+        ! in_array(env('APP_ENV'), ['local', 'testing'], true),
     ),
 
     'allowed_origins_patterns' => [],

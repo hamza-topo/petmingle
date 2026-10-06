@@ -10,8 +10,10 @@ class FrontendOriginsTest extends TestCase
 {
     public function test_production_origins_are_exact_https_and_deduplicated(): void
     {
-        $this->assertSame(['https://app.petmingle.test', 'https://admin.petmingle.test:8443'],
-            FrontendOrigins::parse(' https://app.petmingle.test,https://admin.petmingle.test:8443,https://app.petmingle.test ', true));
+        $this->assertSame(
+            ['https://app.petmingle.test', 'https://admin.petmingle.test:8443'],
+            FrontendOrigins::parse(' https://app.petmingle.test,https://admin.petmingle.test:8443,https://app.petmingle.test ', true)
+        );
         $this->assertSame([], FrontendOrigins::parse('', true));
     }
 
