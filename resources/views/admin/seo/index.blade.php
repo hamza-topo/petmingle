@@ -32,15 +32,11 @@
                                     <td>{{ $page->title[App\Enums\App::LOCALES['FR']] ?? '' }}</td>
                                     <td>{{ $page->meta['description'][App\Enums\App::LOCALES['FR']] ?? '' }}</td>
                                     <td align="right" class="d-flex justify-content-end">
-                                        <a href="{{ route('admin.seo.show', $page->id) }}" type="button"
-                                            class="btn btn-success me-2">
-                                            <i class="ri ri-eye-line"></i> <!-- Remix Icon for view -->
-                                        </a>
                                         <a href="{{ route('admin.seo.edit', $page->id) }}" type="button"
                                             class="btn btn-primary me-2">
                                             <i class="ri ri-pencil-line"></i> <!-- Remix Icon for edit -->
                                         </a>
-                                        <form action="{{ route('admin.species.destroy', $page->id) }}" method="POST"
+                                        <form action="{{ route('admin.seo.destroy', $page->id) }}" method="POST"
                                             style="display:inline;">
                                             @csrf
                                             @method('DELETE')
@@ -56,9 +52,6 @@
                     </tbody>
                 </table>
 
-                <div class="d-flex justify-content-center">
-                    {{-- {{ $seos->links('pagination::bootstrap-4') }} --}}
-                </div>
             </div>
         </div>
     </div>

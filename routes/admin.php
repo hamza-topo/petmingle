@@ -37,7 +37,7 @@ Route::prefix('/admin')->middleware(['admin'])->name('admin.')->group(function (
     Route::resource('races', RaceController::class);
     Route::resource('adoptions', AdoptionController::class);
     Route::resource('users', UserController::class);
-    Route::resource('seo', SeoController::class);
+    Route::resource('seo', SeoController::class)->except(['show']);
     Route::resource('components', ComponentController::class)->only(['index', 'create', 'store', 'edit']);
     Route::resource('blogs', BlogController::class)->except(['show']);
     Route::post('blogs/upload', [BlogController::class, 'uploadMedia'])->name('blogs.upload');

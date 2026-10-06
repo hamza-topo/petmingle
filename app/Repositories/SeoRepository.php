@@ -9,6 +9,7 @@ use App\Models\Seo;
 use App\Services\CacheService;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Seo Repository class
@@ -25,7 +26,22 @@ class SeoRepository
      */
     public function create(array $seo): Seo
     {
-        return Seo::create($seo);
+        return DB::transaction(function () use ($seo) {
+            $trashed = Seo::onlyTrashed()->where('key', $seo['key'])->first();
+            if ($trashed !== null) {
+                $trashed->fill($seo);
+                $trashed->restore();
+                $trashed->refresh();
+                $this->cacheService->clear($trashed->key);
+
+                return $trashed;
+            }
+
+            $created = Seo::create($seo)->refresh();
+            $this->cacheService->clear($created->key);
+
+            return $created;
+        });
     }
 
     /**
@@ -36,6 +52,7 @@ class SeoRepository
         $seo = $this->getById($seoId);
         $seo->update($newSeo);
         $seo->refresh();
+        $this->cacheService->clear($seo->key);
 
         return $seo;
     }
@@ -43,7 +60,7 @@ class SeoRepository
     /**
      * getById Method
      */
-    public function getById(int $seoId): ?Seo
+    public function getById(int $seoId): Seo
     {
         return Seo::findOrFail($seoId);
     }
@@ -53,7 +70,11 @@ class SeoRepository
      */
     public function delete(int $seoId): bool
     {
-        return Seo::destroy($seoId);
+        $seo = $this->getById($seoId);
+        $deleted = $seo->delete();
+        $this->cacheService->clear($seo->key);
+
+        return (bool) $deleted;
     }
 
     /**
@@ -61,13 +82,15 @@ class SeoRepository
      */
     public function restore(int $seoId): bool
     {
-        return Seo::withTrashed()->find($seoId)->restore();
+        $seo = Seo::withTrashed()->findOrFail($seoId);
+        $restored = $seo->restore();
+        $this->cacheService->clear($seo->key);
+
+        return $restored;
     }
 
     /**
      * Get All Seo Entities
-     *
-     * @return void
      */
     public function all(): Collection
     {
@@ -110,7 +133,7 @@ class SeoRepository
      */
     public function getAllFromCache(?string $page = ''): Seo
     {
-        return $this->cacheService->remember($page, CacheDuration::SHORT->value, function ($page) {
+        return $this->cacheService->remember($page, CacheDuration::SHORT->value, function () use ($page) {
             return Seo::where('key', $page)->firstOrFail();
         });
     }
