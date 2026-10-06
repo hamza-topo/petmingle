@@ -20,11 +20,18 @@ class BladeAssetLoadingTest extends TestCase
             ->assertDontSee('/css/app.css', false);
     }
 
-    public function test_public_auth_page_uses_its_static_bootstrap_and_site_assets(): void
+    public function test_public_contact_page_uses_its_static_bootstrap_and_site_assets(): void
     {
-        $this->get('/user/login')->assertOk()
+        $this->get('/contact')->assertOk()
             ->assertSee('assets/css/bootstrap-5.3.0.min.css', false)
             ->assertSee('assets/js/main.js', false)
+            ->assertDontSee('/js/app.js', false)
+            ->assertDontSee('/css/app.css', false);
+    }
+    public function test_authentication_page_uses_published_adminlte_assets(): void
+    {
+        $this->get('/user/login')->assertOk()
+            ->assertSee('vendor/adminlte/dist/css/adminlte.min.css', false)
             ->assertDontSee('/js/app.js', false)
             ->assertDontSee('/css/app.css', false);
     }

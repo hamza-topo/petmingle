@@ -16,10 +16,8 @@ docker compose --profile frontend up -d node
 For checks, use Node 24 inside a container with frontend as its working directory:
 
 ```sh
-npm ci
-npm run dev -- --host 0.0.0.0
-npm run typecheck
-npm test -- --maxWorkers=1
+docker compose run --rm node npm run typecheck
+docker compose run --rm node npm test -- --maxWorkers=1
 ```
 
 For the local browser review build, use the desktop-review mode with the loopback API/media URLs documented in [the desktop review](../docs/ui/DESKTOP_REGRESSION_REVIEW.md). A normal npm run build now requires a deployment HTTPS API URL.
