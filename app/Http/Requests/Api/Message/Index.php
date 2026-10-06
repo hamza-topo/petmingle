@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 
 class Index extends FormRequest
 {
-    public function rules()
+    public function rules(): array
     {
         return [
             'receiver_id' => [
@@ -16,11 +16,21 @@ class Index extends FormRequest
                 'exists:users,id',
                 new IsAllowed,
             ],
+            'page' => [
+                'sometimes',
+                'integer',
+                'min:1',
+            ],
+            'per_page' => [
+                'sometimes',
+                'integer',
+                'between:1,50',
+            ],
             'sender_id' => ['prohibited'],
         ];
     }
 
-    public function messages()
+    public function messages(): array
     {
         return [
             'receiver_id.required' => __(
@@ -31,6 +41,18 @@ class Index extends FormRequest
             ),
             'receiver_id.exists' => __(
                 'The selected receiver does not exist.'
+            ),
+            'page.integer' => __(
+                'The message page must be a whole number.'
+            ),
+            'page.min' => __(
+                'The message page must be at least 1.'
+            ),
+            'per_page.integer' => __(
+                'The message page size must be a whole number.'
+            ),
+            'per_page.between' => __(
+                'The message page size must be between 1 and 50.'
             ),
             'sender_id.prohibited' => __(
                 'The sender is derived from authentication.'
