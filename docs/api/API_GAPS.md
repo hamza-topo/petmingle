@@ -101,7 +101,7 @@ The original findings above are retained as historical evidence. Only S01, S03, 
 
 Issue #128 supersedes the earlier disabled-provider deployment note. The application broadcast provider is enabled, private subscription auth uses `auth:sanctum` bearer authentication, and the selected Pusher-compatible broadcaster does not require the optional Pusher PHP SDK. Local Docker can use Soketi; Pusher Cloud remains configurable. Ordinary tests force the null broadcaster and dedicated transport tests simulate HTTP/websocket dependencies, so CI contacts no external realtime service.
 
-The legacy `resources/js/app.js` public-channel listeners will no longer receive these private events. Its Echo bootstrap is already commented out; no active realtime client was introduced or modified. A future enabled client must subscribe to its authenticated account's private channel. No public compatibility broadcast is retained, since that would preserve the information leak.
+The unused legacy public-channel listeners and commented Echo bootstrap were removed in #91. The React client subscribes to the authenticated account's private channel. No public compatibility broadcast is retained.
 
 Block create/list were already correctly scoped: the server assigns the authenticated actor, validates non-self targets and lists only the actor's blocks. Existing spoof/self-block tests are retained; new tests cover anonymous requests and attempted query-based list impersonation. No new block endpoint or policy abstraction was necessary.
 

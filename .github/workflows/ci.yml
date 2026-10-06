@@ -108,8 +108,14 @@ jobs:
           cache-dependency-path: frontend/package-lock.json
       - name: Install frontend dependencies
         run: npm ci
-      - name: Typecheck frontend
-        run: npm run typecheck
+      - name: Validate root frontend forwarding manifest
+        run: |
+          npm --prefix .. ci --ignore-scripts
+          npm --prefix .. run typecheck
+      - name: Verify Docker Compose frontend service
+        run: |
+          docker compose -f ../docker-compose.yml --profile frontend config --quiet
+          docker compose -f ../docker-compose.yml --profile frontend run --rm --no-deps node sh -c 'npm ci && npm run typecheck'
       - name: Run frontend tests
         run: npm test -- --maxWorkers=1
       - name: Check public build configuration
