@@ -165,7 +165,7 @@ All existing endpoints in this matrix require **A**. Request and DTO details fol
 | Messaging: active thread | `GET /messages?receiver_id={userId}&page=1&per_page=30` | Receiver User ID; optional page/per_page | Paginated envelope of normalized message rows | Bidirectional; stable IDs/content/seen state/ISO timestamps; page 1 is the newest window and each page is chronological |
 | Messaging: send | `POST /messages` | `{receiver_id:userId,content:string}` | `Envelope<Message>` | Raw sent message can map to `ChatMessage`, but authorization and reload/read path must be corrected first |
 | Messaging: matched pet/details | `GET /matches` + pet/race reads | None / known IDs | Target pet in `to_pet`, match timestamp | Partial breed/age/sex/photo/matched date; owner identity, interests/playdate metadata absent |
-| Messaging: read state/playdate action | none | — | No read-receipt or playdate endpoint | Keep deferred; `is_seen` column alone does not implement a secure read action |
+| Messaging: read state | `PUT /conversations/{conversationId}/seen` | No body; authenticated participant is derived server-side | `Envelope<{conversation_id,marked_count,unread_count}>` | Clear the selected conversation badge only after success; refresh from `GET /conversations` remains authoritative |
 | Own Profile: Plus | none | — | No subscription/payment implementation found | Presentational plans remain local/deferred |
 
 ### Additional route inventory and stubs
