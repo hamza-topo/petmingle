@@ -51,7 +51,8 @@ class UserRepository
     public function restore(int $modelId): bool
     {
         $user = User::onlyTrashed()->findOrFail($modelId);
-        $user->restore();
+
+        return $user->restore();
     }
 
     public function all(): Collection
