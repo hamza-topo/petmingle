@@ -29,6 +29,10 @@ jobs:
           php artisan key:generate || true
           mkdir -p storage/framework/cache
 
+      - name: Lint application PHP
+        run: |
+          find app -name '*.php' -print0 | xargs -0 -n1 php -l
+
       - name: Generate PHPStan baseline
         run: |
           printf 'parameters:\n    ignoreErrors: []\n' > phpstan-baseline.neon
