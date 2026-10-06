@@ -30,7 +30,7 @@ jobs:
         run: |
           composer update laravel/pint larastan/larastan --with-dependencies --no-interaction --no-progress --no-scripts
 
-      - name: Prepare app for Larastan
+      - name: Prepare app for quality tools
         run: |
           cp .env.example .env
           php artisan key:generate
@@ -40,23 +40,23 @@ jobs:
         run: |
           find app -name '*.php' -print0 | xargs -0 -n1 php -l
 
-      - name: Audit Pint formatting
+      - name: Establish Pint formatting baseline
         run: |
-          vendor/bin/pint --test
+          vendor/bin/pint
 
       - name: Generate PHPStan baseline
         run: |
           printf 'parameters:\n    ignoreErrors: []\n' > phpstan-baseline.neon
           vendor/bin/phpstan analyse --generate-baseline=phpstan-baseline.neon --memory-limit=1G
 
-      - name: Commit generated files
+      - name: Commit generated quality baseline
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add composer.lock phpstan-baseline.neon
+          git add -A
           if git diff --cached --quiet; then
-            echo "Generated files are already stable."
+            echo "Quality baseline is already stable."
             exit 0
           fi
-          git commit -m "build(quality): lock Pint and Larastan baseline"
+          git commit -m "style: establish Pint and Larastan baseline"
           git push origin HEAD:quality/90-pint-phpstan-gates
