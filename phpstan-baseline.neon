@@ -1,3 +1,5 @@
+parameters:
+	ignoreErrors:
 		-
 			message: '#^Unsafe call to private method App\\Enums\\Enum\:\:getProperty\(\) through static\:\:\.$#'
 			identifier: staticClassAccess.privateMethod
@@ -1284,12 +1286,6 @@
 		-
 			message: '#^PHPDoc tag @param for parameter \$adoptionId with type mixed is not subtype of native type int\.$#'
 			identifier: parameter.phpDocType
-			count: 1
-			path: app/Repositories/AdoptionRepository.php
-
-		-
-			message: '#^Relation ''toPet'' is not found in App\\Models\\Adoption model\.$#'
-			identifier: larastan.relationExistence
 			count: 1
 			path: app/Repositories/AdoptionRepository.php
 

@@ -16,7 +16,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class PetRepository
 {
-
     public function create(array $pet): Pet
     {
         return Pet::create($pet);

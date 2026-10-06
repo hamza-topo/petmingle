@@ -19,7 +19,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class LocationRepository
 {
-
     public function create(array $location): Location
     {
         return Location::create($location);
