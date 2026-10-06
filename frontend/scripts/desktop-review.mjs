@@ -60,7 +60,7 @@ try {
         catch (error) { errors.push(error.message); await route.fulfill({ status: 500, json: { success: false, message: 'Unexpected fixture' } }); }
       });
       await page.goto(base + screen.path);
-      await page.locator(screen.ready).first().waitFor();
+      await page.locator(screen.ready).first().waitFor({ state: screen.name === 'creation' ? 'attached' : 'visible' });
       await page.evaluate(() => document.fonts.ready);
       const metrics = await page.evaluate(() => ({
         viewport: innerWidth, scroll: document.documentElement.scrollWidth,
@@ -92,6 +92,7 @@ try {
         else await route.fulfill({ json: fixture(path, state) });
       });
       await page.goto(base + screen.path);
+      await page.locator('main').waitFor();
       if (state === 'loading') await page.getByRole('status').filter({ hasText: /Loading/ }).first().waitFor();
       else if (state === 'error') await page.getByRole('alert').first().waitFor();
       else await page.getByRole('status').filter({ hasText: /No / }).first().waitFor();
