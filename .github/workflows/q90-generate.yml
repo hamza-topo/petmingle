@@ -31,7 +31,8 @@ jobs:
 
       - name: Generate PHPStan baseline
         run: |
-          vendor/bin/phpstan analyse --generate-baseline=phpstan-baseline.neon --memory-limit=1G || true
+          printf 'parameters:\n    ignoreErrors: []\n' > phpstan-baseline.neon
+          vendor/bin/phpstan analyse --generate-baseline=phpstan-baseline.neon --memory-limit=1G
 
       - name: Upload generated files
         uses: actions/upload-artifact@v4
