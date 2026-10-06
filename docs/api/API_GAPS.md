@@ -63,9 +63,9 @@ Each row has one primary classification from the requested taxonomy. “Backend 
 
 | ID | Classification | Priority | Evidence and impact | Required decision or correction |
 | --- | --- | --- | --- | --- |
-| M01 | missing endpoint | gate: conversation list | Conversation model/repository exist but no list/detail API; no pair summaries, last message, participant bundle or unread count. | Participant-authorized conversation summaries/details contract. Match lists alone cannot establish message history/unread state. |
-| M02 | backend response normalization | gate: thread | GET messages selects only current user's outgoing messages; receiver_id unvalidated, no ordering/conversation scope, paginator metadata discarded by embedded Chat resource. | Bidirectional participant-scoped thread with validated IDs, deterministic order and pagination metadata. |
-| M03 | backend response normalization | gate: bubbles | Chat resource omits id/content/is_seen/raw timestamps; returns relative date strings, blank owner photos and fragile pet image indexing. | Stable message IDs, actual content, machine dates and explicit receipt/media fields. No frontend adapter can recover omitted content. |
+| M01 | missing endpoint | **Resolved — Issue #124** (original: gate: conversation list) | `GET /conversations` now returns authenticated-user-scoped paginated summaries with both User/Pet participants, latest message and unread count. | Keep conversation list subject derived from authentication; detail/mutation semantics remain separate. |
+| M02 | backend response normalization | **Resolved — Issue #124** (original: gate: thread) | `GET /messages` validates receiver/pagination, returns both message directions, preserves pagination metadata, selects newest pages first and orders each page chronologically. | Preserve the documented ordering/pagination contract when integrating the frontend. |
+| M03 | backend response normalization | **Resolved — Issue #124** (original: gate: bubbles) | Thread rows now expose stable message/conversation IDs, explicit sender/receiver User IDs, content, boolean seen state and ISO timestamps. Conversation summaries carry participant Pet media separately. | Relative labels and media URL mapping stay at the frontend boundary. |
 | M04 | data-model ambiguity | gate: conversation consistency | Conversation lookup matches either orientation but lacks unique pair/atomic creation; message participants can disagree with conversation participants (see S03). Soft-delete recreation is possible. | Agree uniqueness/history semantics and enforce participant integrity/blocking. |
 | M05 | missing endpoint | gate if unread/read UI enabled | is_seen column exists, but no authorized receiver read-marking endpoint or unread summary. Sender-only update is not a read-receipt API. | Define read scope and count response; keep local fixture receipts distinct from actual delivery/read claims. |
 | M06 | frontend adapter only | adapter after M01–M03 | ChatMessage senderId is human identity; bubble direction compares currentOwnerId. UI activity labels are anchored to April 2024 fixtures. | Map authoritative sender IDs, actual timestamps and current clock; never infer direction from pet avatar/name. |
@@ -135,3 +135,17 @@ S04 is resolved by a single server-side interaction policy and explicit transiti
 - No unblock endpoint is introduced. Removing a block in a future authorized flow will not automatically restore old likes, matches, conversations or messages.
 
 Issue #124 remains responsible for normalizing Messaging conversation/thread response contracts; #123 only establishes the contact authorization boundary.
+
+
+## Issue #124 Messaging read contracts — 2026-10-06
+
+M01–M03 are resolved by [MESSAGING_CONTRACT.md](MESSAGING_CONTRACT.md).
+
+- `GET /api/v.0/conversations` is authenticated-user scoped and paginated.
+- Conversation summaries include both human participants, their current Pet identities, latest active message and receiver-scoped unread count.
+- `GET /api/v.0/messages?receiver_id={UserId}` is bidirectional and paginated.
+- Page 1 represents the newest message window; rows within each page are returned oldest-to-newest.
+- Thread rows expose stable IDs, content, explicit User-ID sender/receiver semantics, boolean `is_seen`, and ISO 8601 timestamps.
+- Issue #123 block/match authorization remains mandatory for thread reads.
+- M05 remains open: no receiver-authorized mutation marks messages as seen.
+- M04 remains open: pair uniqueness/atomic conversation creation is not redesigned here.
