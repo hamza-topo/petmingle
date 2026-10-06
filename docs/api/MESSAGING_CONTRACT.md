@@ -136,12 +136,35 @@ Both endpoints use the standard PetMingle paginated envelope:
 
 ## Seen/unread boundary
 
-Issue #124 only makes existing read state observable:
+Issue #127 adds an explicit receiver-authorized mutation:
 
-- thread messages expose `is_seen`;
-- conversation summaries expose `unread_count`.
+```http
+PUT /api/v.0/conversations/{conversationId}/seen
+Authorization: Bearer <token>
+Accept: application/json
+```
 
-There is still no receiver-authorized endpoint to mark messages as seen. That remains the separate M05/read-receipt scope.
+The request has no body. The authenticated User must be a participant in the active conversation and must still satisfy the Issue #123 contact policy.
+
+Only active messages in that conversation where the authenticated User is `receiver_id` and `is_seen = false` are updated. Outgoing messages and messages in other conversations are never changed by this mutation.
+
+Response:
+
+```json
+{
+  "success": true,
+  "message": "Conversation marked as seen.",
+  "data": {
+    "conversation_id": 42,
+    "marked_count": 3,
+    "unread_count": 0
+  }
+}
+```
+
+The frontend removes an unread badge only after this server response. Refresh then reloads `unread_count` from `GET /conversations`; there is no client-only unread source of truth.
+
+Thread messages continue to expose `is_seen`, and conversation summaries continue to expose receiver-scoped `unread_count`.
 
 ## Out of scope
 
@@ -149,7 +172,6 @@ This contract does not add:
 
 - realtime delivery;
 - typing state;
-- read-mark mutation;
 - conversation uniqueness migration;
 - playdate/interests persistence;
 - frontend fixture replacement.
