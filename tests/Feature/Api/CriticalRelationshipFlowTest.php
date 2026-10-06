@@ -8,7 +8,7 @@ use App\Models\Pet;
 use App\Models\Race;
 use App\Models\Species;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseMigrations;
+use Illuminate\Foundation\Testing\DatabaseTruncation;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
 use Laravel\Sanctum\Sanctum;
@@ -16,7 +16,17 @@ use Tests\TestCase;
 
 class CriticalRelationshipFlowTest extends TestCase
 {
-    use DatabaseMigrations;
+    use DatabaseTruncation;
+
+    protected function tearDown(): void
+    {
+        // DatabaseTruncation cleans before committed-flow tests.
+        // Clean again afterwards so transaction-based tests that run
+        // later in the same process never observe our committed rows.
+        $this->truncateTablesForAllConnections();
+
+        parent::tearDown();
+    }
 
     public function test_reciprocal_likes_create_match_and_dispatch_notifications_end_to_end(): void
     {
