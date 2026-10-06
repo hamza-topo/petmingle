@@ -294,6 +294,217 @@ class MessagingContractTest extends TestCase
             ]);
     }
 
+    public function test_receiver_can_mark_one_conversation_seen_and_refresh_preserves_counts(): void
+    {
+        [$currentUser, $currentPet] = $this->userWithPet(
+            'Current',
+            'Nala'
+        );
+        [$otherUser, $otherPet] = $this->userWithPet(
+            'Other',
+            'Milo'
+        );
+        [$thirdUser, $thirdPet] = $this->userWithPet(
+            'Third',
+            'Luna'
+        );
+
+        $this->establishMatch(
+            $currentPet,
+            $otherPet
+        );
+        $this->establishMatch(
+            $currentPet,
+            $thirdPet
+        );
+
+        $conversation = Conversation::create([
+            'first_user_id' => $currentUser->id,
+            'seconde_user_id' => $otherUser->id,
+        ]);
+
+        $otherConversation = Conversation::create([
+            'first_user_id' => $currentUser->id,
+            'seconde_user_id' => $thirdUser->id,
+        ]);
+
+        $firstIncoming = $this->message(
+            $conversation,
+            $otherUser,
+            $currentUser,
+            'Unread one',
+            false
+        );
+
+        $secondIncoming = $this->message(
+            $conversation,
+            $otherUser,
+            $currentUser,
+            'Unread two',
+            false
+        );
+
+        $outgoing = $this->message(
+            $conversation,
+            $currentUser,
+            $otherUser,
+            'Outgoing still unseen by other user',
+            false
+        );
+
+        $otherIncoming = $this->message(
+            $otherConversation,
+            $thirdUser,
+            $currentUser,
+            'Unread in another conversation',
+            false
+        );
+
+        Sanctum::actingAs($currentUser);
+
+        $this->putJson(
+            '/api/v.0/conversations/'
+            . $conversation->id
+            . '/seen'
+        )
+            ->assertOk()
+            ->assertJsonPath('success', true)
+            ->assertJsonPath(
+                'message',
+                'Conversation marked as seen.'
+            )
+            ->assertJsonPath(
+                'data.conversation_id',
+                $conversation->id
+            )
+            ->assertJsonPath(
+                'data.marked_count',
+                2
+            )
+            ->assertJsonPath(
+                'data.unread_count',
+                0
+            );
+
+        $this->assertDatabaseHas('messages', [
+            'id' => $firstIncoming->id,
+            'is_seen' => true,
+        ]);
+
+        $this->assertDatabaseHas('messages', [
+            'id' => $secondIncoming->id,
+            'is_seen' => true,
+        ]);
+
+        $this->assertDatabaseHas('messages', [
+            'id' => $outgoing->id,
+            'is_seen' => false,
+        ]);
+
+        $this->assertDatabaseHas('messages', [
+            'id' => $otherIncoming->id,
+            'is_seen' => false,
+        ]);
+
+        $conversations = $this->getJson(
+            '/api/v.0/conversations?per_page=10'
+        )
+            ->assertOk()
+            ->json('data');
+
+        $byId = collect($conversations)->keyBy('id');
+
+        $this->assertSame(
+            0,
+            $byId[$conversation->id]['unread_count']
+        );
+
+        $this->assertSame(
+            1,
+            $byId[$otherConversation->id]['unread_count']
+        );
+    }
+
+    public function test_non_participant_cannot_mark_conversation_seen(): void
+    {
+        [$firstUser] = $this->userWithPet(
+            'First',
+            'Nala'
+        );
+        [$secondUser] = $this->userWithPet(
+            'Second',
+            'Milo'
+        );
+        [$outsider] = $this->userWithPet(
+            'Outsider',
+            'Luna'
+        );
+
+        $conversation = Conversation::create([
+            'first_user_id' => $firstUser->id,
+            'seconde_user_id' => $secondUser->id,
+        ]);
+
+        $message = $this->message(
+            $conversation,
+            $secondUser,
+            $firstUser,
+            'Private unread',
+            false
+        );
+
+        Sanctum::actingAs($outsider);
+
+        $this->putJson(
+            '/api/v.0/conversations/'
+            . $conversation->id
+            . '/seen'
+        )->assertForbidden();
+
+        $this->assertDatabaseHas('messages', [
+            'id' => $message->id,
+            'is_seen' => false,
+        ]);
+    }
+
+    public function test_participant_cannot_mark_seen_without_active_contact(): void
+    {
+        [$firstUser] = $this->userWithPet(
+            'First',
+            'Nala'
+        );
+        [$secondUser] = $this->userWithPet(
+            'Second',
+            'Milo'
+        );
+
+        $conversation = Conversation::create([
+            'first_user_id' => $firstUser->id,
+            'seconde_user_id' => $secondUser->id,
+        ]);
+
+        $message = $this->message(
+            $conversation,
+            $secondUser,
+            $firstUser,
+            'Unread without active match',
+            false
+        );
+
+        Sanctum::actingAs($firstUser);
+
+        $this->putJson(
+            '/api/v.0/conversations/'
+            . $conversation->id
+            . '/seen'
+        )->assertForbidden();
+
+        $this->assertDatabaseHas('messages', [
+            'id' => $message->id,
+            'is_seen' => false,
+        ]);
+    }
+
     private function message(
         Conversation $conversation,
         User $sender,
