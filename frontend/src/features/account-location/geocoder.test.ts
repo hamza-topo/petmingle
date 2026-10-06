@@ -13,6 +13,12 @@ describe('Place adapter', () => {
     expect(url.searchParams.get('q')).toBe('Casablanca');
     expect(options).toEqual({ signal, credentials: 'omit', referrerPolicy: 'no-referrer' });
   });
+  it('distinguishes searched neighbourhoods while reverse lookup uses the city', async () => {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({ features: [{ ...feature, properties: { ...feature.properties, name: 'Maarif', osm_key: 'place', osm_value: 'suburb' } }] }) }));
+    const signal = new AbortController().signal;
+    expect((await searchPlaces('Maarif', signal))[0].label).toBe('Maarif, Casablanca, Morocco');
+    expect(await reversePlace({ latitude: 33.57, longitude: -7.59 }, signal)).toBe('Casablanca, Morocco');
+  });
   it('rounds reverse lookup coordinates and preserves cancellation', async () => {
     const fetcher = vi.fn().mockResolvedValue({ ok: true, json: async () => ({ features: [feature] }) });
     vi.stubGlobal('fetch', fetcher);
