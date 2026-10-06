@@ -186,10 +186,7 @@ function mapMessage(
     senderId: String(item.sender_user_id),
     content: item.content,
     timestamp: item.created_at,
-    receipt:
-      item.is_seen === true || item.is_seen === 1
-        ? 'read'
-        : undefined,
+    receipt: item.is_seen ? 'read' : undefined,
   };
 }
 
