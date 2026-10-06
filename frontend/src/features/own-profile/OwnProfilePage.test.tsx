@@ -1,6 +1,7 @@
 import {
   render,
   screen,
+  waitFor,
   within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -606,18 +607,16 @@ describe('Own pet profile', () => {
       URL.revokeObjectURL,
     ).toHaveBeenCalledTimes(1);
 
-    const savedImages =
-      await screen.findAllByRole('img', {
+    await waitFor(() => {
+      const savedImages = screen.getAllByRole('img', {
         name: 'Milo saved photo 1',
       });
-
-    expect(
-      savedImages.some(
-        image =>
-          image.getAttribute('src')
-          === '/storage/pets/replaced.png',
-      ),
-    ).toBe(true);
+      expect(
+        savedImages.some(
+          image => image.getAttribute('src') === '/storage/pets/replaced.png',
+        ),
+      ).toBe(true);
+    });
   });
 
   it('keeps saved media intact when replacement fails', async () => {

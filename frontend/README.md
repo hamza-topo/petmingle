@@ -1,80 +1,41 @@
-# PetMingle frontend — five-screen desktop prototype
+# PetMingle React frontend
 
-Standalone React/TypeScript/Vite app. Landing, Discovery, Pet Profile Creation, Messaging and Own Profile are implemented from their desktop references. Laravel, its root npm package, Mix pipeline, Blade views, public assets, routes, and API remain separate.
+React/TypeScript/Vite desktop app integrated with Laravel's Sanctum Bearer API. Authentication, pet creation/editing/media, account location, Discovery filters/interactions, relationships and Messaging use API adapters. Landing example profiles and missing-artwork placeholders remain intentional; billing and other deferred controls are unavailable.
 
-## Run
+## Local Docker workflow
 
-Use Node 22.12+ (tested on 22.23.1). From `frontend/`:
+Use the existing project containers for Laravel and the frontend. Copy frontend/.env.example to the frontend's local environment file and use the browser-facing API URL, normally http://localhost:8000/api/v.0. Docker service names are not browser URLs. The development frontend uses port 5174 on the host (5173 in the container); local standalone Vite uses port 5173. Keep the matching exact origins in backend CORS_ALLOWED_ORIGINS.
+
+Start the frontend from the repository root using Node 24 in Docker:
+
+```sh
+docker run --rm -it -p 127.0.0.1:5174:5173 \\
+  -v "$PWD/frontend:/app" -v petmingle-frontend-node-modules:/app/node_modules \\
+  -w /app node:24-alpine sh -c 'npm ci && npm run dev -- --host 0.0.0.0'
+```
+
+For checks, use Node 24 inside a container with frontend as its working directory:
 
 ```sh
 npm ci
-npm run dev
-npm run build
-npm test
+npm run dev -- --host 0.0.0.0
 npm run typecheck
+npm test -- --maxWorkers=1
 ```
 
-The Vite server binds to `127.0.0.1` and uses port 5173 by default. Build output stays in `frontend/dist`. No API proxy, network data client, or Laravel integration is configured. React Router exposes `/`, `/discover`, `/pet/create`, `/messages` and `/profile`; existing controls connect the five screens and unknown paths return Home.
+For the local browser review build, use the desktop-review mode with the loopback API/media URLs documented in [the desktop review](../docs/ui/DESKTOP_REGRESSION_REVIEW.md). A normal npm run build now requires a deployment HTTPS API URL.
 
-## API environment contract — Cycle 9B
+## Production
 
-Copy `.env.example` to `.env.local` when preparing the next integration cycle. The reserved public build-time setting is:
+Read [FRONTEND_PRODUCTION.md](../docs/deployment/FRONTEND_PRODUCTION.md) for the public build settings, Docker/Nginx hosting, exact HTTPS CORS origins, private realtime configuration and deployment verification. Copy .env.production.example to .env.production.local, set the real browser URLs, then build. Values prefixed VITE_ are public and embedded at build time; never put tokens or server secrets there.
 
-```dotenv
-VITE_API_BASE_URL=http://localhost:8000/api/v.0
-```
+The production Dockerfile builds the bundle and serves it using the supplied Nginx SPA fallback. Direct navigation/refresh is checked in CI. Supported desktop widths are 1448, 1280 and 1120px. Mobile behavior and original photographic/brand assets remain separate work.
 
-Use the **browser-facing** Laravel address with the `/api/v.0` prefix and no trailing slash. Do not use Docker service names (`app`, `nginx`) or container IPs. Vite-prefixed variables are public: never place tokens, passwords or server secrets in them. Nothing consumes this variable yet; fixtures and UI behavior remain unchanged. Restart Vite after changing it, and set the deployment value before production builds.
+## Contracts and quality
 
-The existing Docker frontend publishes host `127.0.0.1:5174` to container port 5173; Vite binds `0.0.0.0:5173` inside that container. Open `http://localhost:5174` or `http://127.0.0.1:5174` on the host. Laravel nginx publishes port 8000. A non-Docker Vite run uses host port 5173 instead. Laravel's local CORS defaults allow these four exact localhost/127.0.0.1 frontend origins; custom ports/domains must be listed in backend `CORS_ALLOWED_ORIGINS`.
+- [API contract](../docs/api/FRONTEND_API_CONTRACT.md) and [API documentation](../docs/api/README.md).
+- [Desktop regression review](../docs/ui/DESKTOP_REGRESSION_REVIEW.md).
+- [Product behavior and deferred features](../docs/ui/PRODUCT_BEHAVIOR_REVIEW.md).
+- [Accessibility review](../docs/ui/ACCESSIBILITY_REVIEW.md).
 
-Future flow: `POST /sign-in` → `{success, token, token_type:"Bearer"}` → `GET /me` with `Authorization: Bearer <token>` and `Accept: application/json`. `/me` returns an envelope containing separate `data.user` and nullable `data.pet`. Logout is `POST /sign-out` with the active token. SPA cookies, `/sanctum/csrf-cookie`, and `credentials: include` are not the chosen React authentication path. No auth UI, client, token persistence or fetch call is introduced here.
-
-See [FRONTEND_API_CONTRACT.md](../docs/api/FRONTEND_API_CONTRACT.md) for the exact identity fields, production CORS configuration and remaining integration gates.
-
-## Implementation
-
-- `src/app/App.tsx`: frontend-only router.
-- `src/features/landing/LandingPage.tsx`: header + five small section compositions.
-- `src/features/landing/components/`: hero, benefits, process, pet strip, closing CTA, repeated signup button.
-- `src/features/landing/landing.fixtures.ts`: typed benefits, steps, and six pets from the reference.
-- `src/components/`: action styles, header, logo treatment, reference-image fallback, pet card, section heading.
-- `src/styles/tokens.css`: documented colors, typography estimates, spacing, radii, shadow, and width exposed as CSS variables / Tailwind theme tokens.
-- `src/styles/app.css`: desktop composition and nearby-desktop adjustments. No mobile layout or footer. Discovery has its own scoped desktop stylesheet.
-
-## Reference fidelity and asset handoff
-
-Target viewport: **1448 × 1086**. The centered application is 1310px wide, with an 81px header, 319px hero, overlapping benefit strip, four horizontal process steps, six pet cards, and final CTA. The mockup's browser toolbar, window frame, and outer glow are not website UI; content starts at y=0 instead of the screenshot's approximate y=49. Compare section geometry with that offset in mind.
-
-All repository raster assets were visually reviewed. Existing `public/logo.png` is a different pink/navy silhouette mark; available real dog photos and template placeholders do not match the reference. None were copied into this frontend. No external imagery, generated imagery, screenshot crops, or `/design` content is bundled.
-
-Missing assets are explicit labeled placeholders: original logo, Nala/Mochi hero, six pet portraits, and the high-five cutout. `src/assets/landingAssets.ts` isolates hero/logo/CTA sources; each typed pet fixture owns its photo source. Replace `src: null` with an approved imported asset to render an actual image in the same geometry. The hero expects a complete wide scene with room on the left for text; the logo source should contain the complete mark and wordmark. Actual photos need focal-point review on replacement.
-
-The blue/pink text wordmark is a temporary brand placeholder, not a claimed recreation of the logo. No exact font file is available; separate local body/display fallback stacks preserve hierarchy approximately, but glyph shape and wrapping differ. Body text no longer uses the condensed display fallback. Ordinary interface symbols use Lucide; its outlined symbols cannot exactly reproduce all illustrated/filled reference icons. No new gradients or animation were added.
-
-## Interaction boundary
-
-On Landing, Home is active; Explore, Explore Pets, and See more pets now open `/discover`. How It Works links to its section. Search, Stories, Resources, Sign In, and signup CTAs are disabled with explanatory titles because their destinations are outside this cycle. They retain the reference's resting appearance. Signup buttons additionally expose their unavailable explanation to assistive technology. No placeholder routes or extra dialogs were invented. Pet hearts retain the outlined reference appearance and are inactive. Cycle 2.1 removed the speculative local favorite toggle; the mockup does not establish a selected state.
-
-## Checks
-
-Vitest + Testing Library cover screen sections, primary navigation, CTA presence/unavailability, fixture-backed pet cards with honest image placeholders and inactive save affordances. Browser viewport inspection is separate from these DOM tests; jsdom does not verify layout.
-
-Tool integration follows [Tailwind's Vite installation](https://tailwindcss.com/docs/installation/using-vite), [React Router's declarative setup](https://reactrouter.com/start/declarative/installation), and [Vitest's guide](https://vitest.dev/guide/). Installed versions are pinned in `package.json` and the independent lockfile.
-
-
-## Discovery — Cycle 3
-
-- `src/features/discovery/DiscoveryPage.tsx` composes the authenticated-looking header, upper navigation/featured-pet region, lower six-pet grid, and right filter panel. The results extend beneath the navigation; there is no full-height sidebar.
-- `discovery.fixtures.ts` contains typed owner/location/count data, Nala and her companion, six nearby pets with distance/traits/photo slots, and filter groups/defaults. The displayed 127-pet count is reference copy, not a computed result count.
-- `components/DiscoveryHeader.tsx`, `DiscoverySidebar.tsx`, `FeaturedPetCard.tsx`, `DiscoveryFilters.tsx`, and `PetGrid.tsx` implement only this screen's compositions.
-- Shared logo, action button, image fallback, section heading, and `PetCard` are reused. The nearby card variant adds the screenshot's top-right heart, distance, and two traits. `PetLocation` and `PetTraitBadge` are shared because both the featured pet and nearby cards require them.
-- Existing tokens remain unchanged. The Plus star has the reference's local gold accent; backgrounds and trait colors otherwise use the approved tokens. `discovery.css` is imported through the Tailwind entry to preserve layer order, and its selectors do not restyle Landing.
-
-Local interactions: radio-chip selection/reset, editable search text, and the Show button scrolling to the fixed fixture grid. Search and filters do not fetch or change results. Single selection per group is a minimal preview assumption because cardinality is not specified in the image. Distance and sort show only the reference option; list view, gallery arrows, Save, Say Hello, notification/account/location menus, companion profiles, and other sidebar destinations remain inactive. There is no local favorite state, matching, authentication, persistence, or API integration.
-
-All Discovery photographs and the owner portrait remain isolated neutral placeholders. No generated/stock images or screenshot crops were introduced. The original font and some bespoke icons are still unavailable. See `docs/ui/DISCOVERY_VISUAL_REVIEW.md` at the repository root for measurements and verification results.
-
-## Consolidation review
-
-See [GLOBAL_UI_REVIEW.md](../docs/ui/GLOBAL_UI_REVIEW.md) for the current component architecture, navigation, verification, missing assets and API prerequisites. Earlier cycle notes below/above are historical; all data and interactions still remain local. No API, authentication, billing or persistence is implemented.
+CI runs TypeScript, Vitest integration/persistence tests, public build configuration checks, production build, Chromium desktop captures and Nginx hosting checks alongside Laravel's test/quality gates. Historical Cycle documents describe earlier prototypes; they do not override current implemented behavior.
