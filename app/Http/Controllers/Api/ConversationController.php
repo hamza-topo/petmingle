@@ -18,13 +18,19 @@ class ConversationController extends Controller
     {
         $validated = $request->validated();
 
+        $perPage = (int) ($validated['per_page'] ?? 20);
+
         $conversations = $this
             ->conversationRepository
             ->paginateForUser(
                 (int) $request->user()->id,
-                (int) ($validated['per_page'] ?? 20),
+                $perPage,
                 (int) ($validated['page'] ?? 1)
             );
+
+        $conversations->appends([
+            'per_page' => $perPage,
+        ]);
 
         return ApiResponse::paginated(
             $conversations,
