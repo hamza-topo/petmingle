@@ -29,8 +29,12 @@ class PrivateBroadcastTest extends TestCase
             'broadcasting.default' => 'private-test',
             'broadcasting.connections.private-test' => ['driver' => 'private-test'],
         ]);
-        Broadcast::extend('private-test', fn () => new RedisBroadcaster(Mockery::mock(Factory::class)));
-        $this->app->register(\App\Providers\BroadcastServiceProvider::class);
+        Broadcast::extend(
+            'private-test',
+            fn () => new RedisBroadcaster(
+                Mockery::mock(Factory::class)
+            )
+        );
     }
 
     public function test_private_events_target_only_participant_accounts_and_omit_loaded_relations(): void
@@ -56,9 +60,24 @@ class PrivateBroadcastTest extends TestCase
         $this->assertArrayNotHasKey('fromPet', (new MatchEvent($match, $reverse))->broadcastWith()['fromMatch']);
         $this->assertArrayNotHasKey('sender', (new MessageEvent($message))->broadcastWith()['message']);
         $this->assertSame('Private message', (new MessageEvent($message))->broadcastWith()['message']['content']);
-        $typing = new IsWritingEvent(102, true);
-        $this->assertInstanceOf(PrivateChannel::class, $typing->broadcastOn());
-        $this->assertSame('private-App.Models.User.102', $typing->broadcastOn()->name);
+        $typing = new IsWritingEvent(
+            101,
+            102,
+            true
+        );
+        $this->assertInstanceOf(
+            PrivateChannel::class,
+            $typing->broadcastOn()
+        );
+        $this->assertSame(
+            'private-App.Models.User.102',
+            $typing->broadcastOn()->name
+        );
+        $this->assertSame([
+            'sender_user_id' => 101,
+            'receiver_user_id' => 102,
+            'is_writing' => true,
+        ], $typing->broadcastWith());
     }
 
     public function test_account_can_authorize_only_its_own_private_channel(): void
@@ -67,6 +86,38 @@ class PrivateBroadcastTest extends TestCase
         $this->postJson('/broadcasting/auth', ['channel_name' => 'private-App.Models.User.101'])->assertOk();
         $this->postJson('/broadcasting/auth', ['channel_name' => 'private-App.Models.User.102'])->assertForbidden();
         $this->postJson('/broadcasting/auth', ['channel_name' => 'private-auto-sitemap'])->assertForbidden();
+    }
+
+    public function test_bearer_token_can_authorize_only_its_own_private_channel(): void
+    {
+        $user = User::factory()->create([
+            'is_admin' => false,
+        ]);
+
+        $token = $user
+            ->createToken('realtime-test')
+            ->plainTextToken;
+
+        $payload = [
+            'socket_id' => '123.456',
+            'channel_name' =>
+                'private-App.Models.User.'
+                . $user->id,
+        ];
+
+        $this
+            ->withToken($token)
+            ->post('/broadcasting/auth', $payload)
+            ->assertOk();
+
+        $payload['channel_name'] =
+            'private-App.Models.User.'
+            . ($user->id + 1);
+
+        $this
+            ->withToken($token)
+            ->post('/broadcasting/auth', $payload)
+            ->assertForbidden();
     }
 
     public function test_administrator_cannot_subscribe_to_another_users_channel(): void
