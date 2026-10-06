@@ -10,7 +10,7 @@ export function LandingPage() {
     <div className="landing-page">
       <a className="skip-link" href="#main-content">Skip to content</a>
       <SiteHeader />
-      <main id="main-content">
+      <main tabIndex={-1} id="main-content">
         <LandingHero />
         <div className="landing-content">
           <BenefitStrip />

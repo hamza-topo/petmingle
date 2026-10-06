@@ -3,6 +3,7 @@ import {
   useEffect,
   useMemo,
   useState,
+  useRef,
 } from 'react';
 
 import { ApiError } from '../../../api/errors';
@@ -48,6 +49,7 @@ export function PetProfileEditForm({
   onCancel: () => void;
   onSaved: () => Promise<void> | void;
 }) {
+  const form = useRef<HTMLFormElement>(null);
   const [name, setName] = useState(pet.name);
   const [speciesId, setSpeciesId] = useState(
     String(pet.speciesId),
@@ -128,6 +130,14 @@ export function PetProfileEditForm({
     taxonomyError !== null
       ? describeApiFailure(taxonomyError)
       : null;
+
+  useEffect(() => {
+    if (taxonomy) form.current?.querySelector<HTMLInputElement>('input')?.focus();
+  }, [taxonomy]);
+
+  useEffect(() => {
+    if (Object.values(fieldErrors).some(Boolean)) form.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+  }, [fieldErrors]);
 
   function validate(): PetProfileUpdateInput | null {
     const nextErrors: FieldErrors = {};
@@ -318,7 +328,9 @@ export function PetProfileEditForm({
       ) : (
         <form
           className="own-profile-edit-form"
+          ref={form}
           aria-label="Edit pet profile"
+          aria-busy={submitting}
           noValidate
           onSubmit={event => void handleSubmit(event)}
         >
@@ -365,6 +377,7 @@ export function PetProfileEditForm({
                 }));
               }}
               aria-invalid={!!fieldErrors.speciesId}
+              aria-describedby={fieldErrors.speciesId ? 'profile-edit-speciesId-error' : undefined}
             >
               {taxonomy.species.map(species => (
                 <option
@@ -376,7 +389,7 @@ export function PetProfileEditForm({
               ))}
             </select>
             {fieldErrors.speciesId && (
-              <small role="alert">
+              <small id="profile-edit-speciesId-error" role="alert">
                 {fieldErrors.speciesId}
               </small>
             )}
@@ -395,6 +408,7 @@ export function PetProfileEditForm({
               }}
               disabled={availableRaces.length === 0}
               aria-invalid={!!fieldErrors.raceId}
+              aria-describedby={fieldErrors.raceId ? 'profile-edit-raceId-error' : undefined}
             >
               {availableRaces.length === 0 && (
                 <option value="">
@@ -411,7 +425,7 @@ export function PetProfileEditForm({
               ))}
             </select>
             {fieldErrors.raceId && (
-              <small role="alert">
+              <small id="profile-edit-raceId-error" role="alert">
                 {fieldErrors.raceId}
               </small>
             )}
@@ -432,9 +446,10 @@ export function PetProfileEditForm({
                 }));
               }}
               aria-invalid={!!fieldErrors.ageYears}
+              aria-describedby={fieldErrors.ageYears ? 'profile-edit-ageYears-error' : undefined}
             />
             {fieldErrors.ageYears && (
-              <small role="alert">
+              <small id="profile-edit-ageYears-error" role="alert">
                 {fieldErrors.ageYears}
               </small>
             )}
@@ -453,9 +468,10 @@ export function PetProfileEditForm({
                 }));
               }}
               aria-invalid={!!fieldErrors.biography}
+              aria-describedby={fieldErrors.biography ? 'profile-edit-biography-error' : undefined}
             />
             {fieldErrors.biography && (
-              <small role="alert">
+              <small id="profile-edit-biography-error" role="alert">
                 {fieldErrors.biography}
               </small>
             )}

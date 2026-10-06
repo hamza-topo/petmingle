@@ -1,6 +1,9 @@
 import {
   type FormEvent,
   useState,
+  useId,
+  useRef,
+  useEffect,
 } from 'react';
 import {
   Image,
@@ -19,8 +22,18 @@ export function MessageComposer({
   disabled?: boolean;
   error?: string | null;
 }) {
+  const errorId = useId();
+  const input = useRef<HTMLInputElement>(null);
+  const wasPending = useRef(false);
+
+
   const [draft, setDraft] = useState('');
   const [pending, setPending] = useState(false);
+
+  useEffect(() => {
+    if (wasPending.current && !pending) input.current?.focus();
+    wasPending.current = pending;
+  }, [pending]);
 
   async function submit(
     event: FormEvent<HTMLFormElement>,
@@ -54,6 +67,7 @@ export function MessageComposer({
       <form
         className="message-composer"
         aria-label="Send a message"
+        aria-busy={pending}
         onSubmit={submit}
       >
         <button
@@ -76,6 +90,9 @@ export function MessageComposer({
 
         <input
           aria-label="Write a message"
+          ref={input}
+          aria-invalid={!!error}
+          aria-describedby={error ? errorId : undefined}
           placeholder={
             pending
               ? 'Sending...'
@@ -118,6 +135,7 @@ export function MessageComposer({
 
       {error && (
         <p
+          id={errorId}
           className="message-send-error"
           role="alert"
         >

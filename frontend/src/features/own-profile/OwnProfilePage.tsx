@@ -138,7 +138,7 @@ export function OwnProfilePage() {
           }
         />
 
-        <main className="auth-route-state">
+        <main tabIndex={-1} className="auth-route-state">
           <ApiState
             kind="empty"
             title="No pet profile yet"
@@ -163,7 +163,7 @@ export function OwnProfilePage() {
       <div className="own-profile-page">
         {header}
 
-        <main className="auth-route-state">
+        <main tabIndex={-1} className="auth-route-state">
           <ApiState
             kind="loading"
             message="Loading pet profile..."
@@ -183,7 +183,7 @@ export function OwnProfilePage() {
       <div className="own-profile-page">
         {header}
 
-        <main className="auth-route-state">
+        <main tabIndex={-1} className="auth-route-state">
           <ApiState
             kind="error"
             title="We couldn’t load your pet profile"
@@ -353,7 +353,7 @@ export function OwnProfilePage() {
         Skip to pet profile
       </a>
 
-      <main
+      <main tabIndex={-1}
         id="own-profile-main"
         className="own-profile-layout"
       >

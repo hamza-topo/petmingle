@@ -764,7 +764,7 @@ export function MessagingPage() {
 
       <MessagingHeader />
 
-      <main
+      <main tabIndex={-1}
         id="messaging-main"
         className="messaging-layout"
       >

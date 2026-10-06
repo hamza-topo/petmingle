@@ -194,7 +194,7 @@ export function MatchesPage() {
 
       <MatchesHeader />
 
-      <main
+      <main tabIndex={-1}
         id="matches-main"
         className="matches-layout"
       >

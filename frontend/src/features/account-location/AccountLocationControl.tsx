@@ -2,6 +2,8 @@ import {
   type FormEvent,
   useEffect,
   useState,
+  useRef,
+  useId,
 } from 'react';
 import {
   ChevronDown,
@@ -22,8 +24,20 @@ type CoordinateErrors = {
 
 export function AccountLocationControl() {
   const location = useAccountLocation();
+  const editorId = useId();
+  const trigger = useRef<HTMLButtonElement>(null);
+  const editor = useRef<HTMLFormElement>(null);
+  const wasOpen = useRef(false);
+
+
 
   const [open, setOpen] = useState(false);
+
+  useEffect(() => {
+    if (open) editor.current?.querySelector<HTMLInputElement>('input')?.focus();
+    else if (wasOpen.current) trigger.current?.focus();
+    wasOpen.current = open;
+  }, [open]);
   const [latitude, setLatitude] = useState('');
   const [longitude, setLongitude] = useState('');
   const [errors, setErrors] =
@@ -50,6 +64,10 @@ export function AccountLocationControl() {
     setErrors({});
     setSaveError(null);
   }, [location.currentLocation, open]);
+
+  useEffect(() => {
+    if (Object.values(errors).some(Boolean)) editor.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
+  }, [errors]);
 
   function validate():
     | {
@@ -167,11 +185,12 @@ export function AccountLocationControl() {
     <div className="discovery-location-shell">
       <button
         className="discovery-location"
+        ref={trigger}
         type="button"
         onClick={() => setOpen(current => !current)}
         disabled={location.status !== 'ready'}
         aria-expanded={open}
-        aria-controls="account-location-editor"
+        aria-controls={open ? editorId : undefined}
       >
         <MapPin size={22} aria-hidden="true" />
         <span>{label}</span>
@@ -190,7 +209,15 @@ export function AccountLocationControl() {
 
       {open && location.status === 'ready' && (
         <form
-          id="account-location-editor"
+          id={editorId}
+          ref={editor}
+          aria-busy={saving}
+          onKeyDown={event => {
+            if (event.key === 'Escape' && !saving) {
+              event.preventDefault();
+              setOpen(false);
+            }
+          }}
           className="discovery-location-editor"
           aria-label="Account location"
           noValidate
@@ -220,9 +247,10 @@ export function AccountLocationControl() {
                 }));
               }}
               aria-invalid={!!errors.latitude}
+              aria-describedby={errors.latitude ? editorId + '-latitude-error' : undefined}
             />
             {errors.latitude && (
-              <small role="alert">
+              <small id={editorId + '-latitude-error'} role="alert">
                 {errors.latitude}
               </small>
             )}
@@ -241,9 +269,10 @@ export function AccountLocationControl() {
                 }));
               }}
               aria-invalid={!!errors.longitude}
+              aria-describedby={errors.longitude ? editorId + '-longitude-error' : undefined}
             />
             {errors.longitude && (
-              <small role="alert">
+              <small id={editorId + '-longitude-error'} role="alert">
                 {errors.longitude}
               </small>
             )}
