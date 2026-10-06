@@ -26,10 +26,12 @@ class ConversationController extends Controller
         Conversation $conversation
     ) {
         $userId = (int) $request->user()->id;
+        $firstUserId = (int) $conversation->first_user_id;
+        $secondUserId = (int) $conversation->seconde_user_id;
 
         if (
-            $conversation->first_user_id !== $userId
-            && $conversation->seconde_user_id !== $userId
+            $firstUserId !== $userId
+            && $secondUserId !== $userId
         ) {
             throw new AuthorizationException(
                 'You are not a participant in this conversation.'
@@ -37,9 +39,9 @@ class ConversationController extends Controller
         }
 
         $otherUserId =
-            $conversation->first_user_id === $userId
-                ? (int) $conversation->seconde_user_id
-                : (int) $conversation->first_user_id;
+            $firstUserId === $userId
+                ? $secondUserId
+                : $firstUserId;
 
         if (
             !$this->interactionPolicy->canContactUsers(
