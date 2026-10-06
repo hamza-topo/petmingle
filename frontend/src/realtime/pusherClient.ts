@@ -20,7 +20,7 @@ type RealtimeCallbacks = {
   onReconnect?: () => void;
 };
 
-type SocketLike = {
+export type SocketLike = {
   onmessage:
     | ((event: { data: string }) => void)
     | null;
@@ -30,7 +30,7 @@ type SocketLike = {
   close: () => void;
 };
 
-type RealtimeDependencies = {
+export type RealtimeDependencies = {
   createSocket: (url: string) => SocketLike;
   fetchFn: typeof fetch;
   setTimer: (
@@ -42,7 +42,7 @@ type RealtimeDependencies = {
   ) => void;
 };
 
-type RealtimeSettings = {
+export type RealtimeSettings = {
   enabled: boolean;
   appKey: string;
   cluster: string;
