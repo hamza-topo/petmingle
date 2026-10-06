@@ -10,7 +10,6 @@ import { Avatar } from '../../../components/Avatar';
 import { NotificationButton } from '../../../components/NotificationButton';
 import { PetMingleLogo } from '../../../components/PetMingleLogo';
 import { PrimaryNavigation } from '../../../components/PrimaryNavigation';
-import { messagingAccount } from '../messaging.fixtures';
 
 export function MessagingHeader() {
   const { user } = useAuth();
@@ -37,7 +36,7 @@ export function MessagingHeader() {
           disabled
         >
           <MapPin size={21} aria-hidden="true" />
-          <span>{messagingAccount.location}</span>
+          <span>Location unavailable</span>
           <ChevronDown size={16} aria-hidden="true" />
         </button>
 
