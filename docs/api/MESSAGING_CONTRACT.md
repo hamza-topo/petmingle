@@ -166,12 +166,16 @@ The frontend removes an unread badge only after this server response. Refresh th
 
 Thread messages continue to expose `is_seen`, and conversation summaries continue to expose receiver-scoped `unread_count`.
 
+## Realtime extension
+
+Issue #128 adds private Pusher-compatible delivery for new messages, matches and typing while keeping every HTTP contract above authoritative.
+
+See [REALTIME_MESSAGING.md](REALTIME_MESSAGING.md) for channel authorization, event payloads, reconnect behavior and local Soketi configuration.
+
 ## Out of scope
 
 This contract does not add:
 
-- realtime delivery;
-- typing state;
 - conversation uniqueness migration;
 - playdate/interests persistence;
 - frontend fixture replacement.
