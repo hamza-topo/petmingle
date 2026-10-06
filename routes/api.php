@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BlockController;
+use App\Http\Controllers\Api\ConversationController;
 use App\Http\Controllers\Api\DislikeController;
 use App\Http\Controllers\Api\FilterController;
 use App\Http\Controllers\Api\LangController;
@@ -82,6 +83,8 @@ Route::prefix('v.0')->middleware('auth:sanctum')->group(function () {
 
     Route::post('blocks', [BlockController::class, 'store']);
     Route::get('blocks', [BlockController::class, 'index']);
+
+    Route::get('/conversations', [ConversationController::class, 'index']);
 
     Route::put('/messages/restore/{id}', [MessageController::class, 'restore']);
     Route::resources(['messages' => MessageController::class]);

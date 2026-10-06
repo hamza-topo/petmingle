@@ -161,8 +161,8 @@ All existing endpoints in this matrix require **A**. Request and DTO details fol
 | Own Profile: animal details/gallery | `GET /pets/{petId}` + `GET /races` (or race detail) | None | Raw pet and breed | `OwnPet` partly derivable; pet ID and minimal owner identity come from `/me`; media still requires normalization |
 | Own Profile: location | `GET /locations` | None | Own coordinates only | No city label; do not fabricate San Diego from coordinates |
 | Own Profile: statistics | `GET /matches` only for matches | None | Active directional match rows | No views or favorites statistic; cannot call outgoing likes “Favorites” without a product decision |
-| Messaging: conversation summaries | none | — | No conversation-list endpoint | `Conversation[]`: pair identities, last message/time, unread count and current-owner context missing |
-| Messaging: active thread | `GET /messages?receiver_id={userId}&page=1` | Receiver User ID, page | `Envelope<ChatRow[]>` | Only outgoing messages; resource omits message ID, content, raw time and read status; pagination metadata lost |
+| Messaging: conversation summaries | `GET /conversations?page=1&per_page=20` | Authenticated User; optional page/per_page | Paginated envelope of conversation summaries | Both User/Pet participants, last message and receiver-scoped unread count are explicit |
+| Messaging: active thread | `GET /messages?receiver_id={userId}&page=1&per_page=30` | Receiver User ID; optional page/per_page | Paginated envelope of normalized message rows | Bidirectional; stable IDs/content/seen state/ISO timestamps; page 1 is the newest window and each page is chronological |
 | Messaging: send | `POST /messages` | `{receiver_id:userId,content:string}` | `Envelope<Message>` | Raw sent message can map to `ChatMessage`, but authorization and reload/read path must be corrected first |
 | Messaging: matched pet/details | `GET /matches` + pet/race reads | None / known IDs | Target pet in `to_pet`, match timestamp | Partial breed/age/sex/photo/matched date; owner identity, interests/playdate metadata absent |
 | Messaging: read state/playdate action | none | — | No read-receipt or playdate endpoint | Keep deferred; `is_seen` column alone does not implement a secure read action |
@@ -281,6 +281,8 @@ LikeRepository's duplicate branch lacks a return despite `?Like`; repeated activ
 Block create: `{to:UserId,cause?:integer|null,why?:string|null}`; target must exist and differ from self, origin is assigned server-side. List/create return raw block rows in envelopes. Creating a block soft-deletes conversations between accounts, resolves their pet IDs, and removes one like direction/match pair. It does not delete messages or persistently enforce exclusion in Discovery/Like/Message queries. Block creation alone is not proof that later contact is forbidden.
 
 ### Messaging
+
+> **Current contract (Issue #124):** use [MESSAGING_CONTRACT.md](MESSAGING_CONTRACT.md) for conversation-list and thread reads. The legacy analysis below is retained as historical context and must not be used as the active frontend schema.
 
 ```ts
 type MessageRow = {
