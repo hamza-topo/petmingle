@@ -16,6 +16,8 @@
   .chat-notifications { position: relative; }
   .chat-notifications > span { position: absolute; right: 5px; top: 2px; width: 10px; height: 10px; background: var(--color-brand-pink); border-radius: 50%; }
   .messaging-layout { display: grid; grid-template-columns: 360px minmax(0, 612px) minmax(0, 370px); gap: 10px; padding: 12px 10px 9px; }
+  .messaging-state-panel { grid-column: 1 / -1; min-height: 520px; border-radius: 14px; background: var(--color-surface); display: grid; place-items: center; padding: 32px; }
+  .messaging-thread-state { display: grid; place-items: center; }
   .conversation-list, .chat-thread, .match-details { border-radius: 14px; background: var(--color-surface); min-width: 0; height: 924px; }
   .conversation-list { padding: 18px 5px 0; }
   .conversation-list h1 { font-size: 28px; line-height: 36px; margin: 0 14px 11px; letter-spacing: -.8px; }
