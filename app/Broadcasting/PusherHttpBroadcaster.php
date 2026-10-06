@@ -34,18 +34,28 @@ final class PusherHttpBroadcaster extends Broadcaster
             ''
         );
 
+        $normalizedChannel =
+            $this->normalizeChannelName($channelName);
+
         if (
             $channelName === ''
             || $socketId === ''
             || !preg_match('/^\d+\.\d+$/', $socketId)
-            || !$this->isGuardedChannel($channelName)
+            || !str_starts_with(
+                $channelName,
+                'private-'
+            )
+            || !$this->retrieveUser(
+                $request,
+                $normalizedChannel
+            )
         ) {
             throw new AccessDeniedHttpException();
         }
 
         return $this->verifyUserCanAccessChannel(
             $request,
-            $this->normalizeChannelName($channelName)
+            $normalizedChannel
         );
     }
 
@@ -171,18 +181,26 @@ final class PusherHttpBroadcaster extends Broadcaster
             )
         );
 
-        $host = (string) (
-            $this->options['host']
-            ?? 'api-'
-                . ($this->options['cluster'] ?? 'mt1')
-                . '.pusher.com'
-        );
+        $configuredHost =
+            $this->options['host'] ?? null;
+
+        $host =
+            is_string($configuredHost)
+            && trim($configuredHost) !== ''
+                ? trim($configuredHost)
+                : 'api-'
+                    . ($this->options['cluster'] ?? 'mt1')
+                    . '.pusher.com';
 
         $defaultPort = $scheme === 'https' ? 443 : 80;
-        $port = (int) (
-            $this->options['port']
-            ?? $defaultPort
-        );
+
+        $configuredPort =
+            $this->options['port'] ?? null;
+
+        $port =
+            is_numeric($configuredPort)
+                ? (int) $configuredPort
+                : $defaultPort;
 
         $portSuffix = $port === $defaultPort
             ? ''
