@@ -62,7 +62,7 @@
   }
 
   :focus-visible {
-    outline: 3px solid var(--color-brand-blue);
+    outline: 3px solid var(--color-ink);
     outline-offset: 4px;
   }
 
@@ -144,7 +144,7 @@
   }
 
   .primary-nav [aria-current="page"] {
-    color: var(--color-brand-blue);
+    color: var(--color-text-blue);
   }
 
   .primary-nav [aria-current="page"]::after {
@@ -194,7 +194,7 @@
   }
 
   .action--secondary {
-    color: var(--color-brand-blue);
+    color: var(--color-text-blue);
     background: var(--color-surface);
     border-color: var(--color-border-action);
   }
@@ -300,7 +300,7 @@
     width: 28px;
     min-width: 28px;
     height: 34px;
-    color: var(--color-brand-pink);
+    color: var(--color-text-pink);
     border-radius: var(--radius-pill);
   }
 
@@ -348,5 +348,31 @@
   .pet-card p {
       font-size: 10px;
     }
+  }
+}
+
+/* Accessible foregrounds retain the decorative brand palette. */
+@layer base {
+  :focus-visible { outline-color: var(--color-ink); }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      scroll-behavior: auto !important;
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+@layer components {
+  .action--primary, .chat-send, .chat-unread, .navigation-count,
+  .featured-label, .own-popular,
+  .pet-progress li[aria-current] .pet-step-number {
+    background: var(--color-text-pink);
+  }
+  .discovery-location-actions button[type="submit"],
+  .own-profile-edit-actions button[type="submit"],
+  .own-media-actions .own-media-save,
+  .pet-choice input:checked + span {
+    background: var(--color-text-blue);
   }
 }

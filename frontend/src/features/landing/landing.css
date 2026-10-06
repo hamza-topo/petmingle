@@ -245,7 +245,7 @@
     display: inline-flex;
     align-items: center;
     gap: 6px;
-    color: var(--color-brand-blue);
+    color: var(--color-text-blue);
     font-size: 14px;
     white-space: nowrap;
   }

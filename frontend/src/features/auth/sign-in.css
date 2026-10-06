@@ -37,7 +37,7 @@
 
     .sign-in-eyebrow {
         margin-bottom: var(--space-2);
-        color: var(--color-brand-pink);
+        color: var(--color-text-pink);
         font-size: 14px;
         font-weight: 800;
     }
@@ -90,7 +90,7 @@
 
     .sign-in-field-error,
     .sign-in-error {
-        color: var(--color-brand-pink);
+        color: var(--color-text-pink);
         font-size: 13px;
         line-height: 1.4;
     }

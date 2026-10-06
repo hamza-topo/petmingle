@@ -7,6 +7,8 @@ export function RouteScroll() {
   useEffect(() => {
     if (!hash) {
       window.scrollTo(0, 0);
+      const main = document.querySelector<HTMLElement>('main');
+      main?.focus({ preventScroll: true });
       return;
     }
 
@@ -19,6 +21,8 @@ export function RouteScroll() {
         return false;
       }
 
+      if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+      target.focus({ preventScroll: true });
       target.scrollIntoView({
         block: 'start',
       });

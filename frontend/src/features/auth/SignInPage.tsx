@@ -62,11 +62,12 @@ export function SignInPage() {
 
   return (
     <div className="sign-in-page">
+      <a className="skip-link" href="#sign-in-main">Skip to content</a>
       <header className="sign-in-header">
         <PetMingleLogo />
       </header>
 
-      <main className="sign-in-main">
+      <main tabIndex={-1} id="sign-in-main" className="sign-in-main">
         <section
           className="sign-in-panel"
           aria-labelledby="sign-in-title"
@@ -103,6 +104,7 @@ export function SignInPage() {
                 <p
                   id="sign-in-email-error"
                   className="sign-in-field-error"
+                  role="alert"
                 >
                   {errors.email.message}
                 </p>

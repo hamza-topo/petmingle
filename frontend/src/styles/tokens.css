@@ -3,7 +3,11 @@
 @theme static {
   --color-*: initial;
   --color-ink: #080d50;
-  --color-text-secondary: #5e75ad;
+  --color-text-secondary: #4d6294;
+  --color-text-blue: #0068c4;
+  --color-text-pink: #bd2056;
+  --color-text-teal: #00786c;
+  --color-text-purple: #7132d5;
   --color-brand-pink: #fc3d7c;
   --color-brand-blue: #0088ff;
   --color-surface: #fefefe;

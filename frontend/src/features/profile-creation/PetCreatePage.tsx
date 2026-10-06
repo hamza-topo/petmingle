@@ -380,7 +380,7 @@ export function PetCreatePage() {
         }
       />
 
-      <main
+      <main tabIndex={-1}
         id="pet-create"
         className="pet-create-layout"
       >

@@ -372,7 +372,7 @@ export function DiscoveryPage() {
 
       <DiscoveryHeader />
 
-      <main
+      <main tabIndex={-1}
         className="discovery-layout"
         id="discovery-main"
       >
