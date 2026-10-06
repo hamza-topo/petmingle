@@ -11,14 +11,6 @@
             <div class="card card-primary card-tabs">
                 <div class="card-header p-0 pt-1">
                     <ul class="nav nav-tabs" id="custom-tabs-one-tab" role="tablist">
-                        {{-- @foreach ($langs as $lang)
-                            <li class="nav-item">
-                                <a class="nav-link" id="custom-tabs-" data-toggle="pill"
-                                    href="#custom-tabs-one-" role="tab"
-                                    aria-controls="custom-tabs-one-"
-                                    aria-selected="false"></a>
-                            </li>
-                        @endforeach --}}
                     </ul>
                 </div>
                 <div class="card-body">

@@ -20,18 +20,6 @@ class AuthRepository
         return User::withTrashed()->findOrFail($id);
     }
 
-    // TODO::we no longer need this
-    /**
-     * Undocumented function
-     *
-     * @see firstOrCreateProviderUser()
-     * @deprecated version
-     */
-    public function firstOrCreate(array $criteria, array $user): User
-    {
-        return User::firstOrCreate($criteria, $user);
-    }
-
     public function firstOrCreateProviderUser(?array $providerUser, string $provider): User
     {
         $reducer = new Socialite($providerUser, $provider);

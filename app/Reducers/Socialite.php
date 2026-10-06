@@ -31,7 +31,6 @@ class Socialite
         self::$user->name = $data['name'] ?? '';
         self::$user->avatar = $data['avatar_url'] ?? '';
         self::$user->email = $data['email'] ?? '';
-        // TODO::define the other fields
     }
 
     protected function google($data): void

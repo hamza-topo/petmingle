@@ -90,11 +90,11 @@ class BlogRepository
         return Blog::where('active', false)->where('publish_it_at', '!=', null)->get();
     }
 
-    public function getScheduledFor(array $condition): Collection
+    public function getDueForPublication(string $date): Collection
     {
         $query = Blog::where('active', false)
             ->where('publish_it_at', '!=', null)
-            ->whereBetween('publish_it_at', $condition);
+            ->where('publish_it_at', '<=', $date);
 
         return $query->get();
     }
@@ -107,7 +107,6 @@ class BlogRepository
         ]);
     }
 
-    // TODO::create another enum class for blog
     public function take(?int $limit = EnumsLike::PAGINATE): Collection
     {
         return Blog::orderBy('created_at')->limit($limit)->get()->filter(function ($row) {

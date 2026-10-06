@@ -5,11 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Enums\App;
 use App\Enums\Component;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Admin\Component\Store;
 use App\Models\Component as ModelComponent;
 use App\Repositories\ComponentRepository;
 use App\Services\ComponentService;
 use App\Traits\ImageTrait;
-use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Log;
 
@@ -54,15 +54,14 @@ class ComponentController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * TODO::add Validation rule
      *
      * @return Response
      */
-    public function store(Request $request)
+    public function store(Store $request)
     {
         $component = $this->componentRepository->getByName($request->name);
         try {
-            $request = $request->all();
+            $request = $request->validated();
             if (! empty($request['media'])) {
                 $request['media'] = $this->uploadAll([$request['media']])[0];
             }
@@ -78,17 +77,6 @@ class ComponentController extends Controller
 
             return redirect()->back();
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function show($id)
-    {
-        //
     }
 
     /**
@@ -108,27 +96,5 @@ class ComponentController extends Controller
         $langs = App::LOCALES;
 
         return view('admin.components.elements.'.\strtolower($componentName), compact('component', 'componentName', 'langs'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return Response
-     */
-    public function destroy($id)
-    {
-        //
     }
 }

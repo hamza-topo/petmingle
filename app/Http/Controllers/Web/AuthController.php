@@ -47,9 +47,8 @@ class AuthController extends Controller
     public function signUp(SignUp $request)
     {
         try {
-            $this->authRepository->signUp($request->all());
+            $this->authRepository->signUp($request->validated());
 
-            // TODO::need email validation
             return redirect(route('user.register'));
         } catch (\Exception $e) {
             Log::error('error while creating new user account', [$e->getMessage()]);

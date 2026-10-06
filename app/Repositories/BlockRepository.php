@@ -12,7 +12,7 @@ class BlockRepository
         return Block::create($block);
     }
 
-    // TODO:pagination and caching
+    // TODO #174: paginate without changing the API envelope.
     public function blocks(int $userId): Collection
     {
         return Block::where('from', $userId)->get();

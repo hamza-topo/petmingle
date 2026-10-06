@@ -37,17 +37,16 @@ class ContactController extends Controller
      */
     public function store(Store $request)
     {
-        // TODO:validate request
-        // validate request is done
         try {
             Log::info('send email contact ...');
-            Mail::to(env('MAIL_CONTACT_US'))->queue(new Contact($request->all()));
-            ModelsContact::create($request->all());
+            Mail::to(config('mail.contact_address'))->queue(new Contact($request->validated()));
+            ModelsContact::create($request->validated());
 
             return redirect(route('contact'))->with('success', __('Your message has been sent successfully!'));
         } catch (\Exception $e) {
-            return redirect()->back()->with('error', __('Failed to send your message. Please try again later.'));
             Log::error('failed send email contact..:[ '.$e->getMessage().' ]');
+
+            return redirect()->back()->with('error', __('Failed to send your message. Please try again later.'));
         }
     }
 }

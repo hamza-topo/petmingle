@@ -53,18 +53,6 @@ class AdoptionRepository
         return Adoption::all();
     }
 
-    // TODO:paginate the result
-    public function matches(int $petId): Collection
-    {
-        return Adoption::where('from', $petId)->with('toPet')->get();
-    }
-
-    // TODO:paginate the result
-    public function mismatches(int $petId): Collection
-    {
-        return Adoption::onlyTrashed()->where('from', $petId)->get();
-    }
-
     public function paginate(): LengthAwarePaginator
     {
         return Adoption::paginate();

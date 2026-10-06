@@ -19,8 +19,6 @@ use Illuminate\Pagination\LengthAwarePaginator;
  */
 class LocationRepository
 {
-    // TODO::make this as enum
-
     public function create(array $location): Location
     {
         return Location::create($location);
