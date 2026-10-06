@@ -8,6 +8,10 @@ import {
 
 import { petCreateRequest } from './pet-create.api';
 
+vi.mock('../../api/config', () => ({
+  apiUrl: (path: string) => 'https://api.example.test/api/v.0' + path,
+}));
+
 const createdPet = {
   id: 55,
   user_id: 10,

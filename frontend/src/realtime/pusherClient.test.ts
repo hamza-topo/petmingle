@@ -71,7 +71,7 @@ describe('PrivateRealtimeClient', () => {
     const onEvent = vi.fn();
     const onStateChange = vi.fn();
     const fetchFn = vi.fn(
-      async () =>
+      async (_input: RequestInfo | URL, _init?: RequestInit) =>
         response(200, {
           auth: 'petmingle-key:signature',
         }),
@@ -234,9 +234,7 @@ describe('PrivateRealtimeClient', () => {
       new FakeSocket(),
     ];
     let socketIndex = 0;
-    let reconnectCallback:
-      | (() => void)
-      | null = null;
+    const reconnect = { callback: null as (() => void) | null };
 
     const onReconnect = vi.fn();
 
@@ -258,7 +256,7 @@ describe('PrivateRealtimeClient', () => {
             }),
         ) as unknown as typeof fetch,
         setTimer: callback => {
-          reconnectCallback = callback;
+          reconnect.callback = callback;
           return 1 as unknown as ReturnType<
             typeof setTimeout
           >;
@@ -287,9 +285,9 @@ describe('PrivateRealtimeClient', () => {
 
     sockets[0].close();
 
-    expect(reconnectCallback).not.toBeNull();
+    expect(reconnect.callback).not.toBeNull();
 
-    reconnectCallback?.();
+    reconnect.callback?.();
 
     sockets[1].receive(
       'pusher:connection_established',

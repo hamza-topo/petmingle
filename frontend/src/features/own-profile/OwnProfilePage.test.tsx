@@ -47,11 +47,15 @@ vi.mock('../profile-creation/taxonomy.api', () => ({
   taxonomyRequest: vi.fn(),
 }));
 
-vi.mock('../account-location/location.api', () => ({
+vi.mock('../account-location/location.api', async importOriginal => {
+  const actual = await importOriginal<typeof import('../account-location/location.api')>();
+  return {
+    ...actual,
   accountLocationsRequest: vi.fn(),
   createAccountLocationRequest: vi.fn(),
   updateAccountLocationRequest: vi.fn(),
-}));
+  };
+});
 
 const mockedUseAuth = vi.mocked(useAuth);
 const mockedCurrentPetProfileRequest =
@@ -582,14 +586,13 @@ describe('Own pet profile', () => {
       photo,
     );
 
-    expect(
-      screen.getByRole('img', {
-        name: 'Milo pending photo preview',
-      }),
-    ).toHaveAttribute(
-      'src',
-      'blob:profile-preview',
-    );
+    const previews = screen.getAllByRole('img', {
+      name: 'Milo pending photo preview',
+    });
+    expect(previews).toHaveLength(2);
+    for (const preview of previews) {
+      expect(preview).toHaveAttribute('src', 'blob:profile-preview');
+    }
 
     await user.click(
       screen.getByRole('button', {
