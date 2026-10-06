@@ -1,4 +1,5 @@
 import {
+  act,
   render,
   screen,
   waitFor,
@@ -18,12 +19,14 @@ import { App } from '../../app/App';
 import { ApiError } from '../../api/errors';
 import { useAuth } from '../../auth/AuthProvider';
 import { tokenStorage } from '../../auth/tokenStorage';
+import { createPrivateRealtimeClient } from '../../realtime/pusherClient';
 import { authenticatedAuthState } from '../../test/authFixtures';
 import {
   conversationsRequest,
   markConversationSeenRequest,
   messageSendRequest,
   threadRequest,
+  typingRequest,
 } from './messaging.api';
 import type {
   ChatMessage,
@@ -32,6 +35,10 @@ import type {
 
 vi.mock('../../auth/AuthProvider', () => ({
   useAuth: vi.fn(),
+}));
+
+vi.mock('../../realtime/pusherClient', () => ({
+  createPrivateRealtimeClient: vi.fn(),
 }));
 
 vi.mock('./messaging.api', async importOriginal => {
@@ -46,6 +53,7 @@ vi.mock('./messaging.api', async importOriginal => {
     markConversationSeenRequest: vi.fn(),
     messageSendRequest: vi.fn(),
     threadRequest: vi.fn(),
+    typingRequest: vi.fn(),
   };
 });
 
@@ -58,6 +66,22 @@ const mockedMarkConversationSeenRequest =
   vi.mocked(markConversationSeenRequest);
 const mockedMessageSendRequest =
   vi.mocked(messageSendRequest);
+const mockedTypingRequest =
+  vi.mocked(typingRequest);
+const mockedCreatePrivateRealtimeClient =
+  vi.mocked(createPrivateRealtimeClient);
+
+let realtimeCallbacks: {
+  onEvent: (event: {
+    name:
+      | 'new.message'
+      | 'new.match'
+      | 'is-writing-to';
+    data: unknown;
+  }) => void;
+  onReconnect?: () => void;
+} | null = null;
+
 
 function pet(
   id: string,
@@ -165,6 +189,7 @@ function renderMessages() {
 
 beforeEach(() => {
   vi.clearAllMocks();
+  realtimeCallbacks = null;
   window.localStorage.clear();
   tokenStorage.set('test-token');
 
@@ -194,6 +219,21 @@ beforeEach(() => {
 
   mockedMessageSendRequest.mockResolvedValue(
     sentMessage,
+  );
+
+  mockedTypingRequest.mockResolvedValue();
+
+  mockedCreatePrivateRealtimeClient.mockImplementation(
+    ({ callbacks }) => {
+      realtimeCallbacks = callbacks;
+
+      return {
+        connect: vi.fn(),
+        disconnect: vi.fn(),
+      } as unknown as ReturnType<
+        typeof createPrivateRealtimeClient
+      >;
+    },
   );
 });
 
@@ -401,6 +441,235 @@ describe('Messaging persisted reads', () => {
       token: 'test-token',
       conversationId: 101,
     });
+  });
+
+  it('appends an incoming realtime message once and deduplicates replayed events', async () => {
+    renderMessages();
+
+    await screen.findByText('Hello from Milo');
+
+    const event = {
+      name: 'new.message' as const,
+      data: {
+        message: {
+          id: 88,
+          conversation_id: 101,
+          sender_id: 20,
+          receiver_id: 10,
+          content: 'Realtime hello',
+          is_seen: false,
+          created_at:
+            '2026-10-06T12:30:00.000Z',
+        },
+      },
+    };
+
+    await act(async () => {
+      realtimeCallbacks?.onEvent(event);
+      realtimeCallbacks?.onEvent(event);
+    });
+
+    const timeline = within(
+      screen.getByRole('list', {
+        name: 'Messages in active conversation',
+      }),
+    );
+
+    expect(
+      await timeline.findByText(
+        'Realtime hello',
+      ),
+    ).toBeVisible();
+
+    expect(
+      timeline.getAllByText(
+        'Realtime hello',
+      ),
+    ).toHaveLength(1);
+  });
+
+  it('increments only the inactive conversation unread badge for a realtime message', async () => {
+    renderMessages();
+
+    await screen.findByText('Hello from Milo');
+
+    await waitFor(() =>
+      expect(
+        within(
+          screen.getByRole('button', {
+            name: 'Nala & Milo',
+          }),
+        ).queryByLabelText(
+          '1 unread message',
+        ),
+      ).not.toBeInTheDocument(),
+    );
+
+    await act(async () => {
+      realtimeCallbacks?.onEvent({
+        name: 'new.message',
+        data: {
+          message: {
+            id: 89,
+            conversation_id: 102,
+            sender_id: 30,
+            receiver_id: 10,
+            content: 'Luna realtime',
+            is_seen: false,
+            created_at:
+              '2026-10-06T12:31:00.000Z',
+          },
+        },
+      });
+    });
+
+    expect(
+      within(
+        screen.getByRole('button', {
+          name: 'Nala & Luna',
+        }),
+      ).getByLabelText(
+        '3 unread message',
+      ),
+    ).toBeVisible();
+
+    expect(
+      screen.queryByText(
+        'Luna realtime',
+      ),
+    ).not.toBeInTheDocument();
+
+    expect(
+      screen.getByText('Hello from Milo'),
+    ).toBeVisible();
+  });
+
+  it('shows typing only for the active private participant', async () => {
+    renderMessages();
+
+    await screen.findByText('Hello from Milo');
+
+    act(() => {
+      realtimeCallbacks?.onEvent({
+        name: 'is-writing-to',
+        data: {
+          sender_user_id: 20,
+          receiver_user_id: 10,
+          is_writing: true,
+        },
+      });
+    });
+
+    expect(
+      screen.getByText(
+        'Milo’s owner is typing…',
+      ),
+    ).toBeVisible();
+
+    act(() => {
+      realtimeCallbacks?.onEvent({
+        name: 'is-writing-to',
+        data: {
+          sender_user_id: 20,
+          receiver_user_id: 10,
+          is_writing: false,
+        },
+      });
+    });
+
+    expect(
+      screen.queryByText(
+        'Milo’s owner is typing…',
+      ),
+    ).not.toBeInTheDocument();
+  });
+
+  it('publishes typing through the authenticated HTTP fallback contract', async () => {
+    const user = userEvent.setup();
+
+    renderMessages();
+
+    await screen.findByText('Hello from Milo');
+
+    const input = screen.getByRole('textbox', {
+      name: 'Write a message',
+    });
+
+    await user.type(input, 'H');
+
+    expect(
+      mockedTypingRequest,
+    ).toHaveBeenCalledWith({
+      token: 'test-token',
+      receiverUserId: 20,
+      isWriting: true,
+    });
+
+    await user.tab();
+
+    expect(
+      mockedTypingRequest,
+    ).toHaveBeenCalledWith({
+      token: 'test-token',
+      receiverUserId: 20,
+      isWriting: false,
+    });
+  });
+
+  it('resynchronizes conversations and the active thread after realtime reconnect', async () => {
+    renderMessages();
+
+    await screen.findByText('Hello from Milo');
+
+    const conversationCalls =
+      mockedConversationsRequest.mock.calls.length;
+    const threadCalls =
+      mockedThreadRequest.mock.calls.length;
+
+    await act(async () => {
+      realtimeCallbacks?.onReconnect?.();
+    });
+
+    await waitFor(() =>
+      expect(
+        mockedConversationsRequest.mock.calls.length,
+      ).toBeGreaterThan(conversationCalls),
+    );
+
+    await waitFor(() =>
+      expect(
+        mockedThreadRequest.mock.calls.length,
+      ).toBeGreaterThan(threadCalls),
+    );
+  });
+
+  it('refreshes authoritative conversation state on a private match event', async () => {
+    renderMessages();
+
+    await screen.findByText('Hello from Milo');
+
+    const calls =
+      mockedConversationsRequest.mock.calls.length;
+
+    act(() => {
+      realtimeCallbacks?.onEvent({
+        name: 'new.match',
+        data: {
+          fromMatch: {
+            id: 1,
+          },
+          toMatch: {
+            id: 2,
+          },
+        },
+      });
+    });
+
+    await waitFor(() =>
+      expect(
+        mockedConversationsRequest.mock.calls.length,
+      ).toBeGreaterThan(calls),
+    );
   });
 
   it('renders an empty state when there are no persisted conversations', async () => {
