@@ -132,7 +132,7 @@ class SeoRepository
      */
     public function getAllFromCache(?string $page = ''): Seo
     {
-        return $this->cacheService->remember($page, CacheDuration::SHORT->value, function ($page) {
+        return $this->cacheService->remember($page, CacheDuration::SHORT->value, function () use ($page) {
             return Seo::where('key', $page)->firstOrFail();
         });
     }
