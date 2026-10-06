@@ -441,7 +441,7 @@ export function DiscoveryPage() {
                   <ApiState
                     kind="empty"
                     title="Set your location"
-                    message="Add account coordinates above before loading nearby pets."
+                    message="Choose your area using the location button above to discover pets nearby."
                   />
                 )}
 

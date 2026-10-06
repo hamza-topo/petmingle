@@ -5,11 +5,13 @@ export type AccountLocation = {
   user_id: number;
   latitude: number | null;
   longitude: number | null;
+  label?: string | null;
 };
 
 export type LocationCoordinates = {
   latitude: number;
   longitude: number;
+  label?: string | null;
 };
 
 type ApiEnvelope<T> = {
@@ -120,5 +122,5 @@ export function formatAccountLocation(
     longitude: number;
   },
 ): string {
-  return `${location.latitude.toFixed(6)}, ${location.longitude.toFixed(6)}`;
+  return location.label?.trim() || 'Selected area';
 }

@@ -1,312 +1,152 @@
-import {
-  type FormEvent,
-  useEffect,
-  useState,
-  useRef,
-  useId,
-} from 'react';
-import {
-  ChevronDown,
-  MapPin,
-} from 'lucide-react';
-
-import { ApiError } from '../../api/errors';
+import { lazy, Suspense, useEffect, useId, useRef, useState } from 'react';
+import { ChevronDown, LocateFixed, MapPin, Search, X } from 'lucide-react';
 import { describeApiFailure } from '../../api/presentation';
-import {
-  accountLocationLabel,
-  useAccountLocation,
-} from './AccountLocationProvider';
+import { accountLocationLabel, useAccountLocation } from './AccountLocationProvider';
+import { reversePlace, searchPlaces, type Place } from './geocoder';
+import type { LocationCoordinates } from './location.api';
+import './location-picker.css';
 
-type CoordinateErrors = {
-  latitude?: string;
-  longitude?: string;
-};
+const LocationMap = lazy(() => import('./LocationMap'));
 
 export function AccountLocationControl() {
   const location = useAccountLocation();
   const editorId = useId();
   const trigger = useRef<HTMLButtonElement>(null);
-  const editor = useRef<HTMLFormElement>(null);
-  const wasOpen = useRef(false);
-
-
-
   const [open, setOpen] = useState(false);
+  return <div className="discovery-location-shell">
+    <button className="discovery-location" ref={trigger} type="button" onClick={() => setOpen(true)} disabled={location.status !== 'ready'} aria-expanded={open} aria-haspopup="dialog" aria-controls={open ? editorId : undefined}>
+      <MapPin size={22} aria-hidden="true" /><span>{accountLocationLabel(location)}</span><ChevronDown size={18} aria-hidden="true" />
+    </button>
+    {location.status === 'error' && <button type="button" className="discovery-location-retry" onClick={() => void location.reload()}>Retry location</button>}
+    {open && <LocationPicker id={editorId} initial={location.currentLocation} save={location.saveCoordinates} close={() => { setOpen(false); trigger.current?.focus(); }} />}
+  </div>;
+}
 
-  useEffect(() => {
-    if (open) editor.current?.querySelector<HTMLInputElement>('input')?.focus();
-    else if (wasOpen.current) trigger.current?.focus();
-    wasOpen.current = open;
-  }, [open]);
-  const [latitude, setLatitude] = useState('');
-  const [longitude, setLongitude] = useState('');
-  const [errors, setErrors] =
-    useState<CoordinateErrors>({});
-  const [saveError, setSaveError] =
-    useState<string | null>(null);
+function LocationPicker({ id, initial, save, close }: {
+  id: string;
+  initial: LocationCoordinates | null;
+  save: (point: LocationCoordinates) => Promise<unknown>;
+  close: () => void;
+}) {
+  const dialog = useRef<HTMLDialogElement>(null);
+  const input = useRef<HTMLInputElement>(null);
+  const [point, setPoint] = useState<LocationCoordinates | null>(initial);
+  const [query, setQuery] = useState('');
+  const [results, setResults] = useState<Place[]>([]);
+  const [searching, setSearching] = useState(false);
+  const [locating, setLocating] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [notice, setNotice] = useState<string | null>(null);
+  const search = useRef<AbortController | null>(null);
+  const reverse = useRef<AbortController | null>(null);
+  const active = useRef(true);
+  const revision = useRef(0);
 
   useEffect(() => {
-    if (!open) {
-      return;
-    }
+    active.current = true;
+    const element = dialog.current;
+    element?.showModal?.();
+    if (element && !element.open) element.setAttribute('open', '');
+    input.current?.focus();
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      active.current = false;
+      search.current?.abort();
+      reverse.current?.abort();
+      document.body.style.overflow = previous;
+    };
+  }, []);
 
-    setLatitude(
-      location.currentLocation
-        ? String(location.currentLocation.latitude)
-        : '',
-    );
-    setLongitude(
-      location.currentLocation
-        ? String(location.currentLocation.longitude)
-        : '',
-    );
-    setErrors({});
-    setSaveError(null);
-  }, [location.currentLocation, open]);
-
+  // Only settled map/GPS selections need reverse geocoding. Search results already carry a name.
   useEffect(() => {
-    if (Object.values(errors).some(Boolean)) editor.current?.querySelector<HTMLElement>('[aria-invalid="true"]')?.focus();
-  }, [errors]);
+    if (!point || point.label) return;
+    const controller = new AbortController();
+    reverse.current = controller;
+    const timer = window.setTimeout(() => {
+      void reversePlace(point, controller.signal).then(label => {
+        if (!controller.signal.aborted && active.current) {
+          setPoint(current => current ? { ...current, label } : current);
+          setNotice(label ? null : 'City name unavailable. Your selected area can still be saved.');
+        }
+      }).catch(() => {
+        if (!controller.signal.aborted && active.current) setNotice('City name unavailable. Your selected area can still be saved.');
+      });
+    }, 800);
+    return () => { window.clearTimeout(timer); controller.abort(); };
+  }, [point?.latitude, point?.longitude, point?.label]);
 
-  function validate():
-    | {
-        latitude: number;
-        longitude: number;
-      }
-    | null {
-    const nextErrors: CoordinateErrors = {};
-    const parsedLatitude = Number(latitude);
-    const parsedLongitude = Number(longitude);
-
-    if (
-      !latitude.trim()
-      || !Number.isFinite(parsedLatitude)
-      || parsedLatitude < -90
-      || parsedLatitude > 90
-    ) {
-      nextErrors.latitude =
-        'Latitude must be between -90 and 90.';
-    }
-
-    if (
-      !longitude.trim()
-      || !Number.isFinite(parsedLongitude)
-      || parsedLongitude < -180
-      || parsedLongitude > 180
-    ) {
-      nextErrors.longitude =
-        'Longitude must be between -180 and 180.';
-    }
-
-    setErrors(nextErrors);
-
-    if (Object.keys(nextErrors).length > 0) {
-      return null;
-    }
-
-    return {
-      latitude: parsedLatitude,
-      longitude: parsedLongitude,
-    };
+  function select(next: LocationCoordinates) {
+    if (saving) return;
+    revision.current += 1;
+    reverse.current?.abort();
+    setPoint(next);
+    setResults([]);
+    setError(null);
+    setNotice(null);
   }
 
-  function mapServerValidation(
-    caught: ApiError,
-  ): boolean {
-    const validationErrors =
-      caught.status === 422
-        ? caught.payload?.errors
-        : undefined;
-
-    if (!validationErrors) {
-      return false;
-    }
-
-    const nextErrors: CoordinateErrors = {
-      latitude:
-        validationErrors.latitude?.[0],
-      longitude:
-        validationErrors.longitude?.[0],
-    };
-
-    if (
-      !nextErrors.latitude
-      && !nextErrors.longitude
-    ) {
-      return false;
-    }
-
-    setErrors(nextErrors);
-    return true;
-  }
-
-  async function handleSubmit(
-    event: FormEvent<HTMLFormElement>,
-  ) {
-    event.preventDefault();
-
-    if (saving) {
-      return;
-    }
-
-    setSaveError(null);
-
-    const coordinates = validate();
-
-    if (!coordinates) {
-      return;
-    }
-
-    setSaving(true);
-
+  async function findPlaces() {
+    search.current?.abort();
+    const controller = new AbortController();
+    search.current = controller;
+    setSearching(true);
+    setError(null);
+    setResults([]);
     try {
-      await location.saveCoordinates(coordinates);
-      setOpen(false);
-    } catch (caught) {
-      if (
-        caught instanceof ApiError
-        && mapServerValidation(caught)
-      ) {
-        return;
-      }
-
-      setSaveError(
-        describeApiFailure(caught).message,
-      );
+      const found = await searchPlaces(query, controller.signal);
+      if (controller.signal.aborted || !active.current) return;
+      setResults(found);
+      if (!found.length) setError('No places found. Try another city or move the map.');
+    } catch {
+      if (!controller.signal.aborted && active.current) setError('Place search is unavailable. Move the map or use your location.');
     } finally {
-      setSaving(false);
+      if (!controller.signal.aborted && active.current) setSearching(false);
     }
   }
 
-  const label = accountLocationLabel(location);
+  function usePosition() {
+    if (!navigator.geolocation) { setError('Location is unavailable on this device. Search for a city instead.'); return; }
+    setLocating(true);
+    setError(null);
+    const requestRevision = ++revision.current;
+    navigator.geolocation.getCurrentPosition(position => {
+      if (!active.current) return;
+      setLocating(false);
+      if (requestRevision === revision.current) select({ latitude: position.coords.latitude, longitude: position.coords.longitude });
+    }, () => {
+      if (!active.current) return;
+      setLocating(false);
+      if (requestRevision === revision.current) setError('Could not access your location. You can search for a city instead.');
+    }, { enableHighAccuracy: false, timeout: 10000, maximumAge: 60000 });
+  }
 
-  return (
-    <div className="discovery-location-shell">
-      <button
-        className="discovery-location"
-        ref={trigger}
-        type="button"
-        onClick={() => setOpen(current => !current)}
-        disabled={location.status !== 'ready'}
-        aria-expanded={open}
-        aria-controls={open ? editorId : undefined}
-      >
-        <MapPin size={22} aria-hidden="true" />
-        <span>{label}</span>
-        <ChevronDown size={18} aria-hidden="true" />
-      </button>
+  async function confirm() {
+    if (!point || saving) return;
+    setSaving(true);
+    setError(null);
+    try { await save({ ...point, label: point.label || null }); close(); }
+    catch (caught) { if (active.current) setError(describeApiFailure(caught).message); }
+    finally { if (active.current) setSaving(false); }
+  }
 
-      {location.status === 'error' && (
-        <button
-          type="button"
-          className="discovery-location-retry"
-          onClick={() => void location.reload()}
-        >
-          Retry location
-        </button>
-      )}
-
-      {open && location.status === 'ready' && (
-        <form
-          id={editorId}
-          ref={editor}
-          aria-busy={saving}
-          onKeyDown={event => {
-            if (event.key === 'Escape' && !saving) {
-              event.preventDefault();
-              setOpen(false);
-            }
-          }}
-          className="discovery-location-editor"
-          aria-label="Account location"
-          noValidate
-          onSubmit={event => void handleSubmit(event)}
-        >
-          <h2>
-            {location.currentLocation
-              ? 'Update location'
-              : 'Set location'}
-          </h2>
-
-          <p>
-            PetMingle stores coordinates only. No city or
-            address is inferred.
-          </p>
-
-          <label>
-            <span>Latitude</span>
-            <input
-              inputMode="decimal"
-              value={latitude}
-              onChange={event => {
-                setLatitude(event.target.value);
-                setErrors(current => ({
-                  ...current,
-                  latitude: undefined,
-                }));
-              }}
-              aria-invalid={!!errors.latitude}
-              aria-describedby={errors.latitude ? editorId + '-latitude-error' : undefined}
-            />
-            {errors.latitude && (
-              <small id={editorId + '-latitude-error'} role="alert">
-                {errors.latitude}
-              </small>
-            )}
-          </label>
-
-          <label>
-            <span>Longitude</span>
-            <input
-              inputMode="decimal"
-              value={longitude}
-              onChange={event => {
-                setLongitude(event.target.value);
-                setErrors(current => ({
-                  ...current,
-                  longitude: undefined,
-                }));
-              }}
-              aria-invalid={!!errors.longitude}
-              aria-describedby={errors.longitude ? editorId + '-longitude-error' : undefined}
-            />
-            {errors.longitude && (
-              <small id={editorId + '-longitude-error'} role="alert">
-                {errors.longitude}
-              </small>
-            )}
-          </label>
-
-          {saveError && (
-            <p
-              className="discovery-location-error"
-              role="alert"
-            >
-              {saveError}
-            </p>
-          )}
-
-          <div className="discovery-location-actions">
-            <button
-              type="submit"
-              disabled={saving}
-            >
-              {saving
-                ? 'Saving...'
-                : 'Save coordinates'}
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setOpen(false)}
-              disabled={saving}
-            >
-              Cancel
-            </button>
-          </div>
-        </form>
-      )}
-    </div>
-  );
+  return <dialog ref={dialog} id={id} className="location-picker" aria-labelledby={id + '-title'} aria-describedby={id + '-description'} aria-busy={saving} onCancel={event => { event.preventDefault(); if (!saving) close(); }} onKeyDown={event => { if (event.key === 'Escape') { event.preventDefault(); if (!saving) close(); } }}>
+    <header className="location-picker-heading"><div><span className="location-picker-eyebrow">A little closer</span><h2 id={id + '-title'}>Where do your paths meet?</h2></div><button type="button" className="location-picker-close" aria-label="Close location picker" disabled={saving} onClick={close}><X size={22} /></button></header>
+    <p id={id + '-description'} className="location-picker-description">Choose your area to discover pets nearby.</p>
+    <fieldset disabled={saving} className="location-picker-body">
+      <form className="location-picker-search" role="search" onSubmit={event => { event.preventDefault(); if (query.trim().length >= 2) void findPlaces(); }}>
+        <Search size={20} aria-hidden="true" /><input ref={input} aria-label="Search city or neighbourhood" placeholder="Search a city or neighbourhood" value={query} maxLength={120} onChange={event => { search.current?.abort(); setSearching(false); setResults([]); setQuery(event.target.value); }} />
+        <button type="submit" disabled={searching || query.trim().length < 2}>{searching ? 'Searching…' : 'Search'}</button>
+      </form>
+      {results.length > 0 && <ul className="location-picker-results" aria-label="Place search results">{results.map((place, index) => <li key={`${place.latitude}:${place.longitude}:${index}`}><button type="button" onClick={() => select(place)}><MapPin size={18} aria-hidden="true" /><span>{place.label}</span><span aria-hidden="true">↗</span></button></li>)}</ul>}
+      <button type="button" className="location-picker-gps" onClick={usePosition} disabled={locating}><LocateFixed size={19} aria-hidden="true" />{locating ? 'Finding your location…' : 'Use my current location'}</button>
+      <Suspense fallback={<div className="location-map-loading" role="status">Loading map…</div>}><LocationMap point={point} onSelect={select} /></Suspense>
+    </fieldset>
+    <footer className="location-picker-footer"><div className="location-picker-selected"><span className="location-picker-selected-icon"><MapPin size={22} aria-hidden="true" /></span><div><small>Your discovery area</small><strong>{point ? point.label || 'Selected area' : 'Choose a place on the map'}</strong></div></div>
+      <p className="location-picker-privacy">Your exact coordinates are not displayed on your profile. Map and place search use external services.</p>
+      {error && <p className="location-picker-error" role="alert">{error}</p>}{notice && <p className="location-picker-notice" role="status">{notice}</p>}
+      <button type="button" className="location-picker-confirm" disabled={!point || saving} onClick={() => void confirm()}>{saving ? 'Saving…' : 'Confirm this area'}<span aria-hidden="true">↗</span></button>
+    </footer>
+  </dialog>;
 }
