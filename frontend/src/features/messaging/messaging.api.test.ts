@@ -10,6 +10,7 @@ import { apiRequest } from '../../api/client';
 import {
   conversationsRequest,
   mapConversation,
+  messageSendRequest,
   otherParticipantUserId,
   threadRequest,
 } from './messaging.api';
@@ -263,6 +264,94 @@ describe('messaging api', () => {
         receipt: 'read',
       },
     ]);
+  });
+
+  it('sends only receiver identity and content, then maps the persisted message', async () => {
+    mockedApiRequest.mockResolvedValue({
+      success: true,
+      message: 'Message created.',
+      data: {
+        id: 77,
+        conversation_id: 7,
+        sender_id: 10,
+        receiver_id: 20,
+        content: 'Persisted hello',
+        is_seen: false,
+        created_at: '2026-10-06T11:00:00.000Z',
+        updated_at: '2026-10-06T11:00:00.000Z',
+      },
+    });
+
+    const result = await messageSendRequest({
+      token: 'token',
+      conversationId: 7,
+      currentUserId: 10,
+      receiverUserId: 20,
+      content: 'Persisted hello',
+    });
+
+    expect(mockedApiRequest).toHaveBeenCalledWith(
+      '/messages',
+      {
+        method: 'POST',
+        token: 'token',
+        body: JSON.stringify({
+          receiver_id: 20,
+          content: 'Persisted hello',
+        }),
+      },
+    );
+
+    expect(
+      JSON.parse(
+        mockedApiRequest.mock.calls[0][1]
+          ?.body as string,
+      ),
+    ).not.toHaveProperty('sender_id');
+
+    expect(
+      JSON.parse(
+        mockedApiRequest.mock.calls[0][1]
+          ?.body as string,
+      ),
+    ).not.toHaveProperty('conversation_id');
+
+    expect(result).toEqual({
+      id: '77',
+      senderId: '10',
+      content: 'Persisted hello',
+      timestamp: '2026-10-06T11:00:00.000Z',
+      receipt: undefined,
+    });
+  });
+
+  it('rejects a created-message response with the wrong sender identity', async () => {
+    mockedApiRequest.mockResolvedValue({
+      success: true,
+      message: 'Message created.',
+      data: {
+        id: 77,
+        conversation_id: 7,
+        sender_id: 999,
+        receiver_id: 20,
+        content: 'Forged sender',
+        is_seen: false,
+        created_at: '2026-10-06T11:00:00.000Z',
+        updated_at: '2026-10-06T11:00:00.000Z',
+      },
+    });
+
+    await expect(
+      messageSendRequest({
+        token: 'token',
+        conversationId: 7,
+        currentUserId: 10,
+        receiverUserId: 20,
+        content: 'Forged sender',
+      }),
+    ).rejects.toThrow(
+      'Created message response does not preserve authenticated conversation identity.',
+    );
   });
 
   it('rejects mixed identity domains from the backend', () => {

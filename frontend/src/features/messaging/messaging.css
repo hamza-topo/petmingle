@@ -70,6 +70,8 @@
   .message-composer { display: flex; align-items: center; gap: var(--space-2); min-height: 84px; border: 1px solid var(--color-border); border-radius: 27px; padding: 10px; box-shadow: var(--shadow-card); }
   .message-composer input { min-width: 0; flex: 1; border-radius: var(--radius-pill); height: 58px; padding: 0 23px; background: var(--color-bubble-incoming); font-size: 17px; }
   .message-composer input::placeholder { color: var(--color-text-secondary); opacity: 1; }
+  .message-composer input:disabled { cursor: wait; opacity: .75; }
+  .message-send-error { margin: 8px 14px 0; color: var(--color-brand-pink); font-size: 13px; line-height: 18px; }
   .chat-send { width: 58px; height: 58px; border-radius: 50%; background: var(--color-brand-pink); color: var(--color-surface); display: grid; place-items: center; flex-shrink: 0; }
   .match-details { padding: 17px 17px 14px; }
   .match-pets { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 10px; }

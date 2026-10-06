@@ -1,6 +1,7 @@
 import {
   render,
   screen,
+  waitFor,
   within,
 } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
@@ -14,11 +15,13 @@ import {
 } from 'vitest';
 
 import { App } from '../../app/App';
+import { ApiError } from '../../api/errors';
 import { useAuth } from '../../auth/AuthProvider';
 import { tokenStorage } from '../../auth/tokenStorage';
 import { authenticatedAuthState } from '../../test/authFixtures';
 import {
   conversationsRequest,
+  messageSendRequest,
   threadRequest,
 } from './messaging.api';
 import type {
@@ -39,6 +42,7 @@ vi.mock('./messaging.api', async importOriginal => {
   return {
     ...actual,
     conversationsRequest: vi.fn(),
+    messageSendRequest: vi.fn(),
     threadRequest: vi.fn(),
   };
 });
@@ -48,6 +52,8 @@ const mockedConversationsRequest =
   vi.mocked(conversationsRequest);
 const mockedThreadRequest =
   vi.mocked(threadRequest);
+const mockedMessageSendRequest =
+  vi.mocked(messageSendRequest);
 
 function pet(
   id: string,
@@ -138,6 +144,13 @@ const lunaMessages: ChatMessage[] = [
   },
 ];
 
+const sentMessage: ChatMessage = {
+  id: '77',
+  senderId: '10',
+  content: 'Persisted hello',
+  timestamp: '2026-10-06T11:00:00.000Z',
+};
+
 function renderMessages() {
   return render(
     <MemoryRouter initialEntries={['/messages']}>
@@ -164,6 +177,10 @@ beforeEach(() => {
       receiverUserId === 20
         ? miloMessages
         : lunaMessages,
+  );
+
+  mockedMessageSendRequest.mockResolvedValue(
+    sentMessage,
   );
 });
 
@@ -285,21 +302,177 @@ describe('Messaging persisted reads', () => {
     ).toBeVisible();
   });
 
-  it('does not fake local sends before issue 126', async () => {
+  it('persists a message and updates the active thread after success', async () => {
+    const user = userEvent.setup();
+
     renderMessages();
 
     await screen.findByText('Hello from Milo');
 
+    const input = screen.getByRole('textbox', {
+      name: 'Write a message',
+    });
+
+    await user.type(input, ' Persisted hello ');
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Send message',
+      }),
+    );
+
     expect(
+      mockedMessageSendRequest,
+    ).toHaveBeenCalledWith({
+      token: 'test-token',
+      conversationId: 101,
+      currentUserId: 10,
+      receiverUserId: 20,
+      content: 'Persisted hello',
+    });
+
+    const timeline = within(
+      screen.getByRole('list', {
+        name: 'Messages in active conversation',
+      }),
+    );
+
+    expect(
+      await timeline.findByText('Persisted hello'),
+    ).toBeVisible();
+
+    await waitFor(() =>
+      expect(input).toHaveValue(''),
+    );
+  });
+
+  it('prevents duplicate submissions while a send is pending', async () => {
+    const user = userEvent.setup();
+    let resolveSend:
+      | ((message: ChatMessage) => void)
+      | undefined;
+
+    mockedMessageSendRequest.mockReturnValue(
+      new Promise(resolve => {
+        resolveSend = resolve;
+      }),
+    );
+
+    renderMessages();
+
+    await screen.findByText('Hello from Milo');
+
+    await user.type(
       screen.getByRole('textbox', {
         name: 'Write a message',
       }),
-    ).toBeDisabled();
+      'Only once',
+    );
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Send message',
+      }),
+    );
+
+    const pendingButton = screen.getByRole(
+      'button',
+      {
+        name: 'Sending message',
+      },
+    );
+
+    expect(pendingButton).toBeDisabled();
+    expect(
+      mockedMessageSendRequest,
+    ).toHaveBeenCalledTimes(1);
+
+    await user.click(pendingButton);
 
     expect(
-      screen.getByRole('button', {
-        name: 'Send message — unavailable',
+      mockedMessageSendRequest,
+    ).toHaveBeenCalledTimes(1);
+
+    resolveSend?.({
+      ...sentMessage,
+      content: 'Only once',
+    });
+
+    const timeline = within(
+      screen.getByRole('list', {
+        name: 'Messages in active conversation',
       }),
-    ).toBeDisabled();
+    );
+
+    expect(
+      await timeline.findByText('Only once'),
+    ).toBeVisible();
+  });
+
+  it('preserves the draft after a validation failure', async () => {
+    const user = userEvent.setup();
+
+    mockedMessageSendRequest.mockRejectedValue(
+      new ApiError(
+        'The Field Content is too long!',
+        422,
+      ),
+    );
+
+    renderMessages();
+
+    await screen.findByText('Hello from Milo');
+
+    const input = screen.getByRole('textbox', {
+      name: 'Write a message',
+    });
+
+    await user.type(input, 'Keep this draft');
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Send message',
+      }),
+    );
+
+    expect(
+      await screen.findByRole('alert'),
+    ).toHaveTextContent(
+      'PetMingle could not process this request.',
+    );
+
+    expect(input).toHaveValue('Keep this draft');
+  });
+
+  it('preserves the draft and surfaces authorization failure', async () => {
+    const user = userEvent.setup();
+
+    mockedMessageSendRequest.mockRejectedValue(
+      new ApiError(
+        'Contact is not allowed.',
+        403,
+      ),
+    );
+
+    renderMessages();
+
+    await screen.findByText('Hello from Milo');
+
+    const input = screen.getByRole('textbox', {
+      name: 'Write a message',
+    });
+
+    await user.type(input, 'Still here');
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Send message',
+      }),
+    );
+
+    expect(
+      await screen.findByRole('alert'),
+    ).toHaveTextContent(
+      'You do not have permission to access this information.',
+    );
+
+    expect(input).toHaveValue('Still here');
   });
 });

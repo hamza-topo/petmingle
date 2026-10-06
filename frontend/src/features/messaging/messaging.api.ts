@@ -39,6 +39,23 @@ type MessageApiItem = {
   updated_at: string;
 };
 
+type CreatedMessageApiItem = {
+  id: number;
+  conversation_id: number;
+  sender_id: number;
+  receiver_id: number;
+  content: string;
+  is_seen?: boolean | number | null;
+  created_at: string;
+  updated_at: string;
+};
+
+type ApiEnvelope<T> = {
+  success: true;
+  message: string;
+  data: T;
+};
+
 type ParticipantApiItem = {
   user_id: number;
   name: string | null;
@@ -155,6 +172,43 @@ function mapMessage(
   return {
     id: String(item.id),
     senderId: String(item.sender_user_id),
+    content: item.content,
+    timestamp: item.created_at,
+    receipt:
+      item.is_seen === true || item.is_seen === 1
+        ? 'read'
+        : undefined,
+  };
+}
+
+function mapCreatedMessage(
+  item: CreatedMessageApiItem,
+  {
+    conversationId,
+    currentUserId,
+    receiverUserId,
+  }: {
+    conversationId: number;
+    currentUserId: number;
+    receiverUserId: number;
+  },
+): ChatMessage {
+  if (
+    !isPositiveInteger(item.id)
+    || item.conversation_id !== conversationId
+    || item.sender_id !== currentUserId
+    || item.receiver_id !== receiverUserId
+    || typeof item.content !== 'string'
+    || typeof item.created_at !== 'string'
+  ) {
+    throw new Error(
+      'Created message response does not preserve authenticated conversation identity.',
+    );
+  }
+
+  return {
+    id: String(item.id),
+    senderId: String(item.sender_id),
     content: item.content,
     timestamp: item.created_at,
     receipt: item.is_seen ? 'read' : undefined,
@@ -299,6 +353,54 @@ export async function threadRequest({
   );
 
   return response.data.map(mapMessage);
+}
+
+export async function messageSendRequest({
+  token,
+  conversationId,
+  currentUserId,
+  receiverUserId,
+  content,
+}: {
+  token: string;
+  conversationId: number;
+  currentUserId: number;
+  receiverUserId: number;
+  content: string;
+}): Promise<ChatMessage> {
+  if (
+    !isPositiveInteger(conversationId)
+    || !isPositiveInteger(currentUserId)
+    || !isPositiveInteger(receiverUserId)
+    || currentUserId === receiverUserId
+  ) {
+    throw new Error(
+      'Message send request contains invalid conversation participants.',
+    );
+  }
+
+  const response = await apiRequest<
+    ApiEnvelope<CreatedMessageApiItem>
+  >(
+    '/messages',
+    {
+      method: 'POST',
+      token,
+      body: JSON.stringify({
+        receiver_id: receiverUserId,
+        content,
+      }),
+    },
+  );
+
+  return mapCreatedMessage(
+    response.data,
+    {
+      conversationId,
+      currentUserId,
+      receiverUserId,
+    },
+  );
 }
 
 export function otherParticipantUserId(

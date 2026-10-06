@@ -15,6 +15,8 @@ import { MatchDetailsPanel } from './components/MatchDetailsPanel';
 import { MessagingHeader } from './components/MessagingHeader';
 import {
   conversationsRequest,
+  messageSendRequest,
+  messageTime,
   otherParticipantUserId,
   threadRequest,
 } from './messaging.api';
@@ -39,6 +41,8 @@ export function MessagingPage() {
     useState<LoadStatus>('ready');
   const [threadError, setThreadError] =
     useState<unknown | null>(null);
+  const [sendError, setSendError] =
+    useState<string | null>(null);
 
   const threadRequestId = useRef(0);
 
@@ -168,7 +172,82 @@ export function MessagingPage() {
   }, [activeId, loadThread]);
 
   function selectConversation(id: string) {
+    setSendError(null);
     setActiveId(id);
+  }
+
+  async function sendMessage(content: string) {
+    if (!active) {
+      const error = new Error(
+        'No active conversation is available.',
+      );
+
+      setSendError(
+        describeApiFailure(error).message,
+      );
+      throw error;
+    }
+
+    const token = tokenStorage.get();
+
+    if (!token) {
+      const error = new ApiError(
+        'Authentication token is missing.',
+        401,
+      );
+
+      setSendError(
+        describeApiFailure(error).message,
+      );
+      throw error;
+    }
+
+    const conversationId = active.id;
+    const currentUserId =
+      Number(active.currentOwnerId);
+    const receiverUserId =
+      otherParticipantUserId(active);
+
+    setSendError(null);
+
+    try {
+      const sent = await messageSendRequest({
+        token,
+        conversationId: Number(conversationId),
+        currentUserId,
+        receiverUserId,
+        content,
+      });
+
+      setItems(current =>
+        current.map(item => {
+          if (item.id !== conversationId) {
+            return item;
+          }
+
+          const alreadyPresent =
+            item.messages.some(
+              message => message.id === sent.id,
+            );
+
+          return {
+            ...item,
+            preview: sent.content,
+            activityLabel: messageTime(
+              sent.timestamp,
+            ),
+            messages: alreadyPresent
+              ? item.messages
+              : [...item.messages, sent],
+          };
+        }),
+      );
+    } catch (caught) {
+      setSendError(
+        describeApiFailure(caught).message,
+      );
+      throw caught;
+    }
   }
 
   const failure =
@@ -245,6 +324,8 @@ export function MessagingPage() {
                 loading={
                   threadStatus === 'loading'
                 }
+                onSend={sendMessage}
+                sendError={sendError}
               />
               <MatchDetailsPanel
                 conversation={active}
