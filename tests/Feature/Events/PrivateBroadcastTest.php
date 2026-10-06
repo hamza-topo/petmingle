@@ -11,12 +11,9 @@ use App\Models\MatchTable;
 use App\Models\Message;
 use App\Models\Pet;
 use App\Models\User;
-use Illuminate\Broadcasting\Broadcasters\RedisBroadcaster;
 use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Redis\Factory;
 use Illuminate\Support\Facades\Broadcast;
 use Laravel\Sanctum\Sanctum;
-use Mockery;
 use Tests\TestCase;
 
 class PrivateBroadcastTest extends TestCase
@@ -25,17 +22,13 @@ class PrivateBroadcastTest extends TestCase
     {
         parent::setUp();
 
-        // Exercise Laravel's real channel authorizer without contacting Redis/Pusher.
         config([
-            'broadcasting.default' => 'private-test',
-            'broadcasting.connections.private-test' => ['driver' => 'private-test'],
+            'broadcasting.default' => 'pusher',
         ]);
-        Broadcast::extend(
-            'private-test',
-            fn () => new RedisBroadcaster(
-                Mockery::mock(Factory::class)
-            )
-        );
+
+        Broadcast::forgetDrivers();
+
+        require base_path('routes/channels.php');
     }
 
     public function test_private_events_target_only_participant_accounts_and_omit_loaded_relations(): void
@@ -89,9 +82,20 @@ class PrivateBroadcastTest extends TestCase
                 'is_admin' => false,
             ])
         );
-        $this->postJson('/broadcasting/auth', ['channel_name' => 'private-App.Models.User.101'])->assertOk();
-        $this->postJson('/broadcasting/auth', ['channel_name' => 'private-App.Models.User.102'])->assertForbidden();
-        $this->postJson('/broadcasting/auth', ['channel_name' => 'private-auto-sitemap'])->assertForbidden();
+        $this->postJson('/broadcasting/auth', [
+            'socket_id' => '123.456',
+            'channel_name' => 'private-App.Models.User.101',
+        ])->assertOk();
+
+        $this->postJson('/broadcasting/auth', [
+            'socket_id' => '123.456',
+            'channel_name' => 'private-App.Models.User.102',
+        ])->assertForbidden();
+
+        $this->postJson('/broadcasting/auth', [
+            'socket_id' => '123.456',
+            'channel_name' => 'private-auto-sitemap',
+        ])->assertForbidden();
     }
 
     public function test_bearer_token_can_authorize_only_its_own_private_channel(): void
@@ -134,12 +138,22 @@ class PrivateBroadcastTest extends TestCase
                 'is_admin' => true,
             ])
         );
-        $this->postJson('/broadcasting/auth', ['channel_name' => 'private-App.Models.User.102'])->assertForbidden();
-        $this->postJson('/broadcasting/auth', ['channel_name' => 'private-auto-sitemap'])->assertOk();
+        $this->postJson('/broadcasting/auth', [
+            'socket_id' => '123.456',
+            'channel_name' => 'private-App.Models.User.102',
+        ])->assertForbidden();
+
+        $this->postJson('/broadcasting/auth', [
+            'socket_id' => '123.456',
+            'channel_name' => 'private-auto-sitemap',
+        ])->assertOk();
     }
 
     public function test_anonymous_subscriber_is_rejected(): void
     {
-        $this->postJson('/broadcasting/auth', ['channel_name' => 'private-App.Models.User.101'])->assertUnauthorized();
+        $this->postJson('/broadcasting/auth', [
+            'socket_id' => '123.456',
+            'channel_name' => 'private-App.Models.User.101',
+        ])->assertUnauthorized();
     }
 }
