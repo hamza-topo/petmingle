@@ -15,6 +15,7 @@ use Illuminate\Broadcasting\Broadcasters\RedisBroadcaster;
 use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Redis\Factory;
 use Illuminate\Support\Facades\Broadcast;
+use Laravel\Sanctum\Sanctum;
 use Mockery;
 use Tests\TestCase;
 
@@ -82,7 +83,12 @@ class PrivateBroadcastTest extends TestCase
 
     public function test_account_can_authorize_only_its_own_private_channel(): void
     {
-        $this->actingAs(User::factory()->make(['id' => 101, 'is_admin' => false]));
+        Sanctum::actingAs(
+            User::factory()->make([
+                'id' => 101,
+                'is_admin' => false,
+            ])
+        );
         $this->postJson('/broadcasting/auth', ['channel_name' => 'private-App.Models.User.101'])->assertOk();
         $this->postJson('/broadcasting/auth', ['channel_name' => 'private-App.Models.User.102'])->assertForbidden();
         $this->postJson('/broadcasting/auth', ['channel_name' => 'private-auto-sitemap'])->assertForbidden();
@@ -122,7 +128,12 @@ class PrivateBroadcastTest extends TestCase
 
     public function test_administrator_cannot_subscribe_to_another_users_channel(): void
     {
-        $this->actingAs(User::factory()->make(['id' => 101, 'is_admin' => true]));
+        Sanctum::actingAs(
+            User::factory()->make([
+                'id' => 101,
+                'is_admin' => true,
+            ])
+        );
         $this->postJson('/broadcasting/auth', ['channel_name' => 'private-App.Models.User.102'])->assertForbidden();
         $this->postJson('/broadcasting/auth', ['channel_name' => 'private-auto-sitemap'])->assertOk();
     }
