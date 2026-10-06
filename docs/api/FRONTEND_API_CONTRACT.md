@@ -315,7 +315,7 @@ type ChatRow = {
 
 `PUT/PATCH /messages/{id}` validates content and enforces sender ownership. Cycle 9A limits updates to validated content, protecting sender/receiver/conversation/read state from client reassignment. Create assigns the sender server-side. Delete/restore require the original sender. No dedicated recipient read-marking endpoint exists.
 
-MessageObserver dispatches MessageEvent after creation. Cycle 9A moved message/match/adoption/typing events to private account channels and restricts model payloads; match Pet IDs are resolved to owner User IDs. The application broadcast provider remains disabled as before. Activation, compatible private client subscriptions and broadcasting transport remain deferred; Cycle 9B changes neither. No sockets/polling are needed or proposed here.
+MessageObserver dispatches MessageEvent after creation. Cycle 9A moved message/match/adoption/typing events to private account channels and restricts model payloads; match Pet IDs are resolved to owner User IDs. Issue #128 activates the provider with Sanctum bearer private-channel authorization, a Pusher-compatible transport, React WebSocket subscription, reconnect/resync and message-ID deduplication. HTTP remains the authoritative fallback. See [REALTIME_MESSAGING.md](REALTIME_MESSAGING.md).
 
 ## Frontend view models and required adapters
 
