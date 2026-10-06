@@ -388,7 +388,7 @@ export function DiscoveryPage() {
                 <div>
                   <h1 id="discovery-heading">
                     Discover Amazing{' '}
-                    <span className="text-brand-pink">
+                    <span className="text-text-pink">
                       Pets
                     </span>
                   </h1>
@@ -574,3 +574,4 @@ export function DiscoveryPage() {
     </div>
   );
 }
+
