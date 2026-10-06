@@ -131,7 +131,17 @@ function LocationPicker({ id, initial, save, close }: {
     finally { if (active.current) setSaving(false); }
   }
 
-  return <dialog ref={dialog} id={id} className="location-picker" aria-labelledby={id + '-title'} aria-describedby={id + '-description'} aria-busy={saving} onCancel={event => { event.preventDefault(); if (!saving) close(); }} onKeyDown={event => { if (event.key === 'Escape') { event.preventDefault(); if (!saving) close(); } }}>
+  return <dialog ref={dialog} id={id} className="location-picker" aria-labelledby={id + '-title'} aria-describedby={id + '-description'} aria-busy={saving} onCancel={event => { event.preventDefault(); if (!saving) close(); }} onKeyDown={event => {
+      if (event.key === 'Tab') {
+        const items = [...event.currentTarget.querySelectorAll<HTMLElement>('button, input, a[href], [tabindex]')].filter(element => !element.matches(':disabled, [tabindex="-1"]') && element.getClientRects().length > 0);
+        const first = items[0];
+        const last = items[items.length - 1];
+        if (first && last && ((!event.shiftKey && document.activeElement === last) || (event.shiftKey && document.activeElement === first))) {
+          event.preventDefault();
+          (event.shiftKey ? last : first).focus();
+        }
+      }
+      if (event.key === 'Escape') { event.preventDefault(); if (!saving) close(); } }}>
     <header className="location-picker-heading"><div><span className="location-picker-eyebrow">A little closer</span><h2 id={id + '-title'}>Where do your paths meet?</h2></div><button type="button" className="location-picker-close" aria-label="Close location picker" disabled={saving} onClick={close}><X size={22} /></button></header>
     <p id={id + '-description'} className="location-picker-description">Choose your area to discover pets nearby.</p>
     <fieldset disabled={saving} className="location-picker-body">
