@@ -107,9 +107,13 @@ function MessageBubble({
 export function ChatThread({
   conversation,
   loading,
+  onSend,
+  sendError,
 }: {
   conversation: Conversation;
   loading: boolean;
+  onSend: (content: string) => Promise<void>;
+  sendError: string | null;
 }) {
   const timeline =
     useRef<HTMLOListElement>(null);
@@ -213,7 +217,12 @@ export function ChatThread({
         </p>
       )}
 
-      <MessageComposer />
+      <MessageComposer
+        key={conversation.id}
+        onSend={onSend}
+        disabled={loading}
+        error={sendError}
+      />
     </section>
   );
 }
