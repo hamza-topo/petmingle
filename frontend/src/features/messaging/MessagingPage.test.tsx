@@ -1,87 +1,305 @@
-import { render, screen, within } from '@testing-library/react';
+import {
+  render,
+  screen,
+  within,
+} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import {
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from 'vitest';
+
 import { App } from '../../app/App';
-import { conversations, pairName } from './messaging.fixtures';
 import { useAuth } from '../../auth/AuthProvider';
+import { tokenStorage } from '../../auth/tokenStorage';
 import { authenticatedAuthState } from '../../test/authFixtures';
+import {
+  conversationsRequest,
+  threadRequest,
+} from './messaging.api';
+import type {
+  ChatMessage,
+  Conversation,
+} from './messaging.types';
 
 vi.mock('../../auth/AuthProvider', () => ({
   useAuth: vi.fn(),
 }));
 
-const mockedUseAuth = vi.mocked(useAuth);
+vi.mock('./messaging.api', async importOriginal => {
+  const actual =
+    await importOriginal<
+      typeof import('./messaging.api')
+    >();
 
-beforeEach(() => {
-  mockedUseAuth.mockReturnValue(authenticatedAuthState());
+  return {
+    ...actual,
+    conversationsRequest: vi.fn(),
+    threadRequest: vi.fn(),
+  };
 });
 
-function renderMessages() { return render(<MemoryRouter initialEntries={['/messages']}><App /></MemoryRouter>); }
+const mockedUseAuth = vi.mocked(useAuth);
+const mockedConversationsRequest =
+  vi.mocked(conversationsRequest);
+const mockedThreadRequest =
+  vi.mocked(threadRequest);
 
-describe('Messaging', () => {
-  it('renders its route, active navigation and conversation fixtures', () => {
+function pet(
+  id: string,
+  name: string,
+) {
+  return {
+    id,
+    name,
+    photo: {
+      src: null,
+      alt: `${name} pet profile`,
+      placeholder: name,
+    },
+    breed: 'Mixed',
+    ageYears: 3,
+  };
+}
+
+const persistedConversations: Conversation[] = [
+  {
+    id: '101',
+    pets: [pet('42', 'Nala'), pet('51', 'Milo')],
+    owners: [
+      {
+        id: '10',
+        name: 'Hamza',
+        representedPetId: '42',
+      },
+      {
+        id: '20',
+        name: 'Alex',
+        representedPetId: '51',
+      },
+    ],
+    currentOwnerId: '10',
+    preview: 'Latest with Milo',
+    activityLabel: '9:30 AM',
+    unreadCount: 1,
+    messages: [],
+    interests: [],
+  },
+  {
+    id: '102',
+    pets: [pet('42', 'Nala'), pet('61', 'Luna')],
+    owners: [
+      {
+        id: '10',
+        name: 'Hamza',
+        representedPetId: '42',
+      },
+      {
+        id: '30',
+        name: 'Sam',
+        representedPetId: '61',
+      },
+    ],
+    currentOwnerId: '10',
+    preview: 'Latest with Luna',
+    activityLabel: '8:00 AM',
+    unreadCount: 0,
+    messages: [],
+    interests: [],
+  },
+];
+
+const miloMessages: ChatMessage[] = [
+  {
+    id: '1',
+    senderId: '20',
+    content: 'Hello from Milo',
+    timestamp: '2026-10-06T09:00:00.000Z',
+  },
+  {
+    id: '2',
+    senderId: '10',
+    content: 'Hello back',
+    timestamp: '2026-10-06T09:01:00.000Z',
+    receipt: 'read',
+  },
+];
+
+const lunaMessages: ChatMessage[] = [
+  {
+    id: '3',
+    senderId: '30',
+    content: 'Hello from Luna',
+    timestamp: '2026-10-06T08:00:00.000Z',
+  },
+];
+
+function renderMessages() {
+  return render(
+    <MemoryRouter initialEntries={['/messages']}>
+      <App />
+    </MemoryRouter>,
+  );
+}
+
+beforeEach(() => {
+  vi.clearAllMocks();
+  window.localStorage.clear();
+  tokenStorage.set('test-token');
+
+  mockedUseAuth.mockReturnValue(
+    authenticatedAuthState(),
+  );
+
+  mockedConversationsRequest.mockResolvedValue(
+    persistedConversations,
+  );
+
+  mockedThreadRequest.mockImplementation(
+    async ({ receiverUserId }) =>
+      receiverUserId === 20
+        ? miloMessages
+        : lunaMessages,
+  );
+});
+
+describe('Messaging persisted reads', () => {
+  it('loads persisted conversations and the first active thread', async () => {
     renderMessages();
-    expect(screen.getByRole('heading', { name: 'Messages', level: 1 })).toBeVisible();
-    expect(screen.getByRole('link', { name: 'Match & Chat' })).toHaveAttribute('aria-current', 'page');
-    const list = within(screen.getByRole('list', { name: 'Conversations' }));
-    expect(list.getAllByRole('listitem')).toHaveLength(conversations.length);
-    for (const conversation of conversations) expect(list.getByRole('button', { name: pairName(conversation) })).toBeVisible();
-    expect(list.getByRole('button', { name: 'Nala & Milo' })).toHaveAttribute('aria-current', 'true');
-  });
-  it('uses the authenticated account identity in the header', () => {
-    renderMessages();
-
-    const account = screen.getByRole('button', {
-      name: 'Hamza account — unavailable',
-    });
-
-    expect(account).toBeVisible();
 
     expect(
-      within(account).getByRole('img'),
-    ).toHaveAccessibleName(/Hamza avatar/);
+      screen.getByText('Loading conversations...'),
+    ).toBeVisible();
+
+    const list = within(
+      await screen.findByRole('list', {
+        name: 'Conversations',
+      }),
+    );
+
+    expect(
+      await list.findByRole('button', {
+        name: 'Nala & Milo',
+      }),
+    ).toHaveAttribute('aria-current', 'true');
+
+    expect(
+      list.getByRole('button', {
+        name: 'Nala & Luna',
+      }),
+    ).toBeVisible();
+
+    expect(
+      await screen.findByText('Hello from Milo'),
+    ).toBeVisible();
+    expect(
+      screen.getByText('Hello back'),
+    ).toBeVisible();
+
+    expect(
+      mockedConversationsRequest,
+    ).toHaveBeenCalledWith('test-token');
+
+    expect(mockedThreadRequest).toHaveBeenCalledWith({
+      token: 'test-token',
+      receiverUserId: 20,
+    });
   });
 
-  it('renders the active thread and both matched pets from fixtures', () => {
+  it('switches conversations and loads the correct persisted thread', async () => {
+    const user = userEvent.setup();
+
     renderMessages();
-    const thread = within(screen.getByRole('region', { name: 'Nala & Milo' }));
-    expect(thread.getByText('Matched March 28, 2024')).toBeVisible();
-    for (const message of conversations[0].messages) expect(thread.getByRole('list', { name: 'Messages in active conversation' })).toHaveTextContent(message.content);
-    const details = within(screen.getByRole('complementary', { name: 'Active match details' }));
-    expect(details.getByRole('article', { name: 'Nala details' })).toHaveTextContent('Golden Retriever');
-    expect(details.getByRole('article', { name: 'Milo details' })).toHaveTextContent('Pembroke Welsh Corgi');
+
+    await screen.findByText('Hello from Milo');
+
+    await user.click(
+      screen.getByRole('button', {
+        name: 'Nala & Luna',
+      }),
+    );
+
+    expect(
+      await screen.findByText('Hello from Luna'),
+    ).toBeVisible();
+
+    expect(
+      screen.queryByText('Hello from Milo'),
+    ).not.toBeInTheDocument();
+
+    expect(mockedThreadRequest).toHaveBeenLastCalledWith({
+      token: 'test-token',
+      receiverUserId: 30,
+    });
   });
-  it('switches the thread and details to the selected conversation', async () => {
-    const user = userEvent.setup(); renderMessages();
-    await user.click(screen.getByRole('button', { name: 'Luna & Toby' }));
-    const thread = within(screen.getByRole('region', { name: 'Luna & Toby' }));
-    expect(thread.getByText('Let’s meet at the dog park!')).toBeVisible();
-    expect(screen.queryByText('Hi! Nala would love to meet Milo!')).not.toBeInTheDocument();
-    expect(screen.getByRole('article', { name: 'Toby details' })).toBeVisible();
-    expect(screen.queryByRole('article', { name: 'Milo details' })).not.toBeInTheDocument();
+
+  it('renders an empty state when there are no persisted conversations', async () => {
+    mockedConversationsRequest.mockResolvedValue([]);
+
+    renderMessages();
+
+    expect(
+      await screen.findByText('No conversations yet'),
+    ).toBeVisible();
+
+    expect(mockedThreadRequest).not.toHaveBeenCalled();
   });
-  it('sends a local message, clears the composer and retains it only in its thread', async () => {
-    const user = userEvent.setup(); renderMessages();
-    expect(screen.getByRole('button', { name: 'Send message' })).toBeDisabled();
-    await user.type(screen.getByRole('textbox', { name: 'Write a message' }), ' See you at ten! ');
-    await user.click(screen.getByRole('button', { name: 'Send message' }));
-    expect(within(screen.getByRole('list', { name: 'Messages in active conversation' })).getByText('See you at ten!')).toBeVisible();
-    expect(screen.getByRole('textbox', { name: 'Write a message' })).toHaveValue('');
-    await user.click(screen.getByRole('button', { name: 'Luna & Toby' }));
-    expect(within(screen.getByRole('list', { name: 'Messages in active conversation' })).queryByText('See you at ten!')).not.toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: 'Nala & Milo' }));
-    expect(within(screen.getByRole('list', { name: 'Messages in active conversation' })).getByText('See you at ten!')).toBeVisible();
+
+  it('renders a safe failure state when conversation loading fails', async () => {
+    mockedConversationsRequest.mockRejectedValue(
+      new Error('Network failed'),
+    );
+
+    renderMessages();
+
+    expect(
+      await screen.findByText('Messages unavailable'),
+    ).toBeVisible();
+
+    expect(
+      screen.getByRole('alert'),
+    ).toBeVisible();
   });
-  it('filters local conversations and clears unread state on opening', async () => {
-    const user = userEvent.setup(); renderMessages();
-    await user.click(screen.getByRole('button', { name: 'Unread' }));
-    expect(within(screen.getByRole('list', { name: 'Conversations' })).getAllByRole('listitem')).toHaveLength(1);
-    await user.click(screen.getByRole('button', { name: 'Nala & Milo' }));
-    expect(screen.getByRole('status')).toHaveTextContent('No conversations found.');
-    await user.click(screen.getByRole('button', { name: 'All' }));
-    await user.type(screen.getByRole('searchbox', { name: 'Search pets or conversations' }), 'Rocky');
-    expect(within(screen.getByRole('list', { name: 'Conversations' })).getAllByRole('listitem')).toHaveLength(1);
-    expect(screen.getByRole('button', { name: 'Rocky & Zoe' })).toBeVisible();
+
+  it('renders a safe thread failure without replacing the selected conversation identity', async () => {
+    mockedThreadRequest.mockRejectedValue(
+      new Error('Thread failed'),
+    );
+
+    renderMessages();
+
+    expect(
+      await screen.findByText(
+        'Conversation unavailable',
+      ),
+    ).toBeVisible();
+
+    expect(
+      screen.getByRole('article', {
+        name: 'Milo details',
+      }),
+    ).toBeVisible();
+  });
+
+  it('does not fake local sends before issue 126', async () => {
+    renderMessages();
+
+    await screen.findByText('Hello from Milo');
+
+    expect(
+      screen.getByRole('textbox', {
+        name: 'Write a message',
+      }),
+    ).toBeDisabled();
+
+    expect(
+      screen.getByRole('button', {
+        name: 'Send message — unavailable',
+      }),
+    ).toBeDisabled();
   });
 });
