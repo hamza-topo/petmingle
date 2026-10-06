@@ -3,16 +3,78 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\Conversation;
 use App\Http\Requests\Api\Conversation\Index;
 use App\Http\Resources\Api\Message\ConversationResource;
 use App\Http\Responses\ApiResponse;
 use App\Repositories\ConversationRepository;
+use App\Repositories\MessageRepository;
+use App\Services\InteractionPolicy;
+use Illuminate\Auth\Access\AuthorizationException;
+use Illuminate\Http\Request;
 
 class ConversationController extends Controller
 {
     public function __construct(
-        protected ConversationRepository $conversationRepository
+        protected ConversationRepository $conversationRepository,
+        protected MessageRepository $messageRepository,
+        protected InteractionPolicy $interactionPolicy
     ) {}
+
+    public function markSeen(
+        Request $request,
+        Conversation $conversation
+    ) {
+        $userId = (int) $request->user()->id;
+
+        if (
+            $conversation->first_user_id !== $userId
+            && $conversation->seconde_user_id !== $userId
+        ) {
+            throw new AuthorizationException(
+                'You are not a participant in this conversation.'
+            );
+        }
+
+        $otherUserId =
+            $conversation->first_user_id === $userId
+                ? (int) $conversation->seconde_user_id
+                : (int) $conversation->first_user_id;
+
+        if (
+            !$this->interactionPolicy->canContactUsers(
+                $userId,
+                $otherUserId
+            )
+        ) {
+            throw new AuthorizationException(
+                'This conversation is not available for contact.'
+            );
+        }
+
+        $markedCount =
+            $this->messageRepository
+                ->markSeenInConversation(
+                    (int) $conversation->id,
+                    $userId
+                );
+
+        $unreadCount =
+            $this->messageRepository
+                ->unreadCountInConversation(
+                    (int) $conversation->id,
+                    $userId
+                );
+
+        return ApiResponse::success(
+            [
+                'conversation_id' => (int) $conversation->id,
+                'marked_count' => $markedCount,
+                'unread_count' => $unreadCount,
+            ],
+            __('Conversation marked as seen.')
+        );
+    }
 
     public function index(Index $request)
     {
