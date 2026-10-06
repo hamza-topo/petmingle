@@ -33,12 +33,11 @@ jobs:
         run: |
           vendor/bin/phpstan analyse --generate-baseline=phpstan-baseline.neon --memory-limit=1G || true
 
-      - name: Emit generated files
-        run: |
-          echo "===COMPOSER_LOCK_B64==="
-          base64 -w 0 composer.lock
-          echo
-          echo "===PHPSTAN_BASELINE_B64==="
-          if [ -f phpstan-baseline.neon ]; then base64 -w 0 phpstan-baseline.neon; fi
-          echo
-          echo "===END_GENERATED_FILES==="
+      - name: Upload generated files
+        uses: actions/upload-artifact@v4
+        with:
+          name: q90-generated
+          path: |
+            composer.lock
+            phpstan-baseline.neon
+          if-no-files-found: error
