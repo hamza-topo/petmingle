@@ -7,10 +7,11 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Contracts\Events\ShouldDispatchAfterCommit;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcastNow;
+use Illuminate\Contracts\Broadcasting\ShouldRescue;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
 
-class MessageEvent implements ShouldBroadcastNow, ShouldDispatchAfterCommit
+class MessageEvent implements ShouldBroadcastNow, ShouldDispatchAfterCommit, ShouldRescue
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
