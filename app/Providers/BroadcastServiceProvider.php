@@ -9,29 +9,24 @@ use Illuminate\Support\ServiceProvider;
 
 class BroadcastServiceProvider extends ServiceProvider
 {
-    public function register(): void
-    {
-        $this->app
-            ->make('broadcast.manager')
-            ->extend(
-                'petmingle-pusher',
-                function ($app, array $config) {
-                    return new PusherHttpBroadcaster(
-                        new Client([
-                            'connect_timeout' => 2,
-                            'timeout' => 5,
-                        ]),
-                        (string) ($config['key'] ?? ''),
-                        (string) ($config['secret'] ?? ''),
-                        (string) ($config['app_id'] ?? ''),
-                        $config['options'] ?? []
-                    );
-                }
-            );
-    }
-
     public function boot(): void
     {
+        Broadcast::extend(
+            'petmingle-pusher',
+            function ($app, array $config) {
+                return new PusherHttpBroadcaster(
+                    new Client([
+                        'connect_timeout' => 2,
+                        'timeout' => 5,
+                    ]),
+                    (string) ($config['key'] ?? ''),
+                    (string) ($config['secret'] ?? ''),
+                    (string) ($config['app_id'] ?? ''),
+                    $config['options'] ?? []
+                );
+            }
+        );
+
         Broadcast::routes([
             'middleware' => ['auth:sanctum'],
         ]);
