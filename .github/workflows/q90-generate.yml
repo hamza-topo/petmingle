@@ -1,0 +1,44 @@
+name: Q90 dependency generation
+
+on:
+  push:
+    branches:
+      - quality/90-pint-phpstan-gates
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.4'
+          extensions: mbstring, intl, bcmath, gd, zip, xml
+          coverage: none
+          tools: composer:v2
+
+      - name: Resolve quality dependencies
+        run: |
+          composer update laravel/pint larastan/larastan --with-all-dependencies --no-interaction --no-progress --no-scripts
+
+      - name: Prepare app for Larastan
+        run: |
+          cp .env.example .env
+          php artisan key:generate || true
+          mkdir -p storage/framework/cache
+
+      - name: Generate PHPStan baseline
+        run: |
+          vendor/bin/phpstan analyse --generate-baseline=phpstan-baseline.neon --memory-limit=1G || true
+
+      - name: Emit generated files
+        run: |
+          echo "===COMPOSER_LOCK_B64==="
+          base64 -w 0 composer.lock
+          echo
+          echo "===PHPSTAN_BASELINE_B64==="
+          if [ -f phpstan-baseline.neon ]; then base64 -w 0 phpstan-baseline.neon; fi
+          echo
+          echo "===END_GENERATED_FILES==="
