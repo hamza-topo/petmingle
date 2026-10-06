@@ -110,12 +110,16 @@ export function ChatThread({
   onSend,
   sendError,
   seenError,
+  isOtherTyping,
+  onTypingChange,
 }: {
   conversation: Conversation;
   loading: boolean;
   onSend: (content: string) => Promise<void>;
   sendError: string | null;
   seenError: string | null;
+  isOtherTyping: boolean;
+  onTypingChange: (isWriting: boolean) => void;
 }) {
   const timeline =
     useRef<HTMLOListElement>(null);
@@ -146,6 +150,24 @@ export function ChatThread({
           <h2 id="chat-title">
             {pairName(conversation)}
           </h2>
+          {isOtherTyping && (
+            <p
+              className="chat-typing-state"
+              role="status"
+            >
+              {
+                conversation.pets.find(
+                  pet =>
+                    pet.id
+                    !== conversation.owners.find(
+                      owner =>
+                        owner.id
+                        === conversation.currentOwnerId,
+                    )?.representedPetId,
+                )?.name ?? 'Your match'
+              }’s owner is typing…
+            </p>
+          )}
         </div>
 
         <div className="chat-call-actions">
@@ -231,6 +253,7 @@ export function ChatThread({
       <MessageComposer
         key={conversation.id}
         onSend={onSend}
+        onTypingChange={onTypingChange}
         disabled={loading}
         error={sendError}
       />
