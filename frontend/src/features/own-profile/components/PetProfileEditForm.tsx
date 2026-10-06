@@ -289,8 +289,7 @@ export function PetProfileEditForm({
             Edit pet profile
           </h2>
           <p>
-            Update the profile fields currently supported
-            by PetMingle.
+            Update your pet’s name, species, breed, age and biography.
           </p>
         </div>
 
@@ -478,10 +477,9 @@ export function PetProfileEditForm({
           </label>
 
           <p className="own-profile-edit-deferred">
-            Location, weight, traits, compatibility,
-            activities and profile statistics are not
-            editable yet because they do not currently
-            have an approved persistence contract.
+            Set your account location in Discovery. Weight, traits,
+            compatibility and activities are not editable yet.
+            Matches and likes update automatically.
           </p>
 
           {formError && (

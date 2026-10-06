@@ -28,7 +28,6 @@ import {
 import { taxonomyRequest } from '../profile-creation/taxonomy.api';
 import { accountLocationsRequest } from '../account-location/location.api';
 import {
-  ownPet,
   plusPlans,
 } from './profile.fixtures';
 
@@ -287,15 +286,10 @@ describe('Own pet profile', () => {
       details.getByText('31.629500, -7.981100'),
     ).toBeVisible();
 
-    expect(
-      details.getByText('62 lbs'),
-    ).toBeVisible();
+    expect(details.queryByText('62 lbs')).not.toBeInTheDocument();
+    expect(details.getAllByText('Not provided')).toHaveLength(4);
 
-    for (const trait of ownPet.traits) {
-      expect(
-        screen.getByText(trait.label),
-      ).toBeVisible();
-    }
+    expect(screen.queryByText('Loves the Beach')).not.toBeInTheDocument();
   });
 
   it('edits persisted fields, refreshes identity, and reloads the profile', async () => {
@@ -339,7 +333,7 @@ describe('Own pet profile', () => {
     });
 
     expect(editForm).toHaveTextContent(
-      'Location, weight, traits, compatibility',
+      'Set your account location in Discovery. Weight, traits',
     );
 
     await user.clear(
@@ -741,7 +735,7 @@ describe('Own pet profile', () => {
     ).toBeVisible();
   });
 
-  it('renders Plus prices and changes the selected plan without enabling purchase', async () => {
+  it('labels proposed Plus prices and prevents selecting or purchasing a plan', async () => {
     const user = userEvent.setup();
 
     renderProfile();
@@ -771,17 +765,11 @@ describe('Own pet profile', () => {
       }),
     );
 
-    expect(
-      screen.getByRole('radio', {
-        name: '3 Months',
-      }),
-    ).toBeChecked();
+    expect(screen.getByRole('radio', { name: '3 Months' })).toBeDisabled();
+    expect(screen.getByRole('radio', { name: '3 Months' })).not.toBeChecked();
+    expect(screen.getByText(/These proposed features and prices may change/)).toBeVisible();
 
-    expect(
-      screen.getByRole('radio', {
-        name: '12 Months',
-      }),
-    ).not.toBeChecked();
+    expect(screen.getByRole('radio', { name: '12 Months' })).toBeChecked();
 
     expect(
       screen.getByText('Most Popular'),

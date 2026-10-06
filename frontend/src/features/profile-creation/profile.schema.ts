@@ -1,4 +1,3 @@
-import { nalaIdentity } from '../../fixtures/petIdentity';
 import { z } from 'zod';
 
 export const traits = [
@@ -43,10 +42,10 @@ export const profileSchema = z.object({
 export type PetProfileValues = z.infer<typeof profileSchema>;
 
 export const initialProfile: PetProfileValues = {
-  name: nalaIdentity.name,
+  name: '',
   speciesId: '',
   raceId: '',
-  age: String(nalaIdentity.ageYears),
+  age: '',
   size: 'Large',
   traits: ['Playful'],
   energy: 'High energy',

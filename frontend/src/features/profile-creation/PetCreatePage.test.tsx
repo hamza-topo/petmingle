@@ -158,6 +158,8 @@ async function selectDogTaxonomy(
   await screen.findByRole('option', {
     name: 'Dog',
   });
+  await user.type(screen.getByRole('textbox', { name: 'Pet name' }), 'Nala');
+  await user.selectOptions(screen.getByRole('combobox', { name: 'Age' }), '3');
 
   await user.selectOptions(
     screen.getByRole('combobox', {
@@ -179,6 +181,22 @@ async function selectDogTaxonomy(
 }
 
 describe('Pet profile creation', () => {
+  it('keeps unsupported preferences disabled and saves only supported fields', async () => {
+    const user = userEvent.setup();
+    renderPersistenceForm();
+    await selectDogTaxonomy(user);
+    for (const name of ['Size', 'Energy level', 'Ideal playdate type']) {
+      expect(screen.getByRole('combobox', { name })).toBeDisabled();
+      expect(screen.getByRole('combobox', { name })).toHaveValue('');
+    }
+    for (const input of screen.getAllByRole('checkbox')) {
+      expect(input).toBeDisabled();
+      expect(input).not.toBeChecked();
+    }
+    expect(screen.getByRole('button', { name: 'Save and finish later' })).toBeDisabled();
+    await user.click(screen.getByRole('button', { name: 'Continue' }));
+    await waitFor(() => expect(mockedPetCreateRequest).toHaveBeenCalledWith({ speciesId: 10, raceId: 20, name: 'Nala', age: 3, photo: null }, 'test-token'));
+  });
   it('renders its route, sections and first progress step', async () => {
     renderForm();
 
@@ -219,7 +237,7 @@ describe('Pet profile creation', () => {
       screen.getByRole('textbox', {
         name: 'Pet name',
       }),
-    ).toHaveValue('Nala');
+    ).toHaveValue('');
 
     expect(
       await screen.findByRole('option', {
@@ -373,7 +391,7 @@ describe('Pet profile creation', () => {
     });
   });
 
-  it('requires a nonblank pet name before local submission', async () => {
+  it('requires a nonblank pet name before submitting', async () => {
     const user = userEvent.setup();
 
     renderForm();

@@ -158,7 +158,7 @@ describe('Matches page', () => {
 
     expect(
       screen.getByText(
-        'When two pets like each other, the persisted match will appear here.',
+        'When two pets like each other, their match will appear here.',
       ),
     ).toBeVisible();
   });

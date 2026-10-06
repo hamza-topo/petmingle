@@ -17,10 +17,10 @@ export function PlusPlans() {
   return <aside id="petmingle-plus" className="own-plus" aria-labelledby="own-plus-title">
     <h2 id="own-plus-title"><Crown size={52} fill="currentColor" aria-hidden="true" /><span>PetMingle <strong>Plus</strong></span></h2>
     <h3>More connections. More adventures.</h3>
-    <p className="own-plus-intro">Unlock premium features and help Nala meet even more amazing friends. PetMingle Plus gives you everything you need to make meaningful connections.</p>
+    <p className="own-plus-intro">PetMingle Plus is not available yet. These proposed features and prices may change.</p>
     <ul className="own-plus-features">{plusFeatures.map(({ title, text, icon: Icon }) => <li key={title}><span className="own-plus-icon"><Icon size={32} aria-hidden="true" /></span><div><h4>{title}</h4><p>{text}</p></div></li>)}</ul>
-    <fieldset className="own-plans"><legend className="sr-only">Choose a PetMingle Plus plan</legend>{plusPlans.map(plan => <PlusPlanCard key={plan.id} plan={plan} selected={selected === plan.id} onSelect={() => setSelected(plan.id)} />)}</fieldset>
-    <ActionButton className="own-upgrade" unavailableReason="Purchases are not available in this preview"><Crown size={37} fill="currentColor" />Try PetMingle Plus<ChevronRight size={27} /></ActionButton>
-    <p className="own-cancel">Cancel anytime. No commitment.</p>
+    <fieldset className="own-plans" disabled><legend className="sr-only">Proposed PetMingle Plus plans</legend>{plusPlans.map(plan => <PlusPlanCard key={plan.id} plan={plan} selected={selected === plan.id} onSelect={() => setSelected(plan.id)} />)}</fieldset>
+    <ActionButton className="own-upgrade" unavailableReason="Purchases are not available yet"><Crown size={37} fill="currentColor" />Try PetMingle Plus<ChevronRight size={27} /></ActionButton>
+    <p className="own-cancel">Subscriptions are not available for purchase.</p>
   </aside>;
 }

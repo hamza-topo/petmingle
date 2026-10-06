@@ -804,7 +804,7 @@ export function MessagingPage() {
             <ApiState
               kind="empty"
               title="No conversations yet"
-              message="Your persisted matches have not started a conversation yet."
+              message="Your matches have not started a conversation yet."
             />
           </section>
         )}

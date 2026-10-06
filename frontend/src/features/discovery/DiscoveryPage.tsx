@@ -393,7 +393,7 @@ export function DiscoveryPage() {
                     </span>
                   </h1>
                   <p>
-                    Meet persisted nearby pet profiles,
+                    Meet nearby pets,
                     ordered by distance.
                   </p>
                 </div>
@@ -477,7 +477,7 @@ export function DiscoveryPage() {
                   <ApiState
                     kind="empty"
                     title="No nearby pets yet"
-                    message="No persisted pet profiles matched the current Discovery filters."
+                    message="No pets matched your current filters."
                   />
                 )}
 
