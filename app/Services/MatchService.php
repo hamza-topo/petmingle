@@ -5,12 +5,12 @@ namespace App\Services;
 use App\Events\MatchEvent;
 use App\Mail\ItsAMatch;
 use App\Models\MatchTable;
-use App\Models\Pet;
 use App\Repositories\MatchRepository;
 use App\Repositories\PetRepository;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\DB;
+use LogicException;
 
 class MatchService
 {
@@ -19,16 +19,31 @@ class MatchService
 
     public function __construct(
         protected MatchRepository $matchRepository,
-        protected PetRepository $petRepository
+        protected PetRepository $petRepository,
+        protected InteractionPolicy $interactionPolicy
     ) {}
 
     public function create(array $like): self
     {
         Log::info('start creating the match');
 
+        $fromPetId = (int) $like['from'];
+        $toPetId = (int) $like['to'];
+
+        if (
+            !$this->interactionPolicy->canMatchPets(
+                $fromPetId,
+                $toPetId
+            )
+        ) {
+            throw new LogicException(
+                'Match cannot be created for this relationship.'
+            );
+        }
+
         $likeSeconde = [
-            'from' => $like['to'],
-            'to' => $like['from'],
+            'from' => $toPetId,
+            'to' => $fromPetId,
         ];
 
         DB::transaction(function () use ($like, $likeSeconde) {

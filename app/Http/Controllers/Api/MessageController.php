@@ -3,13 +3,13 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\Message\Index;
 use App\Http\Requests\Api\Message\Store;
 use App\Http\Requests\Api\Message\Update;
 use App\Http\Resources\Api\Message\Chat;
 use App\Reducer\Message\Conversation;
 use App\Repositories\ConversationRepository;
 use App\Repositories\MessageRepository;
-use Illuminate\Http\Request;
 
 class MessageController extends Controller
 {
@@ -17,36 +17,30 @@ class MessageController extends Controller
         protected ConversationRepository $conversationRepository,
         protected MessageRepository $messageRepository
     ) {}
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
+
+    public function index(Index $request)
     {
+        $receiverId = (int) $request->validated(
+            'receiver_id'
+        );
+
         return response()->json([
             'success' => true,
-            'message' => \__('Messages has been fetched successfully.'),
-            'data' => new Chat($this->messageRepository->messages(auth()->user()->id, $request->receiver_id))
+            'message' => __('Messages has been fetched successfully.'),
+            'data' => new Chat(
+                $this->messageRepository->messages(
+                    (int) $request->user()->id,
+                    $receiverId
+                )
+            ),
         ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
         //
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Store $request)
     {
         $data = $request->validated();
@@ -71,13 +65,7 @@ class MessageController extends Controller
             'data' => $this->messageRepository->create($data),
         ]);
     }
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Update $request, $id)
     {
         $message = $this->messageRepository->getById((int) $id);
@@ -87,16 +75,13 @@ class MessageController extends Controller
         return response()->json([
             'success' => true,
             'message' => __('Messages has been modified successfully.'),
-            'data' => $this->messageRepository->update((int) $id, $request->validated()),
+            'data' => $this->messageRepository->update(
+                (int) $id,
+                $request->validated()
+            ),
         ]);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         $message = $this->messageRepository->getById((int) $id);
@@ -110,12 +95,6 @@ class MessageController extends Controller
         ]);
     }
 
-    /**
-     * Restore the specified resource in storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function restore(int $id)
     {
         $message = $this->messageRepository->getByIdWithTrashed($id);

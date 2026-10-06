@@ -10,7 +10,7 @@ use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 use App\Events\MessageEvent;
 use Illuminate\Support\Facades\Event;
-use App\Models\Like;
+use App\Models\MatchTable;
 use App\Models\Pet;
 use App\Models\Race;
 use App\Models\Species;
@@ -239,10 +239,7 @@ class MessageAuthorizationTest extends TestCase
         $senderPet = $this->createPet($sender);
         $receiverPet = $this->createPet($receiver);
 
-        Like::create([
-            'from' => $receiverPet->id,
-            'to' => $senderPet->id,
-        ]);
+        $this->establishMatch($senderPet, $receiverPet);
 
         Sanctum::actingAs($sender);
 
@@ -267,10 +264,7 @@ class MessageAuthorizationTest extends TestCase
         $senderPet = $this->createPet($sender);
         $receiverPet = $this->createPet($receiver);
 
-        Like::create([
-            'from' => $receiverPet->id,
-            'to' => $senderPet->id,
-        ]);
+        $this->establishMatch($senderPet, $receiverPet);
 
         Sanctum::actingAs($sender);
 
@@ -322,6 +316,26 @@ class MessageAuthorizationTest extends TestCase
             $this->assertSame($sender->id, $conversation->fresh()->first_user_id);
             $this->assertSame($receiver->id, $conversation->fresh()->seconde_user_id);
         }
+    }
+
+    private function establishMatch(
+        Pet $firstPet,
+        Pet $secondPet
+    ): void {
+        MatchTable::withoutEvents(function () use (
+            $firstPet,
+            $secondPet
+        ) {
+            MatchTable::create([
+                'from' => $firstPet->id,
+                'to' => $secondPet->id,
+            ]);
+
+            MatchTable::create([
+                'from' => $secondPet->id,
+                'to' => $firstPet->id,
+            ]);
+        });
     }
 
     private function createPet(User $user): Pet

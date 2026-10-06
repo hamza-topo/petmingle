@@ -4,31 +4,18 @@ namespace App\Repositories;
 
 use App\Models\Message;
 use Illuminate\Pagination\LengthAwarePaginator;
-use Illuminate\Support\Collection;
 
 class MessageRepository
 {
-
-    /**
-     * create
-     *
-     * @param  mixed $chat
-     * @return Message
-     */
     public function create(array $chat): Message
     {
         return Message::create($chat);
     }
 
-    /**
-     * update
-     *
-     * @param  mixed $messageId
-     * @param  mixed $newMessage
-     * @return Message
-     */
-    public function update(int $messageId, array $newMessage): Message
-    {
+    public function update(
+        int $messageId,
+        array $newMessage
+    ): Message {
         $message = $this->getById($messageId);
         $message->update($newMessage);
         $message->refresh();
@@ -36,34 +23,38 @@ class MessageRepository
         return $message;
     }
 
-    /**
-     * getById
-     *
-     * @param  mixed $messageId
-     * @return Message
-     */
     public function getById(int $messageId): Message
     {
         return Message::findOrFail($messageId);
     }
 
-    /**
-     * delete
-     *
-     * @param  mixed $messageId
-     * @return bool
-     */
     public function delete(int $messageId): bool
     {
         return Message::destroy($messageId);
     }
 
-    /**
-     * restore
-     *
-     * @param  mixed $messageId
-     * @return bool
-     */
+    public function deleteBetween(
+        int $firstUserId,
+        int $secondUserId
+    ): int {
+        return Message::query()
+            ->where(function ($query) use (
+                $firstUserId,
+                $secondUserId
+            ) {
+                $query
+                    ->where([
+                        'sender_id' => $firstUserId,
+                        'receiver_id' => $secondUserId,
+                    ])
+                    ->orWhere([
+                        'sender_id' => $secondUserId,
+                        'receiver_id' => $firstUserId,
+                    ]);
+            })
+            ->delete();
+    }
+
     public function restore(int $messageId): bool
     {
         return $this->getByIdWithTrashed($messageId)->restore();
@@ -74,16 +65,14 @@ class MessageRepository
         return Message::withTrashed()->findOrFail($messageId);
     }
 
-    /**
-     * messages
-     *
-     * @param  mixed $senderId
-     * @param  mixed $receiverId
-     * @return LengthAwarePaginator
-     */
-    public function messages(int $senderId, int $receiverId): LengthAwarePaginator
-    {
-        return Message::where(['sender_id' => $senderId, 'receiver_id' => $receiverId])
+    public function messages(
+        int $senderId,
+        int $receiverId
+    ): LengthAwarePaginator {
+        return Message::where([
+            'sender_id' => $senderId,
+            'receiver_id' => $receiverId,
+        ])
             ->with(['receiver.pet', 'sender.pet'])
             ->paginate();
     }
