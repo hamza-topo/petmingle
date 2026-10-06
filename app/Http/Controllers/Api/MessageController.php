@@ -6,7 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Message\Index;
 use App\Http\Requests\Api\Message\Store;
 use App\Http\Requests\Api\Message\Update;
-use App\Http\Resources\Api\Message\Chat;
+use App\Http\Resources\Api\Message\MessageResource;
+use App\Http\Responses\ApiResponse;
 use App\Reducer\Message\Conversation;
 use App\Repositories\ConversationRepository;
 use App\Repositories\MessageRepository;
@@ -20,20 +21,30 @@ class MessageController extends Controller
 
     public function index(Index $request)
     {
-        $receiverId = (int) $request->validated(
-            'receiver_id'
+        $validated = $request->validated();
+        $receiverId = (int) $validated['receiver_id'];
+        $perPage = (int) ($validated['per_page'] ?? 30);
+        $page = (int) ($validated['page'] ?? 1);
+
+        $messages = $this->messageRepository->messagesBetween(
+            (int) $request->user()->id,
+            $receiverId,
+            $perPage,
+            $page
         );
 
-        return response()->json([
-            'success' => true,
-            'message' => __('Messages has been fetched successfully.'),
-            'data' => new Chat(
-                $this->messageRepository->messages(
-                    (int) $request->user()->id,
-                    $receiverId
-                )
-            ),
+        $messages->appends([
+            'receiver_id' => $receiverId,
+            'per_page' => $perPage,
         ]);
+
+        return ApiResponse::paginated(
+            $messages,
+            MessageResource::collection(
+                $messages->getCollection()
+            )->resolve(),
+            __('Message thread.')
+        );
     }
 
     public function create()
