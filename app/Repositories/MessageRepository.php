@@ -69,6 +69,30 @@ class MessageRepository
             ->findOrFail($messageId);
     }
 
+    public function markSeenInConversation(
+        int $conversationId,
+        int $receiverUserId
+    ): int {
+        return Message::query()
+            ->where('conversation_id', $conversationId)
+            ->where('receiver_id', $receiverUserId)
+            ->where('is_seen', false)
+            ->update([
+                'is_seen' => true,
+            ]);
+    }
+
+    public function unreadCountInConversation(
+        int $conversationId,
+        int $receiverUserId
+    ): int {
+        return Message::query()
+            ->where('conversation_id', $conversationId)
+            ->where('receiver_id', $receiverUserId)
+            ->where('is_seen', false)
+            ->count();
+    }
+
     public function messagesBetween(
         int $firstUserId,
         int $secondUserId,
