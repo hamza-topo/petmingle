@@ -5,6 +5,13 @@ on:
     branches:
       - quality/90-pint-phpstan-gates
 
+permissions:
+  contents: write
+
+concurrency:
+  group: q90-dependency-generation
+  cancel-in-progress: true
+
 jobs:
   generate:
     runs-on: ubuntu-latest
@@ -26,8 +33,8 @@ jobs:
       - name: Prepare app for Larastan
         run: |
           cp .env.example .env
-          php artisan key:generate || true
-          mkdir -p storage/framework/cache
+          php artisan key:generate
+          mkdir -p storage/framework/cache/phpstan
 
       - name: Lint application PHP
         run: |
@@ -38,11 +45,14 @@ jobs:
           printf 'parameters:\n    ignoreErrors: []\n' > phpstan-baseline.neon
           vendor/bin/phpstan analyse --generate-baseline=phpstan-baseline.neon --memory-limit=1G
 
-      - name: Upload generated files
-        uses: actions/upload-artifact@v4
-        with:
-          name: q90-generated
-          path: |
-            composer.lock
-            phpstan-baseline.neon
-          if-no-files-found: error
+      - name: Commit generated files
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add composer.lock phpstan-baseline.neon
+          if git diff --cached --quiet; then
+            echo "Generated files are already stable."
+            exit 0
+          fi
+          git commit -m "build(quality): lock Pint and Larastan baseline"
+          git push origin HEAD:quality/90-pint-phpstan-gates
