@@ -31,12 +31,13 @@ class SeoRepository
             if ($trashed !== null) {
                 $trashed->fill($seo);
                 $trashed->restore();
+                $trashed->refresh();
                 $this->cacheService->clear($trashed->key);
 
                 return $trashed;
             }
 
-            $created = Seo::create($seo);
+            $created = Seo::create($seo)->refresh();
             $this->cacheService->clear($created->key);
 
             return $created;
