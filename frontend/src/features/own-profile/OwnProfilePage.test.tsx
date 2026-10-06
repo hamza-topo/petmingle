@@ -586,14 +586,13 @@ describe('Own pet profile', () => {
       photo,
     );
 
-    expect(
-      screen.getByRole('img', {
-        name: 'Milo pending photo preview',
-      }),
-    ).toHaveAttribute(
-      'src',
-      'blob:profile-preview',
-    );
+    const previews = screen.getAllByRole('img', {
+      name: 'Milo pending photo preview',
+    });
+    expect(previews).toHaveLength(2);
+    for (const preview of previews) {
+      expect(preview).toHaveAttribute('src', 'blob:profile-preview');
+    }
 
     await user.click(
       screen.getByRole('button', {
