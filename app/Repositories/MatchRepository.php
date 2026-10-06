@@ -53,13 +53,13 @@ class MatchRepository
         return MatchTable::all();
     }
 
-    // TODO:paginate the result
+    // TODO #174: paginate without changing the API envelope.
     public function matches(int $petId): Collection
     {
         return MatchTable::where('from', $petId)->with('toPet')->get();
     }
 
-    // TODO:paginate the result
+    // TODO #174: paginate without changing the API envelope.
     public function mismatches(int $petId): Collection
     {
         return MatchTable::onlyTrashed()->where('from', $petId)->get();

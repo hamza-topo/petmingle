@@ -30,7 +30,7 @@ Route::prefix('/admin')->middleware(['admin'])->name('admin.')->group(function (
     // toggle trashed
 
     Route::get('/home', [HomeController::class, 'index']);
-    Route::get('/settings', [SettingController::class, 'index']);
+    Route::get('/settings', [SettingController::class, 'index'])->name('profile.index');
     Route::put('/settings', [SettingController::class, 'update'])->name('profile.update');
     Route::resource('pets', PetController::class);
     Route::resource('species', SpeciesController::class);
@@ -38,8 +38,8 @@ Route::prefix('/admin')->middleware(['admin'])->name('admin.')->group(function (
     Route::resource('adoptions', AdoptionController::class);
     Route::resource('users', UserController::class);
     Route::resource('seo', SeoController::class);
-    Route::resource('components', ComponentController::class);
-    Route::resource('blogs', BlogController::class);
+    Route::resource('components', ComponentController::class)->only(['index', 'create', 'store', 'edit']);
+    Route::resource('blogs', BlogController::class)->except(['show']);
     Route::post('blogs/upload', [BlogController::class, 'uploadMedia'])->name('blogs.upload');
     Route::get('blogs-scheduled', [BlogController::class, 'scheduled'])->name('blogs.scheduled');
     Route::get('mail-list', [NewsLetterController::class, 'index'])->name('mail.list');

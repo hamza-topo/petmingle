@@ -30,10 +30,6 @@ Route::get('user/register/', [WebAuthController::class, 'register'])->name('user
 Route::post('user/login/', [WebAuthController::class, 'signIn'])->name('user.login.signIn');
 Route::post('user/register/', [WebAuthController::class, 'signUp'])->name('user.register.signUp');
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
 Route::group([], function ($router) {
     $router->get('/about', AboutController::class)->name('about');
     $router->get('/contact', [ContactController::class, 'index'])->name('contact');

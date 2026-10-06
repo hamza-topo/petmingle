@@ -35,11 +35,6 @@ class LikeController extends Controller
         );
     }
 
-    public function create()
-    {
-        //
-    }
-
     public function store(Store $request)
     {
         $targetPetId = (int) $request->validated(
@@ -68,26 +63,6 @@ class LikeController extends Controller
             (new LikeResource($like))->resolve(),
             __('Like processed.')
         );
-    }
-
-    public function show($id)
-    {
-        //
-    }
-
-    public function edit($id)
-    {
-        //
-    }
-
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    public function destroy($id)
-    {
-        //
     }
 
     private function sourcePetId(Request $request): int

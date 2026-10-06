@@ -33,11 +33,6 @@ class DislikeController extends Controller
         );
     }
 
-    public function create()
-    {
-        //
-    }
-
     public function store(Store $request)
     {
         $dislike = $this->dislikeRepository->process(
@@ -49,26 +44,6 @@ class DislikeController extends Controller
             (new DislikeResource($dislike))->resolve(),
             __('Dislike processed.')
         );
-    }
-
-    public function show($id)
-    {
-        //
-    }
-
-    public function edit($id)
-    {
-        //
-    }
-
-    public function update(Request $request, $id)
-    {
-        //
-    }
-
-    public function destroy($id)
-    {
-        //
     }
 
     private function sourcePetId(Request $request): int

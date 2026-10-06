@@ -1,11 +1,3 @@
-parameters:
-	ignoreErrors:
-		-
-			message: '#^Method App\\Console\\Commands\\PublishBlogs\:\:handle\(\) should return int but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Console/Commands/PublishBlogs.php
-
 		-
 			message: '#^Unsafe call to private method App\\Enums\\Enum\:\:getProperty\(\) through static\:\:\.$#'
 			identifier: staticClassAccess.privateMethod
@@ -139,12 +131,6 @@ parameters:
 			path: app/Http/Controllers/Admin/BlogController.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\Admin\\BlogController\:\:show\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Admin/BlogController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\Admin\\BlogController\:\:store\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
 			identifier: return.type
 			count: 2
@@ -169,12 +155,6 @@ parameters:
 			path: app/Http/Controllers/Admin/ComponentController.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\Admin\\ComponentController\:\:destroy\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Admin/ComponentController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\Admin\\ComponentController\:\:edit\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
 			identifier: return.type
 			count: 1
@@ -187,21 +167,9 @@ parameters:
 			path: app/Http/Controllers/Admin/ComponentController.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\Admin\\ComponentController\:\:show\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Admin/ComponentController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\Admin\\ComponentController\:\:store\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
 			identifier: return.type
 			count: 2
-			path: app/Http/Controllers/Admin/ComponentController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Admin\\ComponentController\:\:update\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
 			path: app/Http/Controllers/Admin/ComponentController.php
 
 		-
@@ -217,44 +185,8 @@ parameters:
 			path: app/Http/Controllers/Admin/HomeController.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\Admin\\NewsLetterController\:\:create\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Admin/NewsLetterController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Admin\\NewsLetterController\:\:destroy\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Admin/NewsLetterController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Admin\\NewsLetterController\:\:edit\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Admin/NewsLetterController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\Admin\\NewsLetterController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
 			identifier: return.type
-			count: 1
-			path: app/Http/Controllers/Admin/NewsLetterController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Admin\\NewsLetterController\:\:show\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Admin/NewsLetterController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Admin\\NewsLetterController\:\:store\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Admin/NewsLetterController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Admin\\NewsLetterController\:\:update\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: app/Http/Controllers/Admin/NewsLetterController.php
 
@@ -414,38 +346,8 @@ parameters:
 			path: app/Http/Controllers/Admin/SeoController.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\Admin\\SettingController\:\:create\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Admin/SettingController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Admin\\SettingController\:\:destroy\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Admin/SettingController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Admin\\SettingController\:\:edit\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Admin/SettingController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\Admin\\SettingController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
 			identifier: return.type
-			count: 1
-			path: app/Http/Controllers/Admin/SettingController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Admin\\SettingController\:\:show\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Admin/SettingController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Admin\\SettingController\:\:store\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: app/Http/Controllers/Admin/SettingController.php
 
@@ -684,92 +586,14 @@ parameters:
 			path: app/Http/Controllers/Api/BlockController.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\Api\\ChatController\:\:create\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Api/ChatController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Api\\ChatController\:\:destroy\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Api/ChatController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Api\\ChatController\:\:edit\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Api/ChatController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Api\\ChatController\:\:index\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Api/ChatController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Api\\ChatController\:\:show\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Api/ChatController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Api\\ChatController\:\:store\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Api/ChatController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Api\\ChatController\:\:update\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Api/ChatController.php
-
-		-
 			message: '#^Access to an undefined property App\\Models\\User\:\:\$pet\.$#'
 			identifier: property.notFound
 			count: 1
 			path: app/Http/Controllers/Api/DislikeController.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\Api\\FilterController\:\:create\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Api/FilterController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Api\\FilterController\:\:destroy\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Api/FilterController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Api\\FilterController\:\:edit\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Api/FilterController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\Api\\FilterController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
 			identifier: return.type
-			count: 1
-			path: app/Http/Controllers/Api/FilterController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Api\\FilterController\:\:show\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Api/FilterController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Api\\FilterController\:\:store\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Api/FilterController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Api\\FilterController\:\:update\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: app/Http/Controllers/Api/FilterController.php
 
@@ -858,24 +682,6 @@ parameters:
 			path: app/Http/Controllers/Api/MatchController.php
 
 		-
-			message: '#^Method App\\Http\\Controllers\\Api\\MatchController\:\:create\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Api/MatchController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Api\\MatchController\:\:destroy\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Api/MatchController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Api\\MatchController\:\:edit\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Api/MatchController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\Api\\MatchController\:\:matches\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
 			identifier: return.type
 			count: 1
@@ -884,24 +690,6 @@ parameters:
 		-
 			message: '#^Method App\\Http\\Controllers\\Api\\MatchController\:\:mismatches\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
 			identifier: return.type
-			count: 1
-			path: app/Http/Controllers/Api/MatchController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Api\\MatchController\:\:show\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Api/MatchController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Api\\MatchController\:\:store\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Http/Controllers/Api/MatchController.php
-
-		-
-			message: '#^Method App\\Http\\Controllers\\Api\\MatchController\:\:update\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
-			identifier: return.missing
 			count: 1
 			path: app/Http/Controllers/Api/MatchController.php
 
@@ -1050,12 +838,6 @@ parameters:
 			path: app/Http/Controllers/Web/BlogController.php
 
 		-
-			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
-			identifier: larastan.noEnvCallsOutsideOfConfig
-			count: 1
-			path: app/Http/Controllers/Web/ContactController.php
-
-		-
 			message: '#^Method App\\Http\\Controllers\\Web\\ContactController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
 			identifier: return.type
 			count: 1
@@ -1070,12 +852,6 @@ parameters:
 		-
 			message: '#^PHPDoc tag @param for parameter \$request with type Illuminate\\Http\\Request is not subtype of native type App\\Http\\Requests\\Web\\Contact\\Store\.$#'
 			identifier: parameter.phpDocType
-			count: 1
-			path: app/Http/Controllers/Web/ContactController.php
-
-		-
-			message: '#^Unreachable statement \- code above always terminates\.$#'
-			identifier: deadCode.unreachable
 			count: 1
 			path: app/Http/Controllers/Web/ContactController.php
 
@@ -1413,18 +1189,6 @@ parameters:
 			message: '#^Expression on left side of \?\? is not nullable\.$#'
 			identifier: nullCoalesce.expr
 			count: 1
-			path: app/Mail/Contact.php
-
-		-
-			message: '#^Method App\\Mail\\Contact\:\:build\(\) should return \$this\(App\\Mail\\Contact\) but return statement is missing\.$#'
-			identifier: return.missing
-			count: 1
-			path: app/Mail/Contact.php
-
-		-
-			message: '#^Expression on left side of \?\? is not nullable\.$#'
-			identifier: nullCoalesce.expr
-			count: 1
 			path: app/Mail/GoodBye.php
 
 		-
@@ -1568,12 +1332,6 @@ parameters:
 		-
 			message: '#^PHPDoc tag @param for parameter \$adoptionId with type mixed is not subtype of native type int\.$#'
 			identifier: parameter.phpDocType
-			count: 1
-			path: app/Repositories/ComponentRepository.php
-
-		-
-			message: '#^Relation ''toPet'' is not found in App\\Models\\Component model\.$#'
-			identifier: larastan.relationExistence
 			count: 1
 			path: app/Repositories/ComponentRepository.php
 

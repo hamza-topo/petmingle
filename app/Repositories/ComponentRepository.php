@@ -37,12 +37,6 @@ class ComponentRepository
         return Component::destroy($adoptionId);
     }
 
-    public function mismatch(array $component): bool
-    {
-        return Component::where(['from' => $component['from'], 'to' => $component['to']])
-            ->orWhere(['from' => $component['to'], 'to' => $component['from']])->delete();
-    }
-
     public function restore(int $adoptionId): bool
     {
         return Component::withTrashed()->findOrFail($adoptionId)->restore();
@@ -51,18 +45,6 @@ class ComponentRepository
     public function all(): Collection
     {
         return Component::all();
-    }
-
-    // TODO:paginate the result
-    public function matches(int $petId): Collection
-    {
-        return Component::where('from', $petId)->with('toPet')->get();
-    }
-
-    // TODO:paginate the result
-    public function mismatches(int $petId): Collection
-    {
-        return Component::onlyTrashed()->where('from', $petId)->get();
     }
 
     public function getByName(string $name): ?Component

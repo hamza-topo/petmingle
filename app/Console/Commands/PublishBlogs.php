@@ -8,48 +8,28 @@ use Illuminate\Console\Command;
 
 class PublishBlogs extends Command
 {
-    /**
-     * The name and signature of the console command.
-     *
-     * @var string
-     */
     protected $signature = 'blogs:publish';
 
-    /**
-     * The console command description.
-     *
-     * @var string
-     */
-    protected $description = 'Command description';
+    protected $description = 'Publish scheduled blogs whose publication time has arrived';
 
-    /**
-     * Create a new command instance.
-     *
-     * @return void
-     */
     public function __construct(protected BlogRepository $blogRepository)
     {
         parent::__construct();
     }
 
-    /**
-     * Execute the console command.
-     *
-     * @return int
-     */
-    public function handle()
+    public function handle(): int
     {
         try {
-            $now = Carbon::now();
-            // Clone the $now instance before modifying it
-            $nowPlusTen = (clone $now)->addMinutes(10);
-            $drafts = $this->blogRepository->getScheduledFor([$now->format('Y-m-d H:i:s'), $nowPlusTen->format('Y-m-d H:i:s')]);
+            $drafts = $this->blogRepository->getDueForPublication(Carbon::now()->format('Y-m-d H:i:s'));
+            $count = $this->blogRepository->publishBulk($drafts->pluck('id')->all());
+            $this->info("Published {$count} blogs.");
 
-            return $this->blogRepository->publishBulk($drafts->map(function ($row) {
-                return $row->id;
-            })->toArray());
+            return self::SUCCESS;
         } catch (\Exception $e) {
-            // throw $th;
+            report($e);
+            $this->error('Blog publication failed.');
+
+            return self::FAILURE;
         }
     }
 }

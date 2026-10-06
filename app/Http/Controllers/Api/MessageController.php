@@ -49,11 +49,6 @@ class MessageController extends Controller
         );
     }
 
-    public function create()
-    {
-        //
-    }
-
     public function store(Store $request)
     {
         $data = $request->validated();

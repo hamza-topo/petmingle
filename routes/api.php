@@ -15,17 +15,6 @@ use App\Http\Controllers\Api\RaceController;
 use App\Http\Controllers\Api\SpeciesController;
 use Illuminate\Support\Facades\Route;
 
-/*
-|--------------------------------------------------------------------------
-| Auth Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API Ayth routes for app. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
-
 Route::prefix('v.0')->group(function () {
     Route::post('/sign-in', [AuthController::class, 'signIn']);
     Route::post('/sign-up', [AuthController::class, 'signUp']);
@@ -33,16 +22,6 @@ Route::prefix('v.0')->group(function () {
     Route::get('/login/{provider}/callback', [AuthController::class, 'handleProviderCallback']);
 });
 
-/*
-|--------------------------------------------------------------------------
-| Api Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API Ayth routes for app. These
-| routes are loaded by the RouteServiceProvider within a group which
-| is assigned the "api" middleware group. Enjoy building your API!
-|
-*/
 Route::prefix('v.0')->middleware('auth:sanctum')->group(function () {
 
     Route::get('/me', [AuthController::class, 'me']);
@@ -60,21 +39,21 @@ Route::prefix('v.0')->middleware('auth:sanctum')->group(function () {
 
     Route::put('/pets/restore/{id}', [PetController::class, 'restore']);
     Route::get('/pets/{id}/statistics', [PetController::class, 'statistics']);
-    Route::resources(['pets' => PetController::class]);
+    Route::apiResource('pets', PetController::class);
 
     Route::put('/races/restore/{id}', [RaceController::class, 'restore']);
-    Route::resources(['races' => RaceController::class]);
+    Route::apiResource('races', RaceController::class);
 
     Route::put('/species/restore/{id}', [SpeciesController::class, 'restore']);
-    Route::resources(['species' => SpeciesController::class]);
+    Route::apiResource('species', SpeciesController::class);
 
     Route::put('/locations/restore/{id}', [LocationController::class, 'restore']);
     Route::post('/locations/nears/', [LocationController::class, 'near']);
     Route::post('/locations/filters/', [LocationController::class, 'filter']);
-    Route::resources(['locations' => LocationController::class]);
+    Route::apiResource('locations', LocationController::class);
 
-    Route::resources(['dislikes' => DislikeController::class]);
-    Route::resources(['likes' => LikeController::class]);
+    Route::apiResource('dislikes', DislikeController::class)->only(['index', 'store']);
+    Route::apiResource('likes', LikeController::class)->only(['index', 'store']);
 
     Route::get('matches', [MatchController::class, 'matches']);
     Route::get('mismatches', [MatchController::class, 'mismatches']);
@@ -87,7 +66,7 @@ Route::prefix('v.0')->middleware('auth:sanctum')->group(function () {
 
     Route::post('/messages/typing', [MessageController::class, 'typing']);
     Route::put('/messages/restore/{id}', [MessageController::class, 'restore']);
-    Route::resources(['messages' => MessageController::class]);
+    Route::apiResource('messages', MessageController::class)->only(['index', 'store', 'update', 'destroy']);
 
     Route::get('filters', [FilterController::class, 'index']);
 });
