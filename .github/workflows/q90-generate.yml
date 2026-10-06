@@ -21,7 +21,7 @@ jobs:
 
       - name: Resolve quality dependencies
         run: |
-          composer update laravel/pint larastan/larastan --with-all-dependencies --no-interaction --no-progress --no-scripts
+          composer update laravel/pint larastan/larastan --with-dependencies --no-interaction --no-progress --no-scripts
 
       - name: Prepare app for Larastan
         run: |
