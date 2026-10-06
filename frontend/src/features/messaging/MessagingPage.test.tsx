@@ -533,14 +533,20 @@ describe('Messaging persisted reads', () => {
       ),
     ).toBeVisible();
 
+    const timeline = within(
+      screen.getByRole('list', {
+        name: 'Messages in active conversation',
+      }),
+    );
+
     expect(
-      screen.queryByText(
+      timeline.queryByText(
         'Luna realtime',
       ),
     ).not.toBeInTheDocument();
 
     expect(
-      screen.getByText('Hello from Milo'),
+      timeline.getByText('Hello from Milo'),
     ).toBeVisible();
   });
 
