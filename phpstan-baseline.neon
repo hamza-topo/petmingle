@@ -1,0 +1,1902 @@
+parameters:
+	ignoreErrors:
+		-
+			message: '#^Method App\\Console\\Commands\\PublishBlogs\:\:handle\(\) should return int but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Console/Commands/PublishBlogs.php
+
+		-
+			message: '#^Unsafe call to private method App\\Enums\\Enum\:\:getProperty\(\) through static\:\:\.$#'
+			identifier: staticClassAccess.privateMethod
+			count: 2
+			path: app/Enums/Enum.php
+
+		-
+			message: '#^Unsafe usage of new static\(\)\.$#'
+			identifier: new.static
+			count: 2
+			path: app/Enums/Enum.php
+
+		-
+			message: '#^PHPDoc tag @param references unknown parameter\: \$status$#'
+			identifier: parameter.notFound
+			count: 1
+			path: app/Enums/User.php
+
+		-
+			message: '#^PHPDoc tag @return with type string is incompatible with native type array\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: app/Enums/User.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\MatchTable\:\:\$fromPet\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Events/MatchEvent.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\MatchTable\:\:\$toPet\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Events/MatchEvent.php
+
+		-
+			message: '#^Call to an undefined method Illuminate\\Database\\Eloquent\\Builder\:\:withTrashed\(\)\.$#'
+			identifier: method.notFound
+			count: 1
+			path: app/Factories/TrashedFactory.php
+
+		-
+			message: '#^Offset ''age'' does not exist on ''filters''\.$#'
+			identifier: offsetAccess.notFound
+			count: 1
+			path: app/Filters/PetFilter.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: app/Helpers/Helper.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\AdoptionController\:\:create\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/AdoptionController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\AdoptionController\:\:destroy\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/AdoptionController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\AdoptionController\:\:edit\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/AdoptionController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\AdoptionController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/AdoptionController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\AdoptionController\:\:show\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/AdoptionController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\AdoptionController\:\:store\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 2
+			path: app/Http/Controllers/Admin/AdoptionController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\AdoptionController\:\:update\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 2
+			path: app/Http/Controllers/Admin/AdoptionController.php
+
+		-
+			message: '#^Method App\\Repositories\\AdoptionRepository\:\:paginate\(\) invoked with 1 parameter, 0 required\.$#'
+			identifier: arguments.count
+			count: 1
+			path: app/Http/Controllers/Admin/AdoptionController.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$request with type Illuminate\\Http\\Request is not subtype of native type App\\Http\\Requests\\Api\\Adoption\\Store\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Http/Controllers/Admin/AdoptionController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\BlogController\:\:create\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/BlogController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\BlogController\:\:destroy\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 2
+			path: app/Http/Controllers/Admin/BlogController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\BlogController\:\:edit\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/BlogController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\BlogController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/BlogController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\BlogController\:\:show\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/BlogController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\BlogController\:\:store\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 2
+			path: app/Http/Controllers/Admin/BlogController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\BlogController\:\:update\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 2
+			path: app/Http/Controllers/Admin/BlogController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\BlogController\:\:uploadMedia\(\) should return Illuminate\\Http\\Response but returns array\<string, string\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/BlogController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\ComponentController\:\:create\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/ComponentController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\ComponentController\:\:destroy\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/ComponentController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\ComponentController\:\:edit\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/ComponentController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\ComponentController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/ComponentController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\ComponentController\:\:show\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/ComponentController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\ComponentController\:\:store\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 2
+			path: app/Http/Controllers/Admin/ComponentController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\ComponentController\:\:update\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/ComponentController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\HomeController\:\:index\(\) has invalid return type App\\Http\\Controllers\\Admin\\A\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/Admin/HomeController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\HomeController\:\:index\(\) should return App\\Http\\Controllers\\Admin\\A but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/HomeController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\NewsLetterController\:\:create\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/NewsLetterController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\NewsLetterController\:\:destroy\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/NewsLetterController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\NewsLetterController\:\:edit\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/NewsLetterController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\NewsLetterController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/NewsLetterController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\NewsLetterController\:\:show\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/NewsLetterController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\NewsLetterController\:\:store\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/NewsLetterController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\NewsLetterController\:\:update\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/NewsLetterController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\PetController\:\:create\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/PetController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\PetController\:\:destroy\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/PetController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\PetController\:\:edit\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/PetController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\PetController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/PetController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\PetController\:\:show\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/PetController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\PetController\:\:store\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 2
+			path: app/Http/Controllers/Admin/PetController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\PetController\:\:update\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 2
+			path: app/Http/Controllers/Admin/PetController.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$request with type Illuminate\\Http\\Request is not subtype of native type App\\Http\\Requests\\Api\\Pet\\Store\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Http/Controllers/Admin/PetController.php
+
+		-
+			message: '#^Call to an undefined static method Illuminate\\Support\\Facades\\Log\:\:erro\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 1
+			path: app/Http/Controllers/Admin/RaceController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\RaceController\:\:create\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/RaceController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\RaceController\:\:destroy\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/RaceController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\RaceController\:\:destroy\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/RaceController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\RaceController\:\:edit\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/RaceController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\RaceController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/RaceController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\RaceController\:\:show\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/RaceController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\RaceController\:\:store\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/RaceController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\RaceController\:\:store\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/RaceController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\RaceController\:\:update\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/RaceController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\RaceController\:\:update\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/RaceController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SeoController\:\:create\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/SeoController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SeoController\:\:edit\(\) with return type void returns Illuminate\\View\\View but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: app/Http/Controllers/Admin/SeoController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SeoController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/SeoController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SeoController\:\:store\(\) with return type void returns Illuminate\\Http\\RedirectResponse but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: app/Http/Controllers/Admin/SeoController.php
+
+		-
+			message: '''
+				#^PHPDoc tag @param has invalid value \(Request 
+				\| request The `Request ` parameter in the `store` function represents an
+				\| HTTP request that contains all the data submitted by the user\. In this context, it is used to
+				\| retrieve all input data from the request to create a new SEO page using the `seoRepository`\.\)\: Unexpected token "The", expected variable at offset 199 on line 6$#
+			'''
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Http/Controllers/Admin/SeoController.php
+
+		-
+			message: '#^PHPDoc tag @property\-read has invalid value \(SeoRepository\)\: Unexpected token "\\n     \*", expected variable at offset 39 on line 2$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Http/Controllers/Admin/SeoController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SettingController\:\:create\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/SettingController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SettingController\:\:destroy\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/SettingController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SettingController\:\:edit\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/SettingController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SettingController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/SettingController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SettingController\:\:show\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/SettingController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SettingController\:\:store\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/SettingController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SettingController\:\:update\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 2
+			path: app/Http/Controllers/Admin/SettingController.php
+
+		-
+			message: '#^Call to an undefined static method Illuminate\\Support\\Facades\\Log\:\:erro\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/Http/Controllers/Admin/SpeciesController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SpeciesController\:\:create\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/SpeciesController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SpeciesController\:\:destroy\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/SpeciesController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SpeciesController\:\:destroy\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/SpeciesController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SpeciesController\:\:edit\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/SpeciesController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SpeciesController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/SpeciesController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SpeciesController\:\:restore\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/SpeciesController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SpeciesController\:\:restore\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/SpeciesController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SpeciesController\:\:show\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/SpeciesController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SpeciesController\:\:store\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 2
+			path: app/Http/Controllers/Admin/SpeciesController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\SpeciesController\:\:update\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 2
+			path: app/Http/Controllers/Admin/SpeciesController.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$request with type Illuminate\\Http\\Request is not subtype of native type App\\Http\\Requests\\Api\\Species\\Store\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Http/Controllers/Admin/SpeciesController.php
+
+		-
+			message: '#^Call to an undefined static method Illuminate\\Support\\Facades\\Log\:\:erro\(\)\.$#'
+			identifier: staticMethod.notFound
+			count: 2
+			path: app/Http/Controllers/Admin/UserController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\UserController\:\:create\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/UserController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\UserController\:\:destroy\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/UserController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\UserController\:\:destroy\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/UserController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\UserController\:\:edit\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/UserController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\UserController\:\:restore\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Admin/UserController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\UserController\:\:restore\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/UserController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\UserController\:\:show\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Admin/UserController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\UserController\:\:store\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 2
+			path: app/Http/Controllers/Admin/UserController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Admin\\UserController\:\:update\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 2
+			path: app/Http/Controllers/Admin/UserController.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$request with type Illuminate\\Http\\Request is not subtype of native type App\\Http\\Requests\\Web\\User\\Store\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Http/Controllers/Admin/UserController.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$request with type Illuminate\\Http\\Request is not subtype of native type App\\Http\\Requests\\Web\\User\\Update\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Http/Controllers/Admin/UserController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\User\:\:\$pet\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/AuthController.php
+
+		-
+			message: '#^Call to an undefined method Laravel\\Socialite\\Contracts\\Provider\:\:stateless\(\)\.$#'
+			identifier: method.notFound
+			count: 2
+			path: app/Http/Controllers/Api/AuthController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\AuthController\:\:handleProviderCallback\(\) has invalid return type App\\Http\\Controllers\\Api\\JsonResponse\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/Api/AuthController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\AuthController\:\:handleProviderCallback\(\) should return App\\Http\\Controllers\\Api\\JsonResponse but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/AuthController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\AuthController\:\:handleProviderCallback\(\) should return App\\Http\\Controllers\\Api\\JsonResponse but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/AuthController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\AuthController\:\:redirectToProvider\(\) has invalid return type App\\Http\\Controllers\\Api\\JsonResponse\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/Api/AuthController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\AuthController\:\:signIn\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 2
+			path: app/Http/Controllers/Api/AuthController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\AuthController\:\:signUp\(\) has invalid return type App\\Http\\Controllers\\Api\\Symfony\\Component\\HttpFoundation\\Response\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/Api/AuthController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\AuthController\:\:validateProvider\(\) has invalid return type App\\Http\\Controllers\\Api\\JsonResponse\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/Api/AuthController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\AuthController\:\:validateProvider\(\) should return App\\Http\\Controllers\\Api\\JsonResponse but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/AuthController.php
+
+		-
+			message: '#^PHPDoc tag @return with type App\\Http\\Controllers\\Api\\Symfony\\Component\\HttpFoundation\\Response is not subtype of native type Symfony\\Component\\HttpFoundation\\Response\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: app/Http/Controllers/Api/AuthController.php
+
+		-
+			message: '#^Using nullsafe method call on non\-nullable type Laravel\\Sanctum\\PersonalAccessToken\. Use \-\> instead\.$#'
+			identifier: nullsafe.neverNull
+			count: 1
+			path: app/Http/Controllers/Api/AuthController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\BlockController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/BlockController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\BlockController\:\:store\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/BlockController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\ChatController\:\:create\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/ChatController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\ChatController\:\:destroy\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/ChatController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\ChatController\:\:edit\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/ChatController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\ChatController\:\:index\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/ChatController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\ChatController\:\:show\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/ChatController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\ChatController\:\:store\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/ChatController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\ChatController\:\:update\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/ChatController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\User\:\:\$pet\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/DislikeController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\FilterController\:\:create\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/FilterController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\FilterController\:\:destroy\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/FilterController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\FilterController\:\:edit\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/FilterController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\FilterController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/FilterController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\FilterController\:\:show\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/FilterController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\FilterController\:\:store\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/FilterController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\FilterController\:\:update\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/FilterController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\LangController\:\:current\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/LangController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\LangController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/LangController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\LangController\:\:set\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/LangController.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$request with type Illuminate\\Http\\Request is not subtype of native type App\\Http\\Requests\\Api\\Languages\\SetLanguage\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Http/Controllers/Api/LangController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\User\:\:\$pet\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/LikeController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\User\:\:\$pet\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Controllers/Api/LocationController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\LocationController\:\:destroy\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/LocationController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\LocationController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/LocationController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\LocationController\:\:restore\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/LocationController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\LocationController\:\:show\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/LocationController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\LocationController\:\:store\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/LocationController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\LocationController\:\:update\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/LocationController.php
+
+		-
+			message: '#^Parameter \#1 \$locationId of method App\\Repositories\\LocationRepository\:\:getById\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 3
+			path: app/Http/Controllers/Api/LocationController.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\User\:\:\$pet\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Http/Controllers/Api/MatchController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\MatchController\:\:create\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/MatchController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\MatchController\:\:destroy\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/MatchController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\MatchController\:\:edit\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/MatchController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\MatchController\:\:matches\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/MatchController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\MatchController\:\:mismatches\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/MatchController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\MatchController\:\:show\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/MatchController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\MatchController\:\:store\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/MatchController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\MatchController\:\:update\(\) should return Illuminate\\Http\\Response but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Controllers/Api/MatchController.php
+
+		-
+			message: '#^Variable \$conversation in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: app/Http/Controllers/Api/MessageController.php
+
+		-
+			message: '#^Call to function is_array\(\) with array will always evaluate to true\.$#'
+			identifier: function.alreadyNarrowedType
+			count: 1
+			path: app/Http/Controllers/Api/PetController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\RaceController\:\:destroy\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/RaceController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\RaceController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/RaceController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\RaceController\:\:restore\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/RaceController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\RaceController\:\:show\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/RaceController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\RaceController\:\:store\(\) has invalid return type App\\Http\\Controllers\\Api\\Illuminate\\Http\\Response\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/Api/RaceController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\RaceController\:\:store\(\) should return App\\Http\\Controllers\\Api\\Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/RaceController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\RaceController\:\:update\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/RaceController.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$request with type App\\Http\\Requests\\RaceRequest is not subtype of native type App\\Http\\Requests\\Api\\Race\\Store\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Http/Controllers/Api/RaceController.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$request with type Illuminate\\Http\\Request is not subtype of native type App\\Http\\Requests\\Api\\Race\\Update\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Http/Controllers/Api/RaceController.php
+
+		-
+			message: '#^Parameter \$request of method App\\Http\\Controllers\\Api\\RaceController\:\:store\(\) has invalid type App\\Http\\Requests\\RaceRequest\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/Api/RaceController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\SpeciesController\:\:destroy\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/SpeciesController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\SpeciesController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/SpeciesController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\SpeciesController\:\:restore\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/SpeciesController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\SpeciesController\:\:show\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/SpeciesController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\SpeciesController\:\:store\(\) has invalid return type App\\Http\\Controllers\\Api\\Illuminate\\Http\\Response\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/Api/SpeciesController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\SpeciesController\:\:store\(\) should return App\\Http\\Controllers\\Api\\Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/SpeciesController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Api\\SpeciesController\:\:update\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\JsonResponse\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Api/SpeciesController.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$request with type App\\Http\\Requests\\Request is not subtype of native type App\\Http\\Requests\\Api\\Species\\Store\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Http/Controllers/Api/SpeciesController.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$request with type Illuminate\\Http\\Request is not subtype of native type App\\Http\\Requests\\Api\\Species\\Update\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Http/Controllers/Api/SpeciesController.php
+
+		-
+			message: '#^Parameter \$request of method App\\Http\\Controllers\\Api\\SpeciesController\:\:store\(\) has invalid type App\\Http\\Requests\\Request\.$#'
+			identifier: class.notFound
+			count: 1
+			path: app/Http/Controllers/Api/SpeciesController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Web\\BlogController\:\:index\(\) with return type void returns Illuminate\\View\\View but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: app/Http/Controllers/Web/BlogController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Web\\BlogController\:\:read\(\) with return type void returns Illuminate\\View\\View but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: app/Http/Controllers/Web/BlogController.php
+
+		-
+			message: '#^Called ''env'' outside of the config directory which returns null when the config is cached, use ''config''\.$#'
+			identifier: larastan.noEnvCallsOutsideOfConfig
+			count: 1
+			path: app/Http/Controllers/Web/ContactController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Web\\ContactController\:\:index\(\) should return Illuminate\\Http\\Response but returns Illuminate\\View\\View\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Http/Controllers/Web/ContactController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Web\\ContactController\:\:store\(\) should return Illuminate\\Http\\Response but returns Illuminate\\Http\\RedirectResponse\.$#'
+			identifier: return.type
+			count: 2
+			path: app/Http/Controllers/Web/ContactController.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$request with type Illuminate\\Http\\Request is not subtype of native type App\\Http\\Requests\\Web\\Contact\\Store\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Http/Controllers/Web/ContactController.php
+
+		-
+			message: '#^Unreachable statement \- code above always terminates\.$#'
+			identifier: deadCode.unreachable
+			count: 1
+			path: app/Http/Controllers/Web/ContactController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Web\\NewsLetterController\:\:subscribe\(\) with return type void returns \*NEVER\* but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: app/Http/Controllers/Web/NewsLetterController.php
+
+		-
+			message: '#^Method App\\Http\\Controllers\\Web\\NewsLetterController\:\:subscribe\(\) with return type void returns Illuminate\\Http\\RedirectResponse but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: app/Http/Controllers/Web/NewsLetterController.php
+
+		-
+			message: '#^Method App\\Http\\Middleware\\Authenticate\:\:redirectTo\(\) should return string\|null but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Http/Middleware/Authenticate.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\User\:\:\$pet\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Requests/Api/Like/Store.php
+
+		-
+			message: '#^PHPDoc tag @return with type bool is incompatible with native type array\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: app/Http/Requests/Web/User/Store.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\BlockResource\:\:\$cause\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/BlockResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\BlockResource\:\:\$from\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/BlockResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\BlockResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/BlockResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\BlockResource\:\:\$to\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/BlockResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\BlockResource\:\:\$why\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/BlockResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\DislikeResource\:\:\$from\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/DislikeResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\DislikeResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/DislikeResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\DislikeResource\:\:\$to\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/DislikeResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\LikeResource\:\:\$from\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/LikeResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\LikeResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/LikeResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\LikeResource\:\:\$to\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/LikeResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\User\:\:\$pet\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/Location/Near.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\LocationResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/LocationResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\LocationResource\:\:\$latitude\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/LocationResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\LocationResource\:\:\$longitude\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/LocationResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\LocationResource\:\:\$user_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/LocationResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\MatchResource\:\:\$from\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/MatchResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\MatchResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/MatchResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\MatchResource\:\:\$to\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/MatchResource.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 3
+			path: app/Http/Resources/Api/Message/Chat.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\Message\\ConversationResource\:\:\$firstUser\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/Message/ConversationResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\Message\\ConversationResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/Message/ConversationResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\Message\\ConversationResource\:\:\$latestMessage\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/Message/ConversationResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\Message\\ConversationResource\:\:\$secondUser\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/Message/ConversationResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\Message\\ConversationResource\:\:\$unread_count\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/Message/ConversationResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\User\:\:\$pet\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/Message/ConversationResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\Message\\MessageResource\:\:\$content\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/Message/MessageResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\Message\\MessageResource\:\:\$conversation_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/Message/MessageResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\Message\\MessageResource\:\:\$created_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/Message/MessageResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\Message\\MessageResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/Message/MessageResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\Message\\MessageResource\:\:\$is_seen\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/Message/MessageResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\Message\\MessageResource\:\:\$receiver_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/Message/MessageResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\Message\\MessageResource\:\:\$sender_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/Message/MessageResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\Message\\MessageResource\:\:\$updated_at\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/Message/MessageResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\PetResource\:\:\$about\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/PetResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\PetResource\:\:\$age\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/PetResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\PetResource\:\:\$color\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/PetResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\PetResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/PetResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\PetResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/PetResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\PetResource\:\:\$race_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/PetResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\PetResource\:\:\$sexe\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/PetResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\PetResource\:\:\$species_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/PetResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\PetResource\:\:\$user_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/PetResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\RaceResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/RaceResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\RaceResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/RaceResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\RaceResource\:\:\$species_id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/RaceResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\SpeciesResource\:\:\$description\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/SpeciesResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\SpeciesResource\:\:\$id\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/SpeciesResource.php
+
+		-
+			message: '#^Access to an undefined property App\\Http\\Resources\\Api\\SpeciesResource\:\:\$name\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Http/Resources/Api/SpeciesResource.php
+
+		-
+			message: '#^Access to an undefined property Illuminate\\Database\\Eloquent\\Model\:\:\$owner\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Jobs/ProcessNewsLetters.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: app/Mail/Contact.php
+
+		-
+			message: '#^Method App\\Mail\\Contact\:\:build\(\) should return \$this\(App\\Mail\\Contact\) but return statement is missing\.$#'
+			identifier: return.missing
+			count: 1
+			path: app/Mail/Contact.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: app/Mail/GoodBye.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: app/Mail/Welcome.php
+
+		-
+			message: '#^Expression on left side of \?\? is not nullable\.$#'
+			identifier: nullCoalesce.expr
+			count: 1
+			path: app/Mail/WelcomeBack.php
+
+		-
+			message: '#^Method App\\Models\\Blog\:\:author\(\) with return type void returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\User, \$this\(App\\Models\\Blog\)\> but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: app/Models/Blog.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Blog\:\:\$casts is not covariant with PHPDoc type array\<string, string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$casts\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Blog.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Component\:\:\$casts is not covariant with PHPDoc type array\<string, string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$casts\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Component.php
+
+		-
+			message: '#^Method App\\Models\\Online\:\:scopeUpdateCurrent\(\) should return Illuminate\\Database\\Eloquent\\Builder but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Online.php
+
+		-
+			message: '#^Method App\\Models\\Online\:\:user\(\) should return App\\Models\\User but returns Illuminate\\Database\\Eloquent\\Relations\\BelongsTo\<App\\Models\\User, \$this\(App\\Models\\Online\)\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Models/Online.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Pet\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Pet.php
+
+		-
+			message: '#^PHPDoc type array\<string\> of property App\\Models\\Race\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Race.php
+
+		-
+			message: '#^PHPDoc type array of property App\\Models\\Seo\:\:\$casts is not covariant with PHPDoc type array\<string, string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$casts\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/Seo.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\User\:\:\$fillable is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$fillable\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^PHPDoc type array\<int, string\> of property App\\Models\\User\:\:\$hidden is not covariant with PHPDoc type list\<string\> of overridden property Illuminate\\Database\\Eloquent\\Model\:\:\$hidden\.$#'
+			identifier: property.phpDocType
+			count: 1
+			path: app/Models/User.php
+
+		-
+			message: '#^Method App\\Observers\\LikeObserver\:\:created\(\) with return type void returns string but should not return anything\.$#'
+			identifier: return.void
+			count: 1
+			path: app/Observers/LikeObserver.php
+
+		-
+			message: '#^PHPDoc tag @var above a method has no effect\.$#'
+			identifier: varTag.misplaced
+			count: 1
+			path: app/Providers/RouteServiceProvider.php
+
+		-
+			message: '#^Method App\\Repositories\\AdoptionRepository\:\:delete\(\) should return bool but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/AdoptionRepository.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$adoptionId with type mixed is not subtype of native type int\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Repositories/AdoptionRepository.php
+
+		-
+			message: '#^Relation ''toPet'' is not found in App\\Models\\Adoption model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Repositories/AdoptionRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\BlogRepository\:\:delete\(\) should return bool but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/BlogRepository.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$likeId with type mixed is not subtype of native type int\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Repositories/BlogRepository.php
+
+		-
+			message: '#^Parameter \#2 \$direction of static method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Blog\>\:\:orderBy\(\) expects ''asc''\|''desc''\|SortDirection, ''DESC'' given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Repositories/BlogRepository.php
+
+		-
+			message: '#^Relation ''from'' is not found in App\\Models\\Blog model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Repositories/BlogRepository.php
+
+		-
+			message: '#^Relation ''to'' is not found in App\\Models\\Blog model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Repositories/BlogRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\ComponentRepository\:\:delete\(\) should return bool but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/ComponentRepository.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$adoptionId with type mixed is not subtype of native type int\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Repositories/ComponentRepository.php
+
+		-
+			message: '#^Relation ''toPet'' is not found in App\\Models\\Component model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Repositories/ComponentRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\ConversationRepository\:\:create\(\) should return App\\Models\\Conversation but returns Illuminate\\Database\\Eloquent\\Model\|null\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/ConversationRepository.php
+
+		-
+			message: '#^Relation ''firstUser'' is not found in App\\Models\\Conversation model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Repositories/ConversationRepository.php
+
+		-
+			message: '#^Relation ''latestMessage'' is not found in App\\Models\\Conversation model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Repositories/ConversationRepository.php
+
+		-
+			message: '#^Relation ''messages'' is not found in App\\Models\\Conversation model\.$#'
+			identifier: larastan.relationExistence
+			count: 2
+			path: app/Repositories/ConversationRepository.php
+
+		-
+			message: '#^Relation ''secondUser'' is not found in App\\Models\\Conversation model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Repositories/ConversationRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\DislikeRepository\:\:delete\(\) should return bool but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/DislikeRepository.php
+
+		-
+			message: '#^Relation ''from'' is not found in App\\Models\\Dislike model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Repositories/DislikeRepository.php
+
+		-
+			message: '#^Relation ''to'' is not found in App\\Models\\Dislike model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Repositories/DislikeRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\FilterRepository\:\:delete\(\) should return bool but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/FilterRepository.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$filterId with type mixed is not subtype of native type int\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Repositories/FilterRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\LikeRepository\:\:delete\(\) should return bool but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/LikeRepository.php
+
+		-
+			message: '#^Relation ''from'' is not found in App\\Models\\Like model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Repositories/LikeRepository.php
+
+		-
+			message: '#^Relation ''to'' is not found in App\\Models\\Like model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Repositories/LikeRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\LocationRepository\:\:delete\(\) should return bool but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/LocationRepository.php
+
+		-
+			message: '#^Parameter \#1 \$locationId of method App\\Repositories\\LocationRepository\:\:getById\(\) expects string, int given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Repositories/LocationRepository.php
+
+		-
+			message: '#^Relation ''user'' is not found in App\\Models\\Location model\.$#'
+			identifier: larastan.relationExistence
+			count: 4
+			path: app/Repositories/LocationRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\MatchRepository\:\:delete\(\) should return bool but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/MatchRepository.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$matchId with type mixed is not subtype of native type int\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Repositories/MatchRepository.php
+
+		-
+			message: '#^Relation ''toPet'' is not found in App\\Models\\MatchTable model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Repositories/MatchRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\MessageRepository\:\:delete\(\) should return bool but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/MessageRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\NewsLetterRepository\:\:delete\(\) should return bool but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/NewsLetterRepository.php
+
+		-
+			message: '#^PHPDoc tag @param has invalid value \(\[type\] \$take\)\: Unexpected token "\[", expected type at offset 53 on line 4$#'
+			identifier: phpDoc.parseError
+			count: 1
+			path: app/Repositories/NewsLetterRepository.php
+
+		-
+			message: '#^PHPDoc tag @return with type void is incompatible with native type Illuminate\\Support\\Collection\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: app/Repositories/NewsLetterRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\PetRepository\:\:delete\(\) should return bool but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/PetRepository.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$petId with type mixed is not subtype of native type int\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Repositories/PetRepository.php
+
+		-
+			message: '#^PHPDoc tag @return with type void is incompatible with native type Illuminate\\Pagination\\LengthAwarePaginator\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: app/Repositories/PetRepository.php
+
+		-
+			message: '#^Parameter \#2 \$direction of static method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\Pet\>\:\:orderBy\(\) expects ''asc''\|''desc''\|SortDirection, ''DESC'' given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Repositories/PetRepository.php
+
+		-
+			message: '#^Relation ''owner'' is not found in App\\Models\\Pet model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Repositories/PetRepository.php
+
+		-
+			message: '#^Relation ''race'' is not found in App\\Models\\Pet model\.$#'
+			identifier: larastan.relationExistence
+			count: 1
+			path: app/Repositories/PetRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\RaceRepository\:\:delete\(\) should return bool but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/RaceRepository.php
+
+		-
+			message: '#^PHPDoc tag @return with type void is incompatible with native type Illuminate\\Pagination\\LengthAwarePaginator\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: app/Repositories/RaceRepository.php
+
+		-
+			message: '#^Relation ''species'' is not found in App\\Models\\Race model\.$#'
+			identifier: larastan.relationExistence
+			count: 3
+			path: app/Repositories/RaceRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\SeoRepository\:\:delete\(\) should return bool but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/SeoRepository.php
+
+		-
+			message: '#^PHPDoc tag @return with type void is incompatible with native type Illuminate\\Support\\Collection\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: app/Repositories/SeoRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\SpeciesRepository\:\:delete\(\) should return bool but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/SpeciesRepository.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$speciesId with type mixed is not subtype of native type int\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Repositories/SpeciesRepository.php
+
+		-
+			message: '#^PHPDoc tag @return with type Illuminate\\Support\\Collection is incompatible with native type App\\Models\\Species\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: app/Repositories/SpeciesRepository.php
+
+		-
+			message: '#^PHPDoc tag @return with type void is incompatible with native type Illuminate\\Pagination\\LengthAwarePaginator\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: app/Repositories/SpeciesRepository.php
+
+		-
+			message: '#^Method App\\Repositories\\UserRepository\:\:delete\(\) should return bool but returns int\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Repositories/UserRepository.php
+
+		-
+			message: '#^PHPDoc tag @return with type mixed is not subtype of native type Illuminate\\Database\\Eloquent\\Collection\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: app/Repositories/UserRepository.php
+
+		-
+			message: '#^PHPDoc tag @return with type void is incompatible with native type Illuminate\\Pagination\\LengthAwarePaginator\.$#'
+			identifier: return.phpDocType
+			count: 1
+			path: app/Repositories/UserRepository.php
+
+		-
+			message: '#^Parameter \#2 \$direction of static method Illuminate\\Database\\Eloquent\\Builder\<App\\Models\\User\>\:\:orderBy\(\) expects ''asc''\|''desc''\|SortDirection, ''DESC'' given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/Repositories/UserRepository.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\User\:\:\$pet\.$#'
+			identifier: property.notFound
+			count: 1
+			path: app/Rules/Api/Like/MatchUser.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Adoption\:\:\$newOwner\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Services/AdoptionService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Adoption\:\:\$owner\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Services/AdoptionService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\Adoption\:\:\$pet\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/AdoptionService.php
+
+		-
+			message: '#^Method App\\Services\\ComponentService\:\:format\(\) should return Illuminate\\Support\\Collection but returns array\<mixed\>\.$#'
+			identifier: return.type
+			count: 1
+			path: app/Services/ComponentService.php
+
+		-
+			message: '#^Variable \$components in empty\(\) always exists and is not falsy\.$#'
+			identifier: empty.variable
+			count: 1
+			path: app/Services/ComponentService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\User\:\:\$pet\.$#'
+			identifier: property.notFound
+			count: 2
+			path: app/Services/InteractionPolicy.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\MatchTable\:\:\$fromPet\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Services/MatchService.php
+
+		-
+			message: '#^Access to an undefined property App\\Models\\MatchTable\:\:\$toPet\.$#'
+			identifier: property.notFound
+			count: 3
+			path: app/Services/MatchService.php
+
+		-
+			message: '#^PHPDoc tag @param for parameter \$message with type mixed is not subtype of native type App\\Models\\Message\.$#'
+			identifier: parameter.phpDocType
+			count: 1
+			path: app/Services/MessageService.php
+
+		-
+			message: '#^Parameter \#2 \$callback of function array_filter expects \(callable\(array\{url\: '''', Text\: ''Home'', show\: true\}\|array\{url\: ''/about'', Text\: ''About'', show\: true\}\|array\{url\: ''/blogs'', Text\: ''Magazine'', show\: true\}\|array\{url\: ''/contact'', Text\: ''Contact'', show\: true\}\|array\{url\: ''/search\?type\=0'', Text\: ''Dating'', show\: false\}\|array\{url\: ''/search\?type\=1'', Text\: ''Pet\-Sitters'', show\: false\}\|array\{url\: ''/search\?type\=2'', Text\: ''Adoption'', show\: false\}\)\: bool\)\|null, Closure\(mixed\)\: \(array\{url\: '''', Text\: ''Home'', show\: true\}\|array\{url\: ''/about'', Text\: ''About'', show\: true\}\|array\{url\: ''/blogs'', Text\: ''Magazine'', show\: true\}\|array\{url\: ''/contact'', Text\: ''Contact'', show\: true\}\) given\.$#'
+			identifier: argument.type
+			count: 1
+			path: app/View/Components/Web/Layout/Header.php
+
+		-
+			message: '#^Right side of && is always true\.$#'
+			identifier: booleanAnd.rightAlwaysTrue
+			count: 1
+			path: app/View/Components/Web/Layout/Header.php
