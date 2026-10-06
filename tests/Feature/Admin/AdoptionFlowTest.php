@@ -8,14 +8,14 @@ use App\Models\Pet;
 use App\Models\Race;
 use App\Models\Species;
 use App\Models\User;
-use Illuminate\Foundation\Testing\DatabaseTruncation;
+use Illuminate\Foundation\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Mail;
 use Tests\TestCase;
 
 class AdoptionFlowTest extends TestCase
 {
-    use DatabaseTruncation;
+    use DatabaseMigrations;
 
     public function test_admin_can_create_adoption_and_dispatch_persisted_notifications(): void
     {
