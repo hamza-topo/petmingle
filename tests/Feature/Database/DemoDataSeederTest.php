@@ -9,11 +9,13 @@ use App\Models\MatchTable;
 use App\Models\Message;
 use App\Models\Pet;
 use App\Models\User;
+use App\Services\InteractionPolicy;
 use Database\Seeders\DemoDataSeeder;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Laravel\Sanctum\Sanctum;
 use RuntimeException;
 use Tests\TestCase;
 
@@ -36,6 +38,12 @@ class DemoDataSeederTest extends TestCase
         $this->assertSame(9, Conversation::count());
         $this->assertSame(27, Message::count());
         $this->assertSame(9, Message::where('is_seen', false)->count());
+        foreach (Conversation::all() as $conversation) {
+            $this->assertTrue(app(InteractionPolicy::class)->canContactUsers(
+                (int) $conversation->getAttribute('first_user_id'),
+                (int) $conversation->getAttribute('seconde_user_id')
+            ));
+        }
         Storage::disk('public')->assertExists('pets/demo/dog.jpg');
         foreach (Pet::with('race')->get() as $pet) {
             $this->assertSame((int) $pet->getAttribute('species_id'), (int) $pet->race->getAttribute('species_id'));
@@ -43,6 +51,10 @@ class DemoDataSeederTest extends TestCase
 
         $demo = User::where('email', 'demo.marrakech@petmingle.test')->firstOrFail();
         $this->assertTrue(Hash::check('PetmingleDemo!2026', (string) $demo->getAttribute('password')));
+        Sanctum::actingAs($demo);
+        $this->postJson('/api/v.0/locations/nears', ['radius_km' => 5])
+            ->assertOk()
+            ->assertJsonPath('success', true);
         $demo->update(['name' => 'Mon compte modifié']);
         $this->seed(DemoDataSeeder::class);
 

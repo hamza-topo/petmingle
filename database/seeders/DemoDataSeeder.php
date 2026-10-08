@@ -11,6 +11,7 @@ use App\Models\Pet;
 use App\Models\Race;
 use App\Models\Species;
 use App\Models\User;
+use App\Services\InteractionPolicy;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -99,6 +100,9 @@ class DemoDataSeeder extends Seeder
                         foreach ([[0, $index], [$index, 0]] as [$from, $to]) {
                             Like::withTrashed()->firstOrCreate(['from' => $pets[$from]->getKey(), 'to' => $pets[$to]->getKey()]);
                             MatchTable::withTrashed()->firstOrCreate(['from' => $pets[$from]->getKey(), 'to' => $pets[$to]->getKey()]);
+                        }
+                        if (! app(InteractionPolicy::class)->canContactUsers((int) $users[0]->getKey(), (int) $users[$index]->getKey())) {
+                            continue;
                         }
                         $conversation = Conversation::withTrashed()->firstOrCreate([
                             'first_user_id' => $users[0]->getKey(),
