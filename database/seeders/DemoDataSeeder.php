@@ -62,11 +62,17 @@ class DemoDataSeeder extends Seeder
                         }
 
                         $cat = $index % 3 === 2;
-                        $species = Species::firstOrCreate(['name' => $cat ? 'Cats' : 'Dogs'], ['description' => $cat ? 'Cats' : 'Dogs']);
-                        $race = Race::firstOrCreate([
+                        $species = Species::withTrashed()->firstOrCreate(['name' => $cat ? 'Cats' : 'Dogs'], ['description' => $cat ? 'Cats' : 'Dogs']);
+                        if ($species->trashed()) {
+                            continue;
+                        }
+                        $race = Race::withTrashed()->firstOrCreate([
                             'species_id' => $species->getKey(),
                             'name' => $cat ? 'Domestic Shorthair' : 'Golden Retriever',
                         ]);
+                        if ($race->trashed()) {
+                            continue;
+                        }
                         $pet = Pet::withTrashed()->firstOrCreate(['user_id' => $user->getKey()], [
                             'species_id' => $species->getKey(),
                             'race_id' => $race->getKey(),

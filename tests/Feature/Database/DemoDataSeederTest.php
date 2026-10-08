@@ -54,6 +54,7 @@ class DemoDataSeederTest extends TestCase
         Sanctum::actingAs($demo);
         $this->postJson('/api/v.0/locations/nears', ['radius_km' => 5])
             ->assertOk()
+            ->assertJsonCount(11, 'data')
             ->assertJsonPath('success', true);
         $demo->update(['name' => 'Mon compte modifié']);
         $this->seed(DemoDataSeeder::class);
@@ -74,11 +75,26 @@ class DemoDataSeederTest extends TestCase
     {
         $this->app->instance('env', 'production');
         try {
-            $this->seed(DemoDataSeeder::class);
+            app(DemoDataSeeder::class)->run();
             $this->fail('Production seeding must be rejected.');
         } catch (RuntimeException $exception) {
             $this->assertStringContainsString('local and testing', $exception->getMessage());
         }
         $this->assertSame(0, User::count());
+    }
+
+    public function test_deleted_demo_accounts_are_not_recreated(): void
+    {
+        Storage::fake('public');
+        $this->seed(DemoDataSeeder::class);
+        $demo = User::where('email', 'demo.marrakech@petmingle.test')->firstOrFail();
+        User::withoutEvents(fn () => $demo->delete());
+
+        $this->seed(DemoDataSeeder::class);
+
+        $this->assertSame(35, User::count());
+        $this->assertSame(36, User::withTrashed()->count());
+        $this->assertSame(36, Pet::count());
+        $this->assertTrue($demo->fresh()->trashed());
     }
 }
