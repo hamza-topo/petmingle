@@ -48,7 +48,7 @@ try {
   }
   browser = await chromium.launch({ headless: true });
   for (const width of [1448, 1280, 1120, 768, 390, 320]) {
-    for (const screen of screens.filter(s => width >= 1120 || s.name === 'landing')) {
+    for (const screen of screens.filter(s => width >= 1120 || ['landing', 'discovery'].includes(s.name))) {
       const context = await browser.newContext({ viewport: { width, height: 1000 }, reducedMotion: 'reduce' });
       await context.addInitScript(() => localStorage.setItem('petmingle.auth.token', 'visual-test-token'));
       const page = await context.newPage();
@@ -182,6 +182,42 @@ try {
       await page.waitForTimeout(4000);
       await page.screenshot({ path: output + '/location-picker-real-tiles.png', fullPage: false });
     }
+    await context.close();
+  }
+  for (const width of [1280, 768, 390, 320]) {
+    const context = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
+    await context.addInitScript(() => localStorage.setItem('petmingle.auth.token', 'visual-test-token'));
+    const page = await context.newPage();
+    await page.route('**/api/v.0/**', route => route.fulfill({ json: fixture(new URL(route.request().url()).pathname.replace('/api/v.0', ''), 'success') }));
+    await page.goto(base + '/discover');
+    await page.locator('.featured-discovery-pet').waitFor();
+    await page.getByRole('button', { name: 'Suivant', exact: true }).click();
+    await page.getByRole('heading', { name: 'Oscar', exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Filtres', exact: true }).click();
+    const modal = page.getByRole('dialog', { name: 'Filtres' });
+    await modal.waitFor();
+    await page.getByRole('combobox', { name: 'Distance' }).selectOption('10');
+    await page.getByRole('button', { name: 'Appliquer', exact: true }).focus();
+    await page.keyboard.press('Tab');
+    if (!(await page.getByRole('button', { name: 'Fermer les filtres' }).evaluate(el => el === document.activeElement))) throw new Error('Filter focus escaped modal');
+    await page.keyboard.press('Escape');
+    if (await modal.count()) throw new Error('Escape did not dismiss filters');
+    if (!(await page.getByRole('button', { name: 'Filtres', exact: true }).evaluate(el => el === document.activeElement))) throw new Error('Filter focus was not restored');
+    await page.getByRole('button', { name: 'Filtres', exact: true }).click();
+    if (await page.getByRole('combobox', { name: 'Distance' }).inputValue() !== '5') throw new Error('Cancelled filter draft was applied');
+    await page.getByRole('combobox', { name: 'Distance' }).selectOption('10');
+    const metrics = await modal.evaluate(el => {
+      const r = el.getBoundingClientRect();
+      return { viewport: innerWidth, scroll: Math.ceil(r.width), outside: [...el.querySelectorAll('button, select')].filter(item => { const b = item.getBoundingClientRect(); return b.left < -1 || b.right > innerWidth + 1; }).map(item => item.className) };
+    });
+    await page.screenshot({ path: output + '/discovery-filters-' + width + '.png' });
+    await page.getByRole('button', { name: 'Appliquer', exact: true }).click();
+    await page.getByRole('heading', { name: otherPet.name, exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Compte de Alexandre propriétaire' }).click();
+    await page.getByRole('link', { name: 'Mon profil', exact: true }).waitFor();
+    await page.keyboard.press('Escape');
+    if (await page.getByRole('link', { name: 'Mon profil', exact: true }).count()) throw new Error('Account menu did not dismiss');
+    results.push({ screen: 'discovery-filters', width, state: 'keyboard-cancel-apply-account', ...metrics });
     await context.close();
   }
   await writeFile(output + '/results.json', JSON.stringify(results, null, 2));

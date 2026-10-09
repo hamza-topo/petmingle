@@ -1,16 +1,7 @@
-import {
-  render,
-  screen,
-  within,
-} from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
-import {
-  afterEach,
-  expect,
-  it,
-  vi,
-} from 'vitest';
+import { afterEach, expect, it, vi } from 'vitest';
 
 import { useAuth } from '../auth/AuthProvider';
 import { tokenStorage } from '../auth/tokenStorage';
@@ -32,23 +23,23 @@ vi.mock('../features/profile-creation/taxonomy.api', () => ({
   taxonomyRequest: vi.fn(),
 }));
 
-vi.mock('../features/account-location/location.api', async importOriginal => {
-  const actual = await importOriginal<typeof import('../features/account-location/location.api')>();
+vi.mock('../features/account-location/location.api', async (importOriginal) => {
+  const actual =
+    await importOriginal<
+      typeof import('../features/account-location/location.api')
+    >();
   return {
     ...actual,
-  accountLocationsRequest: vi.fn(),
-  createAccountLocationRequest: vi.fn(),
-  updateAccountLocationRequest: vi.fn(),
+    accountLocationsRequest: vi.fn(),
+    createAccountLocationRequest: vi.fn(),
+    updateAccountLocationRequest: vi.fn(),
   };
 });
 
 const mockedUseAuth = vi.mocked(useAuth);
-const mockedCurrentPetProfileRequest =
-  vi.mocked(currentPetProfileRequest);
-const mockedTaxonomyRequest =
-  vi.mocked(taxonomyRequest);
-const mockedAccountLocationsRequest =
-  vi.mocked(accountLocationsRequest);
+const mockedCurrentPetProfileRequest = vi.mocked(currentPetProfileRequest);
+const mockedTaxonomyRequest = vi.mocked(taxonomyRequest);
+const mockedAccountLocationsRequest = vi.mocked(accountLocationsRequest);
 
 afterEach(() => {
   tokenStorage.clear();
@@ -133,9 +124,10 @@ it('connects all five screens and the Plus section using existing visible contro
     }),
   );
 
+  await user.click(screen.getByRole('button', { name: 'Compte de Hamza' }));
   await user.click(
     screen.getByRole('link', {
-      name: /^Profile/,
+      name: 'Mon profil',
     }),
   );
 
@@ -165,6 +157,7 @@ it('connects all five screens and the Plus section using existing visible contro
     }),
   );
 
+  await user.click(screen.getByRole('button', { name: 'Compte de Hamza' }));
   await user.click(
     screen.getByRole('link', {
       name: /^PetMingle Plus/,
@@ -177,9 +170,7 @@ it('connects all five screens and the Plus section using existing visible contro
     }),
   ).toBeChecked();
 
-  expect(
-    HTMLElement.prototype.scrollIntoView,
-  ).toHaveBeenCalled();
+  expect(HTMLElement.prototype.scrollIntoView).toHaveBeenCalled();
 
   await user.click(
     screen.getByRole('button', {
@@ -216,4 +207,3 @@ it('connects all five screens and the Plus section using existing visible contro
     }),
   ).toBeVisible();
 }, 15000);
-

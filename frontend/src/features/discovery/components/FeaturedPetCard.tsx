@@ -1,17 +1,11 @@
-import {
-  Heart,
-  Image,
-  MapPin,
-  X,
-} from 'lucide-react';
+import { useState } from 'react';
+import { ChevronLeft, ChevronRight, Heart, MapPin, X } from 'lucide-react';
 
+import { mediaUrl } from '../../../api/config';
 import { ActionButton } from '../../../components/Action';
-import { PetLocation } from '../../../components/PetLocation';
+import { Avatar } from '../../../components/Avatar';
 import { ReferenceImage } from '../../../components/ReferenceImage';
-import type {
-  DiscoveryPet,
-  PetInteractionState,
-} from '../discovery.api';
+import type { DiscoveryPet, PetInteractionState } from '../discovery.api';
 
 export function FeaturedPetCard({
   pet,
@@ -26,101 +20,137 @@ export function FeaturedPetCard({
   onLike: () => void;
   onDislike: () => void;
 }) {
+  const [photoIndex, setPhotoIndex] = useState(0);
+  const photo = pet.images[photoIndex];
+  const asset = photo
+    ? { ...pet.photo, src: mediaUrl(photo), position: 'center' }
+    : pet.photo;
+
   return (
     <article
       className="featured-discovery-pet"
       aria-labelledby={`featured-pet-${pet.id}`}
     >
       <div className="featured-pet-gallery">
-        <ReferenceImage
-          asset={pet.photo}
-          className="featured-pet-photo"
-        />
-
-        <span className="featured-label">
-          <MapPin size={19} aria-hidden="true" />
-          Closest nearby
-        </span>
-
-        <span className="gallery-count">
-          <Image size={16} aria-hidden="true" />
-          {pet.photoCount > 0
-            ? `${pet.photoCount} saved photo${pet.photoCount === 1 ? '' : 's'}`
-            : 'No saved photos'}
+        <ReferenceImage asset={asset} className="featured-pet-photo" />
+        {pet.images.length > 1 && (
+          <>
+            <div
+              className="discovery-photo-progress"
+              aria-label="Photos du profil"
+            >
+              {pet.images.map((image, index) => (
+                <button
+                  key={`${image}-${index}`}
+                  type="button"
+                  aria-label={`Photo ${index + 1} de ${pet.name}`}
+                  aria-pressed={index === photoIndex}
+                  onClick={() => setPhotoIndex(index)}
+                />
+              ))}
+            </div>
+            <button
+              className="gallery-arrow gallery-arrow--previous"
+              type="button"
+              aria-label="Photo précédente"
+              onClick={() =>
+                setPhotoIndex(
+                  (current) =>
+                    (current + pet.images.length - 1) % pet.images.length,
+                )
+              }
+            >
+              <ChevronLeft size={22} />
+            </button>
+            <button
+              className="gallery-arrow gallery-arrow--next"
+              type="button"
+              aria-label="Photo suivante"
+              onClick={() =>
+                setPhotoIndex((current) => (current + 1) % pet.images.length)
+              }
+            >
+              <ChevronRight size={22} />
+            </button>
+          </>
+        )}
+        <span className="gallery-count" aria-live="polite">
+          {pet.images.length
+            ? `${photoIndex + 1} / ${pet.images.length}`
+            : 'Pas encore de photo'}
         </span>
       </div>
-
       <div className="featured-pet-details">
-        <div>
-          <div className="featured-name-row">
-            <h2 id={`featured-pet-${pet.id}`}>
-              {pet.name}
-            </h2>
-
-            {pet.isNew && (
-              <span className="discovery-new-pet">
-                New
-              </span>
-            )}
-          </div>
-
+        <div className="featured-pet-summary">
+          <h2 id={`featured-pet-${pet.id}`} tabIndex={-1}>
+            {pet.name}
+          </h2>
           <p className="featured-pet-identity">
-            {pet.breed}
-            <span aria-hidden="true"> · </span>
-            {pet.ageYears}{' '}
-            {pet.ageYears === 1 ? 'year' : 'years'} old
+            {pet.ageYears} {pet.ageYears === 1 ? 'an' : 'ans'} · {pet.breed}
           </p>
-
-          <PetLocation
-            distanceKm={pet.distanceKm}
-          />
+          <p className="featured-distance">
+            <MapPin size={18} aria-hidden="true" />À{' '}
+            {pet.distanceKm.toLocaleString('fr-FR', {
+              maximumFractionDigits: 1,
+            })}{' '}
+            km
+          </p>
         </div>
-
-        <p className="featured-pet-description">
-          {pet.about ?? 'No biography available yet.'}
-        </p>
-
-        <p className="discovery-owner-note">
-          Shared by {pet.ownerName}
-        </p>
-
-        <div
-          className="featured-pet-actions"
-          aria-label={`Interactions with ${pet.name}`}
-        >
-          <ActionButton
-            variant="secondary"
-            className="featured-pass"
-            onClick={onDislike}
-            disabled={pending}
-            aria-pressed={interaction === 'disliked'}
+        <div className="featured-biography">
+          <h3>Un peu de moi</h3>
+          <p className="featured-pet-description">
+            {pet.about ||
+              'Mon compagnon n’a pas encore ajouté de présentation.'}
+          </p>
+        </div>
+        <div className="discovery-owner-note">
+          <Avatar
+            name={pet.ownerName
+              .trim()
+              .split(/\s+/)
+              .slice(0, 2)
+              .map((part) => part[0])
+              .join('')
+              .toUpperCase()}
+            className="discovery-owner-avatar"
+          />
+          <span>Avec {pet.ownerName}</span>
+        </div>
+        <div className="featured-decision">
+          <div
+            className="featured-pet-actions"
+            aria-label={`Rencontrer ${pet.name}`}
           >
-            <X size={26} aria-hidden="true" />
-            {interaction === 'disliked'
-              ? 'Passed'
-              : 'Pass'}
-          </ActionButton>
-
-          <ActionButton
-            onClick={onLike}
-            disabled={pending}
-            aria-pressed={interaction === 'liked'}
-          >
-            <Heart
-              size={26}
-              fill={
-                interaction === 'liked'
-                  ? 'currentColor'
-                  : 'none'
-              }
-              aria-hidden="true"
-            />
-            {pending
-              ? 'Saving...'
-              : interaction === 'liked'
-                ? 'Liked'
-                : 'Like'}
-          </ActionButton>
+            <ActionButton
+              variant="secondary"
+              className="featured-pass"
+              onClick={onDislike}
+              disabled={pending}
+              aria-pressed={interaction === 'disliked'}
+            >
+              <X size={24} aria-hidden="true" />
+              {interaction === 'disliked' ? 'Passé' : 'Passer'}
+            </ActionButton>
+            <ActionButton
+              onClick={onLike}
+              disabled={pending || interaction === 'liked'}
+              aria-pressed={interaction === 'liked'}
+            >
+              <Heart
+                size={24}
+                fill={interaction === 'liked' ? 'currentColor' : 'none'}
+                aria-hidden="true"
+              />
+              {pending
+                ? 'En cours…'
+                : interaction === 'liked'
+                  ? 'Like envoyé'
+                  : 'J’aime'}
+            </ActionButton>
+          </div>
+          <p className="discovery-match-note">
+            Un like mutuel ouvre la conversation.
+          </p>
         </div>
       </div>
     </article>

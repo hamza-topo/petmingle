@@ -1,13 +1,5 @@
-import {
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import {
-  ChevronDown,
-  MapPin,
-  Search,
-} from 'lucide-react';
+import { useEffect, useMemo, useState } from 'react';
+import { ChevronDown, MapPin, Search } from 'lucide-react';
 
 import { ActionButton } from '../../../components/Action';
 import type { Taxonomy } from '../../profile-creation/taxonomy.types';
@@ -16,7 +8,6 @@ import {
   discoveryFiltersEqual,
   type DiscoveryFilterValue,
 } from '../discovery.api';
-import { unsupportedFilterGroups } from '../discovery.filter-config';
 
 const distanceOptions = [5, 10, 25, 50, 100];
 
@@ -41,42 +32,27 @@ export function DiscoveryFilters({
   onReset: () => void;
   onRetryTaxonomy: () => void;
 }) {
-  const [draft, setDraft] =
-    useState<DiscoveryFilterValue>(value);
+  const [draft, setDraft] = useState<DiscoveryFilterValue>(value);
 
   useEffect(() => {
     setDraft(value);
-  }, [
-    value.radiusKm,
-    value.speciesId,
-    value.raceId,
-  ]);
+  }, [value.radiusKm, value.speciesId, value.raceId]);
 
   const races = useMemo(
     () =>
       draft.speciesId === null
         ? []
-        : taxonomy?.races.filter(
-            race =>
-              race.species_id === draft.speciesId,
-          ) ?? [],
+        : (taxonomy?.races.filter(
+            (race) => race.species_id === draft.speciesId,
+          ) ?? []),
     [draft.speciesId, taxonomy],
   );
 
-  const dirty = !discoveryFiltersEqual(
-    draft,
-    value,
-  );
+  const dirty = !discoveryFiltersEqual(draft, value);
 
   const canReset =
-    !discoveryFiltersEqual(
-      draft,
-      DEFAULT_DISCOVERY_FILTERS,
-    )
-    || !discoveryFiltersEqual(
-      value,
-      DEFAULT_DISCOVERY_FILTERS,
-    );
+    !discoveryFiltersEqual(draft, DEFAULT_DISCOVERY_FILTERS) ||
+    !discoveryFiltersEqual(value, DEFAULT_DISCOVERY_FILTERS);
 
   function reset() {
     setDraft({
@@ -86,28 +62,17 @@ export function DiscoveryFilters({
   }
 
   return (
-    <aside
-      className="discovery-filters"
-      aria-labelledby="filter-heading"
-    >
+    <aside className="discovery-filters" aria-labelledby="filter-heading">
       <div className="filter-heading">
-        <h2 id="filter-heading">Filter Pets</h2>
-        <button
-          type="button"
-          onClick={reset}
-          disabled={!canReset || loading}
-        >
-          Clear All
+        <h2 id="filter-heading">Filtres</h2>
+        <button type="button" onClick={reset} disabled={!canReset || loading}>
+          Réinitialiser
         </button>
       </div>
 
       <div className="distance-filter">
         <label htmlFor="pet-distance">
-          <MapPin
-            size={21}
-            fill="currentColor"
-            aria-hidden="true"
-          />
+          <MapPin size={21} fill="currentColor" aria-hidden="true" />
           Distance
         </label>
 
@@ -115,56 +80,36 @@ export function DiscoveryFilters({
           <select
             id="pet-distance"
             value={String(draft.radiusKm)}
-            onChange={event =>
-              setDraft(current => ({
+            onChange={(event) =>
+              setDraft((current) => ({
                 ...current,
-                radiusKm: Number(
-                  event.target.value,
-                ),
+                radiusKm: Number(event.target.value),
               }))
             }
           >
-            {distanceOptions.map(distance => (
-              <option
-                key={distance}
-                value={distance}
-              >
-                Within {distance} km
+            {distanceOptions.map((distance) => (
+              <option key={distance} value={distance}>
+                À moins de {distance} km
               </option>
             ))}
           </select>
-          <ChevronDown
-            size={18}
-            aria-hidden="true"
-          />
+          <ChevronDown size={18} aria-hidden="true" />
         </div>
       </div>
 
       <div className="distance-filter">
-        <label htmlFor="pet-species">
-          Species
-        </label>
+        <label htmlFor="pet-species">Espèce</label>
 
         <div className="discovery-select">
           <select
             id="pet-species"
-            value={
-              draft.speciesId === null
-                ? ''
-                : String(draft.speciesId)
-            }
-            disabled={
-              taxonomyLoading
-              || taxonomyError !== null
-              || !taxonomy
-            }
-            onChange={event => {
+            value={draft.speciesId === null ? '' : String(draft.speciesId)}
+            disabled={taxonomyLoading || taxonomyError !== null || !taxonomy}
+            onChange={(event) => {
               const speciesId =
-                event.target.value === ''
-                  ? null
-                  : Number(event.target.value);
+                event.target.value === '' ? null : Number(event.target.value);
 
-              setDraft(current => ({
+              setDraft((current) => ({
                 ...current,
                 speciesId,
                 raceId: null,
@@ -173,139 +118,70 @@ export function DiscoveryFilters({
           >
             <option value="">
               {taxonomyLoading
-                ? 'Loading species...'
+                ? 'Chargement des espèces…'
                 : taxonomyError
-                  ? 'Species unavailable'
-                  : 'All species'}
+                  ? 'Espèces indisponibles'
+                  : 'Toutes les espèces'}
             </option>
 
-            {taxonomy?.species.map(species => (
-              <option
-                key={species.id}
-                value={species.id}
-              >
+            {taxonomy?.species.map((species) => (
+              <option key={species.id} value={species.id}>
                 {species.name}
               </option>
             ))}
           </select>
-          <ChevronDown
-            size={18}
-            aria-hidden="true"
-          />
+          <ChevronDown size={18} aria-hidden="true" />
         </div>
       </div>
 
       <div className="distance-filter">
-        <label htmlFor="pet-race">
-          Breed
-        </label>
+        <label htmlFor="pet-race">Race</label>
 
         <div className="discovery-select">
           <select
             id="pet-race"
-            value={
-              draft.raceId === null
-                ? ''
-                : String(draft.raceId)
-            }
+            value={draft.raceId === null ? '' : String(draft.raceId)}
             disabled={
-              taxonomyLoading
-              || taxonomyError !== null
-              || !taxonomy
-              || draft.speciesId === null
+              taxonomyLoading ||
+              taxonomyError !== null ||
+              !taxonomy ||
+              draft.speciesId === null
             }
-            onChange={event =>
-              setDraft(current => ({
+            onChange={(event) =>
+              setDraft((current) => ({
                 ...current,
                 raceId:
-                  event.target.value === ''
-                    ? null
-                    : Number(event.target.value),
+                  event.target.value === '' ? null : Number(event.target.value),
               }))
             }
           >
             <option value="">
               {draft.speciesId === null
-                ? 'Choose a species first'
-                : 'All breeds'}
+                ? 'Choisir une espèce'
+                : 'Toutes les races'}
             </option>
 
-            {races.map(race => (
-              <option
-                key={race.id}
-                value={race.id}
-              >
+            {races.map((race) => (
+              <option key={race.id} value={race.id}>
                 {race.name}
               </option>
             ))}
           </select>
-          <ChevronDown
-            size={18}
-            aria-hidden="true"
-          />
+          <ChevronDown size={18} aria-hidden="true" />
         </div>
       </div>
 
       {taxonomyError && (
         <div className="discovery-taxonomy-error">
           <p role="alert">{taxonomyError}</p>
-          <button
-            type="button"
-            onClick={onRetryTaxonomy}
-          >
-            Retry taxonomy
+          <button type="button" onClick={onRetryTaxonomy}>
+            Réessayer
           </button>
         </div>
       )}
 
-      {unsupportedFilterGroups.map(
-        ({
-          key,
-          label,
-          icon: Icon,
-          options,
-        }) => (
-          <fieldset
-            className="filter-group"
-            key={key}
-            disabled
-            aria-describedby="filter-deferred-note"
-          >
-            <legend>
-              <Icon size={20} aria-hidden="true" />
-              {label}
-            </legend>
-
-            <div className="filter-choices">
-              {options.map(option => (
-                <label
-                  className="filter-choice"
-                  key={option}
-                >
-                  <input
-                    type="radio"
-                    name={key}
-                    value={option}
-                    checked={option === 'All'}
-                    readOnly
-                  />
-                  <span>{option}</span>
-                </label>
-              ))}
-            </div>
-          </fieldset>
-        ),
-      )}
-
-      <p
-        className="discovery-filter-deferred"
-        id="filter-deferred-note"
-      >
-        Size, energy and personality filters are not available yet.
-      </p>
-
       <p className="discovery-filter-result-count">
-        Current results: {resultCount}
+        Profils trouvés : {resultCount}
       </p>
 
       <ActionButton
@@ -314,9 +190,7 @@ export function DiscoveryFilters({
         onClick={() => onApply(draft)}
       >
         <Search size={24} aria-hidden="true" />
-        {loading
-          ? 'Applying filters...'
-          : 'Apply filters'}
+        {loading ? 'Application…' : 'Appliquer'}
       </ActionButton>
     </aside>
   );

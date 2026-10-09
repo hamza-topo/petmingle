@@ -1,10 +1,7 @@
-import {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
-import { PawPrint } from 'lucide-react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { useId } from 'react';
+import { ArrowLeft, ArrowRight, SlidersHorizontal } from 'lucide-react';
+import { AccountLocationControl } from '../account-location/AccountLocationControl';
 
 import { ApiError } from '../../api/errors';
 import { describeApiFailure } from '../../api/presentation';
@@ -18,7 +15,7 @@ import { taxonomyRequest } from '../profile-creation/taxonomy.api';
 import type { Taxonomy } from '../profile-creation/taxonomy.types';
 import { DiscoveryFilters } from './components/DiscoveryFilters';
 import { DiscoveryHeader } from './components/DiscoveryHeader';
-import { DiscoverySidebar } from './components/DiscoverySidebar';
+
 import { FeaturedPetCard } from './components/FeaturedPetCard';
 import { PetGrid } from './components/PetGrid';
 import {
@@ -32,15 +29,9 @@ import {
 } from './discovery.api';
 import { petInteractionRequest } from './interaction.api';
 
-type DiscoveryStatus =
-  | 'loading'
-  | 'ready'
-  | 'error';
+type DiscoveryStatus = 'loading' | 'ready' | 'error';
 
-type TaxonomyStatus =
-  | 'loading'
-  | 'ready'
-  | 'error';
+type TaxonomyStatus = 'loading' | 'ready' | 'error';
 
 const initialMeta: DiscoveryPageMeta = {
   current_page: 1,
@@ -51,44 +42,50 @@ const initialMeta: DiscoveryPageMeta = {
 
 export function DiscoveryPage() {
   const accountLocation = useAccountLocation();
-  const locationLabel =
-    accountLocationLabel(accountLocation);
+  const locationLabel = accountLocationLabel(accountLocation);
 
-  const [status, setStatus] =
-    useState<DiscoveryStatus>('loading');
-  const [pets, setPets] = useState<DiscoveryPet[]>(
-    [],
-  );
-  const [meta, setMeta] =
-    useState<DiscoveryPageMeta>(initialMeta);
-  const [loadError, setLoadError] =
-    useState<unknown | null>(null);
-  const [loadingMore, setLoadingMore] =
-    useState(false);
-  const [interactions, setInteractions] =
-    useState<Map<number, PetInteractionState>>(
-      new Map(),
-    );
-  const [pendingPetIds, setPendingPetIds] =
-    useState<Set<number>>(new Set());
-  const [interactionError, setInteractionError] =
-    useState<string | null>(null);
+  const [status, setStatus] = useState<DiscoveryStatus>('loading');
+  const [pets, setPets] = useState<DiscoveryPet[]>([]);
+  const [meta, setMeta] = useState<DiscoveryPageMeta>(initialMeta);
+  const [loadError, setLoadError] = useState<unknown | null>(null);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [interactions, setInteractions] = useState<
+    Map<number, PetInteractionState>
+  >(new Map());
+  const [pendingPetIds, setPendingPetIds] = useState<Set<number>>(new Set());
+  const [interactionError, setInteractionError] = useState<string | null>(null);
 
-  const [filters, setFilters] =
-    useState<DiscoveryFilterValue>({
-      ...DEFAULT_DISCOVERY_FILTERS,
-    });
+  const [filters, setFilters] = useState<DiscoveryFilterValue>({
+    ...DEFAULT_DISCOVERY_FILTERS,
+  });
 
-  const [taxonomy, setTaxonomy] =
-    useState<Taxonomy | null>(null);
+  const [taxonomy, setTaxonomy] = useState<Taxonomy | null>(null);
   const [taxonomyStatus, setTaxonomyStatus] =
     useState<TaxonomyStatus>('loading');
-  const [taxonomyError, setTaxonomyError] =
-    useState<unknown | null>(null);
-  const [taxonomyReloadKey, setTaxonomyReloadKey] =
-    useState(0);
+  const [taxonomyError, setTaxonomyError] = useState<unknown | null>(null);
+  const [taxonomyReloadKey, setTaxonomyReloadKey] = useState(0);
 
   const requestId = useRef(0);
+  const [selectedPetId, setSelectedPetId] = useState<number | null>(null);
+  const [showNearby, setShowNearby] = useState(false);
+  const [filtersOpen, setFiltersOpen] = useState(false);
+  const filterDialog = useRef<HTMLDialogElement>(null);
+  const filterTrigger = useRef<HTMLButtonElement>(null);
+  const filterDialogId = useId();
+
+  useEffect(() => {
+    if (!filtersOpen) return;
+    const dialog = filterDialog.current;
+    dialog?.showModal?.();
+    if (dialog && !dialog.open) dialog.setAttribute('open', '');
+    dialog?.querySelector<HTMLButtonElement>('button')?.focus();
+    const previous = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previous;
+      filterTrigger.current?.focus();
+    };
+  }, [filtersOpen]);
 
   useEffect(() => {
     let cancelled = false;
@@ -101,10 +98,7 @@ export function DiscoveryPage() {
           setTaxonomy(null);
           setTaxonomyStatus('error');
           setTaxonomyError(
-            new ApiError(
-              'Authentication token is missing.',
-              401,
-            ),
+            new ApiError('Authentication token is missing.', 401),
           );
         }
         return;
@@ -137,25 +131,16 @@ export function DiscoveryPage() {
   }, [taxonomyReloadKey]);
 
   const loadPage = useCallback(
-    async (
-      pageNumber: number,
-      append = false,
-    ): Promise<void> => {
+    async (pageNumber: number, append = false): Promise<void> => {
       const token = tokenStorage.get();
 
       if (!token) {
-        setLoadError(
-          new ApiError(
-            'Authentication token is missing.',
-            401,
-          ),
-        );
+        setLoadError(new ApiError('Authentication token is missing.', 401));
         setStatus('error');
         return;
       }
 
-      const currentRequestId =
-        ++requestId.current;
+      const currentRequestId = ++requestId.current;
 
       if (append) {
         setLoadingMore(true);
@@ -174,13 +159,11 @@ export function DiscoveryPage() {
           perPage: 24,
         });
 
-        if (
-          currentRequestId !== requestId.current
-        ) {
+        if (currentRequestId !== requestId.current) {
           return;
         }
 
-        setInteractions(current => {
+        setInteractions((current) => {
           const next = new Map(current);
 
           for (const pet of result.pets) {
@@ -190,14 +173,14 @@ export function DiscoveryPage() {
           return next;
         });
 
-        setPets(current => {
+        if (!append) setSelectedPetId(null);
+
+        setPets((current) => {
           if (!append) {
             return result.pets;
           }
 
-          const byId = new Map(
-            current.map(pet => [pet.id, pet]),
-          );
+          const byId = new Map(current.map((pet) => [pet.id, pet]));
 
           for (const pet of result.pets) {
             byId.set(pet.id, pet);
@@ -210,9 +193,7 @@ export function DiscoveryPage() {
         setLoadError(null);
         setStatus('ready');
       } catch (caught) {
-        if (
-          currentRequestId !== requestId.current
-        ) {
+        if (currentRequestId !== requestId.current) {
           return;
         }
 
@@ -224,24 +205,18 @@ export function DiscoveryPage() {
           setStatus('error');
         }
       } finally {
-        if (
-          currentRequestId === requestId.current
-        ) {
+        if (currentRequestId === requestId.current) {
           setLoadingMore(false);
         }
       }
     },
-    [
-      filters.radiusKm,
-      filters.speciesId,
-      filters.raceId,
-    ],
+    [filters.radiusKm, filters.speciesId, filters.raceId],
   );
 
   useEffect(() => {
     if (
-      accountLocation.status !== 'ready'
-      || !accountLocation.currentLocation
+      accountLocation.status !== 'ready' ||
+      !accountLocation.currentLocation
     ) {
       requestId.current += 1;
       setPets([]);
@@ -260,15 +235,8 @@ export function DiscoveryPage() {
     loadPage,
   ]);
 
-  function applyFilters(
-    nextFilters: DiscoveryFilterValue,
-  ) {
-    if (
-      discoveryFiltersEqual(
-        filters,
-        nextFilters,
-      )
-    ) {
+  function applyFilters(nextFilters: DiscoveryFilterValue) {
+    if (discoveryFiltersEqual(filters, nextFilters)) {
       return;
     }
 
@@ -277,10 +245,7 @@ export function DiscoveryPage() {
 
   async function persistInteraction(
     petId: number,
-    interaction: Exclude<
-      PetInteractionState,
-      null
-    >,
+    interaction: Exclude<PetInteractionState, null>,
   ) {
     if (pendingPetIds.has(petId)) {
       return;
@@ -289,13 +254,11 @@ export function DiscoveryPage() {
     const token = tokenStorage.get();
 
     if (!token) {
-      setInteractionError(
-        'Authentication token is missing.',
-      );
+      setInteractionError('Authentication token is missing.');
       return;
     }
 
-    setPendingPetIds(current => {
+    setPendingPetIds((current) => {
       const next = new Set(current);
       next.add(petId);
       return next;
@@ -303,27 +266,21 @@ export function DiscoveryPage() {
     setInteractionError(null);
 
     try {
-      const persisted =
-        await petInteractionRequest({
-          token,
-          targetPetId: petId,
-          interaction,
-        });
+      const persisted = await petInteractionRequest({
+        token,
+        targetPetId: petId,
+        interaction,
+      });
 
-      setInteractions(current => {
+      setInteractions((current) => {
         const next = new Map(current);
-        next.set(
-          petId,
-          persisted.interaction,
-        );
+        next.set(petId, persisted.interaction);
         return next;
       });
     } catch (caught) {
-      setInteractionError(
-        describeApiFailure(caught).message,
-      );
+      setInteractionError(describeApiFailure(caught).message);
     } finally {
-      setPendingPetIds(current => {
+      setPendingPetIds((current) => {
         const next = new Set(current);
         next.delete(petId);
         return next;
@@ -332,12 +289,7 @@ export function DiscoveryPage() {
   }
 
   function resetFilters() {
-    if (
-      discoveryFiltersEqual(
-        filters,
-        DEFAULT_DISCOVERY_FILTERS,
-      )
-    ) {
+    if (discoveryFiltersEqual(filters, DEFAULT_DISCOVERY_FILTERS)) {
       return;
     }
 
@@ -346,40 +298,41 @@ export function DiscoveryPage() {
     });
   }
 
-  const closestPet = pets[0] ?? null;
-  const gridPets = pets.slice(1);
-  const hasMore =
-    meta.current_page < meta.last_page;
+  const closestPet =
+    pets.find((pet) => pet.id === selectedPetId) ?? pets[0] ?? null;
+  const selectedIndex = closestPet
+    ? pets.findIndex((pet) => pet.id === closestPet.id)
+    : 0;
 
-  const failure =
-    loadError !== null
-      ? describeApiFailure(loadError)
-      : null;
+  function selectPet(id: number) {
+    setSelectedPetId(id);
+    document
+      .getElementById('discovery-heading')
+      ?.scrollIntoView({ block: 'start', behavior: 'auto' });
+    window.requestAnimationFrame(() =>
+      document
+        .getElementById(`featured-pet-${id}`)
+        ?.focus({ preventScroll: true }),
+    );
+  }
+  const hasMore = meta.current_page < meta.last_page;
+
+  const failure = loadError !== null ? describeApiFailure(loadError) : null;
 
   const taxonomyFailure =
-    taxonomyError !== null
-      ? describeApiFailure(taxonomyError)
-      : null;
+    taxonomyError !== null ? describeApiFailure(taxonomyError) : null;
 
   return (
-    <div className="discovery-page">
-      <a
-        href="#discovery-main"
-        className="skip-link"
-      >
-        Skip to content
+    <div className="discovery-page" lang="fr">
+      <a href="#discovery-main" className="skip-link">
+        Aller au contenu
       </a>
 
       <DiscoveryHeader />
 
-      <main tabIndex={-1}
-        className="discovery-layout"
-        id="discovery-main"
-      >
+      <main tabIndex={-1} className="discovery-layout" id="discovery-main">
         <div className="discovery-results">
           <div className="discovery-upper">
-            <DiscoverySidebar />
-
             <section
               className="discovery-spotlight"
               aria-labelledby="discovery-heading"
@@ -387,42 +340,42 @@ export function DiscoveryPage() {
               <div className="discovery-intro">
                 <div>
                   <h1 id="discovery-heading">
-                    Discover Amazing{' '}
-                    <span className="text-text-pink">
-                      Pets
-                    </span>
+                    Une belle rencontre commence ici.
                   </h1>
                   <p>
-                    Meet nearby pets,
-                    ordered by distance.
+                    {meta.total} {meta.total === 1 ? 'compagnon' : 'compagnons'}{' '}
+                    près de {locationLabel}
                   </p>
                 </div>
-
-                <div className="nearby-count">
-                  <span>
-                    <PawPrint
-                      size={30}
-                      fill="currentColor"
-                      aria-hidden="true"
-                    />
-                  </span>
-                  <p>
-                    <strong>{meta.total}</strong>{' '}
-                    {meta.total === 1
-                      ? 'pet'
-                      : 'pets'}{' '}
-                    near
-                    <br />
-                    <small>{locationLabel}</small>
-                  </p>
+                <div className="discovery-tools">
+                  <AccountLocationControl />
+                  <button
+                    ref={filterTrigger}
+                    type="button"
+                    className="discovery-filter-trigger"
+                    aria-label="Filtres"
+                    aria-haspopup="dialog"
+                    aria-expanded={filtersOpen}
+                    aria-controls={filtersOpen ? filterDialogId : undefined}
+                    onClick={() => setFiltersOpen(true)}
+                  >
+                    <SlidersHorizontal size={19} aria-hidden="true" />
+                    Filtres
+                    {!discoveryFiltersEqual(
+                      filters,
+                      DEFAULT_DISCOVERY_FILTERS,
+                    ) && (
+                      <span
+                        className="discovery-filter-active"
+                        aria-label="Filtres actifs"
+                      />
+                    )}
+                  </button>
                 </div>
               </div>
 
               {accountLocation.status === 'loading' && (
-                <ApiState
-                  kind="loading"
-                  message="Loading your location..."
-                />
+                <ApiState kind="loading" message="Loading your location..." />
               )}
 
               {accountLocation.status === 'error' && (
@@ -430,14 +383,12 @@ export function DiscoveryPage() {
                   kind="error"
                   title="Location unavailable"
                   message="PetMingle could not load your account location."
-                  onRetry={() =>
-                    void accountLocation.reload()
-                  }
+                  onRetry={() => void accountLocation.reload()}
                 />
               )}
 
-              {accountLocation.status === 'ready'
-                && !accountLocation.currentLocation && (
+              {accountLocation.status === 'ready' &&
+                !accountLocation.currentLocation && (
                   <ApiState
                     kind="empty"
                     title="Set your location"
@@ -445,35 +396,30 @@ export function DiscoveryPage() {
                   />
                 )}
 
-              {accountLocation.status === 'ready'
-                && accountLocation.currentLocation
-                && status === 'loading' && (
-                  <ApiState
-                    kind="loading"
-                    message="Loading nearby pets..."
-                  />
+              {accountLocation.status === 'ready' &&
+                accountLocation.currentLocation &&
+                status === 'loading' && (
+                  <ApiState kind="loading" message="Loading nearby pets..." />
                 )}
 
-              {accountLocation.status === 'ready'
-                && accountLocation.currentLocation
-                && status === 'error'
-                && failure && (
+              {accountLocation.status === 'ready' &&
+                accountLocation.currentLocation &&
+                status === 'error' &&
+                failure && (
                   <ApiState
                     kind="error"
                     title="Nearby pets unavailable"
                     message={failure.message}
                     onRetry={
-                      failure.retryable
-                        ? () => void loadPage(1)
-                        : undefined
+                      failure.retryable ? () => void loadPage(1) : undefined
                     }
                   />
                 )}
 
-              {accountLocation.status === 'ready'
-                && accountLocation.currentLocation
-                && status === 'ready'
-                && !closestPet && (
+              {accountLocation.status === 'ready' &&
+                accountLocation.currentLocation &&
+                status === 'ready' &&
+                !closestPet && (
                   <ApiState
                     kind="empty"
                     title="No nearby pets yet"
@@ -482,96 +428,148 @@ export function DiscoveryPage() {
                 )}
 
               {interactionError && (
-                <p
-                  className="discovery-interaction-error"
-                  role="alert"
-                >
+                <p className="discovery-interaction-error" role="alert">
                   {interactionError}
                 </p>
               )}
 
-              {accountLocation.status === 'ready'
-                && accountLocation.currentLocation
-                && status === 'ready'
-                && closestPet && (
+              {accountLocation.status === 'ready' &&
+                accountLocation.currentLocation &&
+                status === 'ready' &&
+                closestPet && (
                   <FeaturedPetCard
+                    key={closestPet.id}
                     pet={closestPet}
                     interaction={
-                      interactions.get(
-                        closestPet.id,
-                      )
-                      ?? closestPet.interaction
+                      interactions.get(closestPet.id) ?? closestPet.interaction
                     }
-                    pending={pendingPetIds.has(
-                      closestPet.id,
-                    )}
+                    pending={pendingPetIds.has(closestPet.id)}
                     onLike={() =>
-                      void persistInteraction(
-                        closestPet.id,
-                        'liked',
-                      )
+                      void persistInteraction(closestPet.id, 'liked')
                     }
                     onDislike={() =>
-                      void persistInteraction(
-                        closestPet.id,
-                        'disliked',
-                      )
+                      void persistInteraction(closestPet.id, 'disliked')
                     }
                   />
                 )}
             </section>
           </div>
 
-          {closestPet && (
-            <PetGrid
-              pets={gridPets}
-              hasMore={hasMore}
-              loadingMore={loadingMore}
-              interactions={interactions}
-              pendingPetIds={pendingPetIds}
-              onLike={petId =>
-                void persistInteraction(
-                  petId,
-                  'liked',
-                )
-              }
-              onDislike={petId =>
-                void persistInteraction(
-                  petId,
-                  'disliked',
-                )
-              }
-              onLoadMore={() =>
-                void loadPage(
-                  meta.current_page + 1,
-                  true,
-                )
-              }
-            />
+          {status === 'ready' && closestPet && (
+            <>
+              <div
+                className="discovery-profile-navigation"
+                aria-label="Parcourir les profils"
+              >
+                <button
+                  type="button"
+                  disabled={selectedIndex === 0}
+                  onClick={() => selectPet(pets[selectedIndex - 1].id)}
+                >
+                  <ArrowLeft size={18} aria-hidden="true" />
+                  Précédent
+                </button>
+                <p aria-live="polite">
+                  Profil {selectedIndex + 1} sur {pets.length}
+                  {hasMore ? ' chargés' : ''}
+                </p>
+                <button
+                  type="button"
+                  disabled={selectedIndex === pets.length - 1}
+                  onClick={() => selectPet(pets[selectedIndex + 1].id)}
+                >
+                  Suivant
+                  <ArrowRight size={18} aria-hidden="true" />
+                </button>
+              </div>
+              {hasMore && (
+                <button
+                  type="button"
+                  className="discovery-load-more"
+                  disabled={loadingMore}
+                  onClick={() => void loadPage(meta.current_page + 1, true)}
+                >
+                  {loadingMore ? 'Chargement…' : 'Voir plus de profils'}
+                </button>
+              )}
+              <button
+                type="button"
+                className="discovery-browse-toggle"
+                aria-expanded={showNearby}
+                aria-controls={showNearby ? 'nearby-pets' : undefined}
+                onClick={() => setShowNearby((current) => !current)}
+              >
+                {showNearby
+                  ? 'Masquer les profils à proximité'
+                  : `Voir les ${meta.total} profils à proximité`}
+                <ArrowRight size={18} aria-hidden="true" />
+              </button>
+              {showNearby && (
+                <PetGrid
+                  pets={pets}
+                  hasMore={false}
+                  loadingMore={loadingMore}
+                  onLoadMore={() => void loadPage(meta.current_page + 1, true)}
+                  onSelect={selectPet}
+                />
+              )}
+            </>
           )}
         </div>
 
-        <DiscoveryFilters
-          value={filters}
-          resultCount={meta.total}
-          taxonomy={taxonomy}
-          taxonomyLoading={
-            taxonomyStatus === 'loading'
-          }
-          taxonomyError={
-            taxonomyFailure?.message ?? null
-          }
-          loading={status === 'loading'}
-          onApply={applyFilters}
-          onReset={resetFilters}
-          onRetryTaxonomy={() =>
-            setTaxonomyReloadKey(
-              current => current + 1,
-            )
-          }
-        />
+        {filtersOpen && (
+          <dialog
+            ref={filterDialog}
+            id={filterDialogId}
+            className="discovery-filter-dialog"
+            aria-labelledby="filter-heading"
+            onCancel={(event) => {
+              event.preventDefault();
+              setFiltersOpen(false);
+            }}
+            onKeyDown={(event) => {
+              if (event.key !== 'Tab') return;
+              const controls =
+                event.currentTarget.querySelectorAll<HTMLElement>(
+                  'button:not(:disabled), select:not(:disabled)',
+                );
+              const first = controls[0];
+              const last = controls[controls.length - 1];
+              if (event.shiftKey && document.activeElement === first) {
+                event.preventDefault();
+                last?.focus();
+              } else if (!event.shiftKey && document.activeElement === last) {
+                event.preventDefault();
+                first?.focus();
+              }
+            }}
+          >
+            <button
+              type="button"
+              className="discovery-filter-close"
+              onClick={() => setFiltersOpen(false)}
+            >
+              Fermer les filtres
+            </button>
+            <DiscoveryFilters
+              value={filters}
+              resultCount={meta.total}
+              taxonomy={taxonomy}
+              taxonomyLoading={taxonomyStatus === 'loading'}
+              taxonomyError={taxonomyFailure?.message ?? null}
+              loading={status === 'loading'}
+              onApply={(next) => {
+                applyFilters(next);
+                setFiltersOpen(false);
+              }}
+              onReset={resetFilters}
+              onRetryTaxonomy={() =>
+                setTaxonomyReloadKey((current) => current + 1)
+              }
+            />
+          </dialog>
+        )}
       </main>
     </div>
   );
 }
-
