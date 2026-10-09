@@ -16,7 +16,7 @@ jobs:
 
     services:
       mysql:
-        image: mysql:8.0
+        image: public.ecr.aws/docker/library/mysql:8.0
         env:
           MYSQL_DATABASE: petmingle_test
           MYSQL_USER: petmingle
@@ -112,6 +112,10 @@ jobs:
         run: |
           npm --prefix .. ci --ignore-scripts
           npm --prefix .. run typecheck
+      - name: Prepare official Node image for Compose
+        run: |
+          docker pull public.ecr.aws/docker/library/node:24-alpine
+          docker tag public.ecr.aws/docker/library/node:24-alpine node:24-alpine
       - name: Verify Docker Compose frontend service
         run: |
           docker compose -f ../docker-compose.yml --profile frontend config --quiet
@@ -144,7 +148,7 @@ jobs:
           VITE_API_BASE_URL: https://api.petmingle.test/api/v.0
           VITE_MEDIA_BASE_URL: https://api.petmingle.test
           VITE_REALTIME_ENABLED: 'false'
-        run: docker build --build-arg VITE_API_BASE_URL --build-arg VITE_MEDIA_BASE_URL --build-arg VITE_REALTIME_ENABLED -t petmingle-frontend:ci .
+        run: docker build --build-arg NODE_IMAGE=public.ecr.aws/docker/library/node:24-alpine --build-arg NGINX_IMAGE=public.ecr.aws/docker/library/nginx:stable-alpine --build-arg VITE_API_BASE_URL --build-arg VITE_MEDIA_BASE_URL --build-arg VITE_REALTIME_ENABLED -t petmingle-frontend:ci .
       - name: Verify production static hosting
         run: |
           docker run --detach --name petmingle-frontend-smoke -p 8088:8080 petmingle-frontend:ci

@@ -1,4 +1,6 @@
-FROM node:24-alpine AS build
+ARG NODE_IMAGE=node:24-alpine
+ARG NGINX_IMAGE=nginx:stable-alpine
+FROM ${NODE_IMAGE} AS build
 WORKDIR /app
 COPY package*.json ./
 RUN npm ci
@@ -20,8 +22,7 @@ RUN VITE_API_BASE_URL="$VITE_API_BASE_URL" VITE_MEDIA_BASE_URL="$VITE_MEDIA_BASE
     VITE_PUSHER_APP_CLUSTER="$VITE_PUSHER_APP_CLUSTER" VITE_PUSHER_WS_HOST="$VITE_PUSHER_WS_HOST" \
     VITE_PUSHER_WS_PORT="$VITE_PUSHER_WS_PORT" VITE_PUSHER_WS_SCHEME="$VITE_PUSHER_WS_SCHEME" npm run build
 
-FROM nginx:stable-alpine
+FROM ${NGINX_IMAGE}
 COPY docker/nginx.conf /etc/nginx/conf.d/default.conf
 COPY --from=build /app/dist /usr/share/nginx/html
 EXPOSE 8080
-
