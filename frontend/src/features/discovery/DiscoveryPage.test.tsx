@@ -1,19 +1,7 @@
-import {
-  render,
-  screen,
-  waitFor,
-  within,
-} from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
-import {
-  afterEach,
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { App } from '../../app/App';
 import { useAuth } from '../../auth/AuthProvider';
@@ -36,13 +24,14 @@ vi.mock('../../auth/AuthProvider', () => ({
   useAuth: vi.fn(),
 }));
 
-vi.mock('../account-location/location.api', async importOriginal => {
-  const actual = await importOriginal<typeof import('../account-location/location.api')>();
+vi.mock('../account-location/location.api', async (importOriginal) => {
+  const actual =
+    await importOriginal<typeof import('../account-location/location.api')>();
   return {
     ...actual,
-  accountLocationsRequest: vi.fn(),
-  createAccountLocationRequest: vi.fn(),
-  updateAccountLocationRequest: vi.fn(),
+    accountLocationsRequest: vi.fn(),
+    createAccountLocationRequest: vi.fn(),
+    updateAccountLocationRequest: vi.fn(),
   };
 });
 
@@ -54,9 +43,8 @@ vi.mock('./interaction.api', () => ({
   petInteractionRequest: vi.fn(),
 }));
 
-vi.mock('./discovery.api', async importOriginal => {
-  const actual =
-    await importOriginal<typeof import('./discovery.api')>();
+vi.mock('./discovery.api', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('./discovery.api')>();
 
   return {
     ...actual,
@@ -65,24 +53,18 @@ vi.mock('./discovery.api', async importOriginal => {
 });
 
 const mockedUseAuth = vi.mocked(useAuth);
-const mockedAccountLocationsRequest =
-  vi.mocked(accountLocationsRequest);
-const mockedCreateAccountLocationRequest =
-  vi.mocked(createAccountLocationRequest);
-const mockedUpdateAccountLocationRequest =
-  vi.mocked(updateAccountLocationRequest);
-const mockedTaxonomyRequest =
-  vi.mocked(taxonomyRequest);
-const mockedDiscoveryRequest =
-  vi.mocked(discoveryRequest);
-const mockedPetInteractionRequest =
-  vi.mocked(petInteractionRequest);
+const mockedAccountLocationsRequest = vi.mocked(accountLocationsRequest);
+const mockedCreateAccountLocationRequest = vi.mocked(
+  createAccountLocationRequest,
+);
+const mockedUpdateAccountLocationRequest = vi.mocked(
+  updateAccountLocationRequest,
+);
+const mockedTaxonomyRequest = vi.mocked(taxonomyRequest);
+const mockedDiscoveryRequest = vi.mocked(discoveryRequest);
+const mockedPetInteractionRequest = vi.mocked(petInteractionRequest);
 
-function pet(
-  id: number,
-  name: string,
-  distanceKm: number,
-): DiscoveryPet {
+function pet(id: number, name: string, distanceKm: number): DiscoveryPet {
   return {
     id,
     ownerId: id + 100,
@@ -108,11 +90,7 @@ function pet(
 }
 
 const firstPage: DiscoveryResult = {
-  pets: [
-    pet(42, 'Milo', 0.8),
-    pet(43, 'Luna', 1.4),
-    pet(44, 'Bella', 2.2),
-  ],
+  pets: [pet(42, 'Milo', 0.8), pet(43, 'Luna', 1.4), pet(44, 'Bella', 2.2)],
   meta: {
     current_page: 1,
     last_page: 1,
@@ -154,9 +132,7 @@ const taxonomy = {
 };
 
 beforeEach(() => {
-  mockedUseAuth.mockReturnValue(
-    authenticatedAuthState(),
-  );
+  mockedUseAuth.mockReturnValue(authenticatedAuthState());
 
   tokenStorage.set('test-token');
 
@@ -220,14 +196,14 @@ async function waitForDiscovery() {
     level: 2,
     name: 'Milo',
   });
+}
 
-  await waitFor(() => {
-    expect(
-      screen.getByRole('combobox', {
-        name: 'Species',
-      }),
-    ).toBeEnabled();
-  });
+async function openFilters() {
+  const user = userEvent.setup();
+  await user.click(screen.getByRole('button', { name: 'Filtres' }));
+  await waitFor(() =>
+    expect(screen.getByRole('combobox', { name: 'Espèce' })).toBeEnabled(),
+  );
 }
 
 describe('Discovery page', () => {
@@ -239,13 +215,11 @@ describe('Discovery page', () => {
 
     await user.click(
       screen.getByRole('button', {
-        name: 'Like',
+        name: 'J’aime',
       }),
     );
 
-    expect(
-      mockedPetInteractionRequest,
-    ).toHaveBeenCalledWith({
+    expect(mockedPetInteractionRequest).toHaveBeenCalledWith({
       token: 'test-token',
       targetPetId: 42,
       interaction: 'liked',
@@ -253,7 +227,7 @@ describe('Discovery page', () => {
 
     expect(
       await screen.findByRole('button', {
-        name: 'Liked',
+        name: 'Like envoyé',
       }),
     ).toHaveAttribute('aria-pressed', 'true');
   });
@@ -277,19 +251,17 @@ describe('Discovery page', () => {
 
     expect(
       screen.getByRole('button', {
-        name: 'Liked',
+        name: 'Like envoyé',
       }),
     ).toHaveAttribute('aria-pressed', 'true');
 
     await user.click(
       screen.getByRole('button', {
-        name: 'Pass',
+        name: 'Passer',
       }),
     );
 
-    expect(
-      mockedPetInteractionRequest,
-    ).toHaveBeenLastCalledWith({
+    expect(mockedPetInteractionRequest).toHaveBeenLastCalledWith({
       token: 'test-token',
       targetPetId: 42,
       interaction: 'disliked',
@@ -297,41 +269,41 @@ describe('Discovery page', () => {
 
     expect(
       await screen.findByRole('button', {
-        name: 'Passed',
+        name: 'Passé',
       }),
     ).toHaveAttribute('aria-pressed', 'true');
 
     expect(
       screen.getByRole('button', {
-        name: 'Like',
+        name: 'J’aime',
       }),
     ).toHaveAttribute('aria-pressed', 'false');
   });
 
-  it('uses stable Pet IDs for interactions from nearby cards', async () => {
+  it('opens nearby profiles before sending a like to their stable Pet ID', async () => {
     const user = userEvent.setup();
-
     renderDiscovery();
     await waitForDiscovery();
-
-    await user.click(
-      screen.getByRole('button', {
-        name: 'Like Luna',
-      }),
-    );
-
     expect(
-      mockedPetInteractionRequest,
-    ).toHaveBeenCalledWith({
+      screen.queryByRole('button', { name: 'Voir le profil de Luna' }),
+    ).not.toBeInTheDocument();
+    await user.click(
+      screen.getByRole('button', { name: 'Voir les 3 profils à proximité' }),
+    );
+    await user.click(
+      screen.getByRole('button', { name: 'Voir le profil de Luna' }),
+    );
+    expect(
+      screen.getByRole('heading', { name: 'Luna', level: 2 }),
+    ).toBeVisible();
+    await user.click(screen.getByRole('button', { name: 'J’aime' }));
+    expect(mockedPetInteractionRequest).toHaveBeenCalledWith({
       token: 'test-token',
       targetPetId: 43,
       interaction: 'liked',
     });
-
     expect(
-      screen.getByRole('button', {
-        name: 'Like Luna',
-      }),
+      await screen.findByRole('button', { name: 'Like envoyé' }),
     ).toHaveAttribute('aria-pressed', 'true');
   });
 
@@ -347,19 +319,17 @@ describe('Discovery page', () => {
 
     await user.click(
       screen.getByRole('button', {
-        name: 'Like',
+        name: 'J’aime',
       }),
     );
 
-    expect(
-      await screen.findByRole('alert'),
-    ).toHaveTextContent(
+    expect(await screen.findByRole('alert')).toHaveTextContent(
       'Unable to reach PetMingle. Check your connection and try again.',
     );
 
     expect(
       screen.getByRole('button', {
-        name: 'Like',
+        name: 'J’aime',
       }),
     ).toHaveAttribute('aria-pressed', 'false');
   });
@@ -377,7 +347,7 @@ describe('Discovery page', () => {
       | undefined;
 
     mockedPetInteractionRequest.mockReturnValueOnce(
-      new Promise(resolve => {
+      new Promise((resolve) => {
         resolveInteraction = resolve;
       }),
     );
@@ -386,20 +356,18 @@ describe('Discovery page', () => {
     await waitForDiscovery();
 
     const like = screen.getByRole('button', {
-      name: 'Like',
+      name: 'J’aime',
     });
 
     await user.click(like);
 
     expect(
       screen.getByRole('button', {
-        name: 'Saving...',
+        name: 'En cours…',
       }),
     ).toBeDisabled();
 
-    expect(
-      mockedPetInteractionRequest,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockedPetInteractionRequest).toHaveBeenCalledTimes(1);
 
     resolveInteraction?.({
       id: 1,
@@ -410,26 +378,72 @@ describe('Discovery page', () => {
 
     expect(
       await screen.findByRole('button', {
-        name: 'Liked',
+        name: 'Like envoyé',
       }),
-    ).toBeEnabled();
+    ).toBeDisabled();
+  });
+
+  it('browses profiles without losing saved interaction state', async () => {
+    const user = userEvent.setup();
+    renderDiscovery();
+    await waitForDiscovery();
+    expect(screen.getByRole('button', { name: 'Précédent' })).toBeDisabled();
+    await user.click(screen.getByRole('button', { name: 'J’aime' }));
+    await screen.findByRole('button', { name: 'Like envoyé' });
+    await user.click(screen.getByRole('button', { name: 'Suivant' }));
+    expect(
+      screen.getByRole('heading', { name: 'Luna', level: 2 }),
+    ).toBeVisible();
+    expect(screen.getByRole('button', { name: 'J’aime' })).toHaveAttribute(
+      'aria-pressed',
+      'false',
+    );
+    await user.click(screen.getByRole('button', { name: 'Précédent' }));
+    expect(screen.getByRole('button', { name: 'Like envoyé' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+    expect(mockedPetInteractionRequest).toHaveBeenCalledTimes(1);
+  });
+
+  it('shows only persisted gallery photos and resets the gallery for the next pet', async () => {
+    const user = userEvent.setup();
+    mockedDiscoveryRequest.mockResolvedValueOnce({
+      ...firstPage,
+      pets: [
+        {
+          ...firstPage.pets[0],
+          images: ['pets/milo.jpg', 'pets/milo-2.jpg'],
+          photoCount: 2,
+        },
+        ...firstPage.pets.slice(1),
+      ],
+    });
+    renderDiscovery();
+    await waitForDiscovery();
+    await user.click(screen.getByRole('button', { name: 'Photo suivante' }));
+    expect(screen.getByRole('img', { name: 'Milo pet photo' })).toHaveAttribute(
+      'src',
+      '/storage/pets/milo-2.jpg',
+    );
+    expect(screen.getByText('2 / 2')).toBeVisible();
+    await user.click(screen.getByRole('button', { name: 'Suivant' }));
+    expect(screen.getByText('1 / 1')).toBeVisible();
+    expect(
+      screen.queryByRole('button', { name: 'Photo suivante' }),
+    ).not.toBeInTheDocument();
   });
 
   it('loads the documented default Discovery query', async () => {
     renderDiscovery();
     await waitForDiscovery();
+    await openFilters();
 
-    expect(
-      mockedTaxonomyRequest,
-    ).toHaveBeenCalledWith('test-token');
+    expect(mockedTaxonomyRequest).toHaveBeenCalledWith('test-token');
 
-    expect(
-      mockedDiscoveryRequest,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockedDiscoveryRequest).toHaveBeenCalledTimes(1);
 
-    expect(
-      mockedDiscoveryRequest,
-    ).toHaveBeenCalledWith({
+    expect(mockedDiscoveryRequest).toHaveBeenCalledWith({
       token: 'test-token',
       radiusKm: 5,
       speciesId: null,
@@ -446,13 +460,13 @@ describe('Discovery page', () => {
 
     expect(
       screen.getByRole('combobox', {
-        name: 'Species',
+        name: 'Espèce',
       }),
     ).toHaveValue('');
 
     expect(
       screen.getByRole('combobox', {
-        name: 'Breed',
+        name: 'Race',
       }),
     ).toBeDisabled();
   });
@@ -462,6 +476,7 @@ describe('Discovery page', () => {
 
     renderDiscovery();
     await waitForDiscovery();
+    await openFilters();
 
     await user.selectOptions(
       screen.getByRole('combobox', {
@@ -472,13 +487,13 @@ describe('Discovery page', () => {
 
     await user.selectOptions(
       screen.getByRole('combobox', {
-        name: 'Species',
+        name: 'Espèce',
       }),
       '3',
     );
 
     const breed = screen.getByRole('combobox', {
-      name: 'Breed',
+      name: 'Race',
     });
 
     expect(breed).toBeEnabled();
@@ -487,19 +502,15 @@ describe('Discovery page', () => {
 
     await user.click(
       screen.getByRole('button', {
-        name: 'Apply filters',
+        name: 'Appliquer',
       }),
     );
 
     await waitFor(() => {
-      expect(
-        mockedDiscoveryRequest,
-      ).toHaveBeenCalledTimes(2);
+      expect(mockedDiscoveryRequest).toHaveBeenCalledTimes(2);
     });
 
-    expect(
-      mockedDiscoveryRequest,
-    ).toHaveBeenLastCalledWith({
+    expect(mockedDiscoveryRequest).toHaveBeenLastCalledWith({
       token: 'test-token',
       radiusKm: 25,
       speciesId: 3,
@@ -514,12 +525,13 @@ describe('Discovery page', () => {
 
     renderDiscovery();
     await waitForDiscovery();
+    await openFilters();
 
     const species = screen.getByRole('combobox', {
-      name: 'Species',
+      name: 'Espèce',
     });
     const breed = screen.getByRole('combobox', {
-      name: 'Breed',
+      name: 'Race',
     });
 
     await user.selectOptions(species, '3');
@@ -549,6 +561,7 @@ describe('Discovery page', () => {
 
     renderDiscovery();
     await waitForDiscovery();
+    await openFilters();
 
     await user.selectOptions(
       screen.getByRole('combobox', {
@@ -559,38 +572,34 @@ describe('Discovery page', () => {
 
     await user.selectOptions(
       screen.getByRole('combobox', {
-        name: 'Species',
+        name: 'Espèce',
       }),
       '3',
     );
 
     await user.click(
       screen.getByRole('button', {
-        name: 'Apply filters',
+        name: 'Appliquer',
       }),
     );
 
     await waitFor(() => {
-      expect(
-        mockedDiscoveryRequest,
-      ).toHaveBeenCalledTimes(2);
+      expect(mockedDiscoveryRequest).toHaveBeenCalledTimes(2);
     });
+
+    await openFilters();
 
     await user.click(
       screen.getByRole('button', {
-        name: 'Clear All',
+        name: 'Réinitialiser',
       }),
     );
 
     await waitFor(() => {
-      expect(
-        mockedDiscoveryRequest,
-      ).toHaveBeenCalledTimes(3);
+      expect(mockedDiscoveryRequest).toHaveBeenCalledTimes(3);
     });
 
-    expect(
-      mockedDiscoveryRequest,
-    ).toHaveBeenLastCalledWith({
+    expect(mockedDiscoveryRequest).toHaveBeenLastCalledWith({
       token: 'test-token',
       radiusKm: 5,
       speciesId: null,
@@ -601,7 +610,7 @@ describe('Discovery page', () => {
 
     expect(
       screen.getByRole('button', {
-        name: 'Clear All',
+        name: 'Réinitialiser',
       }),
     ).toBeDisabled();
   });
@@ -611,9 +620,10 @@ describe('Discovery page', () => {
 
     renderDiscovery();
     await waitForDiscovery();
+    await openFilters();
 
     const apply = screen.getByRole('button', {
-      name: 'Apply filters',
+      name: 'Appliquer',
     });
 
     expect(apply).toBeDisabled();
@@ -628,23 +638,17 @@ describe('Discovery page', () => {
     await user.selectOptions(distance, '5');
 
     expect(apply).toBeDisabled();
-    expect(
-      mockedDiscoveryRequest,
-    ).toHaveBeenCalledTimes(1);
+    expect(mockedDiscoveryRequest).toHaveBeenCalledTimes(1);
   });
 
   it('keeps a stable loading state while a new filter query is pending', async () => {
     const user = userEvent.setup();
 
-    let resolveFiltered:
-      | ((result: DiscoveryResult) => void)
-      | undefined;
+    let resolveFiltered: ((result: DiscoveryResult) => void) | undefined;
 
-    const pending = new Promise<DiscoveryResult>(
-      resolve => {
-        resolveFiltered = resolve;
-      },
-    );
+    const pending = new Promise<DiscoveryResult>((resolve) => {
+      resolveFiltered = resolve;
+    });
 
     mockedDiscoveryRequest
       .mockResolvedValueOnce(firstPage)
@@ -652,6 +656,7 @@ describe('Discovery page', () => {
 
     renderDiscovery();
     await waitForDiscovery();
+    await openFilters();
 
     await user.selectOptions(
       screen.getByRole('combobox', {
@@ -662,21 +667,13 @@ describe('Discovery page', () => {
 
     await user.click(
       screen.getByRole('button', {
-        name: 'Apply filters',
+        name: 'Appliquer',
       }),
     );
 
-    expect(
-      await screen.findByText(
-        'Loading nearby pets...',
-      ),
-    ).toBeVisible();
+    expect(await screen.findByText('Loading nearby pets...')).toBeVisible();
 
-    expect(
-      screen.getByRole('button', {
-        name: 'Applying filters...',
-      }),
-    ).toBeDisabled();
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
 
     resolveFiltered?.(firstPage);
 
@@ -688,49 +685,32 @@ describe('Discovery page', () => {
     ).toBeVisible();
   });
 
-  it('keeps unsupported filters explicitly disabled', async () => {
+  it('keeps filters on demand and omits unavailable controls', async () => {
+    const user = userEvent.setup();
     renderDiscovery();
     await waitForDiscovery();
-
-    expect(
-      screen.getByText(
-        'Size, energy and personality filters are not available yet.',
-      ),
-    ).toBeVisible();
-
-    for (const groupName of [
-      'Size (dogs)',
-      'Energy Level',
-      'Personality',
-    ]) {
-      const group = within(
-        screen.getByRole('group', {
-          name: groupName,
-        }),
-      );
-
-      expect(
-        group.getByRole('radio', {
-          name: 'All',
-        }),
-      ).toBeDisabled();
-    }
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    await openFilters();
+    expect(screen.getByRole('dialog', { name: 'Filtres' })).toBeVisible();
+    expect(screen.queryByText('Energy Level')).not.toBeInTheDocument();
+    expect(screen.queryByRole('radio')).not.toBeInTheDocument();
+    await user.click(
+      screen.getByRole('button', { name: 'Fermer les filtres' }),
+    );
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Filtres' })).toHaveFocus();
   });
 
   it('shows a safe network failure and retries with the applied filters', async () => {
     const user = userEvent.setup();
 
     mockedDiscoveryRequest
-      .mockRejectedValueOnce(
-        new TypeError('Failed to fetch'),
-      )
+      .mockRejectedValueOnce(new TypeError('Failed to fetch'))
       .mockResolvedValueOnce(firstPage);
 
     renderDiscovery();
 
-    expect(
-      await screen.findByRole('alert'),
-    ).toHaveTextContent(
+    expect(await screen.findByRole('alert')).toHaveTextContent(
       'Unable to reach PetMingle. Check your connection and try again.',
     );
 
@@ -747,9 +727,7 @@ describe('Discovery page', () => {
       }),
     ).toBeVisible();
 
-    expect(
-      mockedDiscoveryRequest,
-    ).toHaveBeenLastCalledWith({
+    expect(mockedDiscoveryRequest).toHaveBeenLastCalledWith({
       token: 'test-token',
       radiusKm: 5,
       speciesId: null,
@@ -760,19 +738,13 @@ describe('Discovery page', () => {
   });
 
   it('does not call Discovery until an account location exists', async () => {
-    mockedAccountLocationsRequest.mockResolvedValueOnce(
-      [],
-    );
+    mockedAccountLocationsRequest.mockResolvedValueOnce([]);
 
     renderDiscovery();
 
-    expect(
-      await screen.findByText('Set your location'),
-    ).toBeVisible();
+    expect(await screen.findByText('Set your location')).toBeVisible();
 
-    expect(
-      mockedDiscoveryRequest,
-    ).not.toHaveBeenCalled();
+    expect(mockedDiscoveryRequest).not.toHaveBeenCalled();
   });
 
   it('keeps active filters for pagination', async () => {
@@ -780,10 +752,7 @@ describe('Discovery page', () => {
 
     mockedDiscoveryRequest
       .mockResolvedValueOnce({
-        pets: [
-          pet(42, 'Milo', 0.8),
-          pet(43, 'Luna', 1.4),
-        ],
+        pets: [pet(42, 'Milo', 0.8), pet(43, 'Luna', 1.4)],
         meta: {
           current_page: 1,
           last_page: 1,
@@ -792,10 +761,7 @@ describe('Discovery page', () => {
         },
       })
       .mockResolvedValueOnce({
-        pets: [
-          pet(42, 'Milo', 0.8),
-          pet(43, 'Luna', 1.4),
-        ],
+        pets: [pet(42, 'Milo', 0.8), pet(43, 'Luna', 1.4)],
         meta: {
           current_page: 1,
           last_page: 2,
@@ -815,43 +781,40 @@ describe('Discovery page', () => {
 
     renderDiscovery();
     await waitForDiscovery();
+    await openFilters();
 
     await user.selectOptions(
       screen.getByRole('combobox', {
-        name: 'Species',
+        name: 'Espèce',
       }),
       '3',
     );
 
     await user.click(
       screen.getByRole('button', {
-        name: 'Apply filters',
+        name: 'Appliquer',
       }),
     );
 
     await waitFor(() => {
       expect(
         screen.getByRole('button', {
-          name: 'Load more pets',
+          name: 'Voir plus de profils',
         }),
       ).toBeVisible();
     });
 
     await user.click(
       screen.getByRole('button', {
-        name: 'Load more pets',
+        name: 'Voir plus de profils',
       }),
     );
 
     await waitFor(() => {
-      expect(
-        mockedDiscoveryRequest,
-      ).toHaveBeenCalledTimes(3);
+      expect(mockedDiscoveryRequest).toHaveBeenCalledTimes(3);
     });
 
-    expect(
-      mockedDiscoveryRequest,
-    ).toHaveBeenLastCalledWith({
+    expect(mockedDiscoveryRequest).toHaveBeenLastCalledWith({
       token: 'test-token',
       radiusKm: 5,
       speciesId: 3,

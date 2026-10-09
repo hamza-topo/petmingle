@@ -1,16 +1,7 @@
-import {
-  render,
-  screen,
-} from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { MemoryRouter } from 'react-router';
-import {
-  beforeEach,
-  describe,
-  expect,
-  it,
-  vi,
-} from 'vitest';
+import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 import { App } from '../app/App';
 import { useAuth } from './AuthProvider';
@@ -36,18 +27,12 @@ function renderRoute(path: string) {
 describe('PetRequiredRoute', () => {
   beforeEach(() => {
     mockedUseAuth.mockReset();
-    mockedUseAuth.mockReturnValue(
-      authenticatedWithoutPetAuthState(),
-    );
+    mockedUseAuth.mockReturnValue(authenticatedWithoutPetAuthState());
   });
 
-  it.each([
-    '/discover',
-    '/messages',
-    '/profile',
-  ])(
+  it.each(['/discover', '/messages', '/profile'])(
     'shows the supported no-pet state for %s',
-    path => {
+    (path) => {
       renderRoute(path);
 
       expect(
@@ -57,9 +42,7 @@ describe('PetRequiredRoute', () => {
         }),
       ).toBeVisible();
 
-      expect(
-        screen.getByRole('status'),
-      ).toHaveTextContent(
+      expect(screen.getByRole('status')).toHaveTextContent(
         'You are signed in.',
       );
 
@@ -67,14 +50,9 @@ describe('PetRequiredRoute', () => {
         screen.getByRole('link', {
           name: 'Create pet profile',
         }),
-      ).toHaveAttribute(
-        'href',
-        '/pet/create',
-      );
+      ).toHaveAttribute('href', '/pet/create');
 
-      expect(
-        screen.queryByText('Nala'),
-      ).not.toBeInTheDocument();
+      expect(screen.queryByText('Nala')).not.toBeInTheDocument();
     },
   );
 
@@ -97,16 +75,14 @@ describe('PetRequiredRoute', () => {
   });
 
   it('renders pet-dependent content when a current pet exists', () => {
-    mockedUseAuth.mockReturnValue(
-      authenticatedAuthState(),
-    );
+    mockedUseAuth.mockReturnValue(authenticatedAuthState());
 
     renderRoute('/discover');
 
     expect(
       screen.getByRole('heading', {
         level: 1,
-        name: 'Discover Amazing Pets',
+        name: 'Une belle rencontre commence ici.',
       }),
     ).toBeVisible();
 

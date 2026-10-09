@@ -246,3 +246,104 @@
     .nearby-pet-grid .pet-card--nearby p { font-size: 11px; }
   }
 }
+
+
+/* Profile-first discovery. Sidebar styles above remain shared by Matches. */
+@layer components {
+  .discovery-page { width: 100%; max-width: none; background: var(--color-canvas); }
+  .discovery-page .discovery-header { display: flex; justify-content: space-between; height: 84px; gap: 24px; padding-inline: max(24px, calc((100vw - 1280px) / 2)); border-bottom: 1px solid var(--color-border); }
+  .discovery-page .brand-wordmark { font-size: 27px; }
+  .discovery-page .brand-mark { width: 44px; height: 44px; }
+  .discovery-top-nav { display: flex; align-items: center; gap: 36px; }
+  .discovery-top-nav a { display: flex; align-items: center; min-height: 48px; border-bottom: 2px solid transparent; color: var(--color-text-secondary); font-size: 15px; }
+  .discovery-top-nav a[aria-current="page"] { color: var(--color-ink); border-color: var(--color-ink); font-weight: 700; }
+  .discovery-account-shell { position: relative; }
+  .discovery-page .discovery-account { min-height: 48px; gap: 12px; }
+  .discovery-page .owner-avatar { width: 44px; height: 44px; overflow: hidden; background: var(--color-surface-blue); color: var(--color-ink); font-size: 10px; }
+  .discovery-account-options { position: absolute; right: 0; top: calc(100% + 12px); z-index: 20; width: 240px; display: grid; gap: 4px; padding: 12px; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px; box-shadow: var(--shadow-card); }
+  .discovery-account-options p { padding: 10px 12px; overflow-wrap: anywhere; font-weight: 700; }
+  .discovery-account-options a, .discovery-account-options button { display: flex; min-height: 44px; align-items: center; padding: 10px 12px; border-radius: 8px; text-align: left; }
+  .discovery-account-options a:hover { background: var(--color-surface-blue); }
+  .discovery-page .discovery-layout { display: block; width: min(1120px, calc(100% - 64px)); margin: 0 auto; padding: 48px 0 32px; }
+  .discovery-page .discovery-upper { display: block; }
+  .discovery-page .discovery-intro { align-items: center; min-height: 0; margin-bottom: 28px; padding: 0; gap: 24px; }
+  .discovery-page .discovery-intro h1 { font-size: clamp(25px, 2.6vw, 36px); line-height: 1.2; letter-spacing: -1.2px; }
+  .discovery-page .discovery-intro > div > p { margin-top: 10px; font-size: 16px; line-height: 24px; }
+  .discovery-tools { display: flex; align-items: center; gap: 12px; flex-shrink: 0; }
+  .discovery-page .discovery-location { width: auto; max-width: 280px; background: var(--color-surface-blue); border-color: transparent; color: var(--color-ink); padding-inline: 16px; font-size: 14px; }
+  .discovery-filter-trigger { display: flex; align-items: center; gap: 10px; min-height: 52px; padding: 12px 18px; border: 1px solid var(--color-border-action); border-radius: 16px; background: var(--color-surface); font-size: 14px; }
+  .discovery-filter-active { width: 7px; height: 7px; border-radius: 50%; background: var(--color-text-pink); }
+  .discovery-page .featured-discovery-pet { grid-template-columns: 56% minmax(0, 1fr); min-height: 560px; border-radius: 24px; }
+  .discovery-page .featured-pet-gallery { min-height: 560px; margin: 0; border-radius: 0; background: var(--color-surface-blue); }
+  .discovery-page .featured-pet-photo { object-fit: cover; }
+  .discovery-photo-progress { position: absolute; top: 18px; inset-inline: 20px; display: flex; gap: 8px; }
+  .discovery-photo-progress button { flex: 1; min-width: 0; height: 28px; border-radius: 8px; position: relative; }
+  .discovery-photo-progress button::before { content: ''; display: block; height: 5px; background: rgb(255 255 255 / 65%); border-radius: 4px; }
+  .discovery-photo-progress button[aria-pressed="true"]::before { background: var(--color-brand-blue); }
+  .discovery-page .gallery-arrow { top: 50%; transform: translateY(-50%); background: rgb(255 255 255 / 90%); }
+  .discovery-page .gallery-count { font-size: 12px; min-height: 28px; padding-inline: 12px; }
+  .discovery-page .featured-pet-details { padding: 36px; gap: 24px; border-left: 6px solid var(--color-surface-blue); }
+  .discovery-page .featured-pet-details h2 { font-size: clamp(34px, 3.5vw, 48px); line-height: 1.1; letter-spacing: -1.4px; }
+  .discovery-page .featured-pet-identity { margin-top: 8px; font-size: 16px; font-weight: 500; line-height: 24px; }
+  .featured-distance { display: flex; align-items: center; gap: 8px; margin-top: 12px; font-size: 14px; color: var(--color-text-secondary); }
+  .featured-biography { border-top: 1px solid var(--color-border); padding-top: 24px; }
+  .featured-biography h3 { font-size: 17px; margin-bottom: 10px; }
+  .discovery-page .featured-pet-description { color: var(--color-ink); font-size: 16px; line-height: 1.6; overflow-wrap: anywhere; }
+  .discovery-page .discovery-owner-note { display: flex; align-items: center; gap: 12px; border-top: 1px solid var(--color-border); padding-top: 18px; color: var(--color-ink); font-size: 14px; font-weight: 400; overflow-wrap: anywhere; }
+  .discovery-owner-avatar { width: 44px; height: 44px; border-radius: 50%; flex-shrink: 0; font-size: 9px; overflow: hidden; }
+  .featured-decision { margin-top: auto; }
+  .discovery-page .featured-pet-actions { grid-template-columns: 1fr 1fr; margin: 0; gap: 12px; }
+  .discovery-page .featured-pet-actions .action { min-height: 56px; min-width: 0; white-space: normal; overflow-wrap: anywhere; border-radius: 16px; font-size: 16px; gap: 8px; color: var(--color-ink); }
+  .discovery-page .featured-pet-actions .action--primary { background: var(--color-brand-pink); color: var(--color-ink); }
+  .discovery-page .featured-pet-actions .action--primary:disabled { opacity: 1; background: var(--color-surface-pink); }
+  .discovery-match-note { margin-top: 14px; font-size: 12px; color: var(--color-text-secondary); text-align: center; line-height: 1.5; }
+  .discovery-profile-navigation { display: flex; align-items: center; justify-content: center; gap: 24px; margin: 14px 0 0; font-size: 12px; color: var(--color-text-secondary); }
+  .discovery-profile-navigation button { display: flex; align-items: center; min-height: 44px; gap: 8px; color: var(--color-ink); }
+  .discovery-profile-navigation button:disabled { opacity: .45; }
+  .discovery-browse-toggle { display: flex; align-items: center; gap: 10px; min-height: 48px; margin: 12px auto 0; font-size: 14px; font-weight: 600; }
+  .discovery-page .nearby-pets { margin: 24px 0 0; border-top: 1px solid var(--color-border); padding-top: 24px; }
+  .discovery-page .nearby-pets h2 { font-size: 24px; }
+  .nearby-order { margin-top: 8px; color: var(--color-text-secondary); font-size: 13px; }
+  .discovery-page .nearby-pet-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+  .discovery-profile-preview { width: 100%; overflow: hidden; background: var(--color-surface); border: 1px solid var(--color-border); border-radius: 16px; text-align: left; }
+  .discovery-preview-photo { width: 100%; height: 180px; object-fit: cover; }
+  .discovery-profile-preview > span { display: grid; gap: 5px; padding: 16px; }
+  .discovery-profile-preview strong { font-size: 18px; }
+  .discovery-profile-preview small { color: var(--color-text-secondary); }
+  .discovery-filter-dialog { position: fixed; inset: 0; width: min(440px, calc(100% - 32px)); max-height: calc(100dvh - 32px); margin: auto; padding: 20px; border: 1px solid var(--color-border); border-radius: 24px; color: var(--color-ink); background: var(--color-surface); overflow-y: auto; }
+  .discovery-filter-dialog::backdrop { background: rgb(36 52 67 / 35%); }
+  .discovery-filter-close { display: block; min-height: 44px; margin-left: auto; font-size: 13px; text-decoration: underline; }
+  .discovery-filter-dialog .discovery-filters { padding: 12px 4px 4px; }
+  .discovery-filter-dialog .distance-filter { margin-top: 20px; }
+  .discovery-filter-dialog .discovery-select select { min-height: 48px; border-radius: 12px; }
+  .discovery-page a:focus-visible, .discovery-page button:focus-visible, .discovery-page select:focus-visible { outline: 3px solid var(--color-ink); outline-offset: 3px; }
+  @media (max-width: 1100px) {
+    .discovery-page .discovery-intro { align-items: flex-start; flex-direction: column; }
+    .discovery-page .featured-pet-details { padding: 28px; }
+  }
+  @media (max-width: 700px) {
+    .discovery-page .discovery-header { height: auto; min-height: 76px; flex-wrap: wrap; padding: 12px 20px 0; gap: 6px; }
+    .discovery-page .brand-wordmark { font-size: 23px; }
+    .discovery-top-nav { order: 3; width: 100%; justify-content: center; gap: 28px; }
+    .discovery-top-nav a { min-height: 48px; font-size: 14px; }
+    .discovery-page .discovery-layout { width: calc(100% - 32px); padding-top: 28px; }
+    .discovery-page .discovery-intro h1 { font-size: 28px; letter-spacing: -.8px; }
+    .discovery-page .discovery-intro > div > p { font-size: 14px; }
+    .discovery-tools { width: 100%; gap: 8px; }
+    .discovery-tools .discovery-location-shell { min-width: 0; flex: 1; }
+    .discovery-page .discovery-location { width: 100%; max-width: none; gap: 8px; font-size: 13px; }
+    .discovery-filter-trigger { padding-inline: 12px; }
+    .discovery-page .featured-discovery-pet { display: block; }
+    .discovery-page .featured-pet-gallery { min-height: 0; height: auto; aspect-ratio: 1 / 1; }
+    .discovery-page .featured-pet-details { padding: 24px; border-left: 0; border-top: 5px solid var(--color-surface-blue); gap: 20px; }
+    .discovery-page .featured-pet-details h2 { font-size: 36px; }
+    .discovery-page .featured-pet-description { font-size: 15px; }
+    .discovery-page .featured-pet-actions .action { font-size: 14px; }
+    .discovery-profile-navigation { gap: 16px; }
+    .discovery-page .nearby-pet-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; }
+    .discovery-preview-photo { height: 140px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .discovery-page * { scroll-behavior: auto; }
+  }
+}
