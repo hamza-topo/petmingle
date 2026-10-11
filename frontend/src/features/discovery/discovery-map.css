@@ -27,3 +27,10 @@
 .discovery-map-profile .featured-pet-actions button { padding:12px 8px; font-size:14px; }
 @media(max-width:900px) { .discovery-map-layout { grid-template-columns:1fr; } .discovery-pet-map { height:480px; } .discovery-map-profile .featured-discovery-pet { display:grid; grid-template-columns:1fr 1fr; } .discovery-map-profile .featured-pet-gallery,.discovery-map-profile .featured-pet-photo { height:100%; min-height:300px; } }
 @media(max-width:540px) { .discovery-pet-map { height:440px; } .discovery-map-caption { left:54px; top:12px; padding:9px 11px; font-size:12px; } .discovery-map-recenter { top:auto; bottom:90px; right:12px; } .discovery-map-profile .featured-discovery-pet { display:flex; } .discovery-map-profile .featured-pet-gallery,.discovery-map-profile .featured-pet-photo { height:220px; min-height:0; } }
+.discovery-pet-map .pet-map-photo { width:58px; height:58px; min-width:58px; max-width:58px; box-sizing:border-box; }
+.discovery-pet-map .pet-map-photo img { width:50px; height:50px; min-width:50px; max-width:50px; object-fit:cover; }
+.discovery-map-profile .featured-pet-description { max-height:150px; overflow:auto; }
+.discovery-pet-map .leaflet-control-attribution { max-width:100%; font-size:10px; white-space:normal; }
+.discovery-map-pets { flex-wrap:wrap; overflow-x:visible; }
+.discovery-map-pets button { max-width:100%; }
+.discovery-map-pets button span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
