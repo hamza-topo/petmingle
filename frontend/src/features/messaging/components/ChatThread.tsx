@@ -231,6 +231,7 @@ export function ChatThread({
 
       <MessageComposer
         key={conversation.id}
+        starterPetName={conversation.messages.length === 0 ? conversation.pets.find(pet => pet.id !== conversation.owners.find(owner => owner.id === conversation.currentOwnerId)?.representedPetId)?.name : undefined}
         onSend={onSend}
         onTypingChange={onTypingChange}
         disabled={loading}

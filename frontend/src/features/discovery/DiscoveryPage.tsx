@@ -27,6 +27,7 @@ import {
   type DiscoveryPet,
   type PetInteractionState,
 } from './discovery.api';
+import { useMatchExperience } from '../matches/MatchExperience';
 import { petInteractionRequest } from './interaction.api';
 
 type DiscoveryStatus = 'loading' | 'ready' | 'error';
@@ -41,6 +42,7 @@ const initialMeta: DiscoveryPageMeta = {
 };
 
 export function DiscoveryPage() {
+  const { celebrate } = useMatchExperience();
   const accountLocation = useAccountLocation();
   const locationLabel = accountLocationLabel(accountLocation);
 
@@ -277,6 +279,10 @@ export function DiscoveryPage() {
         next.set(petId, persisted.interaction);
         return next;
       });
+      const target = pets.find(item => item.id === petId);
+      if (persisted.interaction === 'liked' && persisted.new_match === true && typeof persisted.match_id === 'number' && target) {
+        celebrate(persisted.match_id, { id: target.id, name: target.name, photo: target.photo });
+      }
     } catch (caught) {
       setInteractionError(describeApiFailure(caught).message);
     } finally {
