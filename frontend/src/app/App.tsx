@@ -10,6 +10,7 @@ import { MessagingPage } from '../features/messaging/MessagingPage';
 import { OwnProfilePage } from '../features/own-profile/OwnProfilePage';
 import { PetCreatePage } from '../features/profile-creation/PetCreatePage';
 import { AccountLocationRoute } from '../features/account-location/AccountLocationRoute';
+import { MatchExperienceRoute } from '../features/matches/MatchExperience';
 import { RouteScroll } from './RouteScroll';
 
 export function App() {
@@ -28,6 +29,7 @@ export function App() {
           />
 
           <Route element={<PetRequiredRoute />}>
+            <Route element={<MatchExperienceRoute />}>
             <Route
               path="/matches"
               element={<MatchesPage />}
@@ -47,6 +49,7 @@ export function App() {
                 element={<OwnProfilePage />}
               />
             </Route>
+            </Route>
           </Route>
         </Route>
 
@@ -58,3 +61,4 @@ export function App() {
     </>
   );
 }
+

@@ -179,9 +179,9 @@ const sentMessage: ChatMessage = {
   timestamp: '2026-10-06T11:00:00.000Z',
 };
 
-function renderMessages() {
+function renderMessages(path = '/messages') {
   return render(
-    <MemoryRouter initialEntries={['/messages']}>
+    <MemoryRouter initialEntries={[path]}>
       <App />
     </MemoryRouter>,
   );
@@ -238,6 +238,12 @@ beforeEach(() => {
 });
 
 describe('Messaging persisted reads', () => {
+  it('opens the conversation for the pet requested by a match link', async () => {
+    renderMessages('/messages?pet=61');
+    expect(await screen.findByRole('heading', { name: 'Nala & Luna' })).toBeVisible();
+    await waitFor(() => expect(mockedThreadRequest).toHaveBeenCalledWith(expect.objectContaining({ receiverUserId: 30 })));
+  });
+
   it('loads persisted conversations and the first active thread', async () => {
     renderMessages();
 
@@ -707,6 +713,7 @@ describe('Messaging persisted reads', () => {
   });
 
   it('renders a safe thread failure without replacing the selected conversation identity', async () => {
+    const user = userEvent.setup();
     mockedThreadRequest.mockRejectedValue(
       new Error('Thread failed'),
     );
@@ -718,6 +725,8 @@ describe('Messaging persisted reads', () => {
         'Conversation unavailable',
       ),
     ).toBeVisible();
+
+    await user.click(screen.getByText('Leur rencontre'));
 
     expect(
       screen.getByRole('article', {
@@ -900,3 +909,4 @@ describe('Messaging persisted reads', () => {
     expect(input).toHaveValue('Still here');
   });
 });
+

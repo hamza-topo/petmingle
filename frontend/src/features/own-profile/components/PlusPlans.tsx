@@ -1,26 +1,16 @@
-import { useState } from 'react';
-import { Check, ChevronRight, Crown } from 'lucide-react';
-import { ActionButton } from '../../../components/Action';
-import { plusFeatures, plusPlans, type PlusPlan } from '../profile.fixtures';
-function PlusPlanCard({ plan, selected, onSelect }: { plan: PlusPlan; selected: boolean; onSelect: () => void }) {
-  return <label className="own-plan" data-selected={selected}>
-    {plan.recommended && <span className="own-popular">Most Popular</span>}
-    <span className="own-plan-name"><input type="radio" name="plus-plan" value={plan.id} checked={selected} onChange={onSelect} aria-label={plan.label} /><span>{plan.label}</span></span>
-    <span className="own-plan-price"><strong>{plan.monthlyPrice}</strong><span> / month</span></span>
-    <span className="own-plan-billing">{plan.billing}</span>
-    <span className="own-saving-slot">{plan.saving && <span>{plan.saving}</span>}</span>
-    <span className="own-plan-benefits">{plan.benefits.map(text => <span key={text}><Check size={17} aria-hidden="true" />{text}</span>)}</span>
-  </label>;
-}
+import { ArrowUpRight } from 'lucide-react';
+
 export function PlusPlans() {
-  const [selected, setSelected] = useState('annual');
-  return <aside id="petmingle-plus" className="own-plus" aria-labelledby="own-plus-title">
-    <h2 id="own-plus-title"><Crown size={52} fill="currentColor" aria-hidden="true" /><span>PetMingle <strong>Plus</strong></span></h2>
-    <h3>More connections. More adventures.</h3>
-    <p className="own-plus-intro">PetMingle Plus is not available yet. These proposed features and prices may change.</p>
-    <ul className="own-plus-features">{plusFeatures.map(({ title, text, icon: Icon }) => <li key={title}><span className="own-plus-icon"><Icon size={32} aria-hidden="true" /></span><div><h4>{title}</h4><p>{text}</p></div></li>)}</ul>
-    <fieldset className="own-plans" disabled><legend className="sr-only">Proposed PetMingle Plus plans</legend>{plusPlans.map(plan => <PlusPlanCard key={plan.id} plan={plan} selected={selected === plan.id} onSelect={() => setSelected(plan.id)} />)}</fieldset>
-    <ActionButton className="own-upgrade" unavailableReason="Purchases are not available yet"><Crown size={37} fill="currentColor" />Try PetMingle Plus<ChevronRight size={27} /></ActionButton>
-    <p className="own-cancel">Subscriptions are not available for purchase.</p>
-  </aside>;
+  return (
+    <aside id="petmingle-plus" className="own-plus" aria-labelledby="own-plus-title">
+      <span className="plus-coming">À venir</span>
+      <h2 id="own-plus-title">PetMingle <strong>Plus</strong></h2>
+      <p className="own-plus-intro">Encore plus de possibilités pour leurs prochaines rencontres.</p>
+      <details className="plus-preview">
+        <summary>Découvrir la direction de Plus <ArrowUpRight size={18} aria-hidden="true" /></summary>
+        <p>Nous préparons des filtres plus précis et de nouvelles façons de découvrir les animaux près de vous. Les fonctionnalités et les tarifs seront annoncés à leur lancement.</p>
+      </details>
+      <p className="own-cancel">Les abonnements ne sont pas encore disponibles.</p>
+    </aside>
+  );
 }

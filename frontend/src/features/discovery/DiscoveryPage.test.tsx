@@ -132,6 +132,7 @@ const taxonomy = {
 };
 
 beforeEach(() => {
+  sessionStorage.clear();
   mockedUseAuth.mockReturnValue(authenticatedAuthState());
 
   tokenStorage.set('test-token');
@@ -207,6 +208,18 @@ async function openFilters() {
 }
 
 describe('Discovery page', () => {
+  it('opens a celebration only when the server confirms a new reciprocal match', async () => {
+    const user = userEvent.setup();
+    mockedPetInteractionRequest.mockResolvedValueOnce({ id: 100, from_pet_id: 42, to_pet_id: 43, interaction: 'liked', new_match: true, match_id: 777 });
+    renderDiscovery(); await waitForDiscovery();
+    await user.click(screen.getByRole('button', { name: /^Suivant$/ }));
+    await user.click(screen.getByRole('button', { name: 'J’aime' }));
+    expect(await screen.findByRole('dialog', { name: 'Ça sent la belle rencontre !' })).toBeVisible();
+    expect(screen.getByRole('link', { name: /Dire bonjour/ })).toHaveAttribute('href', '/messages?pet=43');
+    await user.click(screen.getByRole('button', { name: 'Continuer à découvrir' }));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
   it('persists a like with the target Pet ID and reflects the saved state', async () => {
     const user = userEvent.setup();
 
@@ -230,6 +243,7 @@ describe('Discovery page', () => {
         name: 'Like envoyé',
       }),
     ).toHaveAttribute('aria-pressed', 'true');
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 
   it('switches an existing like to a persisted dislike', async () => {

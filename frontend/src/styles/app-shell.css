@@ -1,0 +1,28 @@
+@layer components {
+  .app-header.discovery-header { width: 100%; max-width: 1320px; margin-inline: auto; display: flex; align-items: center; gap: 32px; height: auto; min-height: 88px; padding: 18px 32px; border-bottom: 1px solid var(--color-border); background: var(--color-surface); }
+  .app-header .brand-mark { width: 38px; height: 32px; }
+  .app-header .brand-wordmark { font-size: 26px; letter-spacing: -1.1px; }
+  .app-header .discovery-top-nav { display: flex; align-items: center; gap: 8px; margin-inline: auto; }
+  .app-header .discovery-top-nav a { padding: 12px 18px; border-radius: 14px; font-size: 14px; font-weight: 650; color: var(--color-text-secondary); transition: background .18s, color .18s; }
+  .app-header .discovery-top-nav a[aria-current=page] { color: var(--color-ink); background: var(--color-brand-blue); }
+  .app-header .discovery-top-nav a:hover { background: var(--color-surface-blue); }
+  .app-header .discovery-account-shell { position: relative; }
+  .app-header .discovery-account { display: flex; align-items: center; gap: 8px; min-height: 44px; }
+  .app-header .owner-avatar { width: 42px; height: 42px; font-size: 13px; font-weight: 700; background: var(--color-ink); color: white; border-radius: 50%; }
+  .app-header .discovery-account-options { position: absolute; right: 0; top: calc(100% + 12px); z-index: 50; width: min(260px, 80vw); padding: 12px; border: 1px solid var(--color-border); background: var(--color-surface); border-radius: 18px; box-shadow: 0 16px 48px rgb(25 43 52 / .12); display: grid; gap: 4px; }
+  .app-header .discovery-account-options p { overflow-wrap: anywhere; padding: 8px; font-weight: 700; }
+  .app-header .discovery-account-options a, .app-header .discovery-sign-out { display: block; text-align: left; border-radius: 10px; padding: 12px; font-size: 14px; min-height: 44px; }
+  .app-header .discovery-account-options a:hover, .app-header .discovery-sign-out:hover { background: var(--color-surface-blue); }
+  :is(.discovery-page, .own-profile-page, .matches-page, .messaging-page) button:not(:disabled), :is(.discovery-page, .own-profile-page, .matches-page, .messaging-page) a { transition: background .18s, color .18s, box-shadow .18s, transform .18s; }
+  :is(.discovery-page, .own-profile-page, .matches-page, .messaging-page) button:not(:disabled):active { transform: scale(.97); }
+  .app-header a:focus-visible, .app-header button:focus-visible { outline: 3px solid var(--color-text-blue); outline-offset: 3px; }
+  @media (max-width: 700px) {
+    .app-header.discovery-header { gap: 12px; padding: 14px 16px; flex-wrap: wrap; }
+    .app-header .discovery-account-shell { margin-left: auto; }
+    .app-header .discovery-top-nav { order: 3; width: 100%; justify-content: center; margin: 0; }
+    .app-header .discovery-top-nav a { padding: 10px 13px; font-size: 13px; }
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :is(.discovery-page, .own-profile-page, .matches-page, .messaging-page) *, :is(.discovery-page, .own-profile-page, .matches-page, .messaging-page) *::before, :is(.discovery-page, .own-profile-page, .matches-page, .messaging-page) *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}

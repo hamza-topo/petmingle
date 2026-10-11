@@ -6,9 +6,7 @@ import {
   useEffect,
 } from 'react';
 import {
-  Image,
   SendHorizontal,
-  Smile,
 } from 'lucide-react';
 
 export function MessageComposer({
@@ -16,11 +14,13 @@ export function MessageComposer({
   onTypingChange,
   disabled = false,
   error = null,
+  starterPetName,
 }: {
   onSend: (content: string) => Promise<void>;
   onTypingChange?: (isWriting: boolean) => void;
   disabled?: boolean;
   error?: string | null;
+  starterPetName?: string;
 }) {
   const errorId = useId();
   const input = useRef<HTMLInputElement>(null);
@@ -64,30 +64,16 @@ export function MessageComposer({
 
   return (
     <>
+      {starterPetName && !draft.trim() && !controlsDisabled && <div className="chat-starters" aria-label="Suggestions de premier message">
+        <p>Un petit bonjour ?</p>
+        {[`${starterPetName} aime les longues balades ?`, 'Vous avez un parc préféré ?', 'Une petite rencontre ce week-end ?'].map(text => <button key={text} type="button" onClick={() => { setDraft(text); onTypingChange?.(true); input.current?.focus(); }}>{text}</button>)}
+      </div>}
       <form
         className="message-composer"
         aria-label="Send a message"
         aria-busy={pending}
         onSubmit={submit}
       >
-        <button
-          type="button"
-          className="chat-round-control"
-          disabled
-          aria-label="Attach image — unavailable"
-        >
-          <Image size={27} />
-        </button>
-
-        <button
-          type="button"
-          className="chat-round-control"
-          disabled
-          aria-label="Choose emoji — unavailable"
-        >
-          <Smile size={27} />
-        </button>
-
         <input
           aria-label="Write a message"
           ref={input}
@@ -145,3 +131,4 @@ export function MessageComposer({
     </>
   );
 }
+

@@ -1,22 +1,22 @@
 /* Direction 02: crossing paths. Decorative pastels use dark, readable foregrounds. */
 @theme static {
   --color-*: initial;
-  --color-ink: #243443;
+  --color-ink: #192b34;
   --color-text-secondary: #53616e;
   --color-text-blue: #245e79;
   --color-text-pink: #953352;
   --color-text-teal: #00786c;
   --color-text-purple: #7132d5;
-  --color-brand-pink: #efb5c8;
-  --color-brand-blue: #c9e9f4;
+  --color-brand-pink: #ef5c90;
+  --color-brand-blue: #83d5f0;
   --color-surface: #fefefe;
-  --color-canvas: #faf9f6;
+  --color-canvas: #f6f8fa;
   --color-surface-blue: #e3f4fe;
-  --color-surface-pink: #fef3f8;
+  --color-surface-pink: #fff1f6;
   --color-surface-pink-strong: #fce3ed;
   /* Sampled from the blue benefit icon disk in M1 (RGB 211, 235, 253). */
   --color-icon-blue: #d3ebfd;
-  --color-border: #dce1e3;
+  --color-border: #dce5eb;
   --color-border-action: #9ebecb;
   --color-bubble-incoming: #eff3f8;
   --color-bubble-outgoing: #d8efff;

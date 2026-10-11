@@ -153,7 +153,7 @@ it('connects all five screens and the Plus section using existing visible contro
 
   await user.click(
     screen.getByRole('link', {
-      name: 'Explore',
+      name: 'Découvrir',
     }),
   );
 
@@ -164,17 +164,13 @@ it('connects all five screens and the Plus section using existing visible contro
     }),
   );
 
-  expect(
-    screen.getByRole('radio', {
-      name: '12 Months',
-    }),
-  ).toBeChecked();
+  expect(screen.getByRole('heading', { name: 'PetMingle Plus' })).toBeVisible();
 
   expect(HTMLElement.prototype.scrollIntoView).toHaveBeenCalled();
 
   await user.click(
     screen.getByRole('button', {
-      name: 'Complete your profile',
+      name: 'Modifier mon profil',
     }),
   );
 
@@ -196,7 +192,7 @@ it('connects all five screens and the Plus section using existing visible contro
 
   await user.click(
     screen.getByRole('link', {
-      name: 'How It Works',
+      name: 'PetMingle home',
     }),
   );
 

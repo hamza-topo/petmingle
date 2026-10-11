@@ -172,7 +172,7 @@ try {
     await page.getByRole('button', { name: 'Marrakech, Morocco' }).click();
     const modal = page.getByRole('dialog');
     await modal.waitFor();
-    await page.locator('.leaflet-container').waitFor();
+    await page.locator('.location-map.leaflet-container').waitFor();
     if (!(await page.getByRole('textbox', { name: 'Search city or neighbourhood' }).evaluate(el => el === document.activeElement))) throw new Error('Picker initial focus missing');
     await page.getByRole('button', { name: 'Confirm this area' }).focus();
     await page.keyboard.press('Tab');
@@ -184,7 +184,7 @@ try {
     await page.getByRole('textbox', { name: 'Search city or neighbourhood' }).fill('Casablanca');
     await page.getByRole('button', { name: 'Search', exact: true }).click();
     await page.getByRole('button', { name: 'Casablanca, Morocco' }).click();
-    await page.locator('.leaflet-container').focus();
+    await page.locator('.location-map.leaflet-container').focus();
     await page.keyboard.press('ArrowRight');
     await page.locator('.location-picker-selected strong').filter({ hasText: 'Selected area' }).waitFor();
     await page.locator('.location-picker-selected strong').filter({ hasText: 'Casablanca, Morocco' }).waitFor();
@@ -208,7 +208,7 @@ try {
       // Extra visual capture uses real tiles; functional assertions above use deterministic fixtures.
       await page.unroute('https://tile.openstreetmap.org/**');
       await page.getByRole('button', { name: 'Casablanca, Morocco' }).click();
-      await page.locator('.leaflet-container').waitFor();
+      await page.locator('.location-map.leaflet-container').waitFor();
       await page.waitForTimeout(4000);
       await page.screenshot({ path: output + '/location-picker-real-tiles.png', fullPage: false });
     }

@@ -209,3 +209,26 @@
     }
   }
 }
+
+@layer components {
+  .matches-page .matches-layout { display: block; max-width: 1200px; margin: auto; padding: 40px 28px; }
+  .matches-page .matches-content { min-width: 0; padding: 0; }
+  .matches-page .matches-intro { padding: 0 0 32px; background: transparent; border: 0; }
+  .matches-page .matches-intro h1 { font-size: clamp(32px, 4vw, 52px); line-height: 1.1; letter-spacing: -1.5px; margin-block: 10px; }
+  .matches-page .matches-eyebrow { color: var(--color-text-blue); font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; }
+  .matches-page .relationship-grid { grid-template-columns: repeat(auto-fill, minmax(min(100%, 280px), 1fr)); gap: 24px; }
+  .matches-page .relationship-card { border-radius: 24px; overflow: hidden; border: 1px solid var(--color-border); box-shadow: none; }
+  .matches-page .relationship-card-photo { height: 280px; }
+  .matches-page .relationship-card-body { padding: 20px; }
+  .matches-page .relationship-card-heading h3 { font-size: 25px; }
+  .matches-page .relationship-status { font-size: 11px; padding: 6px 10px; color: var(--color-ink); background: var(--color-surface-blue); }
+  .matches-page .relationship-about { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-size: 14px; line-height: 1.6; }
+  .matches-page .relationship-chat { display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding: 14px 16px; background: var(--color-ink); color: white; border-radius: 12px; font-size: 14px; font-weight: 650; }
+  .matches-page .relationship-chat:hover { background: var(--color-text-blue); }
+  @media (max-width: 700px) {
+    .matches-page .matches-layout { padding: 24px 16px; }
+    .matches-page .matches-intro { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .matches-page .relationship-section-heading { flex-wrap: wrap; gap: 12px; }
+  }
+}
+
