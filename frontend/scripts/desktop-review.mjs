@@ -285,6 +285,8 @@ try {
     if (await modal.count()) throw new Error('Match Escape did not dismiss');
     await page.waitForFunction(() => document.querySelector('main') === document.activeElement);
     await page.getByRole('button', { name: 'Passer', exact: true }).click();
+    await page.locator('.featured-pet-summary').getByRole('heading', { name: 'Oscar', exact: true }).waitFor();
+    await page.getByRole('button', { name: 'Précédent', exact: true }).click();
     await page.getByRole('button', { name: 'Passé', exact: true }).waitFor();
     await page.getByRole('button', { name: 'J’aime', exact: true }).click();
     await page.getByRole('button', { name: 'Like envoyé', exact: true }).waitFor();
