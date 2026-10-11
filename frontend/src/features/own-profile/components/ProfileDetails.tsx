@@ -27,7 +27,6 @@ export function ProfileAbout({
 
       <p>{pet.biography}</p>
 
-      <p>Personality traits are not available yet.</p>
     </section>
   );
 }
@@ -42,7 +41,7 @@ export function ProfileDetails({
   locationLabel: string;
 }) {
   const details = profileDetails.map(column =>
-    column.map(detail => {
+    column.filter(detail => ['Age', 'Breed', 'Location'].includes(detail.label)).map(detail => {
       if (detail.label === 'Age') {
         return {
           ...detail,
@@ -112,3 +111,4 @@ export function ProfileDetails({
     </section>
   );
 }
+

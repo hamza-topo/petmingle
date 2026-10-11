@@ -1,6 +1,5 @@
 import {
   ChevronRight,
-  PawPrint,
   Pencil,
 } from 'lucide-react';
 import { PetLocation } from '../../../components/PetLocation';
@@ -97,15 +96,11 @@ export function PetProfileSummary({
         onClick={onEdit}
         disabled={!onEdit}
       >
-        <PawPrint
-          size={30}
-          fill="currentColor"
-        />
-
-        <span>Complete your profile</span>
+        <span>Modifier mon profil</span>
 
         <ChevronRight size={25} />
       </button>
     </section>
   );
 }
+
