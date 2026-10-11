@@ -319,6 +319,26 @@ describe('Discovery page', () => {
     ).toHaveAttribute('aria-pressed', 'true');
   });
 
+  it('skips already passed profiles when advancing', async () => {
+    const user = userEvent.setup();
+    mockedDiscoveryRequest.mockResolvedValueOnce({ ...firstPage, pets: [firstPage.pets[0], { ...firstPage.pets[1], interaction: 'disliked' }, firstPage.pets[2]] });
+    renderDiscovery();
+    await waitForDiscovery();
+    await user.click(screen.getByRole('button', { name: 'Passer' }));
+    expect(await screen.findByRole('heading', { name: 'Bella', level: 2 })).toBeVisible();
+  });
+
+  it('loads the next page when no unpassed loaded profile remains', async () => {
+    const user = userEvent.setup();
+    mockedDiscoveryRequest.mockResolvedValueOnce({ ...firstPage, pets: firstPage.pets.map(pet => ({ ...pet, interaction: 'disliked' })), meta: { ...firstPage.meta, last_page: 2, total: 4 } });
+    mockedDiscoveryRequest.mockResolvedValueOnce({ pets: [pet(45, 'Oscar', 3)], meta: { ...firstPage.meta, current_page: 2, last_page: 2, total: 4 } });
+    renderDiscovery();
+    await waitForDiscovery();
+    await user.click(screen.getByRole('button', { name: 'Passé' }));
+    expect(await screen.findByRole('heading', { name: 'Oscar', level: 2 })).toBeVisible();
+    expect(mockedDiscoveryRequest).toHaveBeenLastCalledWith(expect.objectContaining({ page: 2 }));
+  });
+
   it('keeps the selected profile when passing fails', async () => {
     const user = userEvent.setup();
     mockedPetInteractionRequest.mockRejectedValueOnce(new TypeError('Failed to fetch'));

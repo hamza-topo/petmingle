@@ -136,7 +136,7 @@ export function DiscoveryPage() {
   }, [taxonomyReloadKey]);
 
   const loadPage = useCallback(
-    async (pageNumber: number, append = false, selectNext = false): Promise<void> => {
+    async (pageNumber: number, append = false, selectNext: number | false = false): Promise<void> => {
       const token = tokenStorage.get();
 
       if (!token) {
@@ -179,7 +179,10 @@ export function DiscoveryPage() {
         });
 
         if (!append) setSelectedPetId(null);
-        else if (selectNext) setSelectedPetId(result.pets.find(pet => pet.interaction !== 'disliked')?.id ?? null);
+        else if (selectNext !== false && activeSelection.current === selectNext) {
+          const nextPet = result.pets.find(pet => pet.interaction !== 'disliked');
+          if (nextPet) setSelectedPetId(nextPet.id);
+        }
 
         setPets((current) => {
           if (!append) {
@@ -293,7 +296,7 @@ export function DiscoveryPage() {
           setSelectedPetId(following.id);
           window.requestAnimationFrame(() => document.getElementById(`featured-pet-${following.id}`)?.focus({ preventScroll: true }));
         }
-        else if (meta.current_page < meta.last_page) await loadPage(meta.current_page + 1, true, true);
+        else if (meta.current_page < meta.last_page) await loadPage(meta.current_page + 1, true, petId);
       }
       const target = pets.find(item => item.id === petId);
       if (persisted.interaction === 'liked' && persisted.new_match === true && typeof persisted.match_id === 'number' && target) {
