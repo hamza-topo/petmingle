@@ -30,7 +30,10 @@ function fixture(path, state) {
   if (path === '/pets/42') return envelope(pet);
   if (path === '/pets/55') return envelope(otherPet);
   if (path === '/locations/nears') return pageEnvelope(state === 'empty' ? [] : [otherPet, { ...otherPet, id: 56, name: 'Oscar' }].map(p => ({ owner: { id: 20, name: 'Camille propriétaire' }, pet: { ...p, owner_id: 20, age_years: p.age, sex: p.sexe, race }, distance_km: 1.25, is_new: false, interaction: null })));
+  if (path === '/matches') return envelope([{ id: 8, from_pet_id: 42, to_pet_id: 55 }]);
+  if (path === '/mismatches') return envelope([]);
   if (path === '/conversations') return pageEnvelope(state === 'empty' ? [] : [conversation]);
+  if (path === '/messages/typing') return envelope({ receiver_user_id: 20, is_writing: true });
   if (path === '/messages') return pageEnvelope(state === 'empty' ? [] : [message]);
   if (path === '/conversations/7/seen') return envelope({ conversation_id: 7, marked_count: 0, unread_count: 0 });
   throw new Error('Unexpected API path: ' + path);
@@ -40,6 +43,7 @@ const screens = [
   { name: 'creation', path: '/pet/create', ready: 'form[aria-label="Create pet profile"] select option[value="3"]' },
   { name: 'discovery', path: '/discover', ready: '.featured-discovery-pet' },
   { name: 'profile', path: '/profile', ready: '.own-summary h1' },
+  { name: 'matches', path: '/matches', ready: '.relationship-card' },
   { name: 'messaging', path: '/messages', ready: '.chat-timeline' },
 ];
 try {
@@ -49,7 +53,7 @@ try {
   }
   browser = await chromium.launch({ headless: true });
   for (const width of [1448, 1280, 1120, 768, 390, 320]) {
-    for (const screen of screens.filter(s => width >= 1120 || ['landing', 'discovery', 'messaging', 'profile'].includes(s.name))) {
+    for (const screen of screens.filter(s => width >= 1120 || s.name !== 'creation')) {
       const context = await browser.newContext({ viewport: { width, height: 1000 }, reducedMotion: 'reduce' });
       await context.addInitScript(() => localStorage.setItem('petmingle.auth.token', 'visual-test-token'));
       const page = await context.newPage();
@@ -62,6 +66,9 @@ try {
       });
       await page.route('**/storage/pets/review.jpg', route => route.fulfill({ contentType: 'image/jpeg', body: reviewPhoto }));
       await page.goto(base + screen.path);
+      if (screen.name === 'messaging' && width <= 700) {
+        await page.locator('.conversation-row').first().click();
+      }
       await page.locator(screen.ready).first().waitFor({ state: screen.name === 'creation' ? 'attached' : 'visible' });
       await page.evaluate(() => document.fonts.ready);
       if (screen.name === 'landing') {
@@ -86,6 +93,11 @@ try {
       const shot = await page.screenshot({ path: output + '/' + filename, fullPage: true });
       thumbnails.push({ name: screen.name + ' / ' + width, image: shot.toString('base64') });
       results.push({ screen: screen.name, width, state: 'success', ...metrics, errors });
+      if (screen.name === 'messaging' && width <= 700) {
+        await page.getByRole('button', { name: 'Retour aux conversations' }).click();
+        await page.locator('.conversation-list').waitFor();
+        if (await page.locator('.chat-thread').isVisible()) throw new Error('Mobile back did not restore list');
+      }
       await context.close();
     }
   }
@@ -107,6 +119,9 @@ try {
       });
       await page.route('**/storage/pets/review.jpg', route => route.fulfill({ contentType: 'image/jpeg', body: reviewPhoto }));
       await page.goto(base + screen.path);
+      if (screen.name === 'messaging' && width <= 700) {
+        await page.locator('.conversation-row').first().click();
+      }
       await page.locator('main').waitFor();
       if (state === 'loading') await page.locator('main').getByRole('status').filter({ hasText: screen.name === 'discovery' ? 'Loading nearby pets' : 'Loading conversations' }).first().waitFor();
       else if (state === 'error') await page.getByRole('alert').first().waitFor();
@@ -226,6 +241,71 @@ try {
     await page.keyboard.press('Escape');
     if (await page.getByRole('link', { name: 'Mon profil', exact: true }).count()) throw new Error('Account menu did not dismiss');
     results.push({ screen: 'discovery-filters', width, state: 'keyboard-cancel-apply-account', ...metrics });
+    await context.close();
+  }
+  for (const width of [1280, 768, 390, 320]) {
+    const context = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: width === 320 ? 'reduce' : 'no-preference' });
+    await context.addInitScript(() => localStorage.setItem('petmingle.auth.token', 'visual-test-token'));
+    const page = await context.newPage();
+    let writes = 0;
+    await page.route('**/storage/pets/review.jpg', route => route.fulfill({ contentType: 'image/jpeg', body: reviewPhoto }));
+    await page.route('**/api/v.0/**', async route => {
+      const request = route.request();
+      const path = new URL(request.url()).pathname.replace('/api/v.0', '');
+      if (path === '/likes' || path === '/dislikes') {
+        writes++;
+        return route.fulfill({ json: envelope({ id: 100, from_pet_id: 42, to_pet_id: request.postDataJSON().to_pet_id, interaction: path === '/likes' ? 'liked' : 'disliked', new_match: path === '/likes', match_id: path === '/likes' ? 8 : null }) });
+      }
+      return route.fulfill({ json: fixture(path, 'success') });
+    });
+    await page.goto(base + '/discover');
+    await page.locator('.featured-discovery-pet').waitFor();
+    await page.getByRole('button', { name: 'J’aime', exact: true }).click();
+    const modal = page.getByRole('dialog', { name: 'Ça sent la belle rencontre !' });
+    await modal.waitFor();
+    await modal.locator('img').first().evaluate(img => img.decode());
+    if (!(await page.getByRole('button', { name: 'Fermer la rencontre' }).evaluate(el => el === document.activeElement))) throw new Error('Match initial focus missing');
+    await page.getByRole('button', { name: 'Continuer à découvrir' }).focus();
+    await page.keyboard.press('Tab');
+    if (!(await page.getByRole('button', { name: 'Fermer la rencontre' }).evaluate(el => el === document.activeElement))) throw new Error('Match modal focus escaped');
+    const metrics = await modal.evaluate(el => ({ viewport: innerWidth, scroll: el.scrollWidth, outside: [...el.querySelectorAll('a, button, h2')].filter(item => { const r = item.getBoundingClientRect(); return r.left < -1 || r.right > innerWidth + 1; }).map(item => item.className) }));
+    if (width === 320 && await modal.evaluate(el => getComputedStyle(el).animationName) !== 'none') throw new Error('Match ignores reduced motion');
+    await page.screenshot({ path: output + '/match-celebration-' + width + '.png', animations: 'disabled' });
+    await page.keyboard.press('Escape');
+    if (await modal.count()) throw new Error('Match Escape did not dismiss');
+    await page.waitForFunction(() => document.querySelector('main') === document.activeElement);
+    await page.getByRole('button', { name: 'Passer', exact: true }).click();
+    await page.getByRole('button', { name: 'Passé', exact: true }).waitFor();
+    await page.getByRole('button', { name: 'J’aime', exact: true }).click();
+    await page.getByRole('button', { name: 'Like envoyé', exact: true }).waitFor();
+    if (await page.getByRole('dialog').count() || writes !== 3) throw new Error('Same match replayed or interaction did not persist');
+    results.push({ screen: 'match-celebration', width, state: 'confirmed-keyboard-dedup', ...metrics });
+    await context.close();
+  }
+  {
+    const width = 320;
+    const context = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
+    await context.addInitScript(() => localStorage.setItem('petmingle.auth.token', 'visual-test-token'));
+    const page = await context.newPage();
+    let sent = 0;
+    await page.route('**/storage/pets/review.jpg', route => route.fulfill({ contentType: 'image/jpeg', body: reviewPhoto }));
+    await page.route('**/api/v.0/**', route => {
+      const request = route.request();
+      const path = new URL(request.url()).pathname.replace('/api/v.0', '');
+      if (path === '/messages/typing') return route.fulfill({ json: envelope({ receiver_user_id: request.postDataJSON().receiver_id, is_writing: request.postDataJSON().is_writing }) });
+      if (path === '/messages' && request.method() === 'POST') { sent++; return route.fulfill({ json: envelope({ ...message, id: 91, sender_id: 10, receiver_id: 20, content: request.postDataJSON().content, is_seen: false }) }); }
+      if (path === '/messages') return route.fulfill({ json: pageEnvelope([]) });
+      return route.fulfill({ json: fixture(path, 'success') });
+    });
+    await page.goto(base + '/messages?pet=55');
+    await page.getByRole('button', { name: /aime les longues balades/ }).click();
+    const input = page.getByRole('textbox', { name: 'Write a message' });
+    if (!(await input.inputValue()).includes(otherPet.name) || sent) throw new Error('Starter auto-sent or wrong pet');
+    await input.press('Enter');
+    await page.getByRole('list', { name: 'Messages in active conversation' }).waitFor();
+    if (sent !== 1) throw new Error('Starter submit count incorrect');
+    const scroll = await page.evaluate(() => document.documentElement.scrollWidth);
+    results.push({ screen: 'message-starter', width, state: 'draft-then-submit', viewport: width, scroll });
     await context.close();
   }
   await writeFile(output + '/results.json', JSON.stringify(results, null, 2));

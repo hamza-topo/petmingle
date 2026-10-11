@@ -4,13 +4,14 @@ import {
   useState,
 } from 'react';
 
+import { Link } from 'react-router';
+
 import { ApiError } from '../../api/errors';
 import { describeApiFailure } from '../../api/presentation';
 import { useAuth } from '../../auth/AuthProvider';
 import { tokenStorage } from '../../auth/tokenStorage';
 import { ApiState } from '../../components/ApiState';
 import { ReferenceImage } from '../../components/ReferenceImage';
-import { DiscoverySidebar } from '../discovery/components/DiscoverySidebar';
 import { MatchesHeader } from './MatchesHeader';
 import {
   relationshipsRequest,
@@ -65,9 +66,7 @@ function RelationshipCardView({
           </p>
         )}
 
-        <p className="relationship-id-note">
-          Pet #{relationship.targetPetId}
-        </p>
+        {!past && <Link className="relationship-chat" to={`/messages?pet=${relationship.targetPetId}`}>Dire bonjour <span aria-hidden="true">↗</span></Link>}
       </div>
     </article>
   );
@@ -198,7 +197,6 @@ export function MatchesPage() {
         id="matches-main"
         className="matches-layout"
       >
-        <DiscoverySidebar />
 
         <section
           className="matches-content"
@@ -207,14 +205,13 @@ export function MatchesPage() {
           <div className="matches-intro">
             <div>
               <p className="matches-eyebrow">
-                Your connections
+                Leurs nouvelles histoires
               </p>
               <h1 id="matches-title">
-                Your Matches
+                Vos rencontres
               </h1>
               <p>
-                Mutual pet connections are loaded from
-                your saved PetMingle relationships.
+                Une balade, un jeu, une nouvelle amitié. Tout commence ici.
               </p>
             </div>
 
@@ -270,14 +267,14 @@ export function MatchesPage() {
           {status === 'ready' && (
             <>
               <RelationshipSection
-                title="Active matches"
-                description="Current mutual pet connections."
+                title="Nouvelles rencontres"
+                description="Ils se sont plu. À vous de faire connaissance."
                 relationships={relationships.matches}
               />
 
               <RelationshipSection
-                title="Past matches"
-                description="Previous mutual connections that are no longer active."
+                title="Rencontres passées"
+                description="Les rencontres qui ne sont plus actives."
                 relationships={relationships.mismatches}
               />
             </>
@@ -287,3 +284,4 @@ export function MatchesPage() {
     </div>
   );
 }
+

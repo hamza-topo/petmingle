@@ -48,7 +48,7 @@ export function ConversationList({
         role="group"
         aria-label="Conversation filters"
       >
-        {['All', 'Matches', 'Unread'].map(label => (
+        {['All', 'Unread'].map(label => (
           <button
             type="button"
             key={label}
@@ -105,3 +105,4 @@ export function ConversationList({
     </aside>
   );
 }
+
