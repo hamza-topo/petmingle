@@ -153,7 +153,7 @@ it('connects all five screens and the Plus section using existing visible contro
 
   await user.click(
     screen.getByRole('link', {
-      name: 'Explore',
+      name: 'Découvrir',
     }),
   );
 
