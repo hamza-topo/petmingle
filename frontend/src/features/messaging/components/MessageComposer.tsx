@@ -6,9 +6,7 @@ import {
   useEffect,
 } from 'react';
 import {
-  Image,
   SendHorizontal,
-  Smile,
 } from 'lucide-react';
 
 export function MessageComposer({
@@ -70,24 +68,6 @@ export function MessageComposer({
         aria-busy={pending}
         onSubmit={submit}
       >
-        <button
-          type="button"
-          className="chat-round-control"
-          disabled
-          aria-label="Attach image — unavailable"
-        >
-          <Image size={27} />
-        </button>
-
-        <button
-          type="button"
-          className="chat-round-control"
-          disabled
-          aria-label="Choose emoji — unavailable"
-        >
-          <Smile size={27} />
-        </button>
-
         <input
           aria-label="Write a message"
           ref={input}
@@ -145,3 +125,4 @@ export function MessageComposer({
     </>
   );
 }
+

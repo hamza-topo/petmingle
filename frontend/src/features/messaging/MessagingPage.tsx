@@ -5,6 +5,8 @@ import {
   useState,
 } from 'react';
 
+import { useSearchParams } from 'react-router';
+
 import { ApiError } from '../../api/errors';
 import { describeApiFailure } from '../../api/presentation';
 import { useAuth } from '../../auth/AuthProvider';
@@ -41,6 +43,9 @@ type LoadStatus =
 
 export function MessagingPage() {
   const { user } = useAuth();
+  const [searchParams] = useSearchParams();
+  const requestedPetId = searchParams.get('pet');
+  const [threadOpen, setThreadOpen] = useState(!!requestedPetId);
 
   const [status, setStatus] =
     useState<LoadStatus>('loading');
@@ -151,7 +156,7 @@ export function MessagingPage() {
             return current;
           }
 
-          return conversations[0]?.id ?? null;
+          return conversations.find(item => item.pets.some(pet => pet.id === requestedPetId))?.id ?? conversations[0]?.id ?? null;
         });
 
         if (showLoading) {
@@ -170,7 +175,7 @@ export function MessagingPage() {
         return [];
       }
     },
-    [],
+    [requestedPetId],
   );
 
   const persistSeen = useCallback(
@@ -658,6 +663,7 @@ export function MessagingPage() {
     setSendError(null);
     setSeenError(null);
     setActiveId(id);
+    setThreadOpen(true);
   }
 
   async function sendMessage(content: string) {
@@ -767,6 +773,7 @@ export function MessagingPage() {
       <main tabIndex={-1}
         id="messaging-main"
         className="messaging-layout"
+        data-thread-open={threadOpen}
       >
         <ConversationList
           conversations={items}
@@ -815,6 +822,7 @@ export function MessagingPage() {
             <>
               <ChatThread
                 conversation={active}
+                onBack={() => setThreadOpen(false)}
                 loading={
                   threadStatus === 'loading'
                 }
@@ -866,3 +874,4 @@ export function MessagingPage() {
     </div>
   );
 }
+

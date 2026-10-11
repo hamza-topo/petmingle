@@ -4,12 +4,10 @@ import {
   useRef,
 } from 'react';
 import {
+  ArrowLeft,
   CheckCheck,
-  MoreVertical,
   PawPrint,
-  Phone,
   Smile,
-  Video,
 } from 'lucide-react';
 
 import {
@@ -112,6 +110,7 @@ export function ChatThread({
   seenError,
   isOtherTyping,
   onTypingChange,
+  onBack,
 }: {
   conversation: Conversation;
   loading: boolean;
@@ -120,6 +119,7 @@ export function ChatThread({
   seenError: string | null;
   isOtherTyping: boolean;
   onTypingChange: (isWriting: boolean) => void;
+  onBack?: () => void;
 }) {
   const timeline =
     useRef<HTMLOListElement>(null);
@@ -144,6 +144,7 @@ export function ChatThread({
       aria-label={pairName(conversation)}
     >
       <header className="chat-thread-header">
+        {onBack && <button className="chat-back" type="button" onClick={onBack} aria-label="Retour aux conversations"><ArrowLeft size={22} /></button>}
         <PetPairAvatar pets={conversation.pets} />
 
         <div>
@@ -170,29 +171,7 @@ export function ChatThread({
           )}
         </div>
 
-        <div className="chat-call-actions">
-          <button
-            type="button"
-            disabled
-            aria-label="Video call — unavailable"
-          >
-            <Video size={27} />
-          </button>
-          <button
-            type="button"
-            disabled
-            aria-label="Phone call — unavailable"
-          >
-            <Phone size={26} />
-          </button>
-          <button
-            type="button"
-            disabled
-            aria-label="More conversation actions — unavailable"
-          >
-            <MoreVertical size={26} />
-          </button>
-        </div>
+
       </header>
 
       {loading ? (
@@ -260,3 +239,4 @@ export function ChatThread({
     </section>
   );
 }
+

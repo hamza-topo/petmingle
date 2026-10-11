@@ -30,6 +30,8 @@ function fixture(path, state) {
   if (path === '/pets/42') return envelope(pet);
   if (path === '/pets/55') return envelope(otherPet);
   if (path === '/locations/nears') return pageEnvelope(state === 'empty' ? [] : [otherPet, { ...otherPet, id: 56, name: 'Oscar' }].map(p => ({ owner: { id: 20, name: 'Camille propriétaire' }, pet: { ...p, owner_id: 20, age_years: p.age, sex: p.sexe, race }, distance_km: 1.25, is_new: false, interaction: null })));
+  if (path === '/matches') return envelope([{ id: 8, from_pet_id: 42, to_pet_id: 55 }]);
+  if (path === '/mismatches') return envelope([]);
   if (path === '/conversations') return pageEnvelope(state === 'empty' ? [] : [conversation]);
   if (path === '/messages') return pageEnvelope(state === 'empty' ? [] : [message]);
   if (path === '/conversations/7/seen') return envelope({ conversation_id: 7, marked_count: 0, unread_count: 0 });
@@ -40,6 +42,7 @@ const screens = [
   { name: 'creation', path: '/pet/create', ready: 'form[aria-label="Create pet profile"] select option[value="3"]' },
   { name: 'discovery', path: '/discover', ready: '.featured-discovery-pet' },
   { name: 'profile', path: '/profile', ready: '.own-summary h1' },
+  { name: 'matches', path: '/matches', ready: '.relationship-card' },
   { name: 'messaging', path: '/messages', ready: '.chat-timeline' },
 ];
 try {
@@ -49,7 +52,7 @@ try {
   }
   browser = await chromium.launch({ headless: true });
   for (const width of [1448, 1280, 1120, 768, 390, 320]) {
-    for (const screen of screens.filter(s => width >= 1120 || ['landing', 'discovery', 'messaging', 'profile'].includes(s.name))) {
+    for (const screen of screens.filter(s => width >= 1120 || s.name !== 'creation')) {
       const context = await browser.newContext({ viewport: { width, height: 1000 }, reducedMotion: 'reduce' });
       await context.addInitScript(() => localStorage.setItem('petmingle.auth.token', 'visual-test-token'));
       const page = await context.newPage();
@@ -62,6 +65,9 @@ try {
       });
       await page.route('**/storage/pets/review.jpg', route => route.fulfill({ contentType: 'image/jpeg', body: reviewPhoto }));
       await page.goto(base + screen.path);
+      if (screen.name === 'messaging' && width <= 700) {
+        await page.locator('.conversation-row').first().click();
+      }
       await page.locator(screen.ready).first().waitFor({ state: screen.name === 'creation' ? 'attached' : 'visible' });
       await page.evaluate(() => document.fonts.ready);
       if (screen.name === 'landing') {
@@ -86,6 +92,11 @@ try {
       const shot = await page.screenshot({ path: output + '/' + filename, fullPage: true });
       thumbnails.push({ name: screen.name + ' / ' + width, image: shot.toString('base64') });
       results.push({ screen: screen.name, width, state: 'success', ...metrics, errors });
+      if (screen.name === 'messaging' && width <= 700) {
+        await page.getByRole('button', { name: 'Retour aux conversations' }).click();
+        await page.locator('.conversation-list').waitFor();
+        if (await page.locator('.chat-thread').isVisible()) throw new Error('Mobile back did not restore list');
+      }
       await context.close();
     }
   }
@@ -107,6 +118,9 @@ try {
       });
       await page.route('**/storage/pets/review.jpg', route => route.fulfill({ contentType: 'image/jpeg', body: reviewPhoto }));
       await page.goto(base + screen.path);
+      if (screen.name === 'messaging' && width <= 700) {
+        await page.locator('.conversation-row').first().click();
+      }
       await page.locator('main').waitFor();
       if (state === 'loading') await page.locator('main').getByRole('status').filter({ hasText: screen.name === 'discovery' ? 'Loading nearby pets' : 'Loading conversations' }).first().waitFor();
       else if (state === 'error') await page.getByRole('alert').first().waitFor();
