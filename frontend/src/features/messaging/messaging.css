@@ -33,7 +33,7 @@
   .conversation-row:not([aria-current=true])::after { content: ''; position: absolute; bottom: 0; right: 14px; left: 108px; height: 1px; background: var(--color-border); opacity: .5; }
   .conversation-list li:last-child .conversation-row::after { display: none; }
   .chat-pair-avatar { display: flex; align-items: center; flex-shrink: 0; width: 120px; height: 76px; }
-  .chat-pet-avatar { width: 64px; height: 64px; flex-shrink: 0; border-radius: 50%; border: 2px solid var(--color-surface); font-size: 10px; overflow: hidden; object-fit: cover; }
+  .messaging-page .chat-pet-avatar { width: 64px; height: 64px; flex-shrink: 0; border-radius: 50%; border: 2px solid var(--color-surface); font-size: 10px; overflow: hidden; object-fit: cover; }
   .chat-pair-avatar .chat-pet-avatar { width: 75px; height: 75px; }
   .chat-pair-avatar .chat-pet-avatar + .chat-pet-avatar { margin-left: -29px; }
   .conversation-row .chat-pair-avatar { width: 86px; height: 72px; }
@@ -166,3 +166,39 @@
     .match-pet > .reference-placeholder, .match-pet > img { height: 160px; }
   }
 }
+
+@layer components {
+  /* Image dimensions must beat the shared reference-image rule for real photos. */
+  .messaging-page .chat-message > .chat-pet-avatar { width: 40px; height: 40px; }
+  .messaging-page .chat-pair-avatar .chat-pet-avatar { width: 56px; height: 56px; }
+  .messaging-page .conversation-row .chat-pet-avatar { width: 48px; height: 48px; }
+  .messaging-page .chat-message-content { flex: 0 1 auto; max-width: min(360px, calc(100% - 52px)); }
+  .messaging-page .chat-message-content > p { white-space: pre-wrap; }
+  .messaging-page .messaging-header { height: auto; min-height: 82px; flex-wrap: wrap; gap: 12px; padding-block: 12px; }
+  .messaging-page .messaging-header nav { margin-left: auto; gap: 16px; }
+  .messaging-page .messaging-utilities { padding-left: 0; }
+  .messaging-page .messaging-layout { grid-template-columns: minmax(220px, .8fr) minmax(320px, 1.5fr) minmax(220px, .8fr); }
+  .messaging-page .conversation-list, .messaging-page .chat-thread, .messaging-page .match-details { height: min(800px, calc(100dvh - 180px)); min-height: 480px; }
+  .messaging-page .conversation-list, .messaging-page .match-details { overflow-y: auto; }
+  .messaging-page .chat-thread-header { flex-wrap: wrap; min-height: 80px; }
+  .messaging-page .message-composer { flex-shrink: 0; }
+  @media (max-width: 1100px) {
+    .messaging-page .messaging-layout { grid-template-columns: minmax(220px, .8fr) minmax(0, 1.5fr); }
+    .messaging-page .match-details { grid-column: 1 / -1; height: auto; min-height: 0; }
+    .messaging-page .match-pets { max-width: 400px; }
+  }
+  @media (max-width: 700px) {
+    .messaging-page { width: 100%; }
+    .messaging-page .messaging-header nav { width: 100%; margin: 0; flex-wrap: wrap; justify-content: center; }
+    .messaging-page .messaging-utilities { margin-left: 0; flex-wrap: wrap; }
+    .messaging-page .messaging-layout { grid-template-columns: minmax(0, 1fr); }
+    .messaging-page .conversation-list { height: auto; min-height: 0; max-height: 320px; padding-bottom: 12px; }
+    .messaging-page .chat-thread { height: 640px; min-height: 480px; }
+    .messaging-page .chat-call-actions { gap: 12px; }
+    .messaging-page .chat-message-content > p { font-size: 15px; padding: 12px; }
+    .messaging-page .message-composer input { padding-inline: 10px; font-size: 14px; }
+    .messaging-page .message-composer .chat-round-control { width: 28px; }
+    .messaging-page .chat-send { width: 42px; height: 42px; }
+  }
+}
+

@@ -1,6 +1,6 @@
 
 import { chromium } from 'playwright';
-import { mkdir, writeFile } from 'node:fs/promises';
+import { mkdir, writeFile, readFile } from 'node:fs/promises';
 import { spawn } from 'node:child_process';
 
 const output = 'desktop-review';
@@ -10,9 +10,10 @@ const base = 'http://127.0.0.1:4173';
 let browser;
 const results = [];
 const thumbnails = [];
+const reviewPhoto = await readFile('../public/assets/images/gallery/petspat-banner-orange-dog.jpg');
 const longName = 'Milo Alexandre du Jardin';
 const race = { id: 9, species_id: 3, name: 'Labrador Retriever — croisement' };
-const pet = { id: 42, user_id: 10, species_id: 3, race_id: 9, name: longName, age: 4, sexe: 1, color: null, images: [], about: 'Friendly companion looking for gentle walks. '.repeat(12) };
+const pet = { id: 42, user_id: 10, species_id: 3, race_id: 9, name: longName, age: 4, sexe: 1, color: null, images: ['/storage/pets/review.jpg'], about: 'Friendly companion looking for gentle walks. '.repeat(12) };
 const otherPet = { ...pet, id: 55, user_id: 20, name: 'Luna Belle des Montagnes' };
 const pageEnvelope = data => ({ success: true, message: 'OK', data, meta: { current_page: 1, last_page: 1, per_page: 24, total: data.length }, links: { first: null, last: null, prev: null, next: null } });
 const envelope = data => ({ success: true, message: 'OK', data });
@@ -48,7 +49,7 @@ try {
   }
   browser = await chromium.launch({ headless: true });
   for (const width of [1448, 1280, 1120, 768, 390, 320]) {
-    for (const screen of screens.filter(s => width >= 1120 || ['landing', 'discovery'].includes(s.name))) {
+    for (const screen of screens.filter(s => width >= 1120 || ['landing', 'discovery', 'messaging'].includes(s.name))) {
       const context = await browser.newContext({ viewport: { width, height: 1000 }, reducedMotion: 'reduce' });
       await context.addInitScript(() => localStorage.setItem('petmingle.auth.token', 'visual-test-token'));
       const page = await context.newPage();
@@ -59,6 +60,7 @@ try {
         try { await route.fulfill({ json: fixture(path, 'success') }); }
         catch (error) { errors.push(error.message); await route.fulfill({ status: 500, json: { success: false, message: 'Unexpected fixture' } }); }
       });
+      await page.route('**/storage/pets/review.jpg', route => route.fulfill({ contentType: 'image/jpeg', body: reviewPhoto }));
       await page.goto(base + screen.path);
       await page.locator(screen.ready).first().waitFor({ state: screen.name === 'creation' ? 'attached' : 'visible' });
       await page.evaluate(() => document.fonts.ready);
@@ -67,6 +69,11 @@ try {
         const media = await page.locator('.hero-photo').evaluate(img => ({ width: img.naturalWidth, height: img.naturalHeight }));
         if (media.width < 500 || media.height < 500) throw new Error('Landing hero did not load');
         if (await page.getByText(/placeholder/i).count()) throw new Error('Landing contains a placeholder');
+      }
+      if (screen.name === 'messaging') {
+        await page.locator('.chat-message > img').first().evaluate(img => img.decode());
+        const dimensions = await page.locator('.chat-message').first().evaluate(el => ({ avatar: el.querySelector('img').getBoundingClientRect().width, bubble: el.querySelector('.chat-message-content').getBoundingClientRect().width, scroll: el.scrollWidth, width: el.clientWidth }));
+        if (dimensions.avatar > 64 || dimensions.bubble < 100 || dimensions.scroll > dimensions.width + 1) throw new Error('Real-photo chat sizing regression: ' + JSON.stringify(dimensions));
       }
       const metrics = await page.evaluate(() => ({
         viewport: innerWidth, scroll: document.documentElement.scrollWidth,
@@ -98,6 +105,7 @@ try {
         if (target && state === 'error') await route.fulfill({ status: 500, json: { success: false, message: 'Server failure' } });
         else await route.fulfill({ json: fixture(path, state) });
       });
+      await page.route('**/storage/pets/review.jpg', route => route.fulfill({ contentType: 'image/jpeg', body: reviewPhoto }));
       await page.goto(base + screen.path);
       await page.locator('main').waitFor();
       if (state === 'loading') await page.locator('main').getByRole('status').filter({ hasText: screen.name === 'discovery' ? 'Loading nearby pets' : 'Loading conversations' }).first().waitFor();
