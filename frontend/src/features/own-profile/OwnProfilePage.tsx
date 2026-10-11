@@ -6,7 +6,7 @@ import { describeApiFailure } from '../../api/presentation';
 import { useAuth } from '../../auth/AuthProvider';
 import { tokenStorage } from '../../auth/tokenStorage';
 import { ApiState } from '../../components/ApiState';
-import { SiteHeader } from '../../components/SiteHeader';
+import { AppHeader } from '../../components/AppHeader';
 import {
   currentPetProfileRequest,
   removePetImageRequest,
@@ -127,16 +127,7 @@ export function OwnProfilePage() {
   if (!pet) {
     return (
       <div className="own-profile-page">
-        <SiteHeader
-          identity={
-            user
-              ? {
-                  name: user.name,
-                  kind: 'account',
-                }
-              : undefined
-          }
-        />
+        <AppHeader />
 
         <main tabIndex={-1} className="auth-route-state">
           <ApiState
@@ -149,14 +140,7 @@ export function OwnProfilePage() {
     );
   }
 
-  const header = (
-    <SiteHeader
-      identity={{
-        name: profile?.name ?? pet.name,
-        kind: 'pet',
-      }}
-    />
-  );
+  const header = <AppHeader />;
 
   if (loading) {
     return (
@@ -428,3 +412,4 @@ export function OwnProfilePage() {
     </div>
   );
 }
+

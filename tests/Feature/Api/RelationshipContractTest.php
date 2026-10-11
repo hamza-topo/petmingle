@@ -98,7 +98,9 @@ class RelationshipContractTest extends TestCase
             ->assertOk()
             ->assertJsonPath('data.from_pet_id', $sourcePet->id)
             ->assertJsonPath('data.to_pet_id', $targetPet->id)
-            ->assertJsonPath('data.interaction', 'liked');
+            ->assertJsonPath('data.interaction', 'liked')
+            ->assertJsonPath('data.new_match', false)
+            ->assertJsonPath('data.match_id', null);
 
         $second = $this->postJson('/api/v.0/likes', [
             'to_pet_id' => $targetPet->id,
@@ -107,6 +109,37 @@ class RelationshipContractTest extends TestCase
             ->assertJsonPath('data.id', $first->json('data.id'));
 
         $this->assertDatabaseCount('likes', 1);
+    }
+
+    public function test_only_a_new_reciprocal_like_reports_a_new_match(): void
+    {
+        [$user, $sourcePet] = $this->createUserWithPet('Source');
+        [, $targetPet] = $this->createUserWithPet('Target');
+
+        Like::withoutEvents(fn () => Like::create([
+            'from' => $targetPet->id,
+            'to' => $sourcePet->id,
+        ]));
+
+        Sanctum::actingAs($user);
+
+        $first = $this->postJson('/api/v.0/likes', [
+            'to_pet_id' => $targetPet->id,
+        ])->assertOk()->assertJsonPath('data.new_match', true);
+
+        $matchId = $first->json('data.match_id');
+        $this->assertIsInt($matchId);
+        $this->assertDatabaseHas('matches', [
+            'id' => $matchId,
+            'from' => $sourcePet->id,
+            'to' => $targetPet->id,
+        ]);
+
+        $this->postJson('/api/v.0/likes', [
+            'to_pet_id' => $targetPet->id,
+        ])->assertOk()
+            ->assertJsonPath('data.new_match', false)
+            ->assertJsonPath('data.match_id', $matchId);
     }
 
     public function test_dislike_replaces_existing_like_and_is_idempotent(): void

@@ -47,6 +47,11 @@ const apiItem = {
 };
 
 describe('Discovery API adapter', () => {
+  it('uses valid approximate map positions and ignores invalid coordinates', () => {
+    expect(mapDiscoveryItem({ ...apiItem, map_location: { latitude: 31.63, longitude: -7.98 } }).mapLocation).toEqual({ latitude: 31.63, longitude: -7.98 });
+    expect(mapDiscoveryItem({ ...apiItem, map_location: { latitude: 100, longitude: -7.98 } }).mapLocation).toBeNull();
+  });
+
   beforeEach(() => {
     mockedApiRequest.mockReset();
   });
@@ -77,6 +82,7 @@ describe('Discovery API adapter', () => {
     ).resolves.toEqual({
       pets: [
         {
+          mapLocation: null,
           id: 42,
           ownerId: 7,
           speciesId: 3,
@@ -313,3 +319,4 @@ describe('Discovery API adapter', () => {
     expect(mapped).not.toHaveProperty('location');
   });
 });
+

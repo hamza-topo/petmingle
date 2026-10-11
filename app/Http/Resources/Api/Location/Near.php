@@ -82,6 +82,10 @@ class Near extends ResourceCollection
                         'images' => $images,
                         'about' => $pet->about,
                     ],
+                    'map_location' => [
+                        'latitude' => round((float) $location->latitude, 2),
+                        'longitude' => round((float) $location->longitude, 2),
+                    ],
                     'distance_km' => round(
                         (float) $location->distance,
                         2

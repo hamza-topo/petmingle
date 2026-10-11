@@ -118,6 +118,8 @@ class DiscoveryResponseContractTest extends TestCase
             'companion',
             $item['pet']
         );
+        $this->assertSame(31.63, $item['map_location']['latitude']);
+        $this->assertSame(-7.98, $item['map_location']['longitude']);
         $this->assertArrayNotHasKey(
             'location',
             $item

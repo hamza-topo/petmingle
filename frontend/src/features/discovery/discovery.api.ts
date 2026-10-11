@@ -9,6 +9,7 @@ export type PetInteractionState =
 
 export type DiscoveryPet = {
   id: number;
+  mapLocation?: { latitude: number; longitude: number } | null;
   ownerId: number;
   speciesId: number;
   raceId: number;
@@ -46,6 +47,7 @@ type DiscoveryApiItem = {
     images: string[];
     about: string | null;
   };
+  map_location?: { latitude: number; longitude: number } | null;
   distance_km: number;
   is_new: boolean;
   interaction: PetInteractionState;
@@ -135,6 +137,7 @@ export function mapDiscoveryItem(
   const photoPath = images[0];
 
   return {
+    mapLocation: item.map_location && Number.isFinite(item.map_location.latitude) && Math.abs(item.map_location.latitude) <= 90 && Number.isFinite(item.map_location.longitude) && Math.abs(item.map_location.longitude) <= 180 ? item.map_location : null,
     id: item.pet.id,
     ownerId: item.owner.id,
     speciesId: item.pet.species_id,
@@ -206,3 +209,4 @@ export async function discoveryRequest({
     meta: response.meta,
   };
 }
+

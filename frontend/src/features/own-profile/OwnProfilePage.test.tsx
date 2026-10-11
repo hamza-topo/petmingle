@@ -28,9 +28,6 @@ import {
 } from './profile.api';
 import { taxonomyRequest } from '../profile-creation/taxonomy.api';
 import { accountLocationsRequest } from '../account-location/location.api';
-import {
-  plusPlans,
-} from './profile.fixtures';
 
 vi.mock('../../auth/AuthProvider', () => ({
   useAuth: vi.fn(),
@@ -288,7 +285,7 @@ describe('Own pet profile', () => {
     ).toBeVisible();
 
     expect(details.queryByText('62 lbs')).not.toBeInTheDocument();
-    expect(details.getAllByText('Not provided')).toHaveLength(4);
+    expect(details.queryByText('Not provided')).not.toBeInTheDocument();
 
     expect(screen.queryByText('Loves the Beach')).not.toBeInTheDocument();
   });
@@ -734,51 +731,13 @@ describe('Own pet profile', () => {
     ).toBeVisible();
   });
 
-  it('labels proposed Plus prices and prevents selecting or purchasing a plan', async () => {
-    const user = userEvent.setup();
-
+  it('shows a compact Plus preview without unavailable purchase controls', async () => {
     renderProfile();
     await waitForProfile();
-
-    for (const plan of plusPlans) {
-      expect(
-        screen.getByRole('radio', {
-          name: plan.label,
-        }),
-      ).toBeVisible();
-
-      expect(
-        screen.getByText(plan.monthlyPrice),
-      ).toBeVisible();
-    }
-
-    expect(
-      screen.getByRole('radio', {
-        name: '12 Months',
-      }),
-    ).toBeChecked();
-
-    await user.click(
-      screen.getByRole('radio', {
-        name: '3 Months',
-      }),
-    );
-
-    expect(screen.getByRole('radio', { name: '3 Months' })).toBeDisabled();
-    expect(screen.getByRole('radio', { name: '3 Months' })).not.toBeChecked();
-    expect(screen.getByText(/These proposed features and prices may change/)).toBeVisible();
-
-    expect(screen.getByRole('radio', { name: '12 Months' })).toBeChecked();
-
-    expect(
-      screen.getByText('Most Popular'),
-    ).toBeVisible();
-
-    expect(
-      screen.getByRole('button', {
-        name: /Try PetMingle Plus/,
-      }),
-    ).toBeDisabled();
+    expect(screen.getByText('À venir')).toBeVisible();
+    expect(screen.queryByRole('radio')).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: /Try PetMingle Plus/ })).not.toBeInTheDocument();
+    expect(screen.getByText('Les abonnements ne sont pas encore disponibles.')).toBeVisible();
   });
 
   it('opens Messaging while Home remains a destination rather than the current route', async () => {
@@ -789,23 +748,17 @@ describe('Own pet profile', () => {
 
     expect(
       screen.getByRole('link', {
-        name: 'Home',
+        name: 'PetMingle home',
       }),
     ).not.toHaveAttribute('aria-current');
 
     const petMenu = screen.getByRole('button', {
-      name: `${backendPet.name} pet menu — unavailable`,
+      name: 'Compte de Hamza',
     });
 
     expect(petMenu).toBeVisible();
 
-    expect(
-      within(petMenu).getByRole('img'),
-    ).toHaveAccessibleName(/Milo avatar/);
-
-    expect(
-      within(petMenu).getByRole('img'),
-    ).not.toHaveAccessibleName(/Nala/);
+    expect(petMenu).toHaveAttribute('aria-expanded', 'false');
 
     await user.click(
       screen.getByRole('link', {
@@ -828,7 +781,7 @@ describe('Own pet profile', () => {
 
     expect(
       screen.getByRole('button', {
-        name: `${backendPet.name} pet menu — unavailable`,
+        name: 'Compte de Hamza',
       }),
     ).toBeVisible();
 
@@ -840,7 +793,7 @@ describe('Own pet profile', () => {
 
     expect(
       screen.getByRole('button', {
-        name: `${backendPet.name} pet menu — unavailable`,
+        name: 'Compte de Hamza',
       }),
     ).toBeVisible();
 

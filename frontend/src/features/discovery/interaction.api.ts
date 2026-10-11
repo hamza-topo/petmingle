@@ -12,6 +12,8 @@ export type PersistedPetInteraction = {
   from_pet_id: number;
   to_pet_id: number;
   interaction: Exclude<PetInteractionState, null>;
+  new_match?: boolean;
+  match_id?: number | null;
 };
 
 export async function petInteractionRequest({
@@ -50,3 +52,4 @@ export async function petInteractionRequest({
 
   return response.data;
 }
+

@@ -102,7 +102,7 @@ describe('Matches page', () => {
     expect(
       await screen.findByRole('heading', {
         level: 1,
-        name: 'Your Matches',
+        name: 'Vos rencontres',
       }),
     ).toBeVisible();
 
@@ -115,13 +115,13 @@ describe('Matches page', () => {
 
     expect(
       screen.getByRole('link', {
-        name: /Matches/,
+        name: 'Rencontres',
       }),
     ).toHaveAttribute('aria-current', 'page');
 
     const activeSection = within(
       screen.getByRole('region', {
-        name: 'Active matches',
+        name: 'Nouvelles rencontres',
       }),
     );
 
@@ -131,9 +131,11 @@ describe('Matches page', () => {
       }),
     ).toHaveTextContent('Matched');
 
+    expect(activeSection.getByRole('link', { name: /Dire bonjour/ })).toHaveAttribute('href', '/messages?pet=51');
+
     const pastSection = within(
       screen.getByRole('region', {
-        name: 'Past matches',
+        name: 'Rencontres passées',
       }),
     );
 
@@ -202,3 +204,4 @@ describe('Matches page', () => {
     ).not.toHaveBeenCalled();
   });
 });
+
