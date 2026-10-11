@@ -17,6 +17,8 @@ import { DiscoveryFilters } from './components/DiscoveryFilters';
 import { DiscoveryHeader } from './components/DiscoveryHeader';
 
 import { FeaturedPetCard } from './components/FeaturedPetCard';
+import { DiscoveryMap } from './components/DiscoveryMap';
+import './discovery-map.css';
 import { PetGrid } from './components/PetGrid';
 import {
   DEFAULT_DISCOVERY_FILTERS,
@@ -27,6 +29,7 @@ import {
   type DiscoveryPet,
   type PetInteractionState,
 } from './discovery.api';
+import { useMatchExperience } from '../matches/MatchExperience';
 import { petInteractionRequest } from './interaction.api';
 
 type DiscoveryStatus = 'loading' | 'ready' | 'error';
@@ -41,6 +44,7 @@ const initialMeta: DiscoveryPageMeta = {
 };
 
 export function DiscoveryPage() {
+  const { celebrate } = useMatchExperience();
   const accountLocation = useAccountLocation();
   const locationLabel = accountLocationLabel(accountLocation);
 
@@ -277,6 +281,10 @@ export function DiscoveryPage() {
         next.set(petId, persisted.interaction);
         return next;
       });
+      const target = pets.find(item => item.id === petId);
+      if (persisted.interaction === 'liked' && persisted.new_match === true && typeof persisted.match_id === 'number' && target) {
+        celebrate(persisted.match_id, { id: target.id, name: target.name, photo: target.photo });
+      }
     } catch (caught) {
       setInteractionError(describeApiFailure(caught).message);
     } finally {
@@ -427,6 +435,10 @@ export function DiscoveryPage() {
                   />
                 )}
 
+              {accountLocation.status === 'ready' && accountLocation.currentLocation && status === 'ready' && !closestPet && (
+                <DiscoveryMap pets={pets} center={accountLocation.currentLocation} radiusKm={filters.radiusKm} selectedPetId={null} onSelect={setSelectedPetId} />
+              )}
+
               {interactionError && (
                 <p className="discovery-interaction-error" role="alert">
                   {interactionError}
@@ -437,6 +449,15 @@ export function DiscoveryPage() {
                 accountLocation.currentLocation &&
                 status === 'ready' &&
                 closestPet && (
+                  <div className="discovery-map-layout">
+                    <DiscoveryMap
+                      pets={pets}
+                      center={accountLocation.currentLocation}
+                      radiusKm={filters.radiusKm}
+                      selectedPetId={closestPet.id}
+                      onSelect={setSelectedPetId}
+                    />
+                    <div className="discovery-map-profile">
                   <FeaturedPetCard
                     key={closestPet.id}
                     pet={closestPet}
@@ -451,6 +472,8 @@ export function DiscoveryPage() {
                       void persistInteraction(closestPet.id, 'disliked')
                     }
                   />
+                    </div>
+                  </div>
                 )}
             </section>
           </div>
