@@ -73,7 +73,7 @@ class LikeController extends Controller
 
         return ApiResponse::success(
             array_merge((new LikeResource($like))->resolve(), [
-                'new_match' => $existingMatchId === null && $matchId !== null,
+                'new_match' => $like->wasRecentlyCreated && $existingMatchId === null && $matchId !== null,
                 'match_id' => $matchId,
             ]),
             __('Like processed.')

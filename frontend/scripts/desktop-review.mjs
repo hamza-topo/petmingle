@@ -33,6 +33,7 @@ function fixture(path, state) {
   if (path === '/matches') return envelope([{ id: 8, from_pet_id: 42, to_pet_id: 55 }]);
   if (path === '/mismatches') return envelope([]);
   if (path === '/conversations') return pageEnvelope(state === 'empty' ? [] : [conversation]);
+  if (path === '/messages/typing') return envelope({ receiver_user_id: 20, is_writing: true });
   if (path === '/messages') return pageEnvelope(state === 'empty' ? [] : [message]);
   if (path === '/conversations/7/seen') return envelope({ conversation_id: 7, marked_count: 0, unread_count: 0 });
   throw new Error('Unexpected API path: ' + path);
@@ -272,7 +273,7 @@ try {
     await page.screenshot({ path: output + '/match-celebration-' + width + '.png', animations: 'disabled' });
     await page.keyboard.press('Escape');
     if (await modal.count()) throw new Error('Match Escape did not dismiss');
-    if (!(await page.locator('main').evaluate(el => el === document.activeElement))) throw new Error('Match close did not restore usable focus');
+    await page.waitForFunction(() => document.querySelector('main') === document.activeElement);
     await page.getByRole('button', { name: 'Passer', exact: true }).click();
     await page.getByRole('button', { name: 'Passé', exact: true }).waitFor();
     await page.getByRole('button', { name: 'J’aime', exact: true }).click();
@@ -291,7 +292,8 @@ try {
     await page.route('**/api/v.0/**', route => {
       const request = route.request();
       const path = new URL(request.url()).pathname.replace('/api/v.0', '');
-      if (path === '/messages' && request.method() === 'POST') { sent++; return route.fulfill({ json: envelope({ ...message, id: 91, sender_user_id: 10, receiver_user_id: 20, content: request.postDataJSON().content, is_seen: false }) }); }
+      if (path === '/messages/typing') return route.fulfill({ json: envelope({ receiver_user_id: request.postDataJSON().receiver_id, is_writing: request.postDataJSON().is_writing }) });
+      if (path === '/messages' && request.method() === 'POST') { sent++; return route.fulfill({ json: envelope({ ...message, id: 91, sender_id: 10, receiver_id: 20, content: request.postDataJSON().content, is_seen: false }) }); }
       if (path === '/messages') return route.fulfill({ json: pageEnvelope([]) });
       return route.fulfill({ json: fixture(path, 'success') });
     });

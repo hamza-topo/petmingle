@@ -91,7 +91,13 @@ export function MatchExperience({ children }: { children: ReactNode }) {
     element?.showModal?.();
     if (element && !element.open) element.setAttribute('open', '');
     element?.querySelector<HTMLButtonElement>('button')?.focus();
-    return () => { document.body.style.overflow = overflow; if (previous?.isConnected && !previous.matches(':disabled')) previous.focus(); else document.querySelector<HTMLElement>('main')?.focus(); };
+    return () => {
+      document.body.style.overflow = overflow;
+      queueMicrotask(() => {
+        if (previous?.isConnected && previous.matches('button:not(:disabled), a[href], input:not(:disabled), select:not(:disabled), textarea:not(:disabled), [tabindex]')) previous.focus();
+        else document.querySelector<HTMLElement>('main')?.focus();
+      });
+    };
   }, [active?.matchId]);
 
   function dismiss() { setQueue(current => current.slice(1)); }
