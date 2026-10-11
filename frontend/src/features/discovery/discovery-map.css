@@ -34,3 +34,4 @@
 .discovery-map-pets { flex-wrap:wrap; overflow-x:visible; }
 .discovery-map-pets button { max-width:100%; }
 .discovery-map-pets button span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+.discovery-map-warning { position:static; margin:0; border-radius:0; border-top:1px solid #dce5eb; }
