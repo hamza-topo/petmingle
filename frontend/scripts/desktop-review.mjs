@@ -49,7 +49,7 @@ try {
   }
   browser = await chromium.launch({ headless: true });
   for (const width of [1448, 1280, 1120, 768, 390, 320]) {
-    for (const screen of screens.filter(s => width >= 1120 || ['landing', 'discovery', 'messaging'].includes(s.name))) {
+    for (const screen of screens.filter(s => width >= 1120 || ['landing', 'discovery', 'messaging', 'profile'].includes(s.name))) {
       const context = await browser.newContext({ viewport: { width, height: 1000 }, reducedMotion: 'reduce' });
       await context.addInitScript(() => localStorage.setItem('petmingle.auth.token', 'visual-test-token'));
       const page = await context.newPage();
