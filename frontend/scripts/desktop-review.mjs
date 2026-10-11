@@ -61,6 +61,7 @@ try {
       page.on('pageerror', error => errors.push(error.message));
       await page.route('**/api/v.0/**', async route => {
         const path = new URL(route.request().url()).pathname.replace('/api/v.0', '');
+        if (path === '/dislikes') { const id = route.request().postDataJSON().to_pet_id; return route.fulfill({ json: envelope({ id: 201, from_pet_id: 42, to_pet_id: id, interaction: 'disliked' }) }); }
         try { await route.fulfill({ json: fixture(path, 'success') }); }
         catch (error) { errors.push(error.message); await route.fulfill({ status: 500, json: { success: false, message: 'Unexpected fixture' } }); }
       });
@@ -83,6 +84,8 @@ try {
         await page.locator('.pet-map-marker').click();
         await page.locator('.pet-map-group').getByRole('button', { name: 'Oscar', exact: true }).click();
         await page.locator('.featured-pet-summary').getByRole('heading', { name: 'Oscar', exact: true }).waitFor();
+        await page.getByRole('button', { name: 'Passer', exact: true }).click();
+        await page.locator('.featured-pet-summary').getByRole('heading', { name: 'Luna Belle des Montagnes', exact: true }).waitFor();
       }
       if (screen.name === 'messaging') {
         await page.locator('.chat-message > img').first().evaluate(img => img.decode());

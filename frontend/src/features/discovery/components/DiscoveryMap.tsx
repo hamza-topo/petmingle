@@ -85,11 +85,11 @@ export function DiscoveryMap({ pets, center, radiusKm, selectedPetId, onSelect }
     <div className="discovery-map-caption"><strong>Autour de vous · {radiusKm} km</strong><span>Positions approximatives</span></div>
     <button type="button" className="discovery-map-recenter" onClick={() => map.current?.setView([center.latitude!, center.longitude!], 13, { animate: false })}>Recentrer</button>
     {tileError && <p className="discovery-map-warning" role="status">Le fond de carte est indisponible. Les profils restent accessibles ci-dessous.</p>}
-    <div className="discovery-map-pets" aria-label="Choisir un compagnon">
+    <details className="discovery-map-list"><summary>{pets.length} compagnons sur la carte</summary><div className="discovery-map-pets" aria-label="Choisir un compagnon">
       {pets.map(pet => <button key={pet.id} type="button" aria-pressed={selectedPetId === pet.id} onClick={() => {
         onSelect(pet.id);
         if (pet.mapLocation) map.current?.panTo([pet.mapLocation.latitude, pet.mapLocation.longitude], { animate: false });
       }}>{pet.photo.src && <img src={pet.photo.src} alt="" />}<span>{pet.name}</span></button>)}
-    </div>
+    </div></details>
   </section>;
 }

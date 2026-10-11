@@ -281,11 +281,9 @@ describe('Discovery page', () => {
       interaction: 'disliked',
     });
 
-    expect(
-      await screen.findByRole('button', {
-        name: 'Passé',
-      }),
-    ).toHaveAttribute('aria-pressed', 'true');
+    expect(await screen.findByRole('heading', { name: 'Luna', level: 2 })).toBeVisible();
+    await user.click(screen.getByRole('button', { name: 'Précédent' }));
+    expect(screen.getByRole('button', { name: 'Passé' })).toHaveAttribute('aria-pressed', 'true');
 
     expect(
       screen.getByRole('button', {
@@ -302,10 +300,10 @@ describe('Discovery page', () => {
       screen.queryByRole('button', { name: 'Voir le profil de Luna' }),
     ).not.toBeInTheDocument();
     await user.click(
-      screen.getByRole('button', { name: 'Voir les 3 profils à proximité' }),
+      screen.getByText('3 compagnons sur la carte'),
     );
     await user.click(
-      screen.getByRole('button', { name: 'Voir le profil de Luna' }),
+      screen.getByRole('button', { name: 'Luna' }),
     );
     expect(
       screen.getByRole('heading', { name: 'Luna', level: 2 }),
@@ -319,6 +317,28 @@ describe('Discovery page', () => {
     expect(
       await screen.findByRole('button', { name: 'Like envoyé' }),
     ).toHaveAttribute('aria-pressed', 'true');
+  });
+
+  it('keeps the selected profile when passing fails', async () => {
+    const user = userEvent.setup();
+    mockedPetInteractionRequest.mockRejectedValueOnce(new TypeError('Failed to fetch'));
+    renderDiscovery();
+    await waitForDiscovery();
+    await user.click(screen.getByRole('button', { name: 'Passer' }));
+    await screen.findByRole('alert');
+    expect(screen.getByRole('heading', { name: 'Milo', level: 2 })).toBeVisible();
+  });
+
+  it('advances only after passing is persisted', async () => {
+    const user = userEvent.setup();
+    let finish: ((value: Awaited<ReturnType<typeof petInteractionRequest>>) => void) | undefined;
+    mockedPetInteractionRequest.mockImplementationOnce(() => new Promise(resolve => { finish = resolve; }));
+    renderDiscovery();
+    await waitForDiscovery();
+    await user.click(screen.getByRole('button', { name: 'Passer' }));
+    expect(screen.getByRole('heading', { name: 'Milo', level: 2 })).toBeVisible();
+    finish?.({ id: 1, from_pet_id: 1, to_pet_id: 42, interaction: 'disliked' });
+    expect(await screen.findByRole('heading', { name: 'Luna', level: 2 })).toBeVisible();
   });
 
   it('keeps the previous interaction state when persistence fails', async () => {
