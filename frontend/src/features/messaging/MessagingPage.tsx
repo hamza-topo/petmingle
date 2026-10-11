@@ -5,6 +5,7 @@ import {
   useState,
 } from 'react';
 
+import { useMatchExperience } from '../matches/MatchExperience';
 import { useSearchParams } from 'react-router';
 
 import { ApiError } from '../../api/errors';
@@ -43,6 +44,7 @@ type LoadStatus =
 
 export function MessagingPage() {
   const { user } = useAuth();
+  const { receive: receiveMatch } = useMatchExperience();
   const [searchParams] = useSearchParams();
   const requestedPetId = searchParams.get('pet');
   const [threadOpen, setThreadOpen] = useState(!!requestedPetId);
@@ -480,6 +482,7 @@ export function MessagingPage() {
         event.name === 'new.match'
         && isRealtimeMatchEvent(event.data)
       ) {
+        receiveMatch(event.data);
         void loadConversations(false);
         return;
       }
@@ -495,6 +498,7 @@ export function MessagingPage() {
     [
       handleRealtimeMessage,
       handleRealtimeTyping,
+      receiveMatch,
       loadConversations,
     ],
   );

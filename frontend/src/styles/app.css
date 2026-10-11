@@ -7,6 +7,7 @@
 @import "../features/own-profile/profile.css";
 @import "../features/messaging/messaging.css";
 @import "../features/matches/matches.css";
+@import "../features/matches/match-celebration.css";
 @import "../features/discovery/discovery.css";
 @import "../features/profile-creation/profile.css";
 @import "../features/auth/sign-in.css";

@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\Like\Store;
 use App\Http\Resources\Api\LikeResource;
 use App\Http\Responses\ApiResponse;
+use App\Models\MatchTable;
 use App\Repositories\LikeRepository;
 use App\Services\InteractionPolicy;
 use Illuminate\Http\Request;
@@ -54,13 +55,27 @@ class LikeController extends Controller
             ]);
         }
 
+        $sourcePetId = $this->sourcePetId($request);
+        $existingMatchId = MatchTable::query()
+            ->where('from', $sourcePetId)
+            ->where('to', $targetPetId)
+            ->value('id');
+
         $like = $this->likeRepository->process(
-            $this->sourcePetId($request),
+            $sourcePetId,
             $targetPetId
         );
 
+        $matchId = MatchTable::query()
+            ->where('from', $sourcePetId)
+            ->where('to', $targetPetId)
+            ->value('id');
+
         return ApiResponse::success(
-            (new LikeResource($like))->resolve(),
+            array_merge((new LikeResource($like))->resolve(), [
+                'new_match' => $existingMatchId === null && $matchId !== null,
+                'match_id' => $matchId,
+            ]),
             __('Like processed.')
         );
     }

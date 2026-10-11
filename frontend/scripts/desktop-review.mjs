@@ -242,6 +242,70 @@ try {
     results.push({ screen: 'discovery-filters', width, state: 'keyboard-cancel-apply-account', ...metrics });
     await context.close();
   }
+  for (const width of [1280, 768, 390, 320]) {
+    const context = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: width === 320 ? 'reduce' : 'no-preference' });
+    await context.addInitScript(() => localStorage.setItem('petmingle.auth.token', 'visual-test-token'));
+    const page = await context.newPage();
+    let writes = 0;
+    await page.route('**/storage/pets/review.jpg', route => route.fulfill({ contentType: 'image/jpeg', body: reviewPhoto }));
+    await page.route('**/api/v.0/**', async route => {
+      const request = route.request();
+      const path = new URL(request.url()).pathname.replace('/api/v.0', '');
+      if (path === '/likes' || path === '/dislikes') {
+        writes++;
+        return route.fulfill({ json: envelope({ id: 100, from_pet_id: 42, to_pet_id: request.postDataJSON().to_pet_id, interaction: path === '/likes' ? 'liked' : 'disliked', new_match: path === '/likes', match_id: path === '/likes' ? 8 : null }) });
+      }
+      return route.fulfill({ json: fixture(path, 'success') });
+    });
+    await page.goto(base + '/discover');
+    await page.locator('.featured-discovery-pet').waitFor();
+    await page.getByRole('button', { name: 'J’aime', exact: true }).click();
+    const modal = page.getByRole('dialog', { name: 'Ça sent la belle rencontre !' });
+    await modal.waitFor();
+    await modal.locator('img').first().evaluate(img => img.decode());
+    if (!(await page.getByRole('button', { name: 'Fermer la rencontre' }).evaluate(el => el === document.activeElement))) throw new Error('Match initial focus missing');
+    await page.getByRole('button', { name: 'Continuer à découvrir' }).focus();
+    await page.keyboard.press('Tab');
+    if (!(await page.getByRole('button', { name: 'Fermer la rencontre' }).evaluate(el => el === document.activeElement))) throw new Error('Match modal focus escaped');
+    const metrics = await modal.evaluate(el => ({ viewport: innerWidth, scroll: el.scrollWidth, outside: [...el.querySelectorAll('a, button, h2')].filter(item => { const r = item.getBoundingClientRect(); return r.left < -1 || r.right > innerWidth + 1; }).map(item => item.className) }));
+    if (width === 320 && await modal.evaluate(el => getComputedStyle(el).animationName) !== 'none') throw new Error('Match ignores reduced motion');
+    await page.screenshot({ path: output + '/match-celebration-' + width + '.png', animations: 'disabled' });
+    await page.keyboard.press('Escape');
+    if (await modal.count()) throw new Error('Match Escape did not dismiss');
+    if (!(await page.locator('main').evaluate(el => el === document.activeElement))) throw new Error('Match close did not restore usable focus');
+    await page.getByRole('button', { name: 'Passer', exact: true }).click();
+    await page.getByRole('button', { name: 'Passé', exact: true }).waitFor();
+    await page.getByRole('button', { name: 'J’aime', exact: true }).click();
+    await page.getByRole('button', { name: 'Like envoyé', exact: true }).waitFor();
+    if (await page.getByRole('dialog').count() || writes !== 3) throw new Error('Same match replayed or interaction did not persist');
+    results.push({ screen: 'match-celebration', width, state: 'confirmed-keyboard-dedup', ...metrics });
+    await context.close();
+  }
+  {
+    const width = 320;
+    const context = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: 'reduce' });
+    await context.addInitScript(() => localStorage.setItem('petmingle.auth.token', 'visual-test-token'));
+    const page = await context.newPage();
+    let sent = 0;
+    await page.route('**/storage/pets/review.jpg', route => route.fulfill({ contentType: 'image/jpeg', body: reviewPhoto }));
+    await page.route('**/api/v.0/**', route => {
+      const request = route.request();
+      const path = new URL(request.url()).pathname.replace('/api/v.0', '');
+      if (path === '/messages' && request.method() === 'POST') { sent++; return route.fulfill({ json: envelope({ ...message, id: 91, sender_user_id: 10, receiver_user_id: 20, content: request.postDataJSON().content, is_seen: false }) }); }
+      if (path === '/messages') return route.fulfill({ json: pageEnvelope([]) });
+      return route.fulfill({ json: fixture(path, 'success') });
+    });
+    await page.goto(base + '/messages?pet=55');
+    await page.getByRole('button', { name: /aime les longues balades/ }).click();
+    const input = page.getByRole('textbox', { name: 'Write a message' });
+    if (!(await input.inputValue()).includes(otherPet.name) || sent) throw new Error('Starter auto-sent or wrong pet');
+    await input.press('Enter');
+    await page.getByRole('list', { name: 'Messages in active conversation' }).waitFor();
+    if (sent !== 1) throw new Error('Starter submit count incorrect');
+    const scroll = await page.evaluate(() => document.documentElement.scrollWidth);
+    results.push({ screen: 'message-starter', width, state: 'draft-then-submit', viewport: width, scroll });
+    await context.close();
+  }
   await writeFile(output + '/results.json', JSON.stringify(results, null, 2));
   // A compact contact sheet can be inspected from CI logs as well as artifacts.
   const sheet = await browser.newPage({ viewport: { width: 960, height: 1800 }, deviceScaleFactor: 1 });
