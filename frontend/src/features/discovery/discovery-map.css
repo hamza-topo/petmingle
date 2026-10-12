@@ -35,3 +35,21 @@
 .discovery-map-pets button { max-width:100%; }
 .discovery-map-pets button span { overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
 .discovery-map-warning { position:static; margin:0; border-radius:0; border-top:1px solid #dce5eb; }
+
+.discovery-map-list { background:white; }
+.discovery-map-list summary { padding:14px 18px; cursor:pointer; font-size:14px; font-weight:600; }
+.discovery-map-profile .discovery-owner-note,.discovery-map-profile .featured-biography h3 { display:none; }
+.discovery-map-profile .featured-pet-gallery,.discovery-map-profile .featured-pet-photo { height:190px; min-height:0; }
+.discovery-map-profile .featured-pet-gallery:has(.reference-placeholder) { height:76px; background:#eaf6fc; }
+.discovery-map-profile .reference-placeholder.featured-pet-photo { height:76px; padding:12px; }
+.discovery-map-profile .gallery-count { font-size:11px; }
+.discovery-map-profile .featured-pet-gallery:has(.reference-placeholder) .gallery-count { display:none; }
+.discovery-map-profile .featured-pet-details { padding:20px; gap:12px; }
+.discovery-map-profile .featured-biography { padding:12px 0; }
+.discovery-map-profile .featured-pet-description { max-height:100px; font-size:14px; line-height:1.6; }
+.discovery-map-profile .featured-decision { margin-top:0; }
+.discovery-map-profile .featured-discovery-pet { animation:pet-profile-enter .2s ease-out; }
+.discovery-decision-notice { font-size:13px; color:#60707c; text-align:center; margin:12px 0 0; }
+.discovery-decision-notice:empty { display:none; }
+@keyframes pet-profile-enter { from { opacity:.5; transform:translateX(14px); } to { opacity:1; transform:translateX(0); } }
+@media(prefers-reduced-motion:reduce) { .discovery-map-profile .featured-discovery-pet { animation:none; } }

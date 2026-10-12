@@ -19,7 +19,6 @@ import { DiscoveryHeader } from './components/DiscoveryHeader';
 import { FeaturedPetCard } from './components/FeaturedPetCard';
 import { DiscoveryMap } from './components/DiscoveryMap';
 import './discovery-map.css';
-import { PetGrid } from './components/PetGrid';
 import {
   DEFAULT_DISCOVERY_FILTERS,
   discoveryFiltersEqual,
@@ -71,7 +70,9 @@ export function DiscoveryPage() {
 
   const requestId = useRef(0);
   const [selectedPetId, setSelectedPetId] = useState<number | null>(null);
-  const [showNearby, setShowNearby] = useState(false);
+  const [decisionNotice, setDecisionNotice] = useState('');
+  const activeSelection = useRef<number | null>(null);
+  activeSelection.current = selectedPetId ?? pets[0]?.id ?? null;
   const [filtersOpen, setFiltersOpen] = useState(false);
   const filterDialog = useRef<HTMLDialogElement>(null);
   const filterTrigger = useRef<HTMLButtonElement>(null);
@@ -135,7 +136,7 @@ export function DiscoveryPage() {
   }, [taxonomyReloadKey]);
 
   const loadPage = useCallback(
-    async (pageNumber: number, append = false): Promise<void> => {
+    async (pageNumber: number, append = false, selectNext: number | false = false): Promise<void> => {
       const token = tokenStorage.get();
 
       if (!token) {
@@ -178,6 +179,10 @@ export function DiscoveryPage() {
         });
 
         if (!append) setSelectedPetId(null);
+        else if (selectNext !== false && activeSelection.current === selectNext) {
+          const nextPet = result.pets.find(pet => pet.interaction !== 'disliked');
+          if (nextPet) setSelectedPetId(nextPet.id);
+        }
 
         setPets((current) => {
           if (!append) {
@@ -269,6 +274,7 @@ export function DiscoveryPage() {
     });
     setInteractionError(null);
 
+    const discoveryVersion = requestId.current;
     try {
       const persisted = await petInteractionRequest({
         token,
@@ -281,6 +287,17 @@ export function DiscoveryPage() {
         next.set(petId, persisted.interaction);
         return next;
       });
+      if (persisted.interaction === 'disliked' && discoveryVersion === requestId.current && activeSelection.current === petId) {
+        const index = pets.findIndex(pet => pet.id === petId);
+        const following = [...pets.slice(index + 1), ...pets.slice(0, index)]
+          .find(pet => (interactions.get(pet.id) ?? pet.interaction) !== 'disliked');
+        setDecisionNotice(following ? `Profil passé. Voici ${following.name}.` : 'Profil passé. Vous avez parcouru les profils chargés.');
+        if (following) {
+          setSelectedPetId(following.id);
+          window.requestAnimationFrame(() => document.getElementById(`featured-pet-${following.id}`)?.focus({ preventScroll: true }));
+        }
+        else if (meta.current_page < meta.last_page) await loadPage(meta.current_page + 1, true, petId);
+      }
       const target = pets.find(item => item.id === petId);
       if (persisted.interaction === 'liked' && persisted.new_match === true && typeof persisted.match_id === 'number' && target) {
         celebrate(persisted.match_id, { id: target.id, name: target.name, photo: target.photo });
@@ -478,6 +495,7 @@ export function DiscoveryPage() {
             </section>
           </div>
 
+          <p className="discovery-decision-notice" role="status" aria-live="polite">{decisionNotice}</p>
           {status === 'ready' && closestPet && (
             <>
               <div
@@ -515,27 +533,7 @@ export function DiscoveryPage() {
                   {loadingMore ? 'Chargement…' : 'Voir plus de profils'}
                 </button>
               )}
-              <button
-                type="button"
-                className="discovery-browse-toggle"
-                aria-expanded={showNearby}
-                aria-controls={showNearby ? 'nearby-pets' : undefined}
-                onClick={() => setShowNearby((current) => !current)}
-              >
-                {showNearby
-                  ? 'Masquer les profils à proximité'
-                  : `Voir les ${meta.total} profils à proximité`}
-                <ArrowRight size={18} aria-hidden="true" />
-              </button>
-              {showNearby && (
-                <PetGrid
-                  pets={pets}
-                  hasMore={false}
-                  loadingMore={loadingMore}
-                  onLoadMore={() => void loadPage(meta.current_page + 1, true)}
-                  onSelect={selectPet}
-                />
-              )}
+
             </>
           )}
         </div>
