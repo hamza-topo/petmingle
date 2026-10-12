@@ -319,6 +319,29 @@ describe('Discovery page', () => {
     ).toHaveAttribute('aria-pressed', 'true');
   });
 
+  it('finishes the saved pass movement before showing the next profile', async () => {
+    const user = userEvent.setup();
+    const original = Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'animate');
+    let finish: (() => void) | undefined;
+    const cancel = vi.fn();
+    const animate = vi.fn(() => ({ finished: new Promise<void>(resolve => { finish = resolve; }), cancel }));
+    Object.defineProperty(HTMLElement.prototype, 'animate', { configurable: true, value: animate });
+    try {
+      renderDiscovery();
+      await waitForDiscovery();
+      await user.click(screen.getByRole('button', { name: 'Passer' }));
+      await waitFor(() => expect(animate).toHaveBeenCalled());
+      expect(screen.getByRole('heading', { name: 'Milo', level: 2 })).toBeVisible();
+      expect(screen.queryByRole('heading', { name: 'Luna', level: 2 })).not.toBeInTheDocument();
+      finish?.();
+      expect(await screen.findByRole('heading', { name: 'Luna', level: 2 })).toBeVisible();
+      expect(cancel).toHaveBeenCalled();
+    } finally {
+      if (original) Object.defineProperty(HTMLElement.prototype, 'animate', original);
+      else Reflect.deleteProperty(HTMLElement.prototype, 'animate');
+    }
+  });
+
   it('skips already passed profiles when advancing', async () => {
     const user = userEvent.setup();
     mockedDiscoveryRequest.mockResolvedValueOnce({ ...firstPage, pets: [firstPage.pets[0], { ...firstPage.pets[1], interaction: 'disliked' }, firstPage.pets[2]] });

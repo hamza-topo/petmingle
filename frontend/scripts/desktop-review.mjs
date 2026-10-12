@@ -253,6 +253,30 @@ try {
     results.push({ screen: 'discovery-filters', width, state: 'keyboard-cancel-apply-account', ...metrics });
     await context.close();
   }
+  for (const width of [1280, 390]) {
+    const context = await browser.newContext({ viewport: { width, height: 1000 }, reducedMotion: 'no-preference' });
+    await context.addInitScript(() => localStorage.setItem('petmingle.auth.token', 'visual-test-token'));
+    const page = await context.newPage();
+    await page.route('**/storage/pets/review.jpg', route => route.fulfill({ contentType: 'image/jpeg', body: reviewPhoto }));
+    await page.route('**/api/v.0/**', async route => {
+      const path = new URL(route.request().url()).pathname.replace('/api/v.0', '');
+      if (path === '/likes' || path === '/dislikes') return route.fulfill({ json: envelope({ id: 200, from_pet_id: 42, to_pet_id: route.request().postDataJSON().to_pet_id, interaction: path === '/likes' ? 'liked' : 'disliked' }) });
+      return route.fulfill({ json: fixture(path, 'success') });
+    });
+    await page.goto(base + '/discover');
+    await page.locator('.featured-discovery-pet').waitFor();
+    await page.getByRole('button', { name: 'J’aime', exact: true }).click();
+    await page.waitForFunction(() => document.querySelector('.discovery-map-profile')?.dataset.decision === 'liked');
+    if (!await page.locator('.featured-pet-gallery').evaluate(el => getComputedStyle(el, '::after').content.includes('J’AIME'))) throw new Error('Like stamp missing');
+    await page.waitForFunction(() => !document.querySelector('.discovery-map-profile')?.dataset.decision);
+    await page.getByRole('button', { name: 'Passer', exact: true }).click();
+    await page.waitForFunction(() => document.querySelector('.discovery-map-profile')?.dataset.decision === 'disliked');
+    if (!await page.locator('.featured-discovery-pet').evaluate(el => el.getAnimations().some(animation => animation.effect.getKeyframes().some(frame => String(frame.transform).includes('-110%'))))) throw new Error('Directional pass movement missing');
+    await page.locator('.featured-pet-summary').getByRole('heading', { name: 'Oscar', exact: true }).waitFor();
+    await page.waitForFunction(() => !document.querySelector('.discovery-map-profile')?.dataset.decision);
+    results.push({ screen: 'discovery-motion', width, state: 'like-stamp-pass-exit-next', viewport: width, scroll: await page.evaluate(() => document.documentElement.scrollWidth) });
+    await context.close();
+  }
   for (const width of [1280, 768, 390, 320]) {
     const context = await browser.newContext({ viewport: { width, height: 900 }, reducedMotion: width === 320 ? 'reduce' : 'no-preference' });
     await context.addInitScript(() => localStorage.setItem('petmingle.auth.token', 'visual-test-token'));
