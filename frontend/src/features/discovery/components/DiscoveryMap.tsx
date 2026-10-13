@@ -4,12 +4,13 @@ import 'leaflet/dist/leaflet.css';
 import type { AccountLocation } from '../../account-location/location.api';
 import type { DiscoveryPet } from '../discovery.api';
 
-export function DiscoveryMap({ pets, center, radiusKm, selectedPetId, onSelect }: {
+export function DiscoveryMap({ pets, center, radiusKm, selectedPetId, onSelect, interactions }: {
   pets: DiscoveryPet[];
   center: AccountLocation;
   radiusKm: number;
   selectedPetId: number | null;
   onSelect: (id: number) => void;
+  interactions?: Map<number, import('../discovery.api').PetInteractionState>;
 }) {
   const container = useRef<HTMLDivElement>(null);
   const map = useRef<L.Map | null>(null);
@@ -54,7 +55,7 @@ export function DiscoveryMap({ pets, center, radiusKm, selectedPetId, onSelect }
         const badge = document.createElement('b'); badge.textContent = String(group.length); content.append(badge);
       }
       const marker = L.marker([pet.mapLocation!.latitude, pet.mapLocation!.longitude], {
-        icon: L.divIcon({ html: content, className: `pet-map-marker${group.some(item => item.id === selectedPetId) ? ' is-selected' : ''}`, iconSize: [58, 58], iconAnchor: [29, 29] }),
+        icon: L.divIcon({ html: content, className: `pet-map-marker${(interactions?.get(pet.id) ?? pet.interaction) === 'liked' ? ' is-liked' : ''}${(interactions?.get(pet.id) ?? pet.interaction) === 'disliked' ? ' is-passed' : ''}${group.some(item => item.id === selectedPetId) ? ' is-selected' : ''}`, iconSize: [58, 58], iconAnchor: [29, 29] }),
         title: group.length > 1 ? `${group.length} compagnons dans cette zone` : `Voir ${pet.name}`,
         keyboard: true,
       }).addTo(layer);
@@ -69,7 +70,7 @@ export function DiscoveryMap({ pets, center, radiusKm, selectedPetId, onSelect }
       }
     }
     return () => { layer.remove(); };
-  }, [pets, selectedPetId, center.latitude, center.longitude]);
+  }, [pets, selectedPetId, interactions, center.latitude, center.longitude]);
 
   useEffect(() => {
     if (!map.current) return;
@@ -79,6 +80,13 @@ export function DiscoveryMap({ pets, center, radiusKm, selectedPetId, onSelect }
     const lngRadius = latRadius / Math.max(0.1, Math.cos(lat * Math.PI / 180));
     map.current.fitBounds([[lat - latRadius, lng - lngRadius], [lat + latRadius, lng + lngRadius]], { padding: [45, 45], maxZoom: 14, animate: false });
   }, [radiusKm, center.latitude, center.longitude]);
+
+  useEffect(() => {
+    const pet = pets.find(item => item.id === selectedPetId);
+    if (pet?.mapLocation && map.current) {
+      map.current.panInside([pet.mapLocation.latitude, pet.mapLocation.longitude], { padding: [85, 85], animate: !window.matchMedia?.('(prefers-reduced-motion: reduce)').matches });
+    }
+  }, [selectedPetId, pets]);
 
   return <section className="discovery-map-shell" aria-label="Carte des compagnons à proximité">
     <div ref={container} className="discovery-pet-map" aria-label="Carte interactive. Utilisez les flèches pour vous déplacer." />

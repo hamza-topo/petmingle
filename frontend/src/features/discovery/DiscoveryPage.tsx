@@ -71,6 +71,9 @@ export function DiscoveryPage() {
   const requestId = useRef(0);
   const [selectedPetId, setSelectedPetId] = useState<number | null>(null);
   const [decisionNotice, setDecisionNotice] = useState('');
+  const profilePanel = useRef<HTMLDivElement>(null);
+  const decisionAnimation = useRef<Animation | null>(null);
+  const submittingPetIds = useRef(new Set<number>());
   const activeSelection = useRef<number | null>(null);
   activeSelection.current = selectedPetId ?? pets[0]?.id ?? null;
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -252,11 +255,35 @@ export function DiscoveryPage() {
     setFilters({ ...nextFilters });
   }
 
+  useEffect(() => () => { decisionAnimation.current?.cancel(); }, []);
+  useEffect(() => { decisionAnimation.current?.cancel(); }, [selectedPetId]);
+
+  async function animateDecision(interaction: 'liked' | 'disliked') {
+    const panel = profilePanel.current;
+    const card = panel?.querySelector<HTMLElement>('.featured-discovery-pet');
+    if (!panel || !card || !card.animate || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches) return;
+    decisionAnimation.current?.cancel();
+    panel.dataset.decision = interaction;
+    const frames = interaction === 'disliked'
+      ? [{ transform: 'translateX(0) rotate(0)', opacity: 1 }, { transform: 'translateX(-110%) rotate(-12deg)', opacity: 0 }]
+      : [{ transform: 'translateX(0) rotate(0)' }, { transform: 'translateX(28px) rotate(4deg)', offset: .45 }, { transform: 'translateX(0) rotate(0)' }];
+    const animation = card.animate(frames, { duration: interaction === 'disliked' ? 280 : 360, easing: 'cubic-bezier(.22,.7,.22,1)', fill: 'forwards' });
+    decisionAnimation.current = animation;
+    try { await animation.finished; } catch { /* A newer selection cancels the gesture. */ }
+    finally {
+      if (decisionAnimation.current === animation) {
+        animation.cancel();
+        decisionAnimation.current = null;
+        delete panel.dataset.decision;
+      }
+    }
+  }
+
   async function persistInteraction(
     petId: number,
     interaction: Exclude<PetInteractionState, null>,
   ) {
-    if (pendingPetIds.has(petId)) {
+    if (submittingPetIds.current.has(petId)) {
       return;
     }
 
@@ -267,6 +294,7 @@ export function DiscoveryPage() {
       return;
     }
 
+    submittingPetIds.current.add(petId);
     setPendingPetIds((current) => {
       const next = new Set(current);
       next.add(petId);
@@ -287,6 +315,7 @@ export function DiscoveryPage() {
         next.set(petId, persisted.interaction);
         return next;
       });
+      if (discoveryVersion === requestId.current && activeSelection.current === petId) await animateDecision(persisted.interaction);
       if (persisted.interaction === 'disliked' && discoveryVersion === requestId.current && activeSelection.current === petId) {
         const index = pets.findIndex(pet => pet.id === petId);
         const following = [...pets.slice(index + 1), ...pets.slice(0, index)]
@@ -305,6 +334,7 @@ export function DiscoveryPage() {
     } catch (caught) {
       setInteractionError(describeApiFailure(caught).message);
     } finally {
+      submittingPetIds.current.delete(petId);
       setPendingPetIds((current) => {
         const next = new Set(current);
         next.delete(petId);
@@ -472,9 +502,10 @@ export function DiscoveryPage() {
                       center={accountLocation.currentLocation}
                       radiusKm={filters.radiusKm}
                       selectedPetId={closestPet.id}
+                      interactions={interactions}
                       onSelect={setSelectedPetId}
                     />
-                    <div className="discovery-map-profile">
+                    <div ref={profilePanel} className="discovery-map-profile">
                   <FeaturedPetCard
                     key={closestPet.id}
                     pet={closestPet}
